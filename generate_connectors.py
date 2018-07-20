@@ -95,12 +95,13 @@ def generate(dirpath: str):
         lines.append('   (vertex (pos -1.27 -{}) (angle 0.0))'.format(height))
         lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(height))
         lines.append('  )')
-        lines.append('  (polygon {} (layer top_placement)'.format(uuid()))
-        lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
-        y_pin0_marker = height - spacing / 2 - top
-        lines.append('   (vertex (pos -1.27 -{}) (angle 0.0))'.format(y_pin0_marker))
-        lines.append('   (vertex (pos 1.27 -{}) (angle 0.0))'.format(y_pin0_marker))
-        lines.append('  )')
+        if i > 2:  # If there are more than 2 pins, mark pin 1
+            lines.append('  (polygon {} (layer top_placement)'.format(uuid()))
+            lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
+            y_pin0_marker = height - spacing / 2 - top
+            lines.append('   (vertex (pos -1.27 -{}) (angle 0.0))'.format(y_pin0_marker))
+            lines.append('   (vertex (pos 1.27 -{}) (angle 0.0))'.format(y_pin0_marker))
+            lines.append('  )')
         lines.append(' )')
         lines.append(')')
 
