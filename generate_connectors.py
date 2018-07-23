@@ -16,6 +16,8 @@ from datetime import datetime
 from os import path, makedirs
 from uuid import uuid4
 
+generator = 'librepcb-parts-generator (generate_connectors.py)'
+
 pkgcat = '31d0f1d4-a7cc-4792-8b91-21c897fe855f'
 min_pads = 1
 max_pads = 40
@@ -63,9 +65,8 @@ def generate(dirpath: str):
 
         lines.append('(librepcb_package {}'.format(pkg_uuid))
         lines.append(' (name "Generic {}mm 1x{} Connector")'.format(spacing, i))
-        lines.append(' (description "A generic connector (1x{}) with {}mm pin spacing.")'.format(
-            i, spacing,
-        ))
+        lines.append(' (description "A generic connector (1x{}) with {}mm pin spacing.\\n\\n'
+                     'Generated with {}")'.format(i, spacing, generator))
         lines.append(' (keywords "connector, 1x{}")'.format(i))
         lines.append(' (author "LibrePCB")')
         lines.append(' (version "0.1")')
