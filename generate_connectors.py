@@ -109,7 +109,7 @@ def generate(dirpath: str):
         if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
             makedirs(pkg_dir_path)
         with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-            f.write('0.1')
+            f.write('0.1\n')
         with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
             f.write('\n'.join(lines))
             f.write('\n')
