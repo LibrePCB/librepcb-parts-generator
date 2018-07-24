@@ -16,6 +16,8 @@ from datetime import datetime
 from os import path, makedirs
 from uuid import uuid4
 
+import common
+
 generator = 'librepcb-parts-generator (generate_connectors.py)'
 
 pkgcat = '31d0f1d4-a7cc-4792-8b91-21c897fe855f'
@@ -29,12 +31,23 @@ pad_size = (2.54, 1.27)
 line_width = 0.25
 
 
+# Initialize UUID cache
+uuid_cache_file = 'uuid_cache_connectors.csv'
+uuid_cache = common.init_cache(uuid_cache_file)
+
+
 def now() -> str:
     return datetime.utcnow().isoformat() + 'Z'
 
 
-def uuid() -> str:
-    return str(uuid4())
+def uuid(typ: str, pin_number: int, identifier: str = None) -> str:
+    if identifier:
+        key = '{}-1x{}-{}'.format(typ, pin_number, identifier).lower().replace(' ', '~')
+    else:
+        key = '{}-1x{}'.format(typ, pin_number).lower().replace(' ', '~')
+    if key not in uuid_cache:
+        uuid_cache[key] = str(uuid4())
+    return uuid_cache[key]
 
 
 def get_y(pin_number: int, pin_count: int, spacing: float):
@@ -61,7 +74,7 @@ def generate(dirpath: str):
     for i in range(min_pads, max_pads + 1):
         lines = []
 
-        pkg_uuid = uuid()
+        pkg_uuid = uuid('pkg', i)
 
         lines.append('(librepcb_package {}'.format(pkg_uuid))
         lines.append(' (name "Generic {}mm 1x{} Connector")'.format(spacing, i))
@@ -73,10 +86,10 @@ def generate(dirpath: str):
         lines.append(' (created {})'.format(now()))
         lines.append(' (deprecated false)')
         lines.append(' (category {})'.format(pkgcat))
-        pad_uuids = [uuid() for _ in range(i)]
+        pad_uuids = [uuid('pad', i, p) for p in range(i)]
         for j in range(1, i + 1):
             lines.append(' (pad {} (name "{}"))'.format(pad_uuids[j - 1], j))
-        lines.append(' (footprint {}'.format(uuid()))
+        lines.append(' (footprint {}'.format(uuid('footprint', i, 'default')))
         lines.append('  (name "default")')
         lines.append('  (description "")')
         for j in range(1, i + 1):
@@ -87,7 +100,7 @@ def generate(dirpath: str):
             ))
             lines.append('  )')
 
-        lines.append('  (polygon {} (layer top_placement)'.format(uuid()))
+        lines.append('  (polygon {} (layer top_placement)'.format(uuid('polygon', i, 'contour')))
         lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
         height = get_rectangle_height(i, spacing, top)
         lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(height))
@@ -97,7 +110,9 @@ def generate(dirpath: str):
         lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(height))
         lines.append('  )')
         if i > 2:  # If there are more than 2 pins, mark pin 1
-            lines.append('  (polygon {} (layer top_placement)'.format(uuid()))
+            lines.append('  (polygon {} (layer top_placement)'.format(
+                uuid('polygon', i, 'pin1mark'),
+            ))
             lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
             y_pin0_marker = height - spacing / 2 - top
             lines.append('   (vertex (pos -1.27 -{}) (angle 0.0))'.format(y_pin0_marker))
@@ -126,3 +141,4 @@ if __name__ == '__main__':
     _make('out/connectors')
     _make('out/connectors/pkg')
     generate('out/connectors/pkg')
+    common.save_cache(uuid_cache_file, uuid_cache)
