@@ -21,8 +21,6 @@ import common
 
 generator = 'librepcb-parts-generator (generate_connectors.py)'
 
-min_pads = 1
-max_pads = 40
 width = 2.54
 top = 1.5
 spacing = 2.54
@@ -78,6 +76,8 @@ def generate(
     kind: str,
     pkgcat: str,
     keywords: str,
+    min_pads: int,
+    max_pads: int,
     generate_silkscreen: Callable[[List[str], str, int], None]
 ):
     for i in range(min_pads, max_pads + 1):
@@ -87,7 +87,7 @@ def generate(
 
         # General info
         lines.append('(librepcb_package {}'.format(pkg_uuid))
-        lines.append(' (name "{} {}mm 1x{}")'.format(name, spacing, i))
+        lines.append(' (name "{} 1x{}")'.format(name, i))
         lines.append(' (description "A 1x{} {} with {}mm pin spacing.\\n\\n'
                      'Generated with {}")'.format(name_lower, i, spacing, generator))
         lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
@@ -204,20 +204,35 @@ if __name__ == '__main__':
     _make('out/connectors/pkg')
     generate(
         dirpath='out/connectors/pkg',
-        name='Socket Strip',
+        name='Socket Strip 2.54mm',
         name_lower='female socket strip',
         kind='socketstrip',
         pkgcat='3fe529fe-b8b1-489b-beae-da54e01c9b20',
         keywords='socket strip, female header, tht',
+        min_pads=1,
+        max_pads=40,
         generate_silkscreen=generate_silkscreen_female,
     )
     generate(
         dirpath='out/connectors/pkg',
-        name='Pin Header',
+        name='Pin Header 2.54mm',
         name_lower='male pin header',
         kind='pinheader',
         pkgcat='f8be0636-474e-41ea-8340-05caf137596c',
         keywords='pin header, male header, tht',
+        min_pads=1,
+        max_pads=40,
         generate_silkscreen=generate_silkscreen_male,
+    )
+    generate(
+        dirpath='out/connectors/pkg',
+        name='Soldered Wire Connector',
+        name_lower='soldered wire connecto',
+        kind='wireconnector',
+        pkgcat='f8be0636-474e-41ea-8340-05caf137596c',
+        keywords='generic connector, soldered wire connector, tht',
+        min_pads=1,
+        max_pads=10,
+        generate_silkscreen=generate_silkscreen_female,
     )
     common.save_cache(uuid_cache_file, uuid_cache)
