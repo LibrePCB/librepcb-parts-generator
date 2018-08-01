@@ -61,7 +61,7 @@ def get_y(pin_number: int, pin_count: int, spacing: float):
     mid = (pin_count + 1) // 2
     even = pin_count % 2 == 0
     offset = spacing / 2 if even else 0
-    return round(pin_number * spacing - mid * spacing - offset, 2)
+    return -round(pin_number * spacing - mid * spacing - offset, 2)
 
 
 def get_rectangle_height(pin_count: int, spacing: float, top: float):
