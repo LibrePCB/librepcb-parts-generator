@@ -1,5 +1,5 @@
 """
-Generate generic connector packages.
+Generate pin header and socket strip packages.
 
              +---+- width
              v   v
@@ -20,7 +20,8 @@ import common
 
 generator = 'librepcb-parts-generator (generate_connectors.py)'
 
-pkgcat = '31d0f1d4-a7cc-4792-8b91-21c897fe855f'
+pkgcat_pin_headers = 'f8be0636-474e-41ea-8340-05caf137596c'
+pkgcat_socket_strips = '3fe529fe-b8b1-489b-beae-da54e01c9b20'
 min_pads = 1
 max_pads = 40
 width = 2.54
@@ -77,16 +78,16 @@ def generate(dirpath: str):
         pkg_uuid = uuid('pkg', i)
 
         lines.append('(librepcb_package {}'.format(pkg_uuid))
-        lines.append(' (name "Generic {}mm 1x{} Connector")'.format(spacing, i))
-        lines.append(' (description "A generic connector (1x{}) with {}mm pin spacing.\\n\\n'
+        lines.append(' (name "Socket Strip {}mm 1x{}")'.format(spacing, i))
+        lines.append(' (description "A 1x{} socket strip with {}mm pin spacing.\\n\\n'
                      'Generated with {}")'.format(i, spacing, generator))
-        lines.append(' (keywords "connector, 1x{}")'.format(i))
+        lines.append(' (keywords "connector, socket strip, 1x{}")'.format(i))
         lines.append(' (author "LibrePCB")')
         lines.append(' (version "0.1")')
         lines.append(' (created {})'.format(now()))
         lines.append(' (deprecated false)')
-        lines.append(' (category {})'.format(pkgcat))
-        pad_uuids = [uuid('pad', i, p) for p in range(i)]
+        lines.append(' (category {})'.format(pkgcat_socket_strips))
+        pad_uuids = [uuid('pad', i, str(p)) for p in range(i)]
         for j in range(1, i + 1):
             lines.append(' (pad {} (name "{}"))'.format(pad_uuids[j - 1], j))
         lines.append(' (footprint {}'.format(uuid('footprint', i, 'default')))
