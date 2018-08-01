@@ -14,7 +14,7 @@ Generate pin header and socket strip packages.
 """
 from datetime import datetime
 from os import path, makedirs
-from typing import Callable, List
+from typing import Callable, List, Tuple
 from uuid import uuid4
 
 import common
@@ -22,7 +22,6 @@ import common
 generator = 'librepcb-parts-generator (generate_connectors.py)'
 
 width = 2.54
-top = 1.5
 spacing = 2.54
 pad_drill = 1.0
 pad_size = (2.54, 1.27 * 1.25)
@@ -51,22 +50,23 @@ def uuid(kind: str, typ: str, pin_number: int, identifier: str = None) -> str:
 
 def get_y(pin_number: int, pin_count: int, spacing: float):
     """
-    Return the y coordinate of the specified pin.
+    Return the y coordinate of the specified pin. Keep the pins grid aligned.
 
     The pin number is 1 index based.
 
     """
     mid = (pin_count + 1) // 2
+    return -round(pin_number * spacing - mid * spacing, 2)
+
+
+def get_rectangle_bounds(pin_count: int, spacing: float, top_offset: float) -> Tuple[float, float]:
+    """
+    Return (y_max/y_min) of the rectangle around the pins.
+    """
     even = pin_count % 2 == 0
     offset = spacing / 2 if even else 0
-    return -round(pin_number * spacing - mid * spacing - offset, 2)
-
-
-def get_rectangle_height(pin_count: int, spacing: float, top: float):
-    """
-    Return the y height of the rectangle around the pins.
-    """
-    return (pin_count - 1) / 2 * spacing + top
+    height = (pin_count - 1) / 2 * spacing + top_offset
+    return (height - offset, -height - offset)
 
 
 def generate(
@@ -78,7 +78,8 @@ def generate(
     keywords: str,
     min_pads: int,
     max_pads: int,
-    generate_silkscreen: Callable[[List[str], str, int], None]
+    top_offset: float,
+    generate_silkscreen: Callable[[List[str], str, int, float], None]
 ):
     for i in range(min_pads, max_pads + 1):
         lines = []
@@ -114,23 +115,23 @@ def generate(
             lines.append('  )')
 
         # Silkscreen
-        generate_silkscreen(lines, kind, i)
+        generate_silkscreen(lines, kind, i, top_offset)
 
         # Labels
-        label_y_offset = (i // 2) * 2.54 + 1.27 + (spacing / 2 if i % 2 == 1 else 0)
+        y_max, y_min = get_rectangle_bounds(i, spacing, top_offset + 1.27)
         text_attrs = '(height {}) (stroke_width 0.2) ' \
                      '(letter_spacing auto) (line_spacing auto)'.format(text_height)
         lines.append('  (stroke_text {} (layer top_names)'.format(uuid(kind, 'label-name', i)))
         lines.append('   {}'.format(text_attrs))
         lines.append('   (align center bottom) (pos 0.0 {}) (rot 0.0) (auto_rotate true)'.format(
-            label_y_offset,
+            y_max,
         ))
         lines.append('   (mirror false) (value "{{NAME}}")')
         lines.append('  )')
         lines.append('  (stroke_text {} (layer top_values)'.format(uuid(kind, 'label-value', i)))
         lines.append('   {}'.format(text_attrs))
-        lines.append('   (align center top) (pos 0.0 -{}) (rot 0.0) (auto_rotate true)'.format(
-            label_y_offset,
+        lines.append('   (align center top) (pos 0.0 {}) (rot 0.0) (auto_rotate true)'.format(
+            y_min,
         ))
         lines.append('   (mirror false) (value "{{VALUE}}")')
         lines.append('  )')
@@ -150,23 +151,32 @@ def generate(
         print('1x{}: Wrote package {}'.format(i, pkg_uuid))
 
 
-def generate_silkscreen_female(lines: List[str], kind: str, pin_count: int) -> None:
+def generate_silkscreen_female(
+    lines: List[str],
+    kind: str,
+    pin_count: int,
+    top_offset: float,
+) -> None:
     lines.append('  (polygon {} (layer top_placement)'.format(
         uuid(kind, 'polygon', pin_count, 'contour')
     ))
     lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
-    height = get_rectangle_height(pin_count, spacing, top)
-    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(height))
-    lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(height))
-    lines.append('   (vertex (pos 1.27 -{}) (angle 0.0))'.format(height))
-    lines.append('   (vertex (pos -1.27 -{}) (angle 0.0))'.format(height))
-    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(height))
+    y_max, y_min = get_rectangle_bounds(pin_count, spacing, top_offset)
+    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(y_max))
+    lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(y_max))
+    lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(y_min))
+    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(y_min))
+    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(y_max))
     lines.append('  )')
 
 
-def generate_silkscreen_male(lines: List[str], kind: str, pin_count: int) -> None:
-    odd = pin_count % 2 == 1
-    offset = spacing / 2 if odd else 0
+def generate_silkscreen_male(
+    lines: List[str],
+    kind: str,
+    pin_count: int,
+    top_offset: float,
+) -> None:
+    offset = spacing / 2
 
     # Start in left bottom corner, go around the pads clockwise
     lines.append('  (polygon {} (layer top_placement)'.format(
@@ -175,20 +185,20 @@ def generate_silkscreen_male(lines: List[str], kind: str, pin_count: int) -> Non
     lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
     steps = pin_count // 2
     # Up on the left
-    for pin in range(-(steps + pin_count % 2), steps):
+    for pin in range(-steps, steps + (pin_count % 2)):
         # Up on the left
-        base_y = pin * 2.54 + offset
+        base_y = pin * 2.54 - offset
         lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(base_y + 0.27))
         lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(base_y + 2.27))
         lines.append('   (vertex (pos -1 {}) (angle 0.0))'.format(base_y + 2.54))
-    for pin in reversed(range(-(steps + pin_count % 2), steps)):
+    for pin in reversed(range(-steps, steps + (pin_count % 2))):
         # Down on the right
-        base_y = pin * 2.54 + offset
+        base_y = pin * 2.54 - offset
         lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(base_y + 2.54))
         lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(base_y + 2.27))
         lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(base_y + 0.27))
     # Back to start
-    bottom_y = -(steps + pin_count % 2) * 2.54 + offset
+    bottom_y = -steps * 2.54 - offset
     lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(bottom_y))
     lines.append('   (vertex (pos -1.0 {}) (angle 0.0))'.format(bottom_y))
     lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(bottom_y + 0.27))
@@ -211,6 +221,7 @@ if __name__ == '__main__':
         keywords='socket strip, female header, tht',
         min_pads=1,
         max_pads=40,
+        top_offset=1.5,
         generate_silkscreen=generate_silkscreen_female,
     )
     generate(
@@ -222,6 +233,7 @@ if __name__ == '__main__':
         keywords='pin header, male header, tht',
         min_pads=1,
         max_pads=40,
+        top_offset=1.27,
         generate_silkscreen=generate_silkscreen_male,
     )
     generate(
@@ -233,6 +245,7 @@ if __name__ == '__main__':
         keywords='generic connector, soldered wire connector, tht',
         min_pads=1,
         max_pads=10,
+        top_offset=1.5,
         generate_silkscreen=generate_silkscreen_female,
     )
     common.save_cache(uuid_cache_file, uuid_cache)
