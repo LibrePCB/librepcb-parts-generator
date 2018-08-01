@@ -29,6 +29,7 @@ spacing = 2.54
 pad_drill = 1.0
 pad_size = (2.54, 1.27)
 line_width = 0.25
+text_height = 1.0
 
 
 # Initialize UUID cache
@@ -108,7 +109,27 @@ def generate(
             ))
             lines.append('  )')
 
+        # Silkscreen
         generate_silkscreen(lines, kind, i)
+
+        # Labels
+        label_y_offset = (i // 2) * 2.54 + 1.27 + (spacing / 2 if i % 2 == 1 else 0)
+        text_attrs = '(height {}) (stroke_width 0.2) ' \
+                     '(letter_spacing auto) (line_spacing auto)'.format(text_height)
+        lines.append('  (stroke_text {} (layer top_names)'.format(uuid(kind, 'label-name', i)))
+        lines.append('   {}'.format(text_attrs))
+        lines.append('   (align center bottom) (pos 0.0 {}) (rot 0.0) (auto_rotate true)'.format(
+            label_y_offset,
+        ))
+        lines.append('   (mirror false) (value "{{NAME}}")')
+        lines.append('  )')
+        lines.append('  (stroke_text {} (layer top_values)'.format(uuid(kind, 'label-value', i)))
+        lines.append('   {}'.format(text_attrs))
+        lines.append('   (align center top) (pos 0.0 -{}) (rot 0.0) (auto_rotate true)'.format(
+            label_y_offset,
+        ))
+        lines.append('   (mirror false) (value "{{VALUE}}")')
+        lines.append('  )')
 
         lines.append(' )')
         lines.append(')')
@@ -125,21 +146,21 @@ def generate(
         print('1x{}: Wrote package {}'.format(i, pkg_uuid))
 
 
-def generate_silkscreen_female(lines: List[str], kind: str, pins: int) -> None:
+def generate_silkscreen_female(lines: List[str], kind: str, pin_count: int) -> None:
     lines.append('  (polygon {} (layer top_placement)'.format(
-        uuid(kind, 'polygon', pins, 'contour'))
-    )
+        uuid(kind, 'polygon', pin_count, 'contour')
+    ))
     lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
-    height = get_rectangle_height(pins, spacing, top)
+    height = get_rectangle_height(pin_count, spacing, top)
     lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(height))
     lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(height))
     lines.append('   (vertex (pos 1.27 -{}) (angle 0.0))'.format(height))
     lines.append('   (vertex (pos -1.27 -{}) (angle 0.0))'.format(height))
     lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(height))
     lines.append('  )')
-    if pins > 2:  # If there are more than 2 pins, mark pin 1
+    if pin_count > 2:  # If there are more than 2 pins, mark pin 1
         lines.append('  (polygon {} (layer top_placement)'.format(
-            uuid(kind, 'polygon', pins, 'pin1mark'),
+            uuid(kind, 'polygon', pin_count, 'pin1mark'),
         ))
         lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
         y_pin0_marker = height - spacing / 2 - top
@@ -148,8 +169,45 @@ def generate_silkscreen_female(lines: List[str], kind: str, pins: int) -> None:
         lines.append('  )')
 
 
-def generate_silkscreen_male(lines: List[str], kind: str, pins: int) -> None:
-    pass
+def generate_silkscreen_male(lines: List[str], kind: str, pin_count: int) -> None:
+    odd = pin_count % 2 == 1
+    offset = spacing / 2 if odd else 0
+
+    # Start in left bottom corner, go around the pads clockwise
+    lines.append('  (polygon {} (layer top_placement)'.format(
+        uuid(kind, 'polygon', pin_count, 'contour')
+    ))
+    lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
+    steps = pin_count // 2
+    # Up on the left
+    for pin in range(-(steps + pin_count % 2), steps):
+        # Up on the left
+        base_y = pin * 2.54 + offset
+        lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(base_y + 0.27))
+        lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(base_y + 2.27))
+        lines.append('   (vertex (pos -1 {}) (angle 0.0))'.format(base_y + 2.54))
+    for pin in reversed(range(-(steps + pin_count % 2), steps)):
+        # Down on the right
+        base_y = pin * 2.54 + offset
+        lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(base_y + 2.54))
+        lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(base_y + 2.27))
+        lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(base_y + 0.27))
+    # Back to start
+    bottom_y = -(steps + pin_count % 2) * 2.54 + offset
+    lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(bottom_y))
+    lines.append('   (vertex (pos -1.0 {}) (angle 0.0))'.format(bottom_y))
+    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(bottom_y + 0.27))
+    lines.append('  )')
+
+    if pin_count > 2:  # If there are more than 2 pins, mark pin 1
+        lines.append('  (polygon {} (layer top_placement)'.format(
+            uuid(kind, 'polygon', pin_count, 'pin1mark'),
+        ))
+        lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
+        y_pin0_marker = (steps - 1) * 2.54
+        lines.append('   (vertex (pos -1.0 -{}) (angle 0.0))'.format(y_pin0_marker))
+        lines.append('   (vertex (pos 1.0 -{}) (angle 0.0))'.format(y_pin0_marker))
+        lines.append('  )')
 
 
 if __name__ == '__main__':
