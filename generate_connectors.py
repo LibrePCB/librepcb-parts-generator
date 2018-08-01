@@ -27,7 +27,7 @@ width = 2.54
 top = 1.5
 spacing = 2.54
 pad_drill = 1.0
-pad_size = (2.54, 1.27)
+pad_size = (2.54, 1.27 * 1.25)
 line_width = 0.25
 text_height = 1.0
 
