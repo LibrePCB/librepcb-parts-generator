@@ -85,6 +85,7 @@ def generate(
 
         pkg_uuid = uuid(kind, 'pkg', i)
 
+        # General info
         lines.append('(librepcb_package {}'.format(pkg_uuid))
         lines.append(' (name "{} {}mm 1x{}")'.format(name, spacing, i))
         lines.append(' (description "A 1x{} {} with {}mm pin spacing.\\n\\n'
@@ -101,9 +102,12 @@ def generate(
         lines.append(' (footprint {}'.format(uuid(kind, 'footprint', i, 'default')))
         lines.append('  (name "default")')
         lines.append('  (description "")')
+
+        # Pads
         for j in range(1, i + 1):
             y = get_y(j, i, spacing)
-            lines.append('  (pad {} (side tht) (shape round)'.format(pad_uuids[j - 1]))
+            shape = 'rect' if j == 1 else 'round'
+            lines.append('  (pad {} (side tht) (shape {})'.format(pad_uuids[j - 1], shape))
             lines.append('   (pos 0.0 {}) (rot 0.0) (size {} {}) (drill {})'.format(
                 y, pad_size[0], pad_size[1], pad_drill,
             ))
@@ -158,15 +162,6 @@ def generate_silkscreen_female(lines: List[str], kind: str, pin_count: int) -> N
     lines.append('   (vertex (pos -1.27 -{}) (angle 0.0))'.format(height))
     lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(height))
     lines.append('  )')
-    if pin_count > 2:  # If there are more than 2 pins, mark pin 1
-        lines.append('  (polygon {} (layer top_placement)'.format(
-            uuid(kind, 'polygon', pin_count, 'pin1mark'),
-        ))
-        lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
-        y_pin0_marker = height - spacing / 2 - top
-        lines.append('   (vertex (pos -1.27 -{}) (angle 0.0))'.format(y_pin0_marker))
-        lines.append('   (vertex (pos 1.27 -{}) (angle 0.0))'.format(y_pin0_marker))
-        lines.append('  )')
 
 
 def generate_silkscreen_male(lines: List[str], kind: str, pin_count: int) -> None:
@@ -198,16 +193,6 @@ def generate_silkscreen_male(lines: List[str], kind: str, pin_count: int) -> Non
     lines.append('   (vertex (pos -1.0 {}) (angle 0.0))'.format(bottom_y))
     lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(bottom_y + 0.27))
     lines.append('  )')
-
-    if pin_count > 2:  # If there are more than 2 pins, mark pin 1
-        lines.append('  (polygon {} (layer top_placement)'.format(
-            uuid(kind, 'polygon', pin_count, 'pin1mark'),
-        ))
-        lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
-        y_pin0_marker = (steps - 1) * 2.54
-        lines.append('   (vertex (pos -1.0 -{}) (angle 0.0))'.format(y_pin0_marker))
-        lines.append('   (vertex (pos 1.0 -{}) (angle 0.0))'.format(y_pin0_marker))
-        lines.append('  )')
 
 
 if __name__ == '__main__':
