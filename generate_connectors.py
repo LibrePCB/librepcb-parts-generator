@@ -35,10 +35,16 @@ uuid_cache = common.init_cache(uuid_cache_file)
 
 
 def now() -> str:
+    """
+    Return current timestamp as string.
+    """
     return datetime.utcnow().isoformat() + 'Z'
 
 
 def uuid(kind: str, typ: str, pin_number: int, identifier: str = None) -> str:
+    """
+    Return a uuid for the specified pin.
+    """
     if identifier:
         key = '{}-{}-1x{}-{}'.format(kind, typ, pin_number, identifier).lower().replace(' ', '~')
     else:
@@ -52,7 +58,8 @@ def get_y(pin_number: int, pin_count: int, spacing: float):
     """
     Return the y coordinate of the specified pin. Keep the pins grid aligned.
 
-    The pin number is 1 index based.
+    The pin number is 1 index based. Pin 1 is at the top. The middle pin will
+    be at or near 0.
 
     """
     mid = (pin_count + 1) // 2
@@ -176,32 +183,30 @@ def generate_silkscreen_male(
     pin_count: int,
     top_offset: float,
 ) -> None:
-    offset = spacing / 2
-
-    # Start in left bottom corner, go around the pads clockwise
+    # Start in top right corner, go around the pads clockwise
     lines.append('  (polygon {} (layer top_placement)'.format(
         uuid(kind, 'polygon', pin_count, 'contour')
     ))
     lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
-    steps = pin_count // 2
+    # Down on the right
+    for pin in range(1, pin_count + 1):
+        y = get_y(pin, pin_count, spacing)
+        print('R: Pin %d y %.2f' % (pin, y))
+        lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(y + 1))
+        lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(y - 1))
+        lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(y - 1.27))
     # Up on the left
-    for pin in range(-steps, steps + (pin_count % 2)):
-        # Up on the left
-        base_y = pin * 2.54 - offset
-        lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(base_y + 0.27))
-        lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(base_y + 2.27))
-        lines.append('   (vertex (pos -1 {}) (angle 0.0))'.format(base_y + 2.54))
-    for pin in reversed(range(-steps, steps + (pin_count % 2))):
-        # Down on the right
-        base_y = pin * 2.54 - offset
-        lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(base_y + 2.54))
-        lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(base_y + 2.27))
-        lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(base_y + 0.27))
+    for pin in range(pin_count, 0, -1):
+        y = get_y(pin, pin_count, spacing)
+        print('L: Pin %d y %.2f' % (pin, y))
+        lines.append('   (vertex (pos -1.0 {}) (angle 0.0))'.format(y - 1.27))
+        lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(y - 1))
+        lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(y + 1))
     # Back to start
-    bottom_y = -steps * 2.54 - offset
-    lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(bottom_y))
-    lines.append('   (vertex (pos -1.0 {}) (angle 0.0))'.format(bottom_y))
-    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(bottom_y + 0.27))
+    top_y = get_y(1, pin_count, spacing) + spacing / 2
+    lines.append('   (vertex (pos -1.0 {}) (angle 0.0))'.format(top_y))
+    lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(top_y))
+    lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(top_y - 0.27))
     lines.append('  )')
 
 
