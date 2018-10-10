@@ -14,7 +14,7 @@ Generate pin header and socket strip packages.
 """
 from datetime import datetime
 from os import path, makedirs
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Optional
 from uuid import uuid4
 
 import common
@@ -81,7 +81,7 @@ def generate(
     name: str,
     name_lower: str,
     kind: str,
-    pkgcat: str,
+    pkgcat: Optional[str],
     keywords: str,
     min_pads: int,
     max_pads: int,
@@ -103,7 +103,8 @@ def generate(
         lines.append(' (version "0.1")')
         lines.append(' (created {})'.format(now()))
         lines.append(' (deprecated false)')
-        lines.append(' (category {})'.format(pkgcat))
+        if pkgcat is not None:
+            lines.append(' (category {})'.format(pkgcat))
         pad_uuids = [uuid(kind, 'pad', i, str(p)) for p in range(i)]
         for j in range(1, i + 1):
             lines.append(' (pad {} (name "{}"))'.format(pad_uuids[j - 1], j))
@@ -222,7 +223,7 @@ if __name__ == '__main__':
         name='Socket Strip 2.54mm',
         name_lower='female socket strip',
         kind='socketstrip',
-        pkgcat='3fe529fe-b8b1-489b-beae-da54e01c9b20',
+        pkgcat=None,
         keywords='socket strip, female header, tht',
         min_pads=1,
         max_pads=40,
@@ -234,7 +235,7 @@ if __name__ == '__main__':
         name='Pin Header 2.54mm',
         name_lower='male pin header',
         kind='pinheader',
-        pkgcat='f8be0636-474e-41ea-8340-05caf137596c',
+        pkgcat=None,
         keywords='pin header, male header, tht',
         min_pads=1,
         max_pads=40,
@@ -246,7 +247,7 @@ if __name__ == '__main__':
         name='Soldered Wire Connector',
         name_lower='soldered wire connecto',
         kind='wireconnector',
-        pkgcat='f8be0636-474e-41ea-8340-05caf137596c',
+        pkgcat=None,
         keywords='generic connector, soldered wire connector, tht',
         min_pads=1,
         max_pads=10,
