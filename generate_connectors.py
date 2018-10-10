@@ -1,5 +1,5 @@
 """
-Generate pin header and socket strip packages.
+Generate pin header and socket packages.
 
              +---+- width
              v   v
@@ -26,7 +26,8 @@ spacing = 2.54
 pad_drill = 1.0
 pad_size = (2.54, 1.27 * 1.25)
 line_width = 0.25
-text_height = 1.0
+footprint_text_height = 1.0
+symbol_text_height = 2.54
 
 
 # Initialize UUID cache
@@ -76,7 +77,7 @@ def get_rectangle_bounds(pin_count: int, spacing: float, top_offset: float) -> T
     return (height - offset, -height - offset)
 
 
-def generate(
+def generate_pkg(
     dirpath: str,
     name: str,
     name_lower: str,
@@ -128,7 +129,7 @@ def generate(
         # Labels
         y_max, y_min = get_rectangle_bounds(i, spacing, top_offset + 1.27)
         text_attrs = '(height {}) (stroke_width 0.2) ' \
-                     '(letter_spacing auto) (line_spacing auto)'.format(text_height)
+                     '(letter_spacing auto) (line_spacing auto)'.format(footprint_text_height)
         lines.append('  (stroke_text {} (layer top_names)'.format(uuid(kind, 'label-name', i)))
         lines.append('   {}'.format(text_attrs))
         lines.append('   (align center bottom) (pos 0.0 {}) (rot 0.0) (auto_rotate true)'.format(
@@ -192,14 +193,12 @@ def generate_silkscreen_male(
     # Down on the right
     for pin in range(1, pin_count + 1):
         y = get_y(pin, pin_count, spacing)
-        print('R: Pin %d y %.2f' % (pin, y))
         lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(y + 1))
         lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(y - 1))
         lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(y - 1.27))
     # Up on the left
     for pin in range(pin_count, 0, -1):
         y = get_y(pin, pin_count, spacing)
-        print('L: Pin %d y %.2f' % (pin, y))
         lines.append('   (vertex (pos -1.0 {}) (angle 0.0))'.format(y - 1.27))
         lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(y - 1))
         lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(y + 1))
@@ -211,6 +210,84 @@ def generate_silkscreen_male(
     lines.append('  )')
 
 
+def generate_sym(
+    dirpath: str,
+    name: str,
+    name_lower: str,
+    kind: str,
+    cmpcat: str,
+    keywords: str,
+    min_pads: int,
+    max_pads: int,
+):
+    for i in range(min_pads, max_pads + 1):
+        lines = []
+
+        sym_uuid = uuid(kind, 'sym', i)
+
+        # General info
+        lines.append('(librepcb_symbol {}'.format(sym_uuid))
+        lines.append(' (name "{} 1x{}")'.format(name, i))
+        lines.append(' (description "A 1x{} {}.\\n\\n'
+                     'Generated with {}")'.format(i, name_lower, generator))
+        lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
+        lines.append(' (author "LibrePCB")')
+        lines.append(' (version "0.1")')
+        lines.append(' (created {})'.format(now()))
+        lines.append(' (deprecated false)')
+        lines.append(' (category {})'.format(cmpcat))
+        pin_uuids = [uuid(kind, 'pin', i, str(p)) for p in range(i)]
+        for j in range(1, i + 1):
+            lines.append(' (pin {} (name "{}")'.format(pin_uuids[j - 1], j))
+            lines.append('  (position 5.08 {}) (rotation 180.0) (length 2.54)'.format(
+                get_y(j, i, spacing)
+            ))
+            lines.append(' )')
+
+        # Polygons
+        y_max, y_min = get_rectangle_bounds(i, spacing, spacing)
+        lines.append(' (polygon {} (layer sym_outlines)'.format(
+            uuid(kind, 'polygon', i, 'sym-outline')
+        ))
+        lines.append('  (width {}) (fill false) (grab true)'.format(line_width))
+        lines.append('  (vertex (pos -{} {}) (angle 0.0))'.format(spacing, y_max))
+        lines.append('  (vertex (pos {} {}) (angle 0.0))'.format(spacing, y_max))
+        lines.append('  (vertex (pos {} {}) (angle 0.0))'.format(spacing, y_min))
+        lines.append('  (vertex (pos -{} {}) (angle 0.0))'.format(spacing, y_min))
+        lines.append('  (vertex (pos -{} {}) (angle 0.0))'.format(spacing, y_max))
+        lines.append(' )')
+
+        # Text
+        y_max, y_min = get_rectangle_bounds(i, spacing, spacing * 2)
+        lines.append(' (text {} (layer sym_names) (value "{{{{NAME}}}}")'.format(
+            uuid(kind, 'text-name', i)),
+        )
+        lines.append('  (align center center) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
+            symbol_text_height, y_max,
+        ))
+        lines.append(' )')
+        lines.append(' (text {} (layer sym_names) (value "{{{{VALUE}}}}")'.format(
+            uuid(kind, 'text-value', i)),
+        )
+        lines.append('  (align center center) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
+            symbol_text_height, y_min,
+        ))
+        lines.append(' )')
+
+        lines.append(')')
+
+        sym_dir_path = path.join(dirpath, sym_uuid)
+        if not (path.exists(sym_dir_path) and path.isdir(sym_dir_path)):
+            makedirs(sym_dir_path)
+        with open(path.join(sym_dir_path, '.librepcb-sym'), 'w') as f:
+            f.write('0.1\n')
+        with open(path.join(sym_dir_path, 'symbol.lp'), 'w') as f:
+            f.write('\n'.join(lines))
+            f.write('\n')
+
+        print('1x{}: Wrote symbol {}'.format(i, sym_uuid))
+
+
 if __name__ == '__main__':
     def _make(dirpath: str):
         if not (path.exists(dirpath) and path.isdir(dirpath)):
@@ -218,19 +295,40 @@ if __name__ == '__main__':
     _make('out')
     _make('out/connectors')
     _make('out/connectors/pkg')
-    generate(
+    _make('out/connectors/sym')
+    generate_sym(
+        dirpath='out/connectors/sym',
+        name='Pin Header',
+        name_lower='male pin header',
+        kind='pinheader',
+        cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
+        keywords='pin header, male header',
+        min_pads=1,
+        max_pads=40,
+    )
+    generate_sym(
+        dirpath='out/connectors/sym',
+        name='Pin Socket',
+        name_lower='female pin socket',
+        kind='pinsocket',
+        cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
+        keywords='pin socket, female header',
+        min_pads=1,
+        max_pads=40,
+    )
+    generate_pkg(
         dirpath='out/connectors/pkg',
-        name='Socket Strip 2.54mm',
-        name_lower='female socket strip',
-        kind='socketstrip',
+        name='Pin Socket 2.54mm',
+        name_lower='female pin socket',
+        kind='pinsocket',
         pkgcat=None,
-        keywords='socket strip, female header, tht',
+        keywords='pin socket, female header, tht',
         min_pads=1,
         max_pads=40,
         top_offset=1.5,
         generate_silkscreen=generate_silkscreen_female,
     )
-    generate(
+    generate_pkg(
         dirpath='out/connectors/pkg',
         name='Pin Header 2.54mm',
         name_lower='male pin header',
@@ -242,7 +340,7 @@ if __name__ == '__main__':
         top_offset=1.27,
         generate_silkscreen=generate_silkscreen_male,
     )
-    generate(
+    generate_pkg(
         dirpath='out/connectors/pkg',
         name='Soldered Wire Connector',
         name_lower='soldered wire connecto',
