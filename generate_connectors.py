@@ -97,7 +97,7 @@ def generate(
         lines.append('(librepcb_package {}'.format(pkg_uuid))
         lines.append(' (name "{} 1x{}")'.format(name, i))
         lines.append(' (description "A 1x{} {} with {}mm pin spacing.\\n\\n'
-                     'Generated with {}")'.format(name_lower, i, spacing, generator))
+                     'Generated with {}")'.format(i, name_lower, spacing, generator))
         lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
         lines.append(' (author "LibrePCB")')
         lines.append(' (version "0.1")')
