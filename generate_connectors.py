@@ -325,6 +325,73 @@ def generate_sym(
         print('1x{}: Wrote symbol {}'.format(i, sym_uuid))
 
 
+def generate_cmp(
+    dirpath: str,
+    name: str,
+    name_lower: str,
+    kind: str,
+    cmpcat: str,
+    keywords: str,
+    min_pads: int,
+    max_pads: int,
+):
+    for i in range(min_pads, max_pads + 1):
+        lines = []
+
+        cmp_uuid = uuid(kind, 'cmp', i)
+
+        # General info
+        lines.append('(librepcb_component {}'.format(cmp_uuid))
+        lines.append(' (name "{} 1x{}")'.format(name, i))
+        lines.append(' (description "A 1x{} {}.\\n\\n'
+                     'Generated with {}")'.format(i, name_lower, generator))
+        lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
+        lines.append(' (author "{}")'.format(author))
+        lines.append(' (version "0.1")')
+        lines.append(' (created {})'.format(now()))
+        lines.append(' (deprecated false)')
+        lines.append(' (category {})'.format(cmpcat))
+        lines.append(' (schematic_only false)')
+        lines.append(' (default_value "")')
+        lines.append(' (prefix "J")')
+
+        pin_uuids = [uuid(kind, 'pin', i, str(p)) for p in range(i)]
+        signal_uuids = [uuid(kind, 'signal', i, str(p)) for p in range(i)]
+        variant_uuid = uuid(kind, 'cmp-variant', i)
+        gate_uuid = uuid(kind, 'cmp-gate', i)
+        symbol_uuid = uuid(kind, 'sym', i)
+
+        for j in range(1, i + 1):
+            lines.append(' (signal {} (name "{}") (role passive)'.format(signal_uuids[j - 1], j))
+            lines.append('  (required false) (negated false) (clock false) (forced_net "")')
+            lines.append(' )')
+        lines.append(' (variant {} (norm "")'.format(variant_uuid))
+        lines.append('  (name "default")')
+        lines.append('  (description "")')
+        lines.append('  (gate {}'.format(gate_uuid))
+        lines.append('   (symbol {})'.format(symbol_uuid))
+        lines.append('   (position 0.0 0.0) (rotation 0.0) (required true) (suffix "")')
+        for j in range(1, i + 1):
+            lines.append('   (pin {} (signal {}) (text pin))'.format(
+                pin_uuids[j - 1],
+                signal_uuids[j - 1],
+            ))
+        lines.append('  )')
+        lines.append(' )')
+        lines.append(')')
+
+        cmp_dir_path = path.join(dirpath, cmp_uuid)
+        if not (path.exists(cmp_dir_path) and path.isdir(cmp_dir_path)):
+            makedirs(cmp_dir_path)
+        with open(path.join(cmp_dir_path, '.librepcb-cmp'), 'w') as f:
+            f.write('0.1\n')
+        with open(path.join(cmp_dir_path, 'component.lp'), 'w') as f:
+            f.write('\n'.join(lines))
+            f.write('\n')
+
+        print('1x{}: Wrote component {}'.format(i, cmp_uuid))
+
+
 if __name__ == '__main__':
     def _make(dirpath: str):
         if not (path.exists(dirpath) and path.isdir(dirpath)):
@@ -345,6 +412,26 @@ if __name__ == '__main__':
     )
     generate_sym(
         dirpath='out/connectors/sym',
+        name='Pin Socket',
+        name_lower='female pin socket',
+        kind='pinsocket',
+        cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
+        keywords='pin socket, female header',
+        min_pads=1,
+        max_pads=40,
+    )
+    generate_cmp(
+        dirpath='out/connectors/cmp',
+        name='Pin Header',
+        name_lower='male pin header',
+        kind='pinheader',
+        cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
+        keywords='pin header, male header',
+        min_pads=1,
+        max_pads=40,
+    )
+    generate_cmp(
+        dirpath='out/connectors/cmp',
         name='Pin Socket',
         name_lower='female pin socket',
         kind='pinsocket',
