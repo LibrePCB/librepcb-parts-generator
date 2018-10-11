@@ -14,7 +14,7 @@ Generate pin header and socket packages.
 """
 from datetime import datetime
 from os import path, makedirs
-from typing import Callable, List, Tuple, Optional
+from typing import Callable, List, Tuple
 from uuid import uuid4
 
 import common
@@ -84,7 +84,7 @@ def generate_pkg(
     name: str,
     name_lower: str,
     kind: str,
-    pkgcat: Optional[str],
+    pkgcat: str,
     keywords: str,
     min_pads: int,
     max_pads: int,
@@ -106,8 +106,7 @@ def generate_pkg(
         lines.append(' (version "0.1")')
         lines.append(' (created {})'.format(now()))
         lines.append(' (deprecated false)')
-        if pkgcat is not None:
-            lines.append(' (category {})'.format(pkgcat))
+        lines.append(' (category {})'.format(pkgcat))
         pad_uuids = [uuid(kind, 'pad', i, str(p)) for p in range(i)]
         for j in range(1, i + 1):
             lines.append(' (pad {} (name "{}"))'.format(pad_uuids[j - 1], j))
@@ -359,7 +358,7 @@ if __name__ == '__main__':
         name='Pin Socket 2.54mm',
         name_lower='female pin socket',
         kind='pinsocket',
-        pkgcat=None,
+        pkgcat='6183d171-e810-475a-a568-2a270aff8f5e',
         keywords='pin socket, female header, tht',
         min_pads=1,
         max_pads=40,
@@ -371,7 +370,7 @@ if __name__ == '__main__':
         name='Pin Header 2.54mm',
         name_lower='male pin header',
         kind='pinheader',
-        pkgcat=None,
+        pkgcat='e4d3a6bf-af32-48a2-b427-5e794bed949a',
         keywords='pin header, male header, tht',
         min_pads=1,
         max_pads=40,
@@ -383,7 +382,7 @@ if __name__ == '__main__':
         name='Soldered Wire Connector',
         name_lower='soldered wire connecto',
         kind='wireconnector',
-        pkgcat=None,
+        pkgcat='56a5773f-eeb4-4b39-8cb9-274f3da26f4f',
         keywords='generic connector, soldered wire connector, tht',
         min_pads=1,
         max_pads=10,
