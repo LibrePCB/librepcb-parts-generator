@@ -115,7 +115,7 @@ def generate_pkg(
 
             # General info
             lines.append('(librepcb_package {}'.format(uuid_pkg))
-            lines.append(' (name "{} 1x{} ⌀{:.1f}")'.format(name, i, drill))
+            lines.append(' (name "{} 1x{} ⌀{:.1f}mm")'.format(name, i, drill))
             lines.append(' (description "A 1x{} {} with {}mm pin spacing '
                            'and {:.1f}mm drill holes.\\n\\n'
                            'Generated with {}")'.format(i, name_lower, spacing, drill, generator))
@@ -175,7 +175,7 @@ def generate_pkg(
                 f.write('\n'.join(lines))
                 f.write('\n')
 
-            print('1x{} ⌀{:.1f}: Wrote package {}'.format(i, drill, uuid_pkg))
+            print('1x{} ⌀{:.1f}mm: Wrote package {}'.format(i, drill, uuid_pkg))
 
 
 def generate_silkscreen_female(
@@ -447,7 +447,7 @@ def generate_dev(
 
             # General info
             lines.append('(librepcb_device {}'.format(uuid_dev))
-            lines.append(' (name "{} 1x{} ⌀{:.1f}")'.format(name, i, drill))
+            lines.append(' (name "{} 1x{} ⌀{:.1f}mm")'.format(name, i, drill))
             lines.append(' (description "A 1x{} {} with {}mm pin spacing '
                            'and {:.1f}mm drill holes.\\n\\n'
                            'Generated with {}")'.format(i, name_lower, spacing, drill, generator))
@@ -472,7 +472,7 @@ def generate_dev(
                 f.write('\n'.join(lines))
                 f.write('\n')
 
-            print('1x{} ⌀{:.1f}: Wrote device {}'.format(i, drill, uuid_dev))
+            print('1x{} ⌀{:.1f}mm: Wrote device {}'.format(i, drill, uuid_dev))
 
 
 if __name__ == '__main__':
