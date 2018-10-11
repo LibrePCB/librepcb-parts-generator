@@ -24,12 +24,11 @@ author = 'librepcb-parts-generator'
 
 width = 2.54
 spacing = 2.54
-pad_drill = 1.0
+pad_drills = [0.9, 1.0, 1.1]
 pad_size = (2.54, 1.27 * 1.25)
 line_width = 0.25
-footprint_text_height = 1.0
-symbol_text_height = 2.54
-decoration_size = 2.54 / 4
+pkg_text_height = 1.0
+sym_text_height = 2.54
 
 
 # Initialize UUID cache
@@ -92,73 +91,76 @@ def generate_pkg(
     generate_silkscreen: Callable[[List[str], str, int, float], None]
 ):
     for i in range(min_pads, max_pads + 1):
-        lines = []
+        for drill in pad_drills:
+            lines = []
 
-        pkg_uuid = uuid(kind, 'pkg', i)
+            drillkind = kind + '-D{:.1f}'.format(drill)
+            pkg_uuid = uuid(drillkind, 'pkg', i)
 
-        # General info
-        lines.append('(librepcb_package {}'.format(pkg_uuid))
-        lines.append(' (name "{} 1x{}")'.format(name, i))
-        lines.append(' (description "A 1x{} {} with {}mm pin spacing.\\n\\n'
-                     'Generated with {}")'.format(i, name_lower, spacing, generator))
-        lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
-        lines.append(' (author "{}")'.format(author))
-        lines.append(' (version "0.1")')
-        lines.append(' (created {})'.format(now()))
-        lines.append(' (deprecated false)')
-        lines.append(' (category {})'.format(pkgcat))
-        pad_uuids = [uuid(kind, 'pad', i, str(p)) for p in range(i)]
-        for j in range(1, i + 1):
-            lines.append(' (pad {} (name "{}"))'.format(pad_uuids[j - 1], j))
-        lines.append(' (footprint {}'.format(uuid(kind, 'footprint', i, 'default')))
-        lines.append('  (name "default")')
-        lines.append('  (description "")')
+            # General info
+            lines.append('(librepcb_package {}'.format(pkg_uuid))
+            lines.append(' (name "{} 1x{} ⌀{:.1f}")'.format(name, i, drill))
+            lines.append(' (description "A 1x{} {} with {}mm pin spacing '
+                           'and {:.1f}mm drill holes.\\n\\n'
+                           'Generated with {}")'.format(i, name_lower, spacing, drill, generator))
+            lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
+            lines.append(' (author "{}")'.format(author))
+            lines.append(' (version "0.1")')
+            lines.append(' (created {})'.format(now()))
+            lines.append(' (deprecated false)')
+            lines.append(' (category {})'.format(pkgcat))
+            pad_uuids = [uuid(drillkind, 'pad', i, str(p)) for p in range(i)]
+            for j in range(1, i + 1):
+                lines.append(' (pad {} (name "{}"))'.format(pad_uuids[j - 1], j))
+            lines.append(' (footprint {}'.format(uuid(drillkind, 'footprint', i, 'default')))
+            lines.append('  (name "default")')
+            lines.append('  (description "")')
 
-        # Pads
-        for j in range(1, i + 1):
-            y = get_y(j, i, spacing)
-            shape = 'rect' if j == 1 else 'round'
-            lines.append('  (pad {} (side tht) (shape {})'.format(pad_uuids[j - 1], shape))
-            lines.append('   (pos 0.0 {}) (rot 0.0) (size {} {}) (drill {})'.format(
-                y, pad_size[0], pad_size[1], pad_drill,
+            # Pads
+            for j in range(1, i + 1):
+                y = get_y(j, i, spacing)
+                shape = 'rect' if j == 1 else 'round'
+                lines.append('  (pad {} (side tht) (shape {})'.format(pad_uuids[j - 1], shape))
+                lines.append('   (pos 0.0 {}) (rot 0.0) (size {} {}) (drill {})'.format(
+                    y, pad_size[0], pad_size[1], drill,
+                ))
+                lines.append('  )')
+
+            # Silkscreen
+            generate_silkscreen(lines, drillkind, i, top_offset)
+
+            # Labels
+            y_max, y_min = get_rectangle_bounds(i, spacing, top_offset + 1.27)
+            text_attrs = '(height {}) (stroke_width 0.2) ' \
+                         '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
+            lines.append('  (stroke_text {} (layer top_names)'.format(uuid(drillkind, 'label-name', i)))
+            lines.append('   {}'.format(text_attrs))
+            lines.append('   (align center bottom) (pos 0.0 {}) (rot 0.0) (auto_rotate true)'.format(
+                y_max,
             ))
+            lines.append('   (mirror false) (value "{{NAME}}")')
+            lines.append('  )')
+            lines.append('  (stroke_text {} (layer top_values)'.format(uuid(drillkind, 'label-value', i)))
+            lines.append('   {}'.format(text_attrs))
+            lines.append('   (align center top) (pos 0.0 {}) (rot 0.0) (auto_rotate true)'.format(
+                y_min,
+            ))
+            lines.append('   (mirror false) (value "{{VALUE}}")')
             lines.append('  )')
 
-        # Silkscreen
-        generate_silkscreen(lines, kind, i, top_offset)
+            lines.append(' )')
+            lines.append(')')
 
-        # Labels
-        y_max, y_min = get_rectangle_bounds(i, spacing, top_offset + 1.27)
-        text_attrs = '(height {}) (stroke_width 0.2) ' \
-                     '(letter_spacing auto) (line_spacing auto)'.format(footprint_text_height)
-        lines.append('  (stroke_text {} (layer top_names)'.format(uuid(kind, 'label-name', i)))
-        lines.append('   {}'.format(text_attrs))
-        lines.append('   (align center bottom) (pos 0.0 {}) (rot 0.0) (auto_rotate true)'.format(
-            y_max,
-        ))
-        lines.append('   (mirror false) (value "{{NAME}}")')
-        lines.append('  )')
-        lines.append('  (stroke_text {} (layer top_values)'.format(uuid(kind, 'label-value', i)))
-        lines.append('   {}'.format(text_attrs))
-        lines.append('   (align center top) (pos 0.0 {}) (rot 0.0) (auto_rotate true)'.format(
-            y_min,
-        ))
-        lines.append('   (mirror false) (value "{{VALUE}}")')
-        lines.append('  )')
+            pkg_dir_path = path.join(dirpath, pkg_uuid)
+            if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
+                makedirs(pkg_dir_path)
+            with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
+                f.write('0.1\n')
+            with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
+                f.write('\n'.join(lines))
+                f.write('\n')
 
-        lines.append(' )')
-        lines.append(')')
-
-        pkg_dir_path = path.join(dirpath, pkg_uuid)
-        if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-            makedirs(pkg_dir_path)
-        with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-            f.write('0.1\n')
-        with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
-            f.write('\n'.join(lines))
-            f.write('\n')
-
-        print('1x{}: Wrote package {}'.format(i, pkg_uuid))
+            print('1x{} ⌀{:.1f}: Wrote package {}'.format(i, drill, pkg_uuid))
 
 
 def generate_silkscreen_female(
@@ -300,14 +302,14 @@ def generate_sym(
             uuid(kind, 'text-name', i)),
         )
         lines.append('  (align center bottom) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
-            symbol_text_height, y_max,
+            sym_text_height, y_max,
         ))
         lines.append(' )')
         lines.append(' (text {} (layer sym_names) (value "{{{{VALUE}}}}")'.format(
             uuid(kind, 'text-value', i)),
         )
         lines.append('  (align center top) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
-            symbol_text_height, y_min,
+            sym_text_height, y_min,
         ))
         lines.append(' )')
 
