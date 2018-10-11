@@ -418,6 +418,63 @@ def generate_cmp(
         print('1x{}: Wrote component {}'.format(i, uuid_cmp))
 
 
+def generate_dev(
+    dirpath: str,
+    name: str,
+    name_lower: str,
+    kind: str,
+    pkgcat: str,
+    keywords: str,
+    min_pads: int,
+    max_pads: int,
+):
+    category = 'dev'
+    for i in range(min_pads, max_pads + 1):
+        for drill in pad_drills:
+            lines = []
+
+            variant = '1x{}-D{:.1f}'.format(i, drill)
+            broad_variant = '1x{}'.format(i)
+
+            def _uuid(identifier):
+                return uuid(category, kind, variant, identifier)
+
+            uuid_dev = _uuid('dev')
+            uuid_cmp = uuid('cmp', kind, broad_variant, 'cmp')
+            uuid_signals = [uuid('cmp', kind, broad_variant, 'signal-{}'.format(p)) for p in range(i)]
+            uuid_pkg = uuid('pkg', kind, variant, 'pkg')
+            uuid_pads = [uuid('pkg', kind, variant, 'pad-{}'.format(p)) for p in range(i)]
+
+            # General info
+            lines.append('(librepcb_device {}'.format(uuid_dev))
+            lines.append(' (name "{} 1x{} ⌀{:.1f}")'.format(name, i, drill))
+            lines.append(' (description "A 1x{} {} with {}mm pin spacing '
+                           'and {:.1f}mm drill holes.\\n\\n'
+                           'Generated with {}")'.format(i, name_lower, spacing, drill, generator))
+            lines.append(' (keywords "connector, 1x{}, d{:.1f}, {}")'.format(i, drill, keywords))
+            lines.append(' (author "{}")'.format(author))
+            lines.append(' (version "0.1")')
+            lines.append(' (created {})'.format(now()))
+            lines.append(' (deprecated false)')
+            lines.append(' (category {})'.format(pkgcat))
+            lines.append(' (component {})'.format(uuid_cmp))
+            lines.append(' (package {})'.format(uuid_pkg))
+            for j in range(1, i + 1):
+                lines.append(' (pad {} (signal {}))'.format(uuid_pads[j - 1], uuid_signals[j - 1]))
+            lines.append(')')
+
+            dev_dir_path = path.join(dirpath, uuid_dev)
+            if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
+                makedirs(dev_dir_path)
+            with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
+                f.write('0.1\n')
+            with open(path.join(dev_dir_path, 'device.lp'), 'w') as f:
+                f.write('\n'.join(lines))
+                f.write('\n')
+
+            print('1x{} ⌀{:.1f}: Wrote device {}'.format(i, drill, uuid_dev))
+
+
 if __name__ == '__main__':
     def _make(dirpath: str):
         if not (path.exists(dirpath) and path.isdir(dirpath)):
@@ -493,7 +550,7 @@ if __name__ == '__main__':
     generate_pkg(
         dirpath='out/connectors/pkg',
         name='Soldered Wire Connector',
-        name_lower='soldered wire connecto',
+        name_lower='soldered wire connector',
         kind='wireconnector',
         pkgcat='56a5773f-eeb4-4b39-8cb9-274f3da26f4f',
         keywords='generic connector, soldered wire connector, tht',
@@ -502,4 +559,25 @@ if __name__ == '__main__':
         top_offset=1.5,
         generate_silkscreen=generate_silkscreen_female,
     )
+    generate_dev(
+        dirpath='out/connectors/dev',
+        name='Generic Pin Socket 2.54mm',
+        name_lower='generic female pin socket',
+        kind='pinsocket',
+        pkgcat='6183d171-e810-475a-a568-2a270aff8f5e',
+        keywords='pin socket, female header, tht, generic',
+        min_pads=1,
+        max_pads=40,
+    )
+    generate_dev(
+        dirpath='out/connectors/dev',
+        name='Generic Pin Header 2.54mm',
+        name_lower='generic male pin header',
+        kind='pinheader',
+        pkgcat='e4d3a6bf-af32-48a2-b427-5e794bed949a',
+        keywords='pin header, male header, tht, generic',
+        min_pads=1,
+        max_pads=40,
+    )
+    # TODO: Generate sym, cmp and dev for soldered wire connector
     common.save_cache(uuid_cache_file, uuid_cache)
