@@ -296,18 +296,18 @@ def generate_sym(
                 lines.append(' )')
 
         # Text
-        y_max, y_min = get_rectangle_bounds(i, spacing, spacing * 2)
+        y_max, y_min = get_rectangle_bounds(i, spacing, spacing)
         lines.append(' (text {} (layer sym_names) (value "{{{{NAME}}}}")'.format(
             uuid(kind, 'text-name', i)),
         )
-        lines.append('  (align center center) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
+        lines.append('  (align center bottom) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
             symbol_text_height, y_max,
         ))
         lines.append(' )')
         lines.append(' (text {} (layer sym_names) (value "{{{{VALUE}}}}")'.format(
             uuid(kind, 'text-value', i)),
         )
-        lines.append('  (align center center) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
+        lines.append('  (align center top) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
             symbol_text_height, y_min,
         ))
         lines.append(' )')
