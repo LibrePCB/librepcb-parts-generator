@@ -28,6 +28,7 @@ pad_size = (2.54, 1.27 * 1.25)
 line_width = 0.25
 footprint_text_height = 1.0
 symbol_text_height = 2.54
+decoration_size = 2.54 / 4
 
 
 # Initialize UUID cache
@@ -239,7 +240,7 @@ def generate_sym(
         pin_uuids = [uuid(kind, 'pin', i, str(p)) for p in range(i)]
         for j in range(1, i + 1):
             lines.append(' (pin {} (name "{}")'.format(pin_uuids[j - 1], j))
-            lines.append('  (position 5.08 {}) (rotation 180.0) (length 2.54)'.format(
+            lines.append('  (position 5.08 {}) (rotation 180.0) (length 3.81)'.format(
                 get_y(j, i, spacing)
             ))
             lines.append(' )')
@@ -256,6 +257,42 @@ def generate_sym(
         lines.append('  (vertex (pos -{} {}) (angle 0.0))'.format(spacing, y_min))
         lines.append('  (vertex (pos -{} {}) (angle 0.0))'.format(spacing, y_max))
         lines.append(' )')
+
+        # Decorations
+        if kind == 'pinheader':
+            # Headers: Small rectangle
+            for j in range(1, i + 1):
+                y = get_y(j, i, spacing)
+                dx = spacing / 8 * 1.5
+                dy = spacing / 8 / 1.5
+                lines.append(' (polygon {} (layer sym_outlines)'.format(
+                    uuid(kind, 'polygon', i, 'sym_decoration')
+                ))
+                lines.append('  (width {}) (fill true) (grab true)'.format(line_width))
+                vertex = '  (vertex (pos {} {}) (angle 0.0))'
+                lines.append(vertex.format(spacing / 2 - dx, y + dy))
+                lines.append(vertex.format(spacing / 2 + dx, y + dy))
+                lines.append(vertex.format(spacing / 2 + dx, y - dy))
+                lines.append(vertex.format(spacing / 2 - dx, y - dy))
+                lines.append(vertex.format(spacing / 2 - dx, y + dy))
+                lines.append(' )')
+        elif kind == 'pinsocket':
+            # Sockets: Small semicircle
+            for j in range(1, i + 1):
+                y = get_y(j, i, spacing)
+                d = spacing / 4 * 0.75
+                w = line_width * 0.75
+                lines.append(' (polygon {} (layer sym_outlines)'.format(
+                    uuid(kind, 'polygon', i, 'sym_decoration')
+                ))
+                lines.append('  (width {}) (fill false) (grab false) '.format(w))
+                lines.append('  (vertex (pos {} {}) (angle 135.0))'.format(
+                    spacing / 2 + d * 0.5 - d - w, y - d),
+                )
+                lines.append('  (vertex (pos {} {}) (angle 0.0))'.format(
+                    spacing / 2 + d * 0.5 - d - w, y + d)
+                )
+                lines.append(' )')
 
         # Text
         y_max, y_min = get_rectangle_bounds(i, spacing, spacing * 2)
