@@ -20,6 +20,7 @@ from uuid import uuid4
 import common
 
 generator = 'librepcb-parts-generator (generate_connectors.py)'
+author = 'librepcb-parts-generator'
 
 width = 2.54
 spacing = 2.54
@@ -101,7 +102,7 @@ def generate_pkg(
         lines.append(' (description "A 1x{} {} with {}mm pin spacing.\\n\\n'
                      'Generated with {}")'.format(i, name_lower, spacing, generator))
         lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
-        lines.append(' (author "LibrePCB")')
+        lines.append(' (author "{}")'.format(author))
         lines.append(' (version "0.1")')
         lines.append(' (created {})'.format(now()))
         lines.append(' (deprecated false)')
@@ -232,7 +233,7 @@ def generate_sym(
         lines.append(' (description "A 1x{} {}.\\n\\n'
                      'Generated with {}")'.format(i, name_lower, generator))
         lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
-        lines.append(' (author "LibrePCB")')
+        lines.append(' (author "{}")'.format(author))
         lines.append(' (version "0.1")')
         lines.append(' (created {})'.format(now()))
         lines.append(' (deprecated false)')
