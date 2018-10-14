@@ -43,7 +43,7 @@ def now() -> str:
     """
     Return current timestamp as string.
     """
-    return datetime.utcnow().isoformat() + 'Z'
+    return datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
 
 
 def uuid(category: str, kind: str, variant: str, identifier: str) -> str:
