@@ -46,6 +46,18 @@ def now() -> str:
     return datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
 
 
+def n(number: float) -> str:
+    """
+    Format a float according to LibrePCB normalization rules.
+    """
+    formatted = '{:.3f}'.format(number)
+    if formatted[-1] == '0':
+        if formatted[-2] == '0':
+            return formatted[:-2]
+        return formatted[:-1]
+    return formatted
+
+
 def uuid(category: str, kind: str, variant: str, identifier: str) -> str:
     """
     Return a uuid for the specified pin.
@@ -159,14 +171,14 @@ def generate_pkg(
             lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
             lines.append('   {}'.format(text_attrs))
             lines.append('   (align center bottom) (pos 0.0 {}) (rot 0.0) (auto_rotate true)'.format(
-                y_max,
+                n(y_max),
             ))
             lines.append('   (mirror false) (value "{{NAME}}")')
             lines.append('  )')
             lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
             lines.append('   {}'.format(text_attrs))
             lines.append('   (align center top) (pos 0.0 {}) (rot 0.0) (auto_rotate true)'.format(
-                y_min,
+                n(y_min),
             ))
             lines.append('   (mirror false) (value "{{VALUE}}")')
             lines.append('  )')
@@ -199,11 +211,11 @@ def generate_silkscreen_female(
     lines.append('  (polygon {} (layer top_placement)'.format(uuid_polygon))
     lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
     y_max, y_min = get_rectangle_bounds(pin_count, spacing, top_offset)
-    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(y_max))
-    lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(y_max))
-    lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(y_min))
-    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(y_min))
-    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(y_max))
+    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(n(y_max)))
+    lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(n(y_max)))
+    lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(n(y_min)))
+    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(n(y_min)))
+    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(n(y_max)))
     lines.append('  )')
 
 
@@ -223,20 +235,20 @@ def generate_silkscreen_male(
     # Down on the right
     for pin in range(1, pin_count + 1):
         y = get_y(pin, pin_count, spacing)
-        lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(y + 1))
-        lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(y - 1))
-        lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(y - 1.27))
+        lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(n(y + 1)))
+        lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(n(y - 1)))
+        lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(n(y - 1.27)))
     # Up on the left
     for pin in range(pin_count, 0, -1):
         y = get_y(pin, pin_count, spacing)
-        lines.append('   (vertex (pos -1.0 {}) (angle 0.0))'.format(y - 1.27))
-        lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(y - 1))
-        lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(y + 1))
+        lines.append('   (vertex (pos -1.0 {}) (angle 0.0))'.format(n(y - 1.27)))
+        lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(n(y - 1)))
+        lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(n(y + 1)))
     # Back to start
     top_y = get_y(1, pin_count, spacing) + spacing / 2
-    lines.append('   (vertex (pos -1.0 {}) (angle 0.0))'.format(top_y))
-    lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(top_y))
-    lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(top_y - 0.27))
+    lines.append('   (vertex (pos -1.0 {}) (angle 0.0))'.format(n(top_y)))
+    lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(n(top_y)))
+    lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(n(top_y - 0.27)))
     lines.append('  )')
 
 
