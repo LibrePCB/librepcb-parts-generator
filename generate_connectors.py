@@ -20,7 +20,6 @@ from uuid import uuid4
 import common
 
 generator = 'librepcb-parts-generator (generate_connectors.py)'
-author = 'librepcb-parts-generator'
 
 width = 2.54
 spacing = 2.54
@@ -87,6 +86,7 @@ def get_rectangle_bounds(pin_count: int, spacing: float, top_offset: float) -> T
 
 def generate_pkg(
     dirpath: str,
+    author: str,
     name: str,
     name_lower: str,
     kind: str,
@@ -234,6 +234,7 @@ def generate_silkscreen_male(
 
 def generate_sym(
     dirpath: str,
+    author: str,
     name: str,
     name_lower: str,
     kind: str,
@@ -348,6 +349,7 @@ def generate_sym(
 
 def generate_cmp(
     dirpath: str,
+    author: str,
     name: str,
     name_lower: str,
     kind: str,
@@ -420,6 +422,7 @@ def generate_cmp(
 
 def generate_dev(
     dirpath: str,
+    author: str,
     name: str,
     name_lower: str,
     kind: str,
@@ -485,6 +488,7 @@ if __name__ == '__main__':
     _make('out/connectors/sym')
     generate_sym(
         dirpath='out/connectors/sym',
+        author='Danilo B.',
         name='Pin Header',
         name_lower='male pin header',
         kind='pinheader',
@@ -495,6 +499,7 @@ if __name__ == '__main__':
     )
     generate_sym(
         dirpath='out/connectors/sym',
+        author='Danilo B.',
         name='Pin Socket',
         name_lower='female pin socket',
         kind='pinsocket',
@@ -505,6 +510,7 @@ if __name__ == '__main__':
     )
     generate_cmp(
         dirpath='out/connectors/cmp',
+        author='Danilo B.',
         name='Pin Header',
         name_lower='male pin header',
         kind='pinheader',
@@ -515,6 +521,7 @@ if __name__ == '__main__':
     )
     generate_cmp(
         dirpath='out/connectors/cmp',
+        author='Danilo B.',
         name='Pin Socket',
         name_lower='female pin socket',
         kind='pinsocket',
@@ -525,6 +532,7 @@ if __name__ == '__main__':
     )
     generate_pkg(
         dirpath='out/connectors/pkg',
+        author='Danilo B.',
         name='Pin Socket 2.54mm',
         name_lower='female pin socket',
         kind='pinsocket',
@@ -537,6 +545,7 @@ if __name__ == '__main__':
     )
     generate_pkg(
         dirpath='out/connectors/pkg',
+        author='Danilo B.',
         name='Pin Header 2.54mm',
         name_lower='male pin header',
         kind='pinheader',
@@ -549,6 +558,7 @@ if __name__ == '__main__':
     )
     generate_pkg(
         dirpath='out/connectors/pkg',
+        author='Danilo B.',
         name='Soldered Wire Connector',
         name_lower='soldered wire connector',
         kind='wireconnector',
@@ -561,6 +571,7 @@ if __name__ == '__main__':
     )
     generate_dev(
         dirpath='out/connectors/dev',
+        author='Danilo B.',
         name='Generic Pin Socket 2.54mm',
         name_lower='generic female pin socket',
         kind='pinsocket',
@@ -571,6 +582,7 @@ if __name__ == '__main__':
     )
     generate_dev(
         dirpath='out/connectors/dev',
+        author='Danilo B.',
         name='Generic Pin Header 2.54mm',
         name_lower='generic male pin header',
         kind='pinheader',
