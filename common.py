@@ -3,6 +3,7 @@ Common functionality for generator scripts.
 """
 import collections
 import csv
+from datetime import datetime
 
 
 def init_cache(uuid_cache_file: str) -> collections.OrderedDict:
@@ -25,3 +26,22 @@ def save_cache(uuid_cache_file: str, uuid_cache: collections.OrderedDict) -> Non
         for k, v in uuid_cache.items():
             writer.writerow([k, v])
     print('Done, cached {} UUIDs'.format(len(uuid_cache)))
+
+
+def now() -> str:
+    """
+    Return current timestamp as string.
+    """
+    return datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
+
+
+def format_float(number: float) -> str:
+    """
+    Format a float according to LibrePCB normalization rules.
+    """
+    formatted = '{:.3f}'.format(number)
+    if formatted[-1] == '0':
+        if formatted[-2] == '0':
+            return formatted[:-2]
+        return formatted[:-1]
+    return formatted
