@@ -5,16 +5,16 @@ Generate pin header and socket packages.
              v   v
              +---+ <-+
              |   |   | top
-          +->| O | <-+
+          +->| O | <!-- <-+
   spacing |  |(…)|
-          +->| O |
+          +-> -->| O |
              |   |
              +---+
 
 """
 from datetime import datetime
 from os import path, makedirs
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Iterable
 from uuid import uuid4
 
 import common
@@ -23,11 +23,15 @@ generator = 'librepcb-parts-generator (generate_connectors.py)'
 
 width = 2.54
 spacing = 2.54
-pad_drills = [0.9, 1.0, 1.1]
 pad_size = (2.54, 1.27 * 1.25)
 line_width = 0.25
 pkg_text_height = 1.0
 sym_text_height = 2.54
+
+
+KIND_HEADER = 'pinheader'
+KIND_SOCKET = 'pinsocket'
+KIND_WIRE_CONNECTOR = 'wireconnector'
 
 
 # Initialize UUID cache
@@ -95,6 +99,7 @@ def generate_pkg(
     min_pads: int,
     max_pads: int,
     top_offset: float,
+    pad_drills: Iterable[float],
     generate_silkscreen: Callable[[List[str], str, str, str, int, float], None]
 ):
     category = 'pkg'
@@ -175,7 +180,7 @@ def generate_pkg(
                 f.write('\n'.join(lines))
                 f.write('\n')
 
-            print('1x{} ⌀{:.1f}mm: Wrote package {}'.format(i, drill, uuid_pkg))
+            print('1x{} {} ⌀{:.1f}mm: Wrote package {}'.format(i, kind, drill, uuid_pkg))
 
 
 def generate_silkscreen_female(
@@ -289,7 +294,7 @@ def generate_sym(
         lines.append(' )')
 
         # Decorations
-        if kind == 'pinheader':
+        if kind == KIND_HEADER:
             # Headers: Small rectangle
             for j in range(1, i + 1):
                 y = get_y(j, i, spacing)
@@ -304,7 +309,7 @@ def generate_sym(
                 lines.append(vertex.format(spacing / 2 - dx, y - dy))
                 lines.append(vertex.format(spacing / 2 - dx, y + dy))
                 lines.append(' )')
-        elif kind == 'pinsocket':
+        elif kind == KIND_SOCKET:
             # Sockets: Small semicircle
             for j in range(1, i + 1):
                 y = get_y(j, i, spacing)
@@ -344,7 +349,7 @@ def generate_sym(
             f.write('\n'.join(lines))
             f.write('\n')
 
-        print('1x{}: Wrote symbol {}'.format(i, uuid_sym))
+        print('1x{} {}: Wrote symbol {}'.format(i, kind, uuid_sym))
 
 
 def generate_cmp(
@@ -417,7 +422,7 @@ def generate_cmp(
             f.write('\n'.join(lines))
             f.write('\n')
 
-        print('1x{}: Wrote component {}'.format(i, uuid_cmp))
+        print('1x{} {}: Wrote component {}'.format(i, kind, uuid_cmp))
 
 
 def generate_dev(
@@ -430,6 +435,7 @@ def generate_dev(
     keywords: str,
     min_pads: int,
     max_pads: int,
+    pad_drills: Iterable[float],
 ):
     category = 'dev'
     for i in range(min_pads, max_pads + 1):
@@ -475,7 +481,7 @@ def generate_dev(
                 f.write('\n'.join(lines))
                 f.write('\n')
 
-            print('1x{} ⌀{:.1f}mm: Wrote device {}'.format(i, drill, uuid_dev))
+            print('1x{} {} ⌀{:.1f}mm: Wrote device {}'.format(i, kind, drill, uuid_dev))
 
 
 if __name__ == '__main__':
@@ -491,7 +497,7 @@ if __name__ == '__main__':
         author='Danilo B.',
         name='Pin Header',
         name_lower='male pin header',
-        kind='pinheader',
+        kind=KIND_HEADER,
         cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
         keywords='pin header, male header',
         min_pads=1,
@@ -502,9 +508,20 @@ if __name__ == '__main__':
         author='Danilo B.',
         name='Pin Socket',
         name_lower='female pin socket',
-        kind='pinsocket',
+        kind=KIND_SOCKET,
         cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
         keywords='pin socket, female header',
+        min_pads=1,
+        max_pads=40,
+    )
+    generate_sym(
+        dirpath='out/connectors/sym',
+        author='Danilo B.',
+        name='Soldered Wire Connector',
+        name_lower='soldered wire connector',
+        kind=KIND_WIRE_CONNECTOR,
+        cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
+        keywords='connector, soldering, generic',
         min_pads=1,
         max_pads=40,
     )
@@ -513,7 +530,7 @@ if __name__ == '__main__':
         author='Danilo B.',
         name='Pin Header',
         name_lower='male pin header',
-        kind='pinheader',
+        kind=KIND_HEADER,
         cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
         keywords='pin header, male header',
         min_pads=1,
@@ -524,9 +541,20 @@ if __name__ == '__main__':
         author='Danilo B.',
         name='Pin Socket',
         name_lower='female pin socket',
-        kind='pinsocket',
+        kind=KIND_SOCKET,
         cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
         keywords='pin socket, female header',
+        min_pads=1,
+        max_pads=40,
+    )
+    generate_cmp(
+        dirpath='out/connectors/cmp',
+        author='Danilo B.',
+        name='Soldered Wire Connector',
+        name_lower='soldered wire connector',
+        kind=KIND_WIRE_CONNECTOR,
+        cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
+        keywords='connector, soldering, generic',
         min_pads=1,
         max_pads=40,
     )
@@ -535,12 +563,13 @@ if __name__ == '__main__':
         author='Danilo B.',
         name='Pin Socket 2.54mm',
         name_lower='female pin socket',
-        kind='pinsocket',
+        kind=KIND_SOCKET,
         pkgcat='6183d171-e810-475a-a568-2a270aff8f5e',
         keywords='pin socket, female header, tht',
         min_pads=1,
         max_pads=40,
         top_offset=1.5,
+        pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_female,
     )
     generate_pkg(
@@ -548,12 +577,13 @@ if __name__ == '__main__':
         author='Danilo B.',
         name='Pin Header 2.54mm',
         name_lower='male pin header',
-        kind='pinheader',
+        kind=KIND_HEADER,
         pkgcat='e4d3a6bf-af32-48a2-b427-5e794bed949a',
         keywords='pin header, male header, tht',
         min_pads=1,
         max_pads=40,
         top_offset=1.27,
+        pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_male,
     )
     generate_pkg(
@@ -561,12 +591,13 @@ if __name__ == '__main__':
         author='Danilo B.',
         name='Soldered Wire Connector',
         name_lower='soldered wire connector',
-        kind='wireconnector',
+        kind=KIND_WIRE_CONNECTOR,
         pkgcat='56a5773f-eeb4-4b39-8cb9-274f3da26f4f',
-        keywords='generic connector, soldered wire connector, tht',
+        keywords='connector, soldering, generic',
         min_pads=1,
-        max_pads=10,
+        max_pads=40,
         top_offset=1.5,
+        pad_drills=[1.0],
         generate_silkscreen=generate_silkscreen_female,
     )
     generate_dev(
@@ -574,22 +605,36 @@ if __name__ == '__main__':
         author='Danilo B.',
         name='Generic Pin Socket 2.54mm',
         name_lower='generic female pin socket',
-        kind='pinsocket',
+        kind=KIND_SOCKET,
         pkgcat='6183d171-e810-475a-a568-2a270aff8f5e',
         keywords='pin socket, female header, tht, generic',
         min_pads=1,
         max_pads=40,
+        pad_drills=[0.9, 1.0, 1.1],
     )
     generate_dev(
         dirpath='out/connectors/dev',
         author='Danilo B.',
         name='Generic Pin Header 2.54mm',
         name_lower='generic male pin header',
-        kind='pinheader',
+        kind=KIND_HEADER,
         pkgcat='e4d3a6bf-af32-48a2-b427-5e794bed949a',
         keywords='pin header, male header, tht, generic',
         min_pads=1,
         max_pads=40,
+        pad_drills=[0.9, 1.0, 1.1],
+    )
+    generate_dev(
+        dirpath='out/connectors/dev',
+        author='Danilo B.',
+        name='Soldered Wire Connector 2.54mm',
+        name_lower='generic soldered wire connector',
+        kind=KIND_WIRE_CONNECTOR,
+        pkgcat='56a5773f-eeb4-4b39-8cb9-274f3da26f4f',
+        keywords='connector, soldering, generic',
+        min_pads=1,
+        max_pads=40,
+        pad_drills=[1.0],
     )
     # TODO: Generate sym, cmp and dev for soldered wire connector
     common.save_cache(uuid_cache_file, uuid_cache)
