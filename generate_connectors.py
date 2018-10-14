@@ -75,7 +75,10 @@ def get_y(pin_number: int, pin_count: int, spacing: float):
 
     """
     mid = (pin_count + 1) // 2
-    return -round(pin_number * spacing - mid * spacing, 2)
+    y = -round(pin_number * spacing - mid * spacing, 2)
+    if y == -0.0:  # Returns true for 0.0 too, but that doesn't matter
+        return 0.0
+    return y
 
 
 def get_rectangle_bounds(pin_count: int, spacing: float, top_offset: float) -> Tuple[float, float]:
