@@ -137,7 +137,7 @@ def generate_pkg(
                 y = get_y(j, i, spacing)
                 shape = 'rect' if j == 1 else 'round'
                 lines.append('  (pad {} (side tht) (shape {})'.format(uuid_pads[j - 1], shape))
-                lines.append('   (pos 0.0 {}) (rot 0.0) (size {} {}) (drill {})'.format(
+                lines.append('   (position 0.0 {}) (rotation 0.0) (size {} {}) (drill {})'.format(
                     y, pad_size[0], pad_size[1], drill,
                 ))
                 lines.append('  )')
@@ -151,17 +151,17 @@ def generate_pkg(
                          '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
             lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
             lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center bottom) (pos 0.0 {}) (rot 0.0) (auto_rotate true)'.format(
+            lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(
                 ff(y_max),
             ))
-            lines.append('   (mirror false) (value "{{NAME}}")')
+            lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
             lines.append('  )')
             lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
             lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center top) (pos 0.0 {}) (rot 0.0) (auto_rotate true)'.format(
+            lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(
                 ff(y_min),
             ))
-            lines.append('   (mirror false) (value "{{VALUE}}")')
+            lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
             lines.append('  )')
 
             lines.append(' )')
@@ -190,13 +190,13 @@ def generate_silkscreen_female(
     uuid_polygon = uuid(category, kind, variant, 'polygon-contour')
 
     lines.append('  (polygon {} (layer top_placement)'.format(uuid_polygon))
-    lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
+    lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
     y_max, y_min = get_rectangle_bounds(pin_count, spacing, top_offset)
-    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(ff(y_max)))
-    lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(ff(y_max)))
-    lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(ff(y_min)))
-    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(ff(y_min)))
-    lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(ff(y_max)))
+    lines.append('   (vertex (position -1.27 {}) (angle 0.0))'.format(ff(y_max)))
+    lines.append('   (vertex (position 1.27 {}) (angle 0.0))'.format(ff(y_max)))
+    lines.append('   (vertex (position 1.27 {}) (angle 0.0))'.format(ff(y_min)))
+    lines.append('   (vertex (position -1.27 {}) (angle 0.0))'.format(ff(y_min)))
+    lines.append('   (vertex (position -1.27 {}) (angle 0.0))'.format(ff(y_max)))
     lines.append('  )')
 
 
@@ -212,24 +212,24 @@ def generate_silkscreen_male(
 
     # Start in top right corner, go around the pads clockwise
     lines.append('  (polygon {} (layer top_placement)'.format(uuid_polygon))
-    lines.append('   (width {}) (fill false) (grab true)'.format(line_width))
+    lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
     # Down on the right
     for pin in range(1, pin_count + 1):
         y = get_y(pin, pin_count, spacing)
-        lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(ff(y + 1)))
-        lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(ff(y - 1)))
-        lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(ff(y - 1.27)))
+        lines.append('   (vertex (position 1.27 {}) (angle 0.0))'.format(ff(y + 1)))
+        lines.append('   (vertex (position 1.27 {}) (angle 0.0))'.format(ff(y - 1)))
+        lines.append('   (vertex (position 1.0 {}) (angle 0.0))'.format(ff(y - 1.27)))
     # Up on the left
     for pin in range(pin_count, 0, -1):
         y = get_y(pin, pin_count, spacing)
-        lines.append('   (vertex (pos -1.0 {}) (angle 0.0))'.format(ff(y - 1.27)))
-        lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(ff(y - 1)))
-        lines.append('   (vertex (pos -1.27 {}) (angle 0.0))'.format(ff(y + 1)))
+        lines.append('   (vertex (position -1.0 {}) (angle 0.0))'.format(ff(y - 1.27)))
+        lines.append('   (vertex (position -1.27 {}) (angle 0.0))'.format(ff(y - 1)))
+        lines.append('   (vertex (position -1.27 {}) (angle 0.0))'.format(ff(y + 1)))
     # Back to start
     top_y = get_y(1, pin_count, spacing) + spacing / 2
-    lines.append('   (vertex (pos -1.0 {}) (angle 0.0))'.format(ff(top_y)))
-    lines.append('   (vertex (pos 1.0 {}) (angle 0.0))'.format(ff(top_y)))
-    lines.append('   (vertex (pos 1.27 {}) (angle 0.0))'.format(ff(top_y - 0.27)))
+    lines.append('   (vertex (position -1.0 {}) (angle 0.0))'.format(ff(top_y)))
+    lines.append('   (vertex (position 1.0 {}) (angle 0.0))'.format(ff(top_y)))
+    lines.append('   (vertex (position 1.27 {}) (angle 0.0))'.format(ff(top_y - 0.27)))
     lines.append('  )')
 
 
@@ -281,12 +281,12 @@ def generate_sym(
         # Polygons
         y_max, y_min = get_rectangle_bounds(i, spacing, spacing)
         lines.append(' (polygon {} (layer sym_outlines)'.format(uuid_polygon))
-        lines.append('  (width {}) (fill false) (grab true)'.format(line_width))
-        lines.append('  (vertex (pos -{} {}) (angle 0.0))'.format(spacing, y_max))
-        lines.append('  (vertex (pos {} {}) (angle 0.0))'.format(spacing, y_max))
-        lines.append('  (vertex (pos {} {}) (angle 0.0))'.format(spacing, y_min))
-        lines.append('  (vertex (pos -{} {}) (angle 0.0))'.format(spacing, y_min))
-        lines.append('  (vertex (pos -{} {}) (angle 0.0))'.format(spacing, y_max))
+        lines.append('  (width {}) (fill false) (grab_area true)'.format(line_width))
+        lines.append('  (vertex (position -{} {}) (angle 0.0))'.format(spacing, ff(y_max)))
+        lines.append('  (vertex (position {} {}) (angle 0.0))'.format(spacing, ff(y_max)))
+        lines.append('  (vertex (position {} {}) (angle 0.0))'.format(spacing, ff(y_min)))
+        lines.append('  (vertex (position -{} {}) (angle 0.0))'.format(spacing, ff(y_min)))
+        lines.append('  (vertex (position -{} {}) (angle 0.0))'.format(spacing, ff(y_max)))
         lines.append(' )')
 
         # Decorations
@@ -297,13 +297,13 @@ def generate_sym(
                 dx = spacing / 8 * 1.5
                 dy = spacing / 8 / 1.5
                 lines.append(' (polygon {} (layer sym_outlines)'.format(uuid_decoration))
-                lines.append('  (width {}) (fill true) (grab true)'.format(line_width))
-                vertex = '  (vertex (pos {} {}) (angle 0.0))'
-                lines.append(vertex.format(spacing / 2 - dx, y + dy))
-                lines.append(vertex.format(spacing / 2 + dx, y + dy))
-                lines.append(vertex.format(spacing / 2 + dx, y - dy))
-                lines.append(vertex.format(spacing / 2 - dx, y - dy))
-                lines.append(vertex.format(spacing / 2 - dx, y + dy))
+                lines.append('  (width {}) (fill true) (grab_area true)'.format(line_width))
+                vertex = '  (vertex (position {} {}) (angle 0.0))'
+                lines.append(vertex.format(ff(spacing / 2 - dx), ff(y + dy)))
+                lines.append(vertex.format(ff(spacing / 2 + dx), ff(y + dy)))
+                lines.append(vertex.format(ff(spacing / 2 + dx), ff(y - dy)))
+                lines.append(vertex.format(ff(spacing / 2 - dx), ff(y - dy)))
+                lines.append(vertex.format(ff(spacing / 2 - dx), ff(y + dy)))
                 lines.append(' )')
         elif kind == KIND_SOCKET:
             # Sockets: Small semicircle
@@ -312,12 +312,12 @@ def generate_sym(
                 d = spacing / 4 * 0.75
                 w = line_width * 0.75
                 lines.append(' (polygon {} (layer sym_outlines)'.format(uuid_decoration))
-                lines.append('  (width {}) (fill false) (grab false) '.format(w))
-                lines.append('  (vertex (pos {} {}) (angle 135.0))'.format(
-                    spacing / 2 + d * 0.5 - d - w, y - d),
+                lines.append('  (width {}) (fill false) (grab_area false)'.format(w))
+                lines.append('  (vertex (position {} {}) (angle 135.0))'.format(
+                    ff(spacing / 2 + d * 0.5 - d - w), ff(y - d)),
                 )
-                lines.append('  (vertex (pos {} {}) (angle 0.0))'.format(
-                    spacing / 2 + d * 0.5 - d - w, y + d)
+                lines.append('  (vertex (position {} {}) (angle 0.0))'.format(
+                    ff(spacing / 2 + d * 0.5 - d - w), ff(y + d))
                 )
                 lines.append(' )')
 
@@ -325,12 +325,12 @@ def generate_sym(
         y_max, y_min = get_rectangle_bounds(i, spacing, spacing)
         lines.append(' (text {} (layer sym_names) (value "{{{{NAME}}}}")'.format(uuid_text_name))
         lines.append('  (align center bottom) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
-            sym_text_height, y_max,
+            ff(sym_text_height), ff(y_max),
         ))
         lines.append(' )')
         lines.append(' (text {} (layer sym_names) (value "{{{{VALUE}}}}")'.format(uuid_text_value))
         lines.append('  (align center top) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
-            sym_text_height, y_min,
+            ff(sym_text_height), ff(y_min),
         ))
         lines.append(' )')
 
