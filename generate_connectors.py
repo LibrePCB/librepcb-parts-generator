@@ -427,7 +427,7 @@ def generate_dev(
     name: str,
     name_lower: str,
     kind: str,
-    pkgcat: str,
+    cmpcat: str,
     keywords: str,
     min_pads: int,
     max_pads: int,
@@ -461,7 +461,7 @@ def generate_dev(
             lines.append(' (version "0.1")')
             lines.append(' (created {})'.format(now()))
             lines.append(' (deprecated false)')
-            lines.append(' (category {})'.format(pkgcat))
+            lines.append(' (category {})'.format(cmpcat))
             lines.append(' (component {})'.format(uuid_cmp))
             lines.append(' (package {})'.format(uuid_pkg))
             for j in range(1, i + 1):
@@ -602,7 +602,7 @@ if __name__ == '__main__':
         name='Generic Pin Socket 2.54mm',
         name_lower='generic female pin socket',
         kind=KIND_SOCKET,
-        pkgcat='6183d171-e810-475a-a568-2a270aff8f5e',
+        cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
         keywords='pin socket, female header, tht, generic',
         min_pads=1,
         max_pads=40,
@@ -614,7 +614,7 @@ if __name__ == '__main__':
         name='Generic Pin Header 2.54mm',
         name_lower='generic male pin header',
         kind=KIND_HEADER,
-        pkgcat='e4d3a6bf-af32-48a2-b427-5e794bed949a',
+        cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
         keywords='pin header, male header, tht, generic',
         min_pads=1,
         max_pads=40,
@@ -626,7 +626,7 @@ if __name__ == '__main__':
         name='Soldered Wire Connector 2.54mm',
         name_lower='generic soldered wire connector',
         kind=KIND_WIRE_CONNECTOR,
-        pkgcat='56a5773f-eeb4-4b39-8cb9-274f3da26f4f',
+        cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
         keywords='connector, soldering, generic',
         min_pads=1,
         max_pads=40,
