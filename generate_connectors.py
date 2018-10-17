@@ -367,6 +367,7 @@ def generate_cmp(
     kind: str,
     cmpcat: str,
     keywords: str,
+    default_value: str,
     min_pads: int,
     max_pads: int,
 ):
@@ -398,7 +399,7 @@ def generate_cmp(
         lines.append(' (deprecated false)')
         lines.append(' (category {})'.format(cmpcat))
         lines.append(' (schematic_only false)')
-        lines.append(' (default_value "")')
+        lines.append(' (default_value "{}")'.format(default_value))
         lines.append(' (prefix "J")')
 
         for j in range(1, i + 1):
@@ -540,6 +541,7 @@ if __name__ == '__main__':
         kind=KIND_HEADER,
         cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
         keywords='pin header, male header',
+        default_value='{{PARTNUMBER}}',
         min_pads=1,
         max_pads=40,
     )
@@ -551,6 +553,7 @@ if __name__ == '__main__':
         kind=KIND_SOCKET,
         cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
         keywords='pin socket, female header',
+        default_value='{{PARTNUMBER}}',
         min_pads=1,
         max_pads=40,
     )
@@ -562,6 +565,7 @@ if __name__ == '__main__':
         kind=KIND_WIRE_CONNECTOR,
         cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
         keywords='connector, soldering, generic',
+        default_value='',
         min_pads=1,
         max_pads=40,
     )
