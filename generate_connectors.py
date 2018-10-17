@@ -524,11 +524,11 @@ if __name__ == '__main__':
     generate_sym(
         dirpath='out/connectors/sym',
         author='Danilo B.',
-        name='Soldered Wire Connector',
-        name_lower='soldered wire connector',
+        name='Connector',
+        name_lower='connector',
         kind=KIND_WIRE_CONNECTOR,
         cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
-        keywords='connector, soldering, generic',
+        keywords='connector, generic',
         min_pads=1,
         max_pads=40,
     )
