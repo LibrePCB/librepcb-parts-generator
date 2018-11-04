@@ -188,7 +188,7 @@ def generate_pkg(
             # Silkscreen: Pin 1 dot
             pin1_dot_diameter = float(width) / 7.62
             lines.append('  (circle {} (layer top_placement)'.format(uuid_pin1_dot))
-            lines.append('   (width 0.0) (fill true) (grab_area true) '
+            lines.append('   (width 0.0) (fill true) (grab_area false) '
                 '(diameter {}) (position -{} {})'.format(
                     ff(pin1_dot_diameter),
                     ff(silkscreen_x_offset - pin1_dot_diameter),
