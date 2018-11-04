@@ -2,7 +2,7 @@
 Generate DIP packages.
 """
 from os import path, makedirs
-from typing import Callable, List, Tuple, Iterable
+from typing import Tuple, Iterable
 from uuid import uuid4
 
 from common import now, init_cache, save_cache, format_float as ff
@@ -12,7 +12,6 @@ generator = 'librepcb-parts-generator (generate_dip.py)'
 
 spacing = 2.54
 line_width = 0.25
-pad_size = (2.54, 1.27)
 drill_diameter = 0.8
 pkg_text_height = 1.0
 silkscreen_offset = 0.15
@@ -102,12 +101,6 @@ def generate_pkg(
 
         uuid_pkg = _uuid('pkg')
         uuid_pads = [_uuid('pad-{}'.format(p)) for p in range(1, pin_count + 1)]
-        uuid_footprint = _uuid('footprint-default')
-        uuid_silkscreen = _uuid('polygon-silkscreen')
-        uuid_pin1_dot = _uuid('pin1-dot-silkscreen')
-        uuid_outline = _uuid('polygon-outline')
-        uuid_text_name = _uuid('text-name')
-        uuid_text_value = _uuid('text-value')
 
         # General info
         lines.append('(librepcb_package {}'.format(uuid_pkg))
@@ -122,98 +115,112 @@ def generate_pkg(
         lines.append(' (category {})'.format(pkgcat))
         for p in range(1, pin_count + 1):
             lines.append(' (pad {} (name "{}"))'.format(uuid_pads[p - 1], p))
-        lines.append(' (footprint {}'.format(uuid_footprint))
-        lines.append('  (name "default")')
-        lines.append('  (description "")')
 
-        # Pads
-        pad_x_offset = float(width) / 2
-        for p in range(1, pin_count // 2 + 1):
-            # Down on the left
-            y = get_y(p, pin_count // 2, spacing, False)
-            shape = 'rect' if p == 1 else 'round'
-            pad_uuid = uuid_pads[p - 1]
-            lines.append('  (pad {} (side tht) (shape {})'.format(pad_uuid, shape))
-            lines.append('   (position -{} {}) (rotation 0.0) (size {} {}) (drill {})'.format(
-                pad_x_offset, y, pad_size[0], pad_size[1], drill_diameter,
+        def add_footprint_variant(key: str, name: str, pad_size: Tuple[float, float]):
+            uuid_footprint = _uuid('footprint-{}'.format(key))
+            uuid_silkscreen = _uuid('polygon-silkscreen-{}'.format(key))
+            uuid_pin1_dot = _uuid('pin1-dot-silkscreen-{}'.format(key))
+            uuid_outline = _uuid('polygon-outline-{}'.format(key))
+            uuid_text_name = _uuid('text-name-{}'.format(key))
+            uuid_text_value = _uuid('text-value-{}'.format(key))
+
+            lines.append(' (footprint {}'.format(uuid_footprint))
+            lines.append('  (name "{}")'.format(name))
+            lines.append('  (description "")')
+
+            # Pads
+            pad_x_offset = float(width) / 2
+            for p in range(1, pin_count // 2 + 1):
+                # Down on the left
+                y = get_y(p, pin_count // 2, spacing, False)
+                shape = 'rect' if p == 1 else 'round'
+                pad_uuid = uuid_pads[p - 1]
+                lines.append('  (pad {} (side tht) (shape {})'.format(pad_uuid, shape))
+                lines.append('   (position -{} {}) (rotation 0.0) (size {} {}) (drill {})'.format(
+                    pad_x_offset, y, pad_size[0], pad_size[1], drill_diameter,
+                ))
+                lines.append('  )')
+            for p in range(1, pin_count // 2 + 1):
+                # Up on the right
+                y = -get_y(p, pin_count // 2, spacing, False)
+                shape = 'round'
+                pad_uuid = uuid_pads[p + pin_count // 2 - 1]
+                lines.append('  (pad {} (side tht) (shape {})'.format(pad_uuid, shape))
+                lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill {})'.format(
+                    pad_x_offset, y, pad_size[0], pad_size[1], drill_diameter,
+                ))
+                lines.append('  )')
+
+            # Silkscreen: Rectangle
+            lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen))
+            lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
+            y_max, y_min = get_rectangle_bounds(pin_count // 2, spacing, top_offset, False)
+            silkscreen_x_offset = pad_x_offset - pad_size[0] / 2 \
+                                - silkscreen_offset - line_width / 2
+            sxo = ff(silkscreen_x_offset)  # Used for shorter lines below :)
+            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_max)))  # NW
+            lines.append('   (vertex (position -{} {}) (angle 180.0))'.format(
+                ff(silkscreen_x_offset / 3), ff(y_max),
             ))
-            lines.append('  )')
-        for p in range(1, pin_count // 2 + 1):
-            # Up on the right
-            y = -get_y(p, pin_count // 2, spacing, False)
-            shape = 'round'
-            pad_uuid = uuid_pads[p + pin_count // 2 - 1]
-            lines.append('  (pad {} (side tht) (shape {})'.format(pad_uuid, shape))
-            lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill {})'.format(
-                pad_x_offset, y, pad_size[0], pad_size[1], drill_diameter,
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
+                ff(silkscreen_x_offset / 3), ff(y_max),
             ))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(sxo, ff(y_max)))  # NE
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(sxo, ff(y_min)))  # SE
+            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_min)))  # SW
+            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_max)))  # NW
             lines.append('  )')
 
-        # Silkscreen: Rectangle
-        lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen))
-        lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
-        y_max, y_min = get_rectangle_bounds(pin_count // 2, spacing, top_offset, False)
-        silkscreen_x_offset = pad_x_offset - pad_size[0] / 2 - silkscreen_offset - line_width / 2
-        sxo = ff(silkscreen_x_offset)  # Used for shorter lines below :)
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_max)))  # NW
-        lines.append('   (vertex (position -{} {}) (angle 180.0))'.format(
-            ff(silkscreen_x_offset / 3), ff(y_max),
-        ))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
-            ff(silkscreen_x_offset / 3), ff(y_max),
-        ))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(sxo, ff(y_max)))  # NE
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(sxo, ff(y_min)))  # SE
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_min)))  # SW
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_max)))  # NW
-        lines.append('  )')
-
-        # Silkscreen: Pin 1 dot
-        pin1_dot_diameter = float(width) / 7.62
-        lines.append('  (circle {} (layer top_placement)'.format(uuid_pin1_dot))
-        lines.append('   (width 0.0) (fill true) (grab_area true) '
-            '(diameter {}) (position -{} {})'.format(
-                ff(pin1_dot_diameter),
-                ff(silkscreen_x_offset - pin1_dot_diameter),
-                ff(y_max - pin1_dot_diameter),
+            # Silkscreen: Pin 1 dot
+            pin1_dot_diameter = float(width) / 7.62
+            lines.append('  (circle {} (layer top_placement)'.format(uuid_pin1_dot))
+            lines.append('   (width 0.0) (fill true) (grab_area true) '
+                '(diameter {}) (position -{} {})'.format(
+                    ff(pin1_dot_diameter),
+                    ff(silkscreen_x_offset - pin1_dot_diameter),
+                    ff(y_max - pin1_dot_diameter),
+                )
             )
-        )
-        lines.append('  )')
+            lines.append('  )')
 
-        # Documentation
-        # TODO: The code below is almost identical to the silkscreen above, code could be reused
-        lines.append('  (polygon {} (layer top_documentation)'.format(uuid_outline))
-        lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
-        y_max, y_min = get_rectangle_bounds(pin_count // 2, spacing, top_offset, False)
-        outline_x_offset = pad_x_offset - pin_package_offset
-        oxo = ff(outline_x_offset)  # Used for shorter lines below :)
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, ff(y_max)))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, ff(y_max)))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, ff(y_min)))
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, ff(y_min)))
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, ff(y_max)))
-        lines.append('  )')
+            # Documentation
+            # TODO: The code below is almost identical to the silkscreen, code could be reused
+            lines.append('  (polygon {} (layer top_documentation)'.format(uuid_outline))
+            lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
+            y_max, y_min = get_rectangle_bounds(pin_count // 2, spacing, top_offset, False)
+            outline_x_offset = pad_x_offset - pin_package_offset
+            oxo = ff(outline_x_offset)  # Used for shorter lines below :)
+            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, ff(y_max)))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, ff(y_max)))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, ff(y_min)))
+            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, ff(y_min)))
+            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, ff(y_max)))
+            lines.append('  )')
 
-        # Labels
-        y_max, y_min = get_rectangle_bounds(pin_count // 2, spacing, top_offset + 1.27, False)
-        text_attrs = '(height {}) (stroke_width 0.2) ' \
-                     '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
-        lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
-        lines.append('   {}'.format(text_attrs))
-        lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(
-            ff(y_max),
-        ))
-        lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
-        lines.append('  )')
-        lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
-        lines.append('   {}'.format(text_attrs))
-        lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(
-            ff(y_min),
-        ))
-        lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
-        lines.append('  )')
+            # Labels
+            y_max, y_min = get_rectangle_bounds(pin_count // 2, spacing, top_offset + 1.27, False)
+            text_attrs = '(height {}) (stroke_width 0.2) ' \
+                         '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
+            lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
+            lines.append('   {}'.format(text_attrs))
+            lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(
+                ff(y_max),
+            ))
+            lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
+            lines.append('  )')
+            lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
+            lines.append('   {}'.format(text_attrs))
+            lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(
+                ff(y_min),
+            ))
+            lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
+            lines.append('  )')
 
-        lines.append(' )')
+            lines.append(' )')
+
+        add_footprint_variant('handsoldering', 'hand soldering', (2.54, 1.27))
+        add_footprint_variant('compact', 'compact', (1.6, 1.6))
+
         lines.append(')')
 
         pkg_dir_path = path.join(dirpath, uuid_pkg)
