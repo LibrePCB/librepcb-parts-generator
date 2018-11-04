@@ -39,6 +39,8 @@ def format_float(number: float) -> str:
     """
     Format a float according to LibrePCB normalization rules.
     """
+    if number == -0.0:  # Returns true for 0.0 too, but that doesn't matter
+        number = 0.0
     formatted = '{:.3f}'.format(number)
     if formatted[-1] == '0':
         if formatted[-2] == '0':
