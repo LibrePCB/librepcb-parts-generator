@@ -17,7 +17,6 @@ drill_diameter = 0.8
 pkg_text_height = 1.0
 silkscreen_offset = 0.15
 pin_package_offset = 0.762  # Distance between drill hole and the package outline
-pin1_dot_diameter = 1.2
 
 
 # Initialize UUID cache
@@ -156,20 +155,27 @@ def generate_pkg(
         y_max, y_min = get_rectangle_bounds(pin_count // 2, spacing, top_offset, False)
         silkscreen_x_offset = pad_x_offset - pad_size[0] / 2 - silkscreen_offset - line_width / 2
         sxo = ff(silkscreen_x_offset)  # Used for shorter lines below :)
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_max)))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(sxo, ff(y_max)))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(sxo, ff(y_min)))
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_min)))
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_max)))
+        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_max)))  # NW
+        lines.append('   (vertex (position -{} {}) (angle 180.0))'.format(
+            ff(silkscreen_x_offset / 3), ff(y_max),
+        ))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
+            ff(silkscreen_x_offset / 3), ff(y_max),
+        ))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(sxo, ff(y_max)))  # NE
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(sxo, ff(y_min)))  # SE
+        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_min)))  # SW
+        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_max)))  # NW
         lines.append('  )')
 
         # Silkscreen: Pin 1 dot
+        pin1_dot_diameter = float(width) / 7.62
         lines.append('  (circle {} (layer top_placement)'.format(uuid_pin1_dot))
         lines.append('   (width 0.0) (fill true) (grab_area true) '
             '(diameter {}) (position -{} {})'.format(
-                pin1_dot_diameter,
-                silkscreen_x_offset - pin1_dot_diameter,
-                y_max - pin1_dot_diameter,
+                ff(pin1_dot_diameter),
+                ff(silkscreen_x_offset - pin1_dot_diameter),
+                ff(y_max - pin1_dot_diameter),
             )
         )
         lines.append('  )')
