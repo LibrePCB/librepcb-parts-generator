@@ -104,7 +104,7 @@ def generate_pkg(
 
         # General info
         lines.append('(librepcb_package {}'.format(uuid_pkg))
-        lines.append(' (name "{}{} {}mm")'.format(name, pin_count, width))
+        lines.append(' (name "{}-{} {}mm")'.format(name, pin_count, width))
         lines.append(' (description "{}-lead {}mm wide {}\\n\\n'
                        'Generated with {}")'.format(pin_count, width, name_lower, generator))
         lines.append(' (keywords "{}")'.format(keywords))
