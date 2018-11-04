@@ -107,7 +107,7 @@ def generate_pkg(
         lines.append(' (name "{}-{} {}mm")'.format(name, pin_count, width))
         lines.append(' (description "{}-lead {}mm wide {}\\n\\n'
                        'Generated with {}")'.format(pin_count, width, name_lower, generator))
-        lines.append(' (keywords "{}")'.format(keywords))
+        lines.append(' (keywords "dip{},pdip{},{}")'.format(pin_count, pin_count, keywords))
         lines.append(' (author "{}")'.format(author))
         lines.append(' (version "0.1")')
         lines.append(' (created {})'.format(now()))
