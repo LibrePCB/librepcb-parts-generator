@@ -136,8 +136,8 @@ def generate_pkg(
                 shape = 'rect' if p == 1 else 'round'
                 pad_uuid = uuid_pads[p - 1]
                 lines.append('  (pad {} (side tht) (shape {})'.format(pad_uuid, shape))
-                lines.append('   (position -{} {}) (rotation 0.0) (size {} {}) (drill {})'.format(
-                    pad_x_offset, y, pad_size[0], pad_size[1], drill_diameter,
+                lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill {})'.format(
+                    ff(-pad_x_offset), ff(y), pad_size[0], pad_size[1], drill_diameter,
                 ))
                 lines.append('  )')
             for p in range(1, pin_count // 2 + 1):
@@ -147,7 +147,7 @@ def generate_pkg(
                 pad_uuid = uuid_pads[p + pin_count // 2 - 1]
                 lines.append('  (pad {} (side tht) (shape {})'.format(pad_uuid, shape))
                 lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill {})'.format(
-                    pad_x_offset, y, pad_size[0], pad_size[1], drill_diameter,
+                    ff(pad_x_offset), ff(y), pad_size[0], pad_size[1], drill_diameter,
                 ))
                 lines.append('  )')
 
@@ -171,18 +171,6 @@ def generate_pkg(
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_max)))  # NW
             lines.append('  )')
 
-            # Silkscreen: Pin 1 dot
-            pin1_dot_diameter = float(width) / 7.62
-            lines.append('  (circle {} (layer top_placement)'.format(uuid_pin1_dot))
-            lines.append('   (width 0.0) (fill true) (grab_area true) '
-                '(diameter {}) (position -{} {})'.format(
-                    ff(pin1_dot_diameter),
-                    ff(silkscreen_x_offset - pin1_dot_diameter),
-                    ff(y_max - pin1_dot_diameter),
-                )
-            )
-            lines.append('  )')
-
             # Documentation
             # TODO: The code below is almost identical to the silkscreen, code could be reused
             lines.append('  (polygon {} (layer top_documentation)'.format(uuid_outline))
@@ -195,6 +183,18 @@ def generate_pkg(
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, ff(y_min)))
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, ff(y_min)))
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, ff(y_max)))
+            lines.append('  )')
+
+            # Silkscreen: Pin 1 dot
+            pin1_dot_diameter = float(width) / 7.62
+            lines.append('  (circle {} (layer top_placement)'.format(uuid_pin1_dot))
+            lines.append('   (width 0.0) (fill true) (grab_area true) '
+                '(diameter {}) (position -{} {})'.format(
+                    ff(pin1_dot_diameter),
+                    ff(silkscreen_x_offset - pin1_dot_diameter),
+                    ff(y_max - pin1_dot_diameter),
+                )
+            )
             lines.append('  )')
 
             # Labels
