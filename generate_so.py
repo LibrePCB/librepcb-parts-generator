@@ -1,5 +1,7 @@
 """
-Generate SOIC (both EIAJ and JEDEC) packages.
+Generate the following SO packages:
+
+- SOIC (both EIAJ and JEDEC)
 """
 from os import path, makedirs
 from typing import Tuple, Iterable
@@ -8,7 +10,7 @@ from uuid import uuid4
 from common import now, init_cache, save_cache, format_float as ff
 
 
-generator = 'librepcb-parts-generator (generate_soic.py)'
+generator = 'librepcb-parts-generator (generate_so.py)'
 
 spacing = 1.27
 line_width = 0.25
@@ -18,7 +20,7 @@ pin_package_offset = 0.762  # Distance between pad center and the package outlin
 
 
 # Initialize UUID cache
-uuid_cache_file = 'uuid_cache_soic.csv'
+uuid_cache_file = 'uuid_cache_so.csv'
 uuid_cache = init_cache(uuid_cache_file)
 
 
