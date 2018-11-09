@@ -87,6 +87,8 @@ def generate_pkg(
     width: str,
     package_width: float,
     total_width: float,
+    lead_width: float,
+    lead_length: float,
     lead_contact_length: float,
     pkgcat: str,
     keywords: str,
@@ -104,6 +106,7 @@ def generate_pkg(
 
         uuid_pkg = _uuid('pkg')
         uuid_pads = [_uuid('pad-{}'.format(p)) for p in range(1, pin_count + 1)]
+        uuid_leads = [_uuid('lead-{}'.format(p)) for p in range(1, pin_count + 1)]
 
         # General info
         lines.append('(librepcb_package {}'.format(uuid_pkg))
@@ -135,27 +138,48 @@ def generate_pkg(
 
             # Pads
             pad_x_offset = total_width / 2 - lead_contact_length / 2 + 0.15 + pad_extension / 2
-            for p in range(1, pin_count // 2 + 1):
-                # Down on the left
-                y = get_y(p, pin_count // 2, spacing, False)
+            for p in range(1, pin_count + 1):
+                mid = pin_count // 2
+                if p <= mid:
+                    y = get_y(p, pin_count // 2, spacing, False)
+                    pxo = ff(-pad_x_offset)
+                else:
+                    y = -get_y(p - mid, pin_count // 2, spacing, False)
+                    pxo = ff(pad_x_offset)
                 pad_uuid = uuid_pads[p - 1]
                 lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
-                lines.append('   (position -{} {}) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                    pad_x_offset, y, lead_contact_length + 0.15 + pad_extension, pad_width,
+                lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
+                    pxo, ff(y), ff(lead_contact_length + 0.15 + pad_extension), pad_width,
                 ))
                 lines.append('  )')
-            for p in range(1, pin_count // 2 + 1):
-                # Up on the right
-                y = -get_y(p, pin_count // 2, spacing, False)
-                pad_uuid = uuid_pads[p + pin_count // 2 - 1]
-                lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
-                lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                    pad_x_offset, y, lead_contact_length + 0.15 + pad_extension, pad_width,
-                ))
+
+            # Documentation: Leads
+            lead_x_offset = package_width / 2
+            for p in range(1, pin_count + 1):
+                mid = pin_count // 2
+                if p <= mid:
+                    y = get_y(p, pin_count // 2, spacing, False)
+                    lxo_min = ff(-lead_x_offset - line_width / 2)
+                    lxo_max = ff(-lead_x_offset - line_width / 2 - lead_length)
+                else:
+                    y = -get_y(p - mid, pin_count // 2, spacing, False)
+                    lxo_min = ff(lead_x_offset + line_width / 2)
+                    lxo_max = ff(lead_x_offset + line_width / 2 + lead_length)
+                y_max = ff(y + lead_width / 2)
+                y_min = ff(y - lead_width / 2)
+                lead_uuid = uuid_leads[p - 1]
+                lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid))
+                lines.append('   (width 0.0) (fill true) (grab_area false)')
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lxo_min, y_max))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lxo_max, y_max))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lxo_max, y_min))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lxo_min, y_min))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lxo_min, y_max))
                 lines.append('  )')
 
             # Silkscreen and Documentation
             outline_x_offset = package_width / 2
+            bounds = get_rectangle_bounds(pin_count // 2, spacing, top_offset, False)
             for (layer, uuid) in [
                 ('top_placement', uuid_silkscreen),
                 ('top_documentation', uuid_outline),
@@ -163,13 +187,14 @@ def generate_pkg(
                 lines.append('  (polygon {} (layer {})'.format(uuid, layer))
                 grab = 'true' if layer == 'top_documentation' else 'false'
                 lines.append('   (width {}) (fill false) (grab_area {})'.format(line_width, grab))
-                y_max, y_min = get_rectangle_bounds(pin_count // 2, spacing, top_offset, False)
+                y_max = ff(bounds[0])
+                y_min = ff(bounds[1])
                 oxo = ff(outline_x_offset)  # Used for shorter lines below :)
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, ff(y_max)))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, ff(y_max)))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, ff(y_min)))
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, ff(y_min)))
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, ff(y_max)))
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_max))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_min))
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_min))
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
                 lines.append('  )')
 
             # Silkscreen: Pin 1 dot
@@ -179,27 +204,25 @@ def generate_pkg(
                 '(diameter {}) (position -{} {})'.format(
                     ff(pin1_dot_diameter),
                     ff(outline_x_offset - pin1_dot_diameter),
-                    ff(y_max - pin1_dot_diameter),
+                    ff(bounds[0] - pin1_dot_diameter),
                 )
             )
             lines.append('  )')
 
             # Labels
-            y_max, y_min = get_rectangle_bounds(pin_count // 2, spacing, top_offset + 1.27, False)
+            bounds = get_rectangle_bounds(pin_count // 2, spacing, top_offset + 1.27, False)
+            y_max = ff(bounds[0])
+            y_min = ff(bounds[1])
             text_attrs = '(height {}) (stroke_width 0.2) ' \
                          '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
             lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
             lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(
-                ff(y_max),
-            ))
+            lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(y_max))
             lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
             lines.append('  )')
             lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
             lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(
-                ff(y_min),
-            ))
+            lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(y_min))
             lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
             lines.append('  )')
 
@@ -238,6 +261,8 @@ if __name__ == '__main__':
         width='7.62',  # 300 mil
         package_width=5.22,
         total_width=8.42,
+        lead_width=0.4,
+        lead_length=1.6,
         lead_contact_length=0.8,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
@@ -253,6 +278,8 @@ if __name__ == '__main__':
         width='6.00',
         package_width=3.9,
         total_width=6.0,
+        lead_width=0.45,
+        lead_length=1.04,
         lead_contact_length=0.835,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec',
