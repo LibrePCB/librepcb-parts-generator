@@ -47,3 +47,10 @@ def format_float(number: float) -> str:
             return formatted[:-2]
         return formatted[:-1]
     return formatted
+
+
+def format_ipc_dimension(number: float) -> str:
+    """
+    Format a dimension (e.g. lead span or height) according to IPC rules.
+    """
+    return '{:.2f}'.format(number).replace('0.', '').replace('.', '')
