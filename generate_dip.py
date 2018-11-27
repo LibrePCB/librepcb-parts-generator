@@ -2,7 +2,7 @@
 Generate DIP packages.
 """
 from os import path, makedirs
-from typing import Tuple, Iterable
+from typing import Tuple, Iterable, Optional
 from uuid import uuid4
 
 from common import now, init_cache, save_cache, format_float as ff
@@ -89,6 +89,7 @@ def generate_pkg(
     keywords: str,
     pins: Iterable[int],
     top_offset: float,
+    create_date: Optional[str],
 ):
     category = 'pkg'
     for pin_count in pins:
@@ -110,7 +111,7 @@ def generate_pkg(
         lines.append(' (keywords "dip{},pdip{},{}")'.format(pin_count, pin_count, keywords))
         lines.append(' (author "{}")'.format(author))
         lines.append(' (version "0.1")')
-        lines.append(' (created {})'.format(now()))
+        lines.append(' (created {})'.format(create_date or now()))
         lines.append(' (deprecated false)')
         lines.append(' (category {})'.format(pkgcat))
         for p in range(1, pin_count + 1):
@@ -252,6 +253,7 @@ if __name__ == '__main__':
         keywords='dip,pdip,cdip,cerdip,dual inline package',
         pins=[4, 6, 8, 14, 16, 18, 20, 24, 28],
         top_offset=0.8255,
+        create_date='2018-11-04T23:13:00Z',
     )
     generate_pkg(
         dirpath='out/dip/pkg',
@@ -263,5 +265,6 @@ if __name__ == '__main__':
         keywords='dip,pdip,cdip,cerdip,dual inline package,wide',
         pins=[24, 28, 32, 36, 40, 48, 52, 64],
         top_offset=0.8255,
+        create_date='2018-11-04T23:13:00Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
