@@ -5,7 +5,7 @@ Generate the following SO packages:
 
 """
 from os import path, makedirs
-from typing import Tuple, Iterable
+from typing import Tuple, Iterable, Optional
 from uuid import uuid4
 
 from common import now, init_cache, save_cache
@@ -95,6 +95,7 @@ def generate_pkg(
     pkgcat: str,
     keywords: str,
     top_offset: float,
+    create_date: Optional[str],
 ):
     category = 'pkg'
     for height in heights:
@@ -120,7 +121,7 @@ def generate_pkg(
             lines.append(' (keywords "soic{},so{},{}")'.format(pin_count, pin_count, keywords))
             lines.append(' (author "{}")'.format(author))
             lines.append(' (version "0.1")')
-            lines.append(' (created {})'.format(now()))
+            lines.append(' (created {})'.format(create_date or now()))
             lines.append(' (deprecated false)')
             lines.append(' (category {})'.format(pkgcat))
             for p in range(1, pin_count + 1):
@@ -270,6 +271,7 @@ if __name__ == '__main__':
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
         top_offset=1.0,
+        create_date='2018-11-10T20:32:03Z',
     )
     generate_pkg(
         dirpath='out/soic/pkg',
@@ -289,6 +291,7 @@ if __name__ == '__main__':
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
         top_offset=1.0,
+        create_date='2018-11-10T20:32:03Z',
     )
     generate_pkg(
         dirpath='out/soic/pkg',
@@ -308,5 +311,6 @@ if __name__ == '__main__':
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec',
         top_offset=0.8,
+        create_date='2018-11-10T20:32:03Z',
     )
     save_cache(uuid_cache_file, uuid_cache)

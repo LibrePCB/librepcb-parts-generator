@@ -13,7 +13,7 @@ Generate pin header and socket packages.
 
 """
 from os import path, makedirs
-from typing import Callable, List, Tuple, Iterable
+from typing import Callable, List, Tuple, Iterable, Optional
 from uuid import uuid4
 
 from common import now, init_cache, save_cache, format_float as ff
@@ -107,7 +107,8 @@ def generate_pkg(
     max_pads: int,
     top_offset: float,
     pad_drills: Iterable[float],
-    generate_silkscreen: Callable[[List[str], str, str, str, int, float], None]
+    generate_silkscreen: Callable[[List[str], str, str, str, int, float], None],
+    create_date: Optional[str],
 ):
     category = 'pkg'
     for i in range(min_pads, max_pads + 1):
@@ -134,7 +135,7 @@ def generate_pkg(
             lines.append(' (keywords "connector, 1x{}, d{:.1f}, {}")'.format(i, drill, keywords))
             lines.append(' (author "{}")'.format(author))
             lines.append(' (version "0.1")')
-            lines.append(' (created {})'.format(now()))
+            lines.append(' (created {})'.format(create_date or now()))
             lines.append(' (deprecated false)')
             lines.append(' (category {})'.format(pkgcat))
             for j in range(1, i + 1):
@@ -254,6 +255,7 @@ def generate_sym(
     keywords: str,
     min_pads: int,
     max_pads: int,
+    create_date: Optional[str],
 ):
     category = 'sym'
     for i in range(min_pads, max_pads + 1):
@@ -279,7 +281,7 @@ def generate_sym(
         lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
         lines.append(' (author "{}")'.format(author))
         lines.append(' (version "0.1")')
-        lines.append(' (created {})'.format(now()))
+        lines.append(' (created {})'.format(create_date or now()))
         lines.append(' (deprecated false)')
         lines.append(' (category {})'.format(cmpcat))
         for j in range(1, i + 1):
@@ -370,6 +372,7 @@ def generate_cmp(
     default_value: str,
     min_pads: int,
     max_pads: int,
+    create_date: Optional[str],
 ):
     category = 'cmp'
     for i in range(min_pads, max_pads + 1):
@@ -395,7 +398,7 @@ def generate_cmp(
         lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
         lines.append(' (author "{}")'.format(author))
         lines.append(' (version "0.1")')
-        lines.append(' (created {})'.format(now()))
+        lines.append(' (created {})'.format(create_date or now()))
         lines.append(' (deprecated false)')
         lines.append(' (category {})'.format(cmpcat))
         lines.append(' (schematic_only false)')
@@ -444,6 +447,7 @@ def generate_dev(
     min_pads: int,
     max_pads: int,
     pad_drills: Iterable[float],
+    create_date: Optional[str],
 ):
     category = 'dev'
     for i in range(min_pads, max_pads + 1):
@@ -471,7 +475,7 @@ def generate_dev(
             lines.append(' (keywords "connector, 1x{}, d{:.1f}, {}")'.format(i, drill, keywords))
             lines.append(' (author "{}")'.format(author))
             lines.append(' (version "0.1")')
-            lines.append(' (created {})'.format(now()))
+            lines.append(' (created {})'.format(create_date or now()))
             lines.append(' (deprecated false)')
             lines.append(' (category {})'.format(cmpcat))
             lines.append(' (component {})'.format(uuid_cmp))
@@ -510,6 +514,7 @@ if __name__ == '__main__':
         keywords='pin header, male header',
         min_pads=1,
         max_pads=40,
+        create_date='2018-10-17T19:13:41Z',
     )
     generate_sym(
         dirpath='out/connectors/sym',
@@ -521,6 +526,7 @@ if __name__ == '__main__':
         keywords='pin socket, female header',
         min_pads=1,
         max_pads=40,
+        create_date='2018-10-17T19:13:41Z',
     )
     generate_sym(
         dirpath='out/connectors/sym',
@@ -532,6 +538,7 @@ if __name__ == '__main__':
         keywords='connector, generic',
         min_pads=1,
         max_pads=40,
+        create_date='2018-10-17T19:13:41Z',
     )
     generate_cmp(
         dirpath='out/connectors/cmp',
@@ -544,6 +551,7 @@ if __name__ == '__main__':
         default_value='{{PARTNUMBER}}',
         min_pads=1,
         max_pads=40,
+        create_date='2018-10-17T19:13:41Z',
     )
     generate_cmp(
         dirpath='out/connectors/cmp',
@@ -556,6 +564,7 @@ if __name__ == '__main__':
         default_value='{{PARTNUMBER}}',
         min_pads=1,
         max_pads=40,
+        create_date='2018-10-17T19:13:41Z',
     )
     generate_cmp(
         dirpath='out/connectors/cmp',
@@ -568,6 +577,7 @@ if __name__ == '__main__':
         default_value='',
         min_pads=1,
         max_pads=40,
+        create_date='2018-10-17T19:13:41Z',
     )
     generate_pkg(
         dirpath='out/connectors/pkg',
@@ -582,6 +592,7 @@ if __name__ == '__main__':
         top_offset=1.5,
         pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_female,
+        create_date='2018-10-17T19:13:41Z',
     )
     generate_pkg(
         dirpath='out/connectors/pkg',
@@ -596,6 +607,7 @@ if __name__ == '__main__':
         top_offset=1.27,
         pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_male,
+        create_date='2018-10-17T19:13:41Z',
     )
     generate_pkg(
         dirpath='out/connectors/pkg',
@@ -610,6 +622,7 @@ if __name__ == '__main__':
         top_offset=1.5,
         pad_drills=[1.0],
         generate_silkscreen=generate_silkscreen_female,
+        create_date='2018-10-17T19:13:41Z',
     )
     generate_dev(
         dirpath='out/connectors/dev',
@@ -622,6 +635,7 @@ if __name__ == '__main__':
         min_pads=1,
         max_pads=40,
         pad_drills=[0.9, 1.0, 1.1],
+        create_date='2018-10-17T19:13:41Z',
     )
     generate_dev(
         dirpath='out/connectors/dev',
@@ -634,6 +648,7 @@ if __name__ == '__main__':
         min_pads=1,
         max_pads=40,
         pad_drills=[0.9, 1.0, 1.1],
+        create_date='2018-10-17T19:13:41Z',
     )
     generate_dev(
         dirpath='out/connectors/dev',
@@ -646,6 +661,7 @@ if __name__ == '__main__':
         min_pads=1,
         max_pads=40,
         pad_drills=[1.0],
+        create_date='2018-10-17T19:13:41Z',
     )
     # TODO: Generate sym, cmp and dev for soldered wire connector
     save_cache(uuid_cache_file, uuid_cache)
