@@ -8,3 +8,7 @@ This is a collection of scripts to generate parts for the
 Run the tests using pytest:
 
     $ pytest
+
+## License
+
+MIT, see `LICENSE` file
