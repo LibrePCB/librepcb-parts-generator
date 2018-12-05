@@ -49,7 +49,7 @@ def format_float(number: float) -> str:
     return formatted
 
 
-def format_ipc_dimension(number: float) -> str:
+def format_ipc_dimension(number: float, decimal_places: int = 2) -> str:
     """
     Format a dimension (e.g. lead span or height) according to IPC rules.
     """
