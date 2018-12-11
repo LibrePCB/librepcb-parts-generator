@@ -181,8 +181,10 @@ JEDEC_CONFIGS = [
         DfnConfig(3.0, 2.0, 0.65, 8, 0.95, 1.00, 0.30, 2.20, 0.60),    # V3020C -- no nominal exp_pad, using manual values
         DfnConfig(3.0, 2.0, 0.5, 8, 0.95, 1.00, 0.55, 2.20, 0.60),     # V3020D-1
         DfnConfig(3.0, 2.0, 0.5, 8, 0.75, 0.80, 0.55, 2.20, 0.60),     # W3020D-1
-        DfnConfig(3.0, 2.0, 0.5, 8, 0.95, 1.00, 0.40, 2.20, 0.60, no_exp=False),     # V3020D-4 -- no nominal exp_pad
-        DfnConfig(3.0, 2.0, 0.5, 8, 0.75, 0.80, 0.40, 2.20, 0.60, no_exp=False),     # W3020D-4 -- no nominal exp_pad
+        # Commented out as they coincide with the V3020D-1, only the tolerances are different,
+        # so we may need to re-add them again later.
+        # DfnConfig(3.0, 2.0, 0.5, 8, 0.95, 1.00, 0.40, 2.20, 0.60, no_exp=False),     # V3020D-4 -- no nominal exp_pad
+        # DfnConfig(3.0, 2.0, 0.5, 8, 0.75, 0.80, 0.40, 2.20, 0.60, no_exp=False),     # W3020D-4 -- no nominal exp_pad
         DfnConfig(3.0, 2.0, 0.5, 10, 0.95, 1.00, 0.55, 2.20, 0.60, print_pad=True),    # V3020D-2
         DfnConfig(3.0, 2.0, 0.5, 10, 0.75, 0.80, 0.55, 2.20, 0.60),    # W3020D-2
         DfnConfig(3.0, 2.0, 0.5, 10, 0.95, 1.00, 0.30, 2.20, 0.60, print_pad=True),    # V3020D-3

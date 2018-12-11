@@ -2,6 +2,7 @@
 Generate DFN packages
 
 """
+import numpy as np
 from os import path, makedirs
 from uuid import uuid4
 
@@ -172,10 +173,9 @@ def generate_pkg(
             lines.append('  )')
 
             # Measure clearance pad-exposed pad
-            clearance = abs(pad_pos_x) - (pad_length / 2) - (config.exposed_width / 2)
-            if clearance < MIN_CLEARANCE:
-                pass
-                # print(f"Warning: minimal clearance violated in {full_name}")
+            clearance = abs(pad_pos_x) - (pad_length / 2) - (config.exposed_length / 2)
+            if np.around(clearance, decimals=2) < MIN_CLEARANCE:
+                print(f"Warning: minimal clearance violated in {full_name}: {clearance:.2f} < {MIN_CLEARANCE:.2f}")
 
         # Create Silk Screen (lines and dot only)
         silk_down = (config.length / 2 - SILKSCREEN_OFFSET -
