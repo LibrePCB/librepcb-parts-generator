@@ -22,7 +22,7 @@ SILKSCREEN_LINE_WIDTH = 0.254
 LABEL_OFFSET = 1.0
 TEXT_ATTRS = "(height 1.0) (stroke_width 0.2) (letter_spacing auto) (line_spacing auto)"
 
-MIN_CLEARANCE = 0.15    # For checking only --> warns if violated
+MIN_CLEARANCE = 0.20    # For checking only --> warns if violated
 
 
 # Initialize UUID cache
@@ -144,38 +144,48 @@ def generate_pkg(
         lines.append('  (name "{}")'.format(name))
         lines.append('  (description "")')
 
+        pad_length = config.lead_length + config.toe_heel + pad_extension
+        exposed_length = config.exposed_length
+        abs_pad_pos_x = (config.width / 2) - (config.lead_length / 2) + (config.toe_heel / 2) + (pad_extension / 2)
+
+        # Check clearance and make pads smaller if required
+        if make_exposed:
+            clearance = (config.width / 2) - config.lead_length - (exposed_length / 2)
+            if clearance < MIN_CLEARANCE:
+                print(f"Increasing clearance from {clearance:.2f} to {MIN_CLEARANCE:.2f}")
+                d_clearance = (MIN_CLEARANCE - clearance) / 2
+                pad_length = pad_length - d_clearance
+                exposed_length = exposed_length - 2 * d_clearance
+                abs_pad_pos_x = abs_pad_pos_x + (d_clearance / 2)
+
         # Place pads
         for pad_idx, pad_nr in enumerate(range(1, config.pin_count + 1)):
-            pad_width = config.lead_width
-            pad_length = config.lead_length + config.toe_heel + pad_extension
-
-            pad_pos_x = config.width / 2 - config.lead_length / 2 + config.toe_heel / 2 + pad_extension / 2
-
             half_n_pads = config.pin_count // 2
             pad_pos_y = get_y(pad_idx % half_n_pads + 1, half_n_pads, config.pitch, False)
 
             if pad_idx < (config.pin_count / 2):
-                pad_pos_x = - pad_pos_x
+                pad_pos_x = - abs_pad_pos_x
             else:
+                pad_pos_x = abs_pad_pos_x
                 pad_pos_y = - pad_pos_y
 
             lines.append('  (pad {} (side top) (shape rect)'.format(uuid_pads[pad_idx]))
             lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
                          ff(pad_pos_x), ff(pad_pos_y),
-                         ff(pad_length), ff(pad_width)))
+                         ff(pad_length), ff(config.lead_width)))
             lines.append('  )')
 
         # Make exposed pad, if required
         if make_exposed:
             lines.append('  (pad {} (side top) (shape rect)'.format(uuid_exp))
             lines.append('   (position 0.0 0.0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                         ff(config.exposed_length), ff(config.exposed_width)))
+                         ff(exposed_length), ff(config.exposed_width)))
             lines.append('  )')
 
             # Measure clearance pad-exposed pad
-            clearance = abs(pad_pos_x) - (pad_length / 2) - (config.exposed_length / 2)
+            clearance = abs(pad_pos_x) - (pad_length / 2) - (exposed_length / 2)
             if np.around(clearance, decimals=2) < MIN_CLEARANCE:
-                print(f"Warning: minimal clearance violated in {full_name}: {clearance:.2f} < {MIN_CLEARANCE:.2f}")
+                print(f"Warning: minimal clearance violated in {full_name}: {clearance:.4f} < {MIN_CLEARANCE:.2f}")
 
         # Create Silk Screen (lines and dot only)
         silk_down = (config.length / 2 - SILKSCREEN_OFFSET -
