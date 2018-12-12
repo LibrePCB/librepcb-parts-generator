@@ -123,7 +123,10 @@ def generate_pkg(
     lines.append(' (name "{}")'.format(full_name))
     lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_description,
                                                                      GENERATOR_NAME))
-    lines.append(' (keywords "dfn{}")'.format(config.pin_count, config.pin_count, keywords))
+    if config.keywords:
+        lines.append(' (keywords "dfn{},{},{}")'.format(config.pin_count, keywords, config.keywords.lower()))
+    else:
+        lines.append(' (keywords "dfn{},{}")'.format(config.pin_count, keywords))
     lines.append(' (author "{}")'.format(author))
     lines.append(' (version "0.1")')
     lines.append(' (created {})'.format(now()))
@@ -342,7 +345,7 @@ if __name__ == '__main__':
                             'Nominal length: {length:.2f} mm\\n'
                             'Height: {height:.2f}mm',
                 pkgcat='88cbb15c-2b69-4612-8764-c5d323f88f13',
-                keywords='dfn',
+                keywords='dfn,dual-flat no-leads,mo-229f',
                 config=config,
                 make_exposed=make_exposed,
             )
@@ -375,7 +378,7 @@ if __name__ == '__main__':
                             'Nominal length: {length:.2f} mm\\n'
                             'Height: {height:.2f}mm',
                 pkgcat='88cbb15c-2b69-4612-8764-c5d323f88f13',
-                keywords='dfn',
+                keywords='dfn,dual-flat no-leads',
                 config=config,
                 make_exposed=make_exposed,
             )
