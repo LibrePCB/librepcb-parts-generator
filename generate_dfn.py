@@ -23,6 +23,7 @@ LABEL_OFFSET = 1.0
 TEXT_ATTRS = "(height 1.0) (stroke_width 0.2) (letter_spacing auto) (line_spacing auto)"
 
 MIN_CLEARANCE = 0.20    # For checking only --> warns if violated
+MIN_TRACE = 0.10
 
 
 # Initialize UUID cache
@@ -160,6 +161,13 @@ def generate_pkg(
                 pad_length = pad_length - d_clearance
                 exposed_length = exposed_length - 2 * d_clearance
                 abs_pad_pos_x = abs_pad_pos_x + (d_clearance / 2)
+
+            if exposed_length < MIN_TRACE:
+                print(f"Increasing exposed path width from {exposed_length:.2f} to {MIN_TRACE:.2f}")
+                d_exp = MIN_TRACE - exposed_length
+                exposed_length = exposed_length + d_exp
+                pad_length = pad_length - (d_exp / 2)
+                abs_pad_pos_x = abs_pad_pos_x + (d_exp / 4)
 
         # Place pads
         for pad_idx, pad_nr in enumerate(range(1, config.pin_count + 1)):
