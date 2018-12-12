@@ -254,22 +254,22 @@ def generate_pkg(
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_max))
             lines.append('  )')
 
-            # Add name and value labels
-            uuid_text_name = _uuid('text-name-{}'.format(key))
-            uuid_text_value = _uuid('text-value-{}'.format(key))
+        # Add name and value labels
+        uuid_text_name = _uuid('text-name-{}'.format(key))
+        uuid_text_value = _uuid('text-value-{}'.format(key))
 
-            lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
-            lines.append('   {}'.format(TEXT_ATTRS))
-            lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(
-                 config.length / 2 + LABEL_OFFSET))
-            lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
-            lines.append('  )')
-            lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
-            lines.append('   {}'.format(TEXT_ATTRS))
-            lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(
-                -config.length / 2 - LABEL_OFFSET))
-            lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
-            lines.append('  )')
+        lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
+        lines.append('   {}'.format(TEXT_ATTRS))
+        lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(
+             config.length / 2 + LABEL_OFFSET))
+        lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
+        lines.append('  )')
+        lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
+        lines.append('   {}'.format(TEXT_ATTRS))
+        lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(
+            -config.length / 2 - LABEL_OFFSET))
+        lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
+        lines.append('  )')
 
         # Closing parenthese for footprint
         lines.append(' )')
