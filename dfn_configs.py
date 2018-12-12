@@ -12,6 +12,19 @@ LEAD_WIDTH = {
         0.4: 0.25
     }
 
+# Toe and heel length as a function of pitch
+# According to IPC-7351C, see slide 26 of
+# http://ocipcdc.org/archive/What_is_New_in_IPC-7351C_03_11_2015.pdf
+LEAD_TOE_HEEL = {
+        1.00: 0.35,
+        0.95: 0.35,    # not specified in standard
+        0.8: 0.33,
+        0.65: 0.31,
+        0.50: 0.29,
+        0.40: 0.27,
+        0.35: 0.25
+    }
+
 
 class DfnConfig:
     def __init__(self,
@@ -45,6 +58,12 @@ class DfnConfig:
             self.lead_width = lead_width
         else:
             self.lead_width = LEAD_WIDTH[pitch]
+
+        # Save toe/heel length
+        try:
+            self.toe_heel = LEAD_TOE_HEEL[pitch]
+        except KeyError:
+            raise NotImplementedError(f"No toe/heel length for pitch {pitch}")
 
 
 JEDEC_CONFIGS = [

@@ -147,9 +147,9 @@ def generate_pkg(
         # Place pads
         for pad_idx, pad_nr in enumerate(range(1, config.pin_count + 1)):
             pad_width = config.lead_width
-            pad_length = config.lead_length + pad_extension
+            pad_length = config.lead_length + config.toe_heel + pad_extension
 
-            pad_pos_x = config.width / 2 - config.lead_length / 2 + pad_extension / 2
+            pad_pos_x = config.width / 2 - config.lead_length / 2 + config.toe_heel / 2 + pad_extension / 2
 
             half_n_pads = config.pin_count // 2
             pad_pos_y = get_y(pad_idx % half_n_pads + 1, half_n_pads, config.pitch, False)
@@ -266,7 +266,7 @@ def generate_pkg(
 
     # Apply function to available footprints
     _generate_footprint('reflow', 'reflow', 0.0)
-    _generate_footprint('hand-soldering', 'hand soldering', 0.5)
+    _generate_footprint('hand-soldering', 'hand soldering', 0.3)
 
     # Final closing parenthese
     lines.append(')')
