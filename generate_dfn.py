@@ -254,6 +254,22 @@ def generate_pkg(
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_max))
             lines.append('  )')
 
+        # Create exposed pad on docu
+        if make_exposed:
+            uuid_docu_exposed = _uuid('lead-exposed')
+
+            x_min, x_max = - config.exposed_length / 2, config.exposed_length / 2
+            y_min, y_max = - config.exposed_width / 2, config.exposed_width / 2
+
+            lines.append('  (polygon {} (layer top_documentation)'.format(uuid_docu_exposed))
+            lines.append('   (width 0.0) (fill true) (grab_area false)')
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_max))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_max, y_max))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_max, y_min))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_min))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_max))
+            lines.append('  )')
+
         # Add name and value labels
         uuid_text_name = _uuid('text-name-{}'.format(key))
         uuid_text_value = _uuid('text-value-{}'.format(key))
