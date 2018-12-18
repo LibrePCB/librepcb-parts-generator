@@ -228,13 +228,18 @@ def generate_pkg(
 
             lines.append('  )')
 
+        # Move silkscreen circle upwards if the line is moved too
+        silk_circ_h = config.length / 2 + SILKSCREEN_LINE_WIDTH
+        if silk_down < 0:
+            silk_circ_h = silk_circ_h - silk_down
+
         uuid_silkscreen_circ = _uuid('circle-silkscreen-{}'.format(key))
         lines.append('  (circle {} (layer top_placement)'.format(uuid_silkscreen_circ))
         lines.append('   (width 0.0) (fill true) (grab_area false) '
                      '(diameter {}) (position {} {})'.format(
                          ff(SILKSCREEN_LINE_WIDTH),
                          ff(-config.width / 2 - SILKSCREEN_LINE_WIDTH),
-                         ff(config.length / 2 + SILKSCREEN_LINE_WIDTH)
+                         ff(silk_circ_h)
                      ))
         lines.append('  )')
 
