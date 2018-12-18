@@ -23,6 +23,22 @@ label_offset_thin = 0.8
 silkscreen_clearance = 0.15
 
 
+# Based on IPC 7351B (Table 3-5)
+DENSITY_LEVELS = {  # For 1608 and up
+    'A': {'toe': 0.55, 'heel': 0.00, 'side': 0.05, 'courtyard': 0.50},
+    'B': {'toe': 0.35, 'heel': 0.00, 'side': 0.00, 'courtyard': 0.25},
+    'C': {'toe': 0.15, 'heel': 0.00, 'side': -0.05, 'courtyard': 0.12},
+}
+# Based on IPC 7351B (Table 3-6)
+# Heel has been set to 0.00 instead of -0.05, since IPC 7351C will probably
+# use those values too.
+DENSITY_LEVELS_SMALL = {  # Below 1608
+    'A': {'toe': 0.20, 'heel': 0.00, 'side': 0.05, 'courtyard': 0.20},
+    'B': {'toe': 0.10, 'heel': 0.00, 'side': 0.00, 'courtyard': 0.15},
+    'C': {'toe': 0.00, 'heel': 0.00, 'side': 0.00, 'courtyard': 0.10},
+}
+
+
 # Initialize UUID cache
 uuid_cache_file = 'uuid_cache_chip.csv'
 uuid_cache = init_cache(uuid_cache_file)
@@ -127,7 +143,7 @@ def generate_pkg(
         lines.append(' (pad {} (name "1"))'.format(uuid_pads[0]))
         lines.append(' (pad {} (name "2"))'.format(uuid_pads[1]))
 
-        def add_footprint_variant(key: str, name: str):
+        def add_footprint_variant(key: str, name: str, density_level: str):
             uuid_footprint = _uuid('footprint-{}'.format(key))
             uuid_text_name = _uuid('text-name-{}'.format(key))
             uuid_text_value = _uuid('text-value-{}'.format(key))
@@ -154,12 +170,22 @@ def generate_pkg(
             for p in [0, 1]:
                 pad_uuid = uuid_pads[p - 1]
                 sign = -1 if p == 1 else 1
-                dx = ff(sign * (config.gap / 2 + config.pad_length / 2))  # x offset (delta-x)
+                # Note: We are using the gap from the actual resistors (Samsung), but calculate
+                # the protrusion (toe and side) based on IPC7351.
+                if config.length >= 1.6:
+                    pad_width = config.width + DENSITY_LEVELS[density_level]['side']
+                    pad_length = (config.length - config.gap) / 2 \
+                               + DENSITY_LEVELS[density_level]['toe']
+                else:
+                    pad_width = config.width + DENSITY_LEVELS_SMALL[density_level]['side']
+                    pad_length = (config.length - config.gap) / 2 \
+                               + DENSITY_LEVELS_SMALL[density_level]['toe']
+                dx = sign * (config.gap / 2 + pad_length / 2)  # x offset (delta-x)
                 lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
                 lines.append('   (position {} 0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                    dx,
-                    ff(config.pad_length),
-                    ff(config.pad_width),
+                    ff(dx),
+                    ff(pad_length),
+                    ff(pad_width),
                 ))
                 lines.append('  )')
 
@@ -211,8 +237,8 @@ def generate_pkg(
 
             lines.append(' )')
 
-        add_footprint_variant('reflow', 'reflow')
-        add_footprint_variant('handsoldering', 'hand soldering')
+        add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A')
+        add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B')
 
         lines.append(')')
 
@@ -240,6 +266,7 @@ if __name__ == '__main__':
         description='Chip resistor {size_metric} (imperial {size_imperial}).\\n\\n'
                     'Length: {length}mm\\nWidth: {width}mm\\nHeight: max {height}mm',
         configs=[
+            # Configuration: Values taken from Samsung specs.
             #        imperial, len, wid,  hght, plen, pwid, gap
             ChipConfig('01005', .4,  .2,  0.15,  .17,  .18, 0.2),   # noqa
             ChipConfig('0201',  .6,  .3,  0.26,  .37,  .29, 0.28),  # noqa
