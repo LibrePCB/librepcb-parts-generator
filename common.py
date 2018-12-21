@@ -4,6 +4,11 @@ Common functionality for generator scripts.
 import collections
 import csv
 from datetime import datetime
+from typing import Iterable
+
+
+# Commonly used dimensions
+COURTYARD_LINE_WIDTH = 0.1
 
 
 def init_cache(uuid_cache_file: str) -> collections.OrderedDict:
@@ -54,3 +59,47 @@ def format_ipc_dimension(number: float, decimal_places: int = 2) -> str:
     Format a dimension (e.g. lead span or height) according to IPC rules.
     """
     return '{:.2f}'.format(number).replace('0.', '').replace('.', '')
+
+
+def indent(level: int, lines: Iterable[str]):
+    """
+    Indent the lines by the specified level.
+    """
+    return [' ' * level + line for line in lines]
+
+
+def generate_courtyard(
+    uuid: str,
+    max_x: float,
+    max_y: float,
+    excess_x: float,
+    excess_y: float,
+):
+    """
+    Generate a courtyard polygon.
+
+    Args:
+        uuid:
+            The polygon UUID
+        max_x:
+            The half width (x) of the maximum boundary
+        max_y:
+            The half height (y) of the maximum boundary
+        excess_x:
+            Courtyard excess in x direction
+        excess_y:
+            Courtyard excess in y direction
+
+    """
+    dx = format_float(max_x + excess_x)
+    dy = format_float(max_y + excess_y)
+    return [
+        '(polygon {} (layer {})'.format(uuid, 'top_courtyard'),
+        ' (width {}) (fill false) (grab_area true)'.format(COURTYARD_LINE_WIDTH),
+        ' (vertex (position -{} {}) (angle 0.0))'.format(dx, dy),  # NW
+        ' (vertex (position {} {}) (angle 0.0))'.format(dx, dy),  # NE
+        ' (vertex (position {} -{}) (angle 0.0))'.format(dx, dy),  # SE
+        ' (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy),  # SW
+        ' (vertex (position -{} {}) (angle 0.0))'.format(dx, dy),  # NW
+        ')',
+    ]
