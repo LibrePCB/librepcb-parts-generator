@@ -10,6 +10,7 @@ from uuid import uuid4
 
 from common import now, init_cache, save_cache
 from common import format_float as ff, format_ipc_dimension as fd
+from common import generate_courtyard, indent
 
 
 generator = 'librepcb-parts-generator (generate_chip.py)'
@@ -37,6 +38,14 @@ DENSITY_LEVELS_SMALL = {  # Below 1608
     'B': {'toe': 0.10, 'heel': 0.00, 'side': 0.00, 'courtyard': 0.15},
     'C': {'toe': 0.00, 'heel': 0.00, 'side': 0.00, 'courtyard': 0.10},
 }
+
+
+def get_by_density(length: float, level: str, key: str):
+    if length >= 1.6:
+        table = DENSITY_LEVELS
+    else:
+        table = DENSITY_LEVELS_SMALL
+    return table[level][key]
 
 
 # Initialize UUID cache
@@ -150,6 +159,11 @@ def generate_pkg(
             uuid_silkscreen_top = _uuid('line-silkscreen-top-{}'.format(key))
             uuid_silkscreen_bot = _uuid('line-silkscreen-bot-{}'.format(key))
             uuid_outline = _uuid('polygon-outline-{}'.format(key))
+            uuid_courtyard = _uuid('polygon-courtyard-{}'.format(key))
+
+            # Max boundary
+            max_x = 0.0
+            max_y = 0.0
 
             # Line width adjusted for size of element
             if config.length >= 2.0:
@@ -172,14 +186,9 @@ def generate_pkg(
                 sign = -1 if p == 1 else 1
                 # Note: We are using the gap from the actual resistors (Samsung), but calculate
                 # the protrusion (toe and side) based on IPC7351.
-                if config.length >= 1.6:
-                    pad_width = config.width + DENSITY_LEVELS[density_level]['side']
-                    pad_length = (config.length - config.gap) / 2 \
-                               + DENSITY_LEVELS[density_level]['toe']
-                else:
-                    pad_width = config.width + DENSITY_LEVELS_SMALL[density_level]['side']
-                    pad_length = (config.length - config.gap) / 2 \
-                               + DENSITY_LEVELS_SMALL[density_level]['toe']
+                pad_width = config.width + get_by_density(config.length, density_level, 'side')
+                pad_length = (config.length - config.gap) / 2 \
+                           + get_by_density(config.length, density_level, 'toe')
                 dx = sign * (config.gap / 2 + pad_length / 2)  # x offset (delta-x)
                 lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
                 lines.append('   (position {} 0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
@@ -187,6 +196,7 @@ def generate_pkg(
                     ff(pad_length),
                     ff(pad_width),
                 ))
+                max_x = max(max_x, pad_length / 2 + dx)
                 lines.append('  )')
 
             # Documentation
@@ -200,6 +210,7 @@ def generate_pkg(
             lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(hw, hl))  # SW
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(hw, hl))  # NW
             lines.append('  )')
+            max_y = config.width / 2 + doc_lw / 2
 
             # Silkscreen
             if config.length > 1.0:
@@ -215,6 +226,17 @@ def generate_pkg(
                 lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy))
                 lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))
                 lines.append('  )')
+                max_y = max(max_y, config.width / 2 + silk_lw)
+
+            # Courtyard
+            courtyard_excess = get_by_density(config.length, density_level, 'courtyard')
+            lines.extend(indent(2, generate_courtyard(
+                uuid=uuid_courtyard,
+                max_x=max_x,
+                max_y=max_y,
+                excess_x=courtyard_excess,
+                excess_y=courtyard_excess,
+            )))
 
             # Labels
             if config.width < 2.0:
