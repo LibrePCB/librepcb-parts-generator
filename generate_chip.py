@@ -78,16 +78,12 @@ class ChipConfig:
         length: float,
         width: float,
         height: float,
-        pad_length: float,
-        pad_width: float,
         gap: float,
     ):
         self._size_imperial = size_imperial
         self.length = length
         self.width = width
         self.height = height
-        self.pad_length = pad_length
-        self.pad_width = pad_width
         self.gap = gap
 
     def size_metric(self) -> str:
@@ -289,24 +285,26 @@ if __name__ == '__main__':
                     'Length: {length}mm\\nWidth: {width}mm\\nHeight: max {height}mm',
         configs=[
             # Configuration: Values taken from Samsung specs.
-            #        imperial, len, wid,  hght, plen, pwid, gap
-            ChipConfig('01005', .4,  .2,  0.15,  .17,  .18, 0.2),   # noqa
-            ChipConfig('0201',  .6,  .3,  0.26,  .37,  .29, 0.28),  # noqa
-            ChipConfig('0402', 1.0,  .5,  0.35,  .6,   .5,  0.5),   # noqa
-            ChipConfig('0603', 1.6,  .8,  0.55,  .8,   .8,  0.8),   # noqa
-            ChipConfig('0805', 2.0, 1.25, 0.60,  .9,  1.2,  1.4),   # noqa
-            ChipConfig('0805', 2.0, 1.25, 0.65,  .9,  1.2,  1.4),   # noqa
-            ChipConfig('0805', 2.0, 1.25, 0.70,  .9,  1.2,  1.4),   # noqa
-            ChipConfig('1206', 3.2, 1.6,  0.60, 1.3,  1.5,  1.8),   # noqa
-            ChipConfig('1206', 3.2, 1.6,  0.65, 1.3,  1.5,  1.8),   # noqa
-            ChipConfig('1206', 3.2, 1.6,  0.70, 1.3,  1.5,  1.8),   # noqa
-            ChipConfig('1210', 3.2, 2.55, 0.60, 1.3,  2.4,  1.8),   # noqa
-            ChipConfig('1210', 3.2, 2.55, 0.65, 1.3,  2.4,  1.8),   # noqa
-            ChipConfig('1210', 3.2, 2.55, 0.70, 1.3,  2.4,  1.8),   # noqa
-            ChipConfig('2010', 5.0, 2.5,  0.65, 1.4,  2.4,  3.3),   # noqa
-            ChipConfig('2010', 5.0, 2.5,  0.70, 1.4,  2.4,  3.3),   # noqa
-            ChipConfig('2512', 6.4, 3.2,  0.65, 1.4,  3.0,  4.6),   # noqa
-            ChipConfig('2512', 6.4, 3.2,  0.70, 1.4,  3.0,  4.6),   # noqa
+            #        imperial, len, wid,  hght, gap
+            ChipConfig('01005', .4,  .2,  0.15, 0.2),   # noqa
+            ChipConfig('0201',  .6,  .3,  0.26, 0.28),  # noqa
+            ChipConfig('0402', 1.0,  .5,  0.35, 0.5),   # noqa
+            ChipConfig('0603', 1.6,  .8,  0.55, 0.8),   # noqa
+            ChipConfig('0805', 2.0, 1.25, 0.60, 1.4),   # noqa
+            ChipConfig('0805', 2.0, 1.25, 0.65, 1.4),   # noqa
+            ChipConfig('0805', 2.0, 1.25, 0.70, 1.4),   # noqa
+            ChipConfig('1206', 3.2, 1.6,  0.60, 1.8),   # noqa
+            ChipConfig('1206', 3.2, 1.6,  0.65, 1.8),   # noqa
+            ChipConfig('1206', 3.2, 1.6,  0.70, 1.8),   # noqa
+            ChipConfig('1210', 3.2, 2.55, 0.60, 1.8),   # noqa
+            ChipConfig('1210', 3.2, 2.55, 0.65, 1.8),   # noqa
+            ChipConfig('1210', 3.2, 2.55, 0.70, 1.8),   # noqa
+            ChipConfig('1218', 3.2, 4.6,  0.60, 1.8),   # noqa
+            ChipConfig('1218', 3.2, 4.6,  0.70, 1.8),   # noqa
+            ChipConfig('2010', 5.0, 2.5,  0.65, 3.3),   # noqa
+            ChipConfig('2010', 5.0, 2.5,  0.70, 3.3),   # noqa
+            ChipConfig('2512', 6.4, 3.2,  0.65, 4.6),   # noqa
+            ChipConfig('2512', 6.4, 3.2,  0.70, 4.6),   # noqa
         ],
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,chip',
