@@ -277,6 +277,7 @@ if __name__ == '__main__':
     _make('out')
     _make('out/chip')
     _make('out/chip/pkg')
+    # Chip resistors (RESC)
     generate_pkg(
         dirpath='out/chip/pkg',
         author='Danilo B.',
@@ -300,5 +301,21 @@ if __name__ == '__main__':
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,chip',
         create_date='2018-12-19T00:08:03Z',
+    )
+    # J-Lead resistors (RESJ)
+    generate_pkg(
+        dirpath='out/chip/pkg',
+        author='Danilo B.',
+        name='RESJ{size_metric}X{height} ({size_imperial})',
+        description='J-lead resistor {size_metric} (imperial {size_imperial}).\\n\\n'
+                    'Length: {length}mm\\nWidth: {width}mm\\nHeight: max {height}mm',
+        configs=[
+            #        imperial, len,   wid,  hght, gap
+            ChipConfig('4527', 11.56, 6.98, 2.54, 5.2),  # noqa
+            ChipConfig('4527', 11.56, 6.98, 5.84, 5.2),  # noqa
+        ],
+        pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
+        keywords='r,resistor,j-lead',
+        create_date='2019-01-04T23:06:17Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
