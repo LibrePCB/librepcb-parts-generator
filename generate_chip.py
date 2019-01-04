@@ -290,20 +290,11 @@ if __name__ == '__main__':
             ChipConfig('0201',  .6,  .3,  0.26, 0.28),  # noqa
             ChipConfig('0402', 1.0,  .5,  0.35, 0.5),   # noqa
             ChipConfig('0603', 1.6,  .8,  0.55, 0.8),   # noqa
-            ChipConfig('0805', 2.0, 1.25, 0.60, 1.4),   # noqa
-            ChipConfig('0805', 2.0, 1.25, 0.65, 1.4),   # noqa
             ChipConfig('0805', 2.0, 1.25, 0.70, 1.4),   # noqa
-            ChipConfig('1206', 3.2, 1.6,  0.60, 1.8),   # noqa
-            ChipConfig('1206', 3.2, 1.6,  0.65, 1.8),   # noqa
             ChipConfig('1206', 3.2, 1.6,  0.70, 1.8),   # noqa
-            ChipConfig('1210', 3.2, 2.55, 0.60, 1.8),   # noqa
-            ChipConfig('1210', 3.2, 2.55, 0.65, 1.8),   # noqa
             ChipConfig('1210', 3.2, 2.55, 0.70, 1.8),   # noqa
-            ChipConfig('1218', 3.2, 4.6,  0.60, 1.8),   # noqa
             ChipConfig('1218', 3.2, 4.6,  0.70, 1.8),   # noqa
-            ChipConfig('2010', 5.0, 2.5,  0.65, 3.3),   # noqa
             ChipConfig('2010', 5.0, 2.5,  0.70, 3.3),   # noqa
-            ChipConfig('2512', 6.4, 3.2,  0.65, 4.6),   # noqa
             ChipConfig('2512', 6.4, 3.2,  0.70, 4.6),   # noqa
         ],
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
