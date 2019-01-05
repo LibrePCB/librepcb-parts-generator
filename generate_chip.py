@@ -155,8 +155,11 @@ def generate_pkg(
             uuid_text_value = _uuid('text-value-{}'.format(key))
             uuid_silkscreen_top = _uuid('line-silkscreen-top-{}'.format(key))
             uuid_silkscreen_bot = _uuid('line-silkscreen-bot-{}'.format(key))
-            uuid_outline = _uuid('polygon-outline-{}'.format(key))
             uuid_courtyard = _uuid('polygon-courtyard-{}'.format(key))
+            uuid_outline_top = _uuid('polygon-outline-top-{}'.format(key))
+            uuid_outline_bot = _uuid('polygon-outline-bot-{}'.format(key))
+            uuid_outline_left = _uuid('polygon-outline-left-{}'.format(key))
+            uuid_outline_right = _uuid('polygon-outline-right-{}'.format(key))
 
             # Max boundary
             max_x = 0.0
@@ -197,17 +200,37 @@ def generate_pkg(
                 lines.append('  )')
 
             # Documentation
-            lines.append('  (polygon {} (layer {})'.format(uuid_outline, 'top_documentation'))
-            lines.append('   (width {}) (fill false) (grab_area true)'.format(doc_lw))
-            hl = ff(config.width / 2)  # half length
-            hw = ff(config.length / 2)  # half width
-            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(hw, hl))  # NW
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(hw, hl))  # NE
-            lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(hw, hl))  # SE
-            lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(hw, hl))  # SW
-            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(hw, hl))  # NW
+            half_gap = ff(config.gap / 2)
+            dx = ff(config.length / 2)
+            dy = ff(config.width / 2)
+            lines.append('  (polygon {} (layer {})'.format(uuid_outline_left, 'top_documentation'))
+            lines.append('   (width 0.0) (fill true) (grab_area true)')
+            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))  # NW
+            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(half_gap, dy))  # NE
+            lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(half_gap, dy))  # SE
+            lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy))  # SW
+            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))  # NW
             lines.append('  )')
-            max_y = config.width / 2 + doc_lw / 2
+            lines.append('  (polygon {} (layer {})'.format(uuid_outline_right, 'top_documentation'))
+            lines.append('   (width 0.0) (fill true) (grab_area true)')
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))  # NE
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(half_gap, dy))  # NW
+            lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))  # SW
+            lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))  # SE
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))  # NE
+            lines.append('  )')
+            dy = ff(config.width / 2 - doc_lw / 2)
+            lines.append('  (polygon {} (layer {})'.format(uuid_outline_top, 'top_documentation'))
+            lines.append('   (width {}) (fill false) (grab_area true)'.format(doc_lw))
+            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(half_gap, dy))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(half_gap, dy))
+            lines.append('  )')
+            lines.append('  (polygon {} (layer {})'.format(uuid_outline_bot, 'top_documentation'))
+            lines.append('   (width {}) (fill false) (grab_area true)'.format(doc_lw))
+            lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(half_gap, dy))
+            lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))
+            lines.append('  )')
+            max_y = max(max_y, config.width / 2)
 
             # Silkscreen
             if config.length > 1.0:
