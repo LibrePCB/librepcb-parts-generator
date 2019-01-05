@@ -17,7 +17,7 @@ generator = 'librepcb-parts-generator (generate_so.py)'
 
 line_width = 0.25
 pkg_text_height = 1.0
-silkscreen_offset = 0.15
+silkscreen_offset = 0.151  # 150 µm + 1 µm to compensate rounding errors
 pin_package_offset = 0.762  # Distance between pad center and the package outline
 
 
@@ -175,6 +175,15 @@ def generate_pkg(
                 pad_heel = get_by_density(pitch, density_level, 'heel')
                 pad_toe = get_by_density(pitch, density_level, 'toe')
                 pad_side = get_by_density(pitch, density_level, 'side')
+
+                # Correct heel size to ensure proper silkscreen clearance
+                _heel_offset = total_width / 2 - lead_flat_length - pad_heel
+                _silkscreen_clearance = body_width / 2 + line_width / 2 + silkscreen_offset
+                _heel_correction = max(_silkscreen_clearance - _heel_offset, 0)
+                if _heel_correction > 0:
+                    print('  Warning: Shortening heel by {:.3f} mm to ensure '
+                          'silkscreen-pad clearance'.format(_heel_correction))
+                    pad_heel -= _heel_correction
 
                 # Pads
                 pad_width = lead_width + pad_side
