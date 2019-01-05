@@ -22,6 +22,7 @@ pkg_text_height = 1.0
 label_offset = 1.1
 label_offset_thin = 0.8
 silkscreen_clearance = 0.15
+handsoldering_toe_extension = 0.5
 
 
 # Based on IPC 7351B (Table 3-5)
@@ -148,7 +149,7 @@ def generate_pkg(
         lines.append(' (pad {} (name "1"))'.format(uuid_pads[0]))
         lines.append(' (pad {} (name "2"))'.format(uuid_pads[1]))
 
-        def add_footprint_variant(key: str, name: str, density_level: str):
+        def add_footprint_variant(key: str, name: str, density_level: str, toe_extension: float):
             uuid_footprint = _uuid('footprint-{}'.format(key))
             uuid_text_name = _uuid('text-name-{}'.format(key))
             uuid_text_value = _uuid('text-value-{}'.format(key))
@@ -183,8 +184,8 @@ def generate_pkg(
                 # Note: We are using the gap from the actual resistors (Samsung), but calculate
                 # the protrusion (toe and side) based on IPC7351.
                 pad_width = config.width + get_by_density(config.length, density_level, 'side')
-                pad_length = (config.length - config.gap) / 2 \
-                           + get_by_density(config.length, density_level, 'toe')
+                pad_toe = get_by_density(config.length, density_level, 'toe') + toe_extension
+                pad_length = (config.length - config.gap) / 2 + pad_toe
                 dx = sign * (config.gap / 2 + pad_length / 2)  # x offset (delta-x)
                 lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
                 lines.append('   (position {} 0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
@@ -255,8 +256,9 @@ def generate_pkg(
 
             lines.append(' )')
 
-        add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B')
-        add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A')
+        add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B', 0.0)
+        add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A', 0.0)
+        # add_footprint_variant('density~hs', 'Hand Soldering', 'A', handsoldering_toe_extension)
 
         lines.append(')')
 
