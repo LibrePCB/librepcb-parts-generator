@@ -20,6 +20,20 @@ silkscreen_offset = 0.15
 pin_package_offset = 0.762  # Distance between pad center and the package outline
 
 
+# Based on IPC 7351B (Table 3-2)
+DENSITY_LEVELS = {  # For pitch 0.625 mm and up
+    'A': {'toe': 0.55, 'heel': 0.45, 'side': 0.05, 'courtyard': 0.50},
+    'B': {'toe': 0.35, 'heel': 0.35, 'side': 0.03, 'courtyard': 0.25},
+    'C': {'toe': 0.15, 'heel': 0.25, 'side': 0.01, 'courtyard': 0.10},
+}
+# Based on IPC 7351B (Table 3-3)
+DENSITY_LEVELS_SMALL = {  # For pitch below 0.625 mm
+    'A': {'toe': 0.55, 'heel': 0.45, 'side': 0.01, 'courtyard': 0.50},
+    'B': {'toe': 0.35, 'heel': 0.35, 'side': -0.02, 'courtyard': 0.25},
+    'C': {'toe': 0.15, 'heel': 0.25, 'side': -0.04, 'courtyard': 0.10},
+}
+
+
 # Initialize UUID cache
 uuid_cache_file = 'uuid_cache_so.csv'
 uuid_cache = init_cache(uuid_cache_file)
@@ -41,6 +55,14 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
     if key not in uuid_cache:
         uuid_cache[key] = str(uuid4())
     return uuid_cache[key]
+
+
+def get_by_density(pitch: float, level: str, key: str):
+    if pitch >= 0.625:
+        table = DENSITY_LEVELS
+    else:
+        table = DENSITY_LEVELS_SMALL
+    return table[level][key]
 
 
 def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool):
@@ -90,11 +112,11 @@ def generate_pkg(
     body_width: float,
     total_width: float,
     lead_width: float,
-    lead_length: float,
-    lead_contact_length: float,
+    lead_flat_length: float,
     pkgcat: str,
     keywords: str,
     top_offset: float,
+    version: str,
     create_date: Optional[str],
 ):
     category = 'pkg'
@@ -120,14 +142,18 @@ def generate_pkg(
             lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_description, generator))
             lines.append(' (keywords "soic{},so{},{}")'.format(pin_count, pin_count, keywords))
             lines.append(' (author "{}")'.format(author))
-            lines.append(' (version "0.1")')
+            lines.append(' (version "{}")'.format(version))
             lines.append(' (created {})'.format(create_date or now()))
             lines.append(' (deprecated false)')
             lines.append(' (category {})'.format(pkgcat))
             for p in range(1, pin_count + 1):
                 lines.append(' (pad {} (name "{}"))'.format(uuid_pads[p - 1], p))
 
-            def add_footprint_variant(key: str, name: str, pad_width: float, pad_extension: float):
+            def add_footprint_variant(
+                key: str,
+                name: str,
+                density_level: str,
+            ):
                 uuid_footprint = _uuid('footprint-{}'.format(key))
                 uuid_silkscreen = _uuid('polygon-silkscreen-{}'.format(key))
                 uuid_pin1_dot = _uuid('pin1-dot-silkscreen-{}'.format(key))
@@ -139,8 +165,15 @@ def generate_pkg(
                 lines.append('  (name "{}")'.format(name))
                 lines.append('  (description "")')
 
+                # Pad excess according to IPC density levels
+                pad_heel = get_by_density(pitch, density_level, 'heel')
+                pad_toe = get_by_density(pitch, density_level, 'toe')
+                pad_side = get_by_density(pitch, density_level, 'side')
+
                 # Pads
-                pad_x_offset = total_width / 2 - lead_contact_length / 2 + 0.15 + pad_extension / 2
+                pad_width = lead_width + pad_side
+                pad_length = lead_flat_length + pad_heel + pad_toe
+                pad_x_offset = total_width / 2 - lead_flat_length / 2 - pad_heel / 2 + pad_toe / 2
                 for p in range(1, pin_count + 1):
                     mid = pin_count // 2
                     if p <= mid:
@@ -152,24 +185,24 @@ def generate_pkg(
                     pad_uuid = uuid_pads[p - 1]
                     lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
                     lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                        pxo, ff(y), ff(lead_contact_length + 0.15 + pad_extension), pad_width,
+                        pxo, ff(y), ff(pad_length), ff(pad_width),
                     ))
                     lines.append('  )')
 
-                # Documentation: Leads
-                lead_x_offset = body_width / 2
+                # Documentation: Leads (only flat part)
+                lead_x_offset = total_width / 2 - lead_flat_length  # this is the inner side of the flat lead
                 for p in range(1, pin_count + 1):
                     mid = pin_count // 2
                     if p <= mid:
                         y = get_y(p, pin_count // 2, pitch, False)
-                        lxo_min = ff(-lead_x_offset - line_width / 2)
-                        lxo_max = ff(-lead_x_offset - line_width / 2 - lead_length)
+                        lxo_min = ff(-lead_x_offset - lead_flat_length)
+                        lxo_max = ff(-lead_x_offset)
                     else:
                         y = -get_y(p - mid, pin_count // 2, pitch, False)
-                        lxo_min = ff(lead_x_offset + line_width / 2)
-                        lxo_max = ff(lead_x_offset + line_width / 2 + lead_length)
-                    y_max = ff(y + lead_width / 2)
-                    y_min = ff(y - lead_width / 2)
+                        lxo_min = ff(lead_x_offset)
+                        lxo_max = ff(lead_x_offset + lead_flat_length)
+                    y_max = ff(y - lead_width / 2)
+                    y_min = ff(y + lead_width / 2)
                     lead_uuid = uuid_leads[p - 1]
                     lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid))
                     lines.append('   (width 0.0) (fill true) (grab_area false)')
@@ -231,8 +264,8 @@ def generate_pkg(
 
                 lines.append(' )')
 
-            add_footprint_variant('reflow', 'reflow', 0.6, 0.0)
-            add_footprint_variant('handsoldering', 'hand soldering', 0.7, 0.5)
+            add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B')
+            add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A')
 
             lines.append(')')
 
@@ -264,13 +297,13 @@ if __name__ == '__main__':
         pins=[6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32],
         heights=[1.2, 1.4, 1.7, 2.7],
         body_width=5.22,
-        total_width=8.42,
+        total_width=8.42,  # effective, not nominal (7.62)
         lead_width=0.4,
-        lead_length=1.6,
-        lead_contact_length=0.8,
+        lead_flat_length=0.8,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
         top_offset=1.0,
+        version='0.2',
         create_date='2018-11-10T20:32:03Z',
     )
     generate_pkg(
@@ -284,13 +317,13 @@ if __name__ == '__main__':
         pins=[20, 22, 24, 28, 30, 32, 36, 40, 42, 44],
         heights=[1.2, 1.4, 1.7, 2.7],
         body_width=12.84,
-        total_width=16.04,
+        total_width=16.04,  # effective, not nominal (15.24)
         lead_width=0.4,
-        lead_length=1.6,
-        lead_contact_length=0.8,
+        lead_flat_length=0.8,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
         top_offset=1.0,
+        version='0.2',
         create_date='2018-11-10T20:32:03Z',
     )
     generate_pkg(
@@ -298,7 +331,7 @@ if __name__ == '__main__':
         author='Danilo B.',
         name='SOIC127P600X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
-                    'standardized by JEDEC.\\n\\n'
+                    'standardized by JEDEC (MS-012G).\\n\\n'
                     'Pitch: 1.27 mm\\nNominal width: 6.00mm\\nHeight: {height:.2f}mm',
         pitch=1.27,
         pins=[6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32, 36, 40, 42, 44, 48],
@@ -306,11 +339,11 @@ if __name__ == '__main__':
         body_width=3.9,
         total_width=6.0,
         lead_width=0.45,
-        lead_length=1.04,
-        lead_contact_length=0.835,
+        lead_flat_length=0.835,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec',
         top_offset=0.8,
+        version='0.2',
         create_date='2018-11-10T20:32:03Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
