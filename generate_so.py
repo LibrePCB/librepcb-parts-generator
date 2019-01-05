@@ -10,6 +10,7 @@ from uuid import uuid4
 
 from common import now, init_cache, save_cache
 from common import format_float as ff, format_ipc_dimension as fd
+from common import generate_courtyard, indent
 
 
 generator = 'librepcb-parts-generator (generate_so.py)'
@@ -158,8 +159,13 @@ def generate_pkg(
                 uuid_silkscreen = _uuid('polygon-silkscreen-{}'.format(key))
                 uuid_pin1_dot = _uuid('pin1-dot-silkscreen-{}'.format(key))
                 uuid_outline = _uuid('polygon-outline-{}'.format(key))
+                uuid_courtyard = _uuid('polygon-courtyard-{}'.format(key))
                 uuid_text_name = _uuid('text-name-{}'.format(key))
                 uuid_text_value = _uuid('text-value-{}'.format(key))
+
+                # Max boundaries
+                max_x = 0.0
+                max_y = 0.0
 
                 lines.append(' (footprint {}'.format(uuid_footprint))
                 lines.append('  (name "{}")'.format(name))
@@ -188,6 +194,7 @@ def generate_pkg(
                         pxo, ff(y), ff(pad_length), ff(pad_width),
                     ))
                     lines.append('  )')
+                max_x = max(max_x, total_width / 2 + pad_toe)
 
                 # Documentation: Leads (only flat part)
                 lead_x_offset = total_width / 2 - lead_flat_length  # this is the inner side of the flat lead
@@ -232,6 +239,17 @@ def generate_pkg(
                     lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_min))
                     lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
                     lines.append('  )')
+                max_y = max(max_y, bounds[0] + line_width / 2)
+
+                # Courtyard
+                courtyard_excess = get_by_density(pitch, density_level, 'courtyard')
+                lines.extend(indent(2, generate_courtyard(
+                    uuid=uuid_courtyard,
+                    max_x=max_x,
+                    max_y=max_y,
+                    excess_x=courtyard_excess,
+                    excess_y=courtyard_excess,
+                )))
 
                 # Silkscreen: Pin 1 dot
                 pin1_dot_diameter = pitch / 2
