@@ -293,6 +293,7 @@ def generate_pkg(
 
             add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B')
             add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A')
+            add_footprint_variant('density~c', 'Density Level C (min protrusion)', 'C')
 
             lines.append(')')
 
