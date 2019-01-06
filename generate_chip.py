@@ -191,7 +191,7 @@ def generate_pkg(
                 pad_length = (config.length - config.gap) / 2 + pad_toe
                 dx = sign * (config.gap / 2 + pad_length / 2)  # x offset (delta-x)
                 lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
-                lines.append('   (position {} 0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
+                lines.append('   (position {} 0.0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
                     ff(dx),
                     ff(pad_length),
                     ff(pad_width),
