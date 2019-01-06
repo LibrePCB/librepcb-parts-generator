@@ -17,7 +17,7 @@ generator = 'librepcb-parts-generator (generate_chip.py)'
 
 line_width = 0.25
 line_width_thin = 0.15
-line_width_thinner = 0.1
+line_width_thinner = 0.05
 pkg_text_height = 1.0
 label_offset = 1.1
 label_offset_thin = 0.8
