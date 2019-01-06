@@ -113,7 +113,7 @@ def generate_pkg(
     body_width: float,
     total_width: float,
     lead_width: float,
-    lead_flat_length: float,
+    lead_contact_length: float,
     pkgcat: str,
     keywords: str,
     top_offset: float,
@@ -133,7 +133,8 @@ def generate_pkg(
 
             uuid_pkg = _uuid('pkg')
             uuid_pads = [_uuid('pad-{}'.format(p)) for p in range(1, pin_count + 1)]
-            uuid_leads = [_uuid('lead-{}'.format(p)) for p in range(1, pin_count + 1)]
+            uuid_leads1 = [_uuid('lead-contact-{}'.format(p)) for p in range(1, pin_count + 1)]
+            uuid_leads2 = [_uuid('lead-proj-{}'.format(p)) for p in range(1, pin_count + 1)]
 
             print('Generating {}: {}'.format(full_name, uuid_pkg))
 
@@ -177,7 +178,7 @@ def generate_pkg(
                 pad_side = get_by_density(pitch, density_level, 'side')
 
                 # Correct heel size to ensure proper silkscreen clearance
-                _heel_offset = total_width / 2 - lead_flat_length - pad_heel
+                _heel_offset = total_width / 2 - lead_contact_length - pad_heel
                 _silkscreen_clearance = body_width / 2 + line_width / 2 + silkscreen_offset
                 _heel_correction = max(_silkscreen_clearance - _heel_offset, 0)
                 if _heel_correction > 0:
@@ -187,8 +188,8 @@ def generate_pkg(
 
                 # Pads
                 pad_width = lead_width + pad_side
-                pad_length = lead_flat_length + pad_heel + pad_toe
-                pad_x_offset = total_width / 2 - lead_flat_length / 2 - pad_heel / 2 + pad_toe / 2
+                pad_length = lead_contact_length + pad_heel + pad_toe
+                pad_x_offset = total_width / 2 - lead_contact_length / 2 - pad_heel / 2 + pad_toe / 2
                 for p in range(1, pin_count + 1):
                     mid = pin_count // 2
                     if p <= mid:
@@ -205,28 +206,41 @@ def generate_pkg(
                     lines.append('  )')
                 max_x = max(max_x, total_width / 2 + pad_toe)
 
-                # Documentation: Leads (only flat part)
-                lead_x_offset = total_width / 2 - lead_flat_length  # this is the inner side of the flat lead
+                # Documentation: Leads
+                lead_contact_x_offset = total_width / 2 - lead_contact_length  # this is the inner side of the contact area
                 for p in range(1, pin_count + 1):
                     mid = pin_count // 2
-                    if p <= mid:
+                    if p <= mid:  # left side
                         y = get_y(p, pin_count // 2, pitch, False)
-                        lxo_min = ff(-lead_x_offset - lead_flat_length)
-                        lxo_max = ff(-lead_x_offset)
-                    else:
+                        lcxo_max = ff(-lead_contact_x_offset - lead_contact_length)
+                        lcxo_min = ff(-lead_contact_x_offset)
+                        body_side = ff(-body_width / 2 - line_width / 2)
+                    else:  # right side
                         y = -get_y(p - mid, pin_count // 2, pitch, False)
-                        lxo_min = ff(lead_x_offset)
-                        lxo_max = ff(lead_x_offset + lead_flat_length)
+                        lcxo_min = ff(lead_contact_x_offset)
+                        lcxo_max = ff(lead_contact_x_offset + lead_contact_length)
+                        body_side = ff(body_width / 2 + line_width / 2)
                     y_max = ff(y - lead_width / 2)
                     y_min = ff(y + lead_width / 2)
-                    lead_uuid = uuid_leads[p - 1]
-                    lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid))
+                    lead_uuid_ctct = uuid_leads1[p - 1]  # Contact area
+                    lead_uuid_proj = uuid_leads2[p - 1]  # Vertical projection
+                    # Contact area
+                    lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid_ctct))
                     lines.append('   (width 0.0) (fill true) (grab_area false)')
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lxo_min, y_max))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lxo_max, y_max))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lxo_max, y_min))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lxo_min, y_min))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lxo_min, y_max))
+                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_max))
+                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_max, y_max))
+                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_max, y_min))
+                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_min))
+                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_max))
+                    lines.append('  )')
+                    # Vertical projection, between contact area and body
+                    lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid_proj))
+                    lines.append('   (width 0.0) (fill true) (grab_area false)')
+                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_max))
+                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_max))
+                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_min))
+                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_min))
+                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_max))
                     lines.append('  )')
 
                 # Silkscreen and Documentation
@@ -327,7 +341,7 @@ if __name__ == '__main__':
         body_width=5.22,
         total_width=8.42,  # effective, not nominal (7.62)
         lead_width=0.4,
-        lead_flat_length=0.8,
+        lead_contact_length=0.8,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
         top_offset=1.0,
@@ -347,7 +361,7 @@ if __name__ == '__main__':
         body_width=12.84,
         total_width=16.04,  # effective, not nominal (15.24)
         lead_width=0.4,
-        lead_flat_length=0.8,
+        lead_contact_length=0.8,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
         top_offset=1.0,
@@ -367,7 +381,7 @@ if __name__ == '__main__':
         body_width=3.9,
         total_width=6.0,
         lead_width=0.45,
-        lead_flat_length=0.835,
+        lead_contact_length=0.835,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec',
         top_offset=0.8,
