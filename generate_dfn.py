@@ -99,7 +99,7 @@ def generate_pkg(
         else:
             full_name += "T{}X{}".format(exp_width, exp_length)
 
-    full_description = description.format(height=config.height,
+    full_description = description.format(height=config.height_nominal,
                                           pin_count=config.pin_count,
                                           pitch=config.pitch,
                                           width=config.width,
@@ -107,6 +107,9 @@ def generate_pkg(
     if make_exposed:
         full_description += "\\nExposed Pad: {:.2f} x {:.2f} mm".format(
                 config.exposed_width, config.exposed_length)
+
+    if config.print_pad:
+        full_description += "\\nPad length: {:.2f} mm".format(config.lead_length)
 
     def _uuid(identifier):
         return uuid(category, full_name, identifier)
