@@ -3,7 +3,9 @@ Configuration file, containing all available DFN configs.
 
 """
 
-# Maximal lead width as a function of pitch, Table 4
+# Maximal lead width as a function of pitch, Table 4 in the JEDEC
+# standard MO-229F, available (with registration!) from
+# https://www.jedec.org/system/files/docs/MO-229F.pdf
 LEAD_WIDTH = {
         0.95: 0.45,
         0.8: 0.35,
@@ -64,7 +66,7 @@ class DfnConfig:
         try:
             self.toe_heel = LEAD_TOE_HEEL[pitch]
         except KeyError:
-            raise NotImplementedError(f"No toe/heel length for pitch {pitch}")
+            raise NotImplementedError("No toe/heel length for pitch {:s}".format(pitch))
 
         self.keywords = keywords
 
@@ -254,6 +256,6 @@ JEDEC_CONFIGS = [
     ]
 
 THIRD_CONFIGS = [
-        # Sensirion SHTC-3
-        DfnConfig(2.0, 2.0, 1.0, 4, 0.75, 0.80, 0.35, 1.60, 0.70, 'SHTC-3', lead_width=0.35),
+        # Sensirion SHTC3
+        DfnConfig(2.0, 2.0, 1.0, 4, 0.75, 0.80, 0.35, 1.60, 0.70, 'Sensirion,SHTC3', lead_width=0.35),
     ]

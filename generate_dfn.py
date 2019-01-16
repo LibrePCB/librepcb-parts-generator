@@ -95,9 +95,9 @@ def generate_pkg(
         exp_width = fd(config.exposed_width)
         exp_length = fd(config.exposed_length)
         if exp_width == exp_length:
-            full_name += f"T{exp_width}"
+            full_name += "T{}".format(exp_width)
         else:
-            full_name += f"T{exp_width}X{exp_length}"
+            full_name += "T{}X{}".format(exp_width, exp_length)
 
     full_description = description.format(height=config.height,
                                           pin_count=config.pin_count,
@@ -156,14 +156,14 @@ def generate_pkg(
         if make_exposed:
             clearance = (config.width / 2) - config.lead_length - (exposed_length / 2)
             if clearance < MIN_CLEARANCE:
-                print(f"Increasing clearance from {clearance:.2f} to {MIN_CLEARANCE:.2f}")
+                print("Increasing clearance from {:.2f} to {:.2f}".format(clearance, MIN_CLEARANCE))
                 d_clearance = (MIN_CLEARANCE - clearance) / 2
                 pad_length = pad_length - d_clearance
                 exposed_length = exposed_length - 2 * d_clearance
                 abs_pad_pos_x = abs_pad_pos_x + (d_clearance / 2)
 
             if exposed_length < MIN_TRACE:
-                print(f"Increasing exposed path width from {exposed_length:.2f} to {MIN_TRACE:.2f}")
+                print("Increasing exposed path width from {:.2f} to {:.2f}".format(exposed_length, MIN_TRACE))
                 d_exp = MIN_TRACE - exposed_length
                 exposed_length = exposed_length + d_exp
                 pad_length = pad_length - (d_exp / 2)
@@ -196,7 +196,7 @@ def generate_pkg(
             # Measure clearance pad-exposed pad
             clearance = abs(pad_pos_x) - (pad_length / 2) - (exposed_length / 2)
             if np.around(clearance, decimals=2) < MIN_CLEARANCE:
-                print(f"Warning: minimal clearance violated in {full_name}: {clearance:.4f} < {MIN_CLEARANCE:.2f}")
+                print("Warning: minimal clearance violated in {}: {:.4f} < {:.2f}".format(full_name, clearance, MIN_CLEARANCE))
 
         # Create Silk Screen (lines and dot only)
         silk_down = (config.length / 2 - SILKSCREEN_OFFSET -
@@ -365,7 +365,7 @@ if __name__ == '__main__':
             if name not in generated_packages:
                 generated_packages.append(name)
             else:
-                print(f"Duplicate name found: {name}")
+                print("Duplicate name found: {}".format(name))
 
     _make('out/3rd_party')
     _make('out/3rd_party/pkg')
@@ -398,6 +398,6 @@ if __name__ == '__main__':
             if name not in generated_packages:
                 generated_packages.append(name)
             else:
-                print(f"Duplicate name found: {name}")
+                print("Duplicate name found: {}".format(name))
 
     save_cache(uuid_cache_file, uuid_cache)
