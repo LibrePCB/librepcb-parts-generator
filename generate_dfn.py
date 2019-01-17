@@ -86,6 +86,10 @@ def generate_pkg(
                             pin_count=config.pin_count,
                             pitch=fd(config.pitch))
 
+    # Add prefix if required
+    if config.name_prefix:
+        full_name = config.name_prefix + full_name
+
     # Add pad length for otherwise identical names/packages
     if config.print_pad:
         full_name += "P{:s}".format(fd(config.lead_length))

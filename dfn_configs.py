@@ -43,6 +43,7 @@ class DfnConfig:
                  no_exp: bool = True,    # By default we create variants w/o exp
                  print_pad: bool = False,    # By default, the pad length is not in the full name
                  lead_width: float = None,
+                 name_prefix: str = None,
                  ):
         self.length = length
         self.width = width
@@ -69,6 +70,7 @@ class DfnConfig:
             raise NotImplementedError("No toe/heel length for pitch {:s}".format(pitch))
 
         self.keywords = keywords
+        self.name_prefix = name_prefix
 
 
 JEDEC_CONFIGS = [
@@ -257,5 +259,5 @@ JEDEC_CONFIGS = [
 
 THIRD_CONFIGS = [
         # Sensirion SHTC3
-        DfnConfig(2.0, 2.0, 1.0, 4, 0.75, 0.80, 0.35, 1.60, 0.70, 'Sensirion,SHTC3', lead_width=0.35),
+        DfnConfig(2.0, 2.0, 1.0, 4, 0.75, 0.80, 0.35, 1.60, 0.70, 'Sensirion,SHTC3', name_prefix='Sensirion ', lead_width=0.35),
     ]
