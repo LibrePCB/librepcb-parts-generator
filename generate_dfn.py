@@ -235,18 +235,33 @@ def generate_pkg(
 
             lines.append('  )')
 
+        # As discussed in https://github.com/LibrePCB-Libraries/LibrePCB_Base.lplib/pull/16
+        # the silkscreen circle should have size SILKSCREEN_LINE_WIDTH for small packages,
+        # and twice the size for larger packages. We define small to be either W or L <3.0mm
+        # and large if both W and L >= 3.0mm
+        if config.width >= 3.0 and config.length >= 3.0:
+            silkscreen_circ_dia = 2.0 * SILKSCREEN_LINE_WIDTH
+        else:
+            silkscreen_circ_dia = SILKSCREEN_LINE_WIDTH
+
+        if silkscreen_circ_dia == SILKSCREEN_LINE_WIDTH:
+            silk_circ_y = config.length / 2 + silkscreen_circ_dia
+            silk_circ_x = -config.width / 2 - SILKSCREEN_LINE_WIDTH
+        else:
+            silk_circ_y = config.length / 2 + SILKSCREEN_LINE_WIDTH / 2
+            silk_circ_x = -config.width / 2 - silkscreen_circ_dia
+
         # Move silkscreen circle upwards if the line is moved too
-        silk_circ_h = config.length / 2 + SILKSCREEN_LINE_WIDTH
         if silk_down < 0:
-            silk_circ_h = silk_circ_h - silk_down
+            silk_circ_y = silk_circ_y - silk_down
 
         uuid_silkscreen_circ = _uuid('circle-silkscreen-{}'.format(key))
         lines.append('  (circle {} (layer top_placement)'.format(uuid_silkscreen_circ))
         lines.append('   (width 0.0) (fill true) (grab_area false) '
                      '(diameter {}) (position {} {})'.format(
-                         ff(SILKSCREEN_LINE_WIDTH),
-                         ff(-config.width / 2 - SILKSCREEN_LINE_WIDTH),
-                         ff(silk_circ_h)
+                         ff(silkscreen_circ_dia),
+                         ff(silk_circ_x),
+                         ff(silk_circ_y)
                      ))
         lines.append('  )')
 
