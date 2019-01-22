@@ -237,36 +237,6 @@ def generate_pkg(
 
             lines.append('  )')
 
-        # As discussed in https://github.com/LibrePCB-Libraries/LibrePCB_Base.lplib/pull/16
-        # the silkscreen circle should have size SILKSCREEN_LINE_WIDTH for small packages,
-        # and twice the size for larger packages. We define small to be either W or L <3.0mm
-        # and large if both W and L >= 3.0mm
-        if config.width >= 3.0 and config.length >= 3.0:
-            silkscreen_circ_dia = 2.0 * SILKSCREEN_LINE_WIDTH
-        else:
-            silkscreen_circ_dia = SILKSCREEN_LINE_WIDTH
-
-        if silkscreen_circ_dia == SILKSCREEN_LINE_WIDTH:
-            silk_circ_y = config.length / 2 + silkscreen_circ_dia
-            silk_circ_x = -config.width / 2 - SILKSCREEN_LINE_WIDTH
-        else:
-            silk_circ_y = config.length / 2 + SILKSCREEN_LINE_WIDTH / 2
-            silk_circ_x = -config.width / 2 - silkscreen_circ_dia
-
-        # Move silkscreen circle upwards if the line is moved too
-        if silk_down < 0:
-            silk_circ_y = silk_circ_y - silk_down
-
-        uuid_silkscreen_circ = _uuid('circle-silkscreen-{}'.format(key))
-        lines.append('  (circle {} (layer top_placement)'.format(uuid_silkscreen_circ))
-        lines.append('   (width 0.0) (fill true) (grab_area false) '
-                     '(diameter {}) (position {} {})'.format(
-                         ff(silkscreen_circ_dia),
-                         ff(silk_circ_x),
-                         ff(silk_circ_y)
-                     ))
-        lines.append('  )')
-
         # Create leads on docu
         uuid_leads = [_uuid('lead-{}'.format(p)) for p in range(1, config.pin_count + 1)]
         for pad_idx, pad_nr in enumerate(range(1, config.pin_count + 1)):
@@ -309,6 +279,36 @@ def generate_pkg(
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_min))
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_max))
             lines.append('  )')
+
+        # As discussed in https://github.com/LibrePCB-Libraries/LibrePCB_Base.lplib/pull/16
+        # the silkscreen circle should have size SILKSCREEN_LINE_WIDTH for small packages,
+        # and twice the size for larger packages. We define small to be either W or L <3.0mm
+        # and large if both W and L >= 3.0mm
+        if config.width >= 3.0 and config.length >= 3.0:
+            silkscreen_circ_dia = 2.0 * SILKSCREEN_LINE_WIDTH
+        else:
+            silkscreen_circ_dia = SILKSCREEN_LINE_WIDTH
+
+        if silkscreen_circ_dia == SILKSCREEN_LINE_WIDTH:
+            silk_circ_y = config.length / 2 + silkscreen_circ_dia
+            silk_circ_x = -config.width / 2 - SILKSCREEN_LINE_WIDTH
+        else:
+            silk_circ_y = config.length / 2 + SILKSCREEN_LINE_WIDTH / 2
+            silk_circ_x = -config.width / 2 - silkscreen_circ_dia
+
+        # Move silkscreen circle upwards if the line is moved too
+        if silk_down < 0:
+            silk_circ_y = silk_circ_y - silk_down
+
+        uuid_silkscreen_circ = _uuid('circle-silkscreen-{}'.format(key))
+        lines.append('  (circle {} (layer top_placement)'.format(uuid_silkscreen_circ))
+        lines.append('   (width 0.0) (fill true) (grab_area false) '
+                     '(diameter {}) (position {} {})'.format(
+                         ff(silkscreen_circ_dia),
+                         ff(silk_circ_x),
+                         ff(silk_circ_y)
+                     ))
+        lines.append('  )')
 
         # Add name and value labels
         uuid_text_name = _uuid('text-name-{}'.format(key))
