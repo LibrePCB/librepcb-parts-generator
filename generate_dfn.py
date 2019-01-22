@@ -147,7 +147,7 @@ def generate_pkg(
     for p in range(1, config.pin_count + 1):
         lines.append(' (pad {} (name "{}"))'.format(uuid_pads[p - 1], p))
     if make_exposed:
-        lines.append(' (pad {} (name "{}"))'.format(uuid_exp, 'Exposed Pad'))
+        lines.append(' (pad {} (name "{}"))'.format(uuid_exp, 'ExposedPad'))
 
     # Create Footprint function
     def _generate_footprint(key: str, name: str, pad_extension: float):
