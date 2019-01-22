@@ -255,6 +255,10 @@ def generate_pkg(
             if pad_idx < (config.pin_count / 2):
                 x_min, x_max = - x_min, - x_max
 
+            # Convert numbers to librepcb format
+            x_min, x_max = ff(x_min), ff(x_max)
+            y_min, y_max = ff(y_min), ff(y_max)
+
             lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid))
             lines.append('   (width 0.0) (fill true) (grab_area false)')
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_max))
