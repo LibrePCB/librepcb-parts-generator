@@ -4,6 +4,7 @@ Generate DFN packages
 """
 import numpy as np
 from os import path, makedirs
+from typing import Optional
 from uuid import uuid4
 
 from common import now, init_cache, save_cache
@@ -76,6 +77,7 @@ def generate_pkg(
     keywords: str,
     config: DfnConfig,
     make_exposed: bool,
+    create_date: Optional[str] = None,
 ):
     category = 'pkg'
     lines = []
@@ -137,7 +139,7 @@ def generate_pkg(
         lines.append(' (keywords "dfn{},{}")'.format(config.pin_count, keywords))
     lines.append(' (author "{}")'.format(author))
     lines.append(' (version "0.1")')
-    lines.append(' (created {})'.format(now()))
+    lines.append(' (created {})'.format(create_date or now()))
     lines.append(' (deprecated false)')
     lines.append(' (category {})'.format(pkgcat))
 
@@ -383,6 +385,7 @@ if __name__ == '__main__':
                 keywords='dfn,dual-flat no-leads,mo-229f',
                 config=config,
                 make_exposed=make_exposed,
+                create_date='2019-01-17T06:11:43Z',
             )
             if name not in generated_packages:
                 generated_packages.append(name)
