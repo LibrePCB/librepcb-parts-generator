@@ -7,25 +7,25 @@ Configuration file, containing all available DFN configs.
 # standard MO-229F, available (with registration!) from
 # https://www.jedec.org/system/files/docs/MO-229F.pdf
 LEAD_WIDTH = {
-        0.95: 0.45,
-        0.8: 0.35,
-        0.65: 0.35,
-        0.5: 0.30,
-        0.4: 0.25
-    }
+    0.95: 0.45,
+    0.8: 0.35,
+    0.65: 0.35,
+    0.5: 0.30,
+    0.4: 0.25
+}
 
 # Toe and heel length as a function of pitch
 # According to IPC-7351C, see slide 26 of
 # http://ocipcdc.org/archive/What_is_New_in_IPC-7351C_03_11_2015.pdf
 LEAD_TOE_HEEL = {
-        1.00: 0.35,
-        0.95: 0.35,    # not specified in standard
-        0.8: 0.33,
-        0.65: 0.31,
-        0.50: 0.29,
-        0.40: 0.27,
-        0.35: 0.25
-    }
+    1.00: 0.35,
+    0.95: 0.35,    # not specified in standard
+    0.8: 0.33,
+    0.65: 0.31,
+    0.50: 0.29,
+    0.40: 0.27,
+    0.35: 0.25
+}
 
 
 class DfnConfig:
@@ -44,6 +44,7 @@ class DfnConfig:
                  print_pad: bool = False,    # By default, the pad length is not in the full name
                  lead_width: float = None,
                  name_prefix: str = None,
+                 pin1_corner_dx_dy: float = None,  # Some parts have a triangular pin1 marking
                  ):
         self.length = length
         self.width = width
@@ -258,6 +259,11 @@ JEDEC_CONFIGS = [
     ]
 
 THIRD_CONFIGS = [
-        # Sensirion SHTC3
-        DfnConfig(2.0, 2.0, 1.0, 4, 0.75, 0.80, 0.35, 1.60, 0.70, 'Sensirion,SHTC3', name_prefix='Sensirion ', lead_width=0.35),
-    ]
+    # length, width, pitch, pin_count, height_nominal, height_max, lead_length, exposed_width, exposed_length, keywords
+
+    # Sensirion
+    DfnConfig(2.0, 2.0, 1.0, 4, 0.75, 0.80, 0.35, 1.60, 0.70, 'sensirion,sht,shtcx,shtc1,shtc3',
+              name_prefix='Sensirion ', lead_width=0.35, no_exp=False, pin1_corner_dx_dy=0.2),
+    DfnConfig(3.0, 3.0, 1.0, 6, 1.1, 1.20, 0.4, 2.4, 1.5, 'sensirion,sht,sht2x,sht20,sht21,sht25',
+              name_prefix='Sensirion ', lead_width=0.4, no_exp=False, pin1_corner_dx_dy=0.2),
+]
