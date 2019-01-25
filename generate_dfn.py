@@ -214,6 +214,15 @@ def generate_pkg(
                      config.lead_width / 2 -
                      SILKSCREEN_LINE_WIDTH / 2)    # required for round ending of line
 
+        # Measure clearance silkscreen to exposed pad
+        silk_top_line_height = config.length / 2
+        if make_exposed:
+            silk_clearance = silk_top_line_height - (SILKSCREEN_LINE_WIDTH / 2) - (config.exposed_width / 2)
+            if np.around(silk_clearance, decimals=2) < SILKSCREEN_OFFSET:
+                silk_top_line_height = silk_top_line_height + (SILKSCREEN_OFFSET - silk_clearance)
+                silk_down = silk_down + (SILKSCREEN_OFFSET - silk_clearance)
+                print("Increasing exp-silk clearance from {:.4f} to {:.2f}".format(silk_clearance, SILKSCREEN_OFFSET))
+
         for idx, silkscreen_pos in enumerate([-1, 1]):
             uuid_silkscreen_poly = _uuid('polygon-silkscreen-{}-{}'.format(key, idx))
             lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_poly))
@@ -221,20 +230,20 @@ def generate_pkg(
                 SILKSCREEN_LINE_WIDTH))
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
                          ff(-config.width / 2),
-                         ff(silkscreen_pos * (config.length / 2 - silk_down))))
+                         ff(silkscreen_pos * (silk_top_line_height - silk_down))))
             # If this is negative, the silkscreen line has to be moved away from
             # the real position, in order to keep the required distance to the
             # pad. We then only draw a single line, so we can omit the parts below.
             if silk_down > 0:
                 lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
                              ff(-config.width / 2),
-                             ff(silkscreen_pos * config.length / 2)))
+                             ff(silkscreen_pos * silk_top_line_height)))
                 lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
                              ff(config.width / 2),
-                             ff(silkscreen_pos * config.length / 2)))
+                             ff(silkscreen_pos * silk_top_line_height)))
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
                          ff(config.width / 2),
-                         ff(silkscreen_pos * (config.length / 2 - silk_down))))
+                         ff(silkscreen_pos * (silk_top_line_height - silk_down))))
 
             lines.append('  )')
 
