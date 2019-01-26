@@ -95,7 +95,7 @@ def generate_courtyard(
     dy = format_float(max_y + excess_y)
     return [
         '(polygon {} (layer {})'.format(uuid, 'top_courtyard'),
-        ' (width {}) (fill false) (grab_area true)'.format(COURTYARD_LINE_WIDTH),
+        ' (width {}) (fill false) (grab_area false)'.format(COURTYARD_LINE_WIDTH),
         ' (vertex (position -{} {}) (angle 0.0))'.format(dx, dy),  # NW
         ' (vertex (position {} {}) (angle 0.0))'.format(dx, dy),  # NE
         ' (vertex (position {} -{}) (angle 0.0))'.format(dx, dy),  # SE
