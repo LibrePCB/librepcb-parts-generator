@@ -159,7 +159,6 @@ def generate_pkg(
                 uuid_footprint = _uuid('footprint-{}'.format(key))
                 uuid_silkscreen_top = _uuid('polygon-silkscreen-{}'.format(key))
                 uuid_silkscreen_bot = _uuid('polygon-silkscreen2-{}'.format(key))
-                uuid_pin1_dot = _uuid('pin1-dot-silkscreen-{}'.format(key))
                 uuid_outline = _uuid('polygon-outline-{}'.format(key))
                 uuid_courtyard = _uuid('polygon-courtyard-{}'.format(key))
                 uuid_text_name = _uuid('text-name-{}'.format(key))
@@ -277,18 +276,6 @@ def generate_pkg(
                     excess_x=courtyard_excess,
                     excess_y=courtyard_excess,
                 )))
-
-                # Silkscreen: Pin 1 dot
-                pin1_dot_diameter = pitch / 2
-                lines.append('  (circle {} (layer top_placement)'.format(uuid_pin1_dot))
-                lines.append('   (width 0.0) (fill true) (grab_area false) '
-                    '(diameter {}) (position -{} {})'.format(
-                        ff(pin1_dot_diameter),
-                        ff(outline_x_offset - pin1_dot_diameter * 1.5),
-                        ff(get_y(1, pin_count // 2, pitch, False)),
-                    )
-                )
-                lines.append('  )')
 
                 # Labels
                 bounds = get_rectangle_bounds(pin_count // 2, pitch, top_offset + 1.27, False)
