@@ -164,7 +164,7 @@ def generate_pkg(
                 uuid_text_name = _uuid('text-name-{}'.format(key))
                 uuid_text_value = _uuid('text-value-{}'.format(key))
 
-                # Max boundaries
+                # Max boundaries (pads or body)
                 max_x = 0.0
                 max_y = 0.0
 
@@ -250,7 +250,6 @@ def generate_pkg(
                 lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-short_x_offset), y_min))  # noqa
                 lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(short_x_offset), y_min))  # noqa
                 lines.append('  )')
-                max_y = max(max_y, bounds[0] + line_width / 2)
 
                 # Documentation outline (fully inside body)
                 outline_x_offset = body_width / 2 - line_width / 2
@@ -266,6 +265,7 @@ def generate_pkg(
                 lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_min))
                 lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
                 lines.append('  )')
+                max_y = max(max_y, bounds[0])  # Body contour
 
                 # Courtyard
                 courtyard_excess = get_by_density(pitch, density_level, 'courtyard')
