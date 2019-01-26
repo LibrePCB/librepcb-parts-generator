@@ -17,7 +17,7 @@ generator = 'librepcb-parts-generator (generate_so.py)'
 
 line_width = 0.25
 pkg_text_height = 1.0
-silkscreen_offset = 0.151  # 150 µm + 1 µm to compensate rounding errors
+silkscreen_offset = 0.150  # 150 µm
 pin_package_offset = 0.762  # Distance between pad center and the package outline
 
 
@@ -157,7 +157,8 @@ def generate_pkg(
                 density_level: str,
             ):
                 uuid_footprint = _uuid('footprint-{}'.format(key))
-                uuid_silkscreen = _uuid('polygon-silkscreen-{}'.format(key))
+                uuid_silkscreen_top = _uuid('polygon-silkscreen-{}'.format(key))
+                uuid_silkscreen_bot = _uuid('polygon-silkscreen2-{}'.format(key))
                 uuid_pin1_dot = _uuid('pin1-dot-silkscreen-{}'.format(key))
                 uuid_outline = _uuid('polygon-outline-{}'.format(key))
                 uuid_courtyard = _uuid('polygon-courtyard-{}'.format(key))
@@ -176,15 +177,6 @@ def generate_pkg(
                 pad_heel = get_by_density(pitch, density_level, 'heel')
                 pad_toe = get_by_density(pitch, density_level, 'toe')
                 pad_side = get_by_density(pitch, density_level, 'side')
-
-                # Correct heel size to ensure proper silkscreen clearance
-                _heel_offset = total_width / 2 - lead_contact_length - pad_heel
-                _silkscreen_clearance = body_width / 2 + line_width / 2 + silkscreen_offset
-                _heel_correction = max(_silkscreen_clearance - _heel_offset, 0)
-                if _heel_correction > 0:
-                    print('  Warning: Shortening heel by {:.3f} mm to ensure '
-                          'silkscreen-pad clearance'.format(_heel_correction))
-                    pad_heel -= _heel_correction
 
                 # Pads
                 pad_width = lead_width + pad_side
@@ -243,26 +235,36 @@ def generate_pkg(
                     lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_max))
                     lines.append('  )')
 
-                # Silkscreen and Documentation
+                # Silkscreen
+                bounds = get_rectangle_bounds(pin_count // 2, pitch, top_offset, False)
+                y_max = ff(bounds[0] + line_width / 2)
+                y_min = ff(bounds[1] - line_width / 2)
+                lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_top))
+                lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-total_width / 2 - pad_toe), y_max))  # noqa
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(body_width / 2), y_max))  # noqa
+                lines.append('  )')
+                lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_bot))
+                lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-body_width / 2), y_min))  # noqa
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(body_width / 2), y_min))  # noqa
+                lines.append('  )')
+                max_y = max(max_y, bounds[0] + line_width / 2)
+
+                # Documentation
                 outline_x_offset = body_width / 2
                 bounds = get_rectangle_bounds(pin_count // 2, pitch, top_offset, False)
-                for (layer, uuid) in [
-                    ('top_placement', uuid_silkscreen),
-                    ('top_documentation', uuid_outline),
-                ]:
-                    lines.append('  (polygon {} (layer {})'.format(uuid, layer))
-                    grab = 'true' if layer == 'top_documentation' else 'false'
-                    lines.append('   (width {}) (fill false) (grab_area {})'.format(line_width, grab))
-                    y_max = ff(bounds[0])
-                    y_min = ff(bounds[1])
-                    oxo = ff(outline_x_offset)  # Used for shorter lines below :)
-                    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_max))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_min))
-                    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_min))
-                    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
-                    lines.append('  )')
-                max_y = max(max_y, bounds[0] + line_width / 2)
+                lines.append('  (polygon {} (layer top_documentation)'.format(uuid_outline))
+                lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
+                y_max = ff(bounds[0])
+                y_min = ff(bounds[1])
+                oxo = ff(outline_x_offset)  # Used for shorter code lines below :)
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_max))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_min))
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_min))
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
+                lines.append('  )')
 
                 # Courtyard
                 courtyard_excess = get_by_density(pitch, density_level, 'courtyard')
