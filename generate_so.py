@@ -206,12 +206,12 @@ def generate_pkg(
                         y = get_y(p, pin_count // 2, pitch, False)
                         lcxo_max = ff(-lead_contact_x_offset - lead_contact_length)
                         lcxo_min = ff(-lead_contact_x_offset)
-                        body_side = ff(-body_width / 2 - line_width / 2)
+                        body_side = ff(-body_width / 2)
                     else:  # right side
                         y = -get_y(p - mid, pin_count // 2, pitch, False)
                         lcxo_min = ff(lead_contact_x_offset)
                         lcxo_max = ff(lead_contact_x_offset + lead_contact_length)
-                        body_side = ff(body_width / 2 + line_width / 2)
+                        body_side = ff(body_width / 2)
                     y_max = ff(y - lead_width / 2)
                     y_min = ff(y + lead_width / 2)
                     lead_uuid_ctct = uuid_leads1[p - 1]  # Contact area
@@ -239,25 +239,27 @@ def generate_pkg(
                 bounds = get_rectangle_bounds(pin_count // 2, pitch, top_offset, False)
                 y_max = ff(bounds[0] + line_width / 2)
                 y_min = ff(bounds[1] - line_width / 2)
+                short_x_offset = body_width / 2 - line_width / 2
+                long_x_offset = total_width / 2 - line_width / 2 + pad_toe  # Pin1 marking
                 lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_top))
                 lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-total_width / 2 - pad_toe), y_max))  # noqa
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(body_width / 2), y_max))  # noqa
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-long_x_offset), y_max))  # noqa
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(short_x_offset), y_max))  # noqa
                 lines.append('  )')
                 lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_bot))
                 lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-body_width / 2), y_min))  # noqa
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(body_width / 2), y_min))  # noqa
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-short_x_offset), y_min))  # noqa
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(short_x_offset), y_min))  # noqa
                 lines.append('  )')
                 max_y = max(max_y, bounds[0] + line_width / 2)
 
-                # Documentation
-                outline_x_offset = body_width / 2
+                # Documentation outline (fully inside body)
+                outline_x_offset = body_width / 2 - line_width / 2
                 bounds = get_rectangle_bounds(pin_count // 2, pitch, top_offset, False)
                 lines.append('  (polygon {} (layer top_documentation)'.format(uuid_outline))
                 lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
-                y_max = ff(bounds[0])
-                y_min = ff(bounds[1])
+                y_max = ff(bounds[0] - line_width / 2)
+                y_min = ff(bounds[1] + line_width / 2)
                 oxo = ff(outline_x_offset)  # Used for shorter code lines below :)
                 lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
                 lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_max))
