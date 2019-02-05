@@ -1,6 +1,6 @@
 import pytest
 
-from common import format_float as ff, format_ipc_dimension
+from common import format_float as ff, format_ipc_dimension, sign
 
 
 @pytest.mark.parametrize(['inval', 'outval'], [
@@ -22,3 +22,16 @@ def test_format_float(inval: float, outval: str):
 ])
 def test_format_ipc_dimension(inval: float, outval: str):
     assert format_ipc_dimension(inval) == outval
+
+
+@pytest.mark.parametrize(['inval', 'outval'], [
+    (3.14456, 1),
+    (75.0, 1),
+    (0, 1),
+    (0.0, 1),
+    (-0.0, 1),
+    (-1, -1),
+    (-0.001, -1),
+])
+def test_sign(inval: float, outval: str):
+    assert sign(inval) == outval

@@ -5,7 +5,7 @@ import collections
 import csv
 from datetime import datetime
 import re
-from typing import Iterable
+from typing import Iterable, Union
 
 
 # Commonly used dimensions
@@ -79,7 +79,7 @@ def generate_courtyard(
     excess_y: float,
 ):
     """
-    Generate a courtyard polygon.
+    Generate a rectangular courtyard polygon.
 
     Args:
         uuid:
@@ -106,3 +106,13 @@ def generate_courtyard(
         ' (vertex (position -{} {}) (angle 0.0))'.format(dx, dy),  # NW
         ')',
     ]
+
+
+def sign(val: Union[int, float]):
+    """
+    Return 1 for positive or zero values, -1 otherwise.
+    """
+    if val >= 0.0:
+        return 1
+    else:
+        return -1
