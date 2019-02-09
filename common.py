@@ -4,6 +4,7 @@ Common functionality for generator scripts.
 import collections
 import csv
 from datetime import datetime
+import re
 from typing import Iterable
 
 
@@ -58,7 +59,9 @@ def format_ipc_dimension(number: float, decimal_places: int = 2) -> str:
     """
     Format a dimension (e.g. lead span or height) according to IPC rules.
     """
-    return '{:.2f}'.format(number).replace('0.', '').replace('.', '')
+    formatted = '{:.2f}'.format(number)
+    stripped = re.sub(r'^0\.', '', formatted)
+    return stripped.replace('.', '')
 
 
 def indent(level: int, lines: Iterable[str]):

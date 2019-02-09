@@ -18,6 +18,7 @@ def test_format_float(inval: float, outval: str):
     (75.0, '7500'),
     (0.4, '40'),
     (0.75, '75'),
+    (30.0, '3000'),
 ])
 def test_format_ipc_dimension(inval: float, outval: str):
     assert format_ipc_dimension(inval) == outval
