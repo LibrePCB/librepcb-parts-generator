@@ -28,7 +28,7 @@ def save_cache(uuid_cache_file: str, uuid_cache: collections.OrderedDict) -> Non
     print('Saving cache: {}'.format(uuid_cache_file))
     with open(uuid_cache_file, 'w') as f:
         writer = csv.writer(f, delimiter=',', quotechar='"', lineterminator='\n')
-        for k, v in uuid_cache.items():
+        for k, v in sorted(uuid_cache.items()):
             writer.writerow([k, v])
     print('Done, cached {} UUIDs'.format(len(uuid_cache)))
 
