@@ -64,7 +64,8 @@ class QfpConfig:
         name: str,  # e.g. QFP or LQFP
         body_size_x: float,
         body_size_y: float,
-        height: float,  # Total height, A in the datasheet
+        height_nom: float,  # Nominal height (1.0 for TQFP and 1.4 for LQFP)
+        height_max: float,  # Total height, A in the datasheet
         pitch: float,
         lead_count: int,
         lead_span_x: float,  # Total length from tip to tip, D in the datasheet
@@ -80,7 +81,8 @@ class QfpConfig:
         self.body_size_y = body_size_y
         self.pitch = pitch
         self.lead_count = lead_count
-        self.height = height
+        self.height_nom = height_nom
+        self.height_max = height_max
         self.lead_span_x = lead_span_x
         self.lead_span_y = lead_span_y
         self.lead_width = lead_width
@@ -104,7 +106,7 @@ class QfpConfig:
             fd(self.pitch),
             fd(self.lead_span_x),
             fd(self.lead_span_y),
-            fd(self.height),
+            fd(self.height_nom),
             self.lead_count,
         )
 
@@ -119,10 +121,10 @@ class QfpConfig:
             raise ValueError('Invalid name: {}'.format(self.name))
         return '{}-pin {}, standardized by JEDEC in MS-026.\\n\\n' \
                'Pitch: {} mm\\nBody size: {}x{} mm\\nLead span: {}x{} mm\\n' \
-               'Max height: {} mm\\n\\nGenerated with {}'.format(
+               'Nominal height: {} mm\\nMax height: {} mm\\n\\nGenerated with {}'.format(
                    self.lead_count, full_name, self.pitch, self.body_size_x,
                    self.body_size_y, self.lead_span_x, self.lead_span_y,
-                   self.height, generator,
+                   self.height_nom, self.height_max, generator,
                )
 
     def excess_by_density(self, density: str) -> Excess:
@@ -165,67 +167,68 @@ class LTQfpConfig:
 
     def get_configs(self) -> List[QfpConfig]:
         configs = []
-        for (variation, height, prefix) in [
-            (self.variation_t, 1.00, 'T'),
-            (self.variation_l, 1.40, 'L'),
+        for (variation, height_nom, height_max, prefix) in [
+            (self.variation_t, 1.00, 1.20, 'T'),
+            (self.variation_l, 1.40, 1.60, 'L'),
         ]:
             if variation is None:
                 continue
             config = deepcopy(self.base_config)
             config.name = prefix + config.name
-            config.height = height
+            config.height_nom = height_nom
+            config.height_max = height_max
             config.keywords += ',{},{}'.format(config.name, variation).strip(',').lower()
             configs.append(config)
         return configs
 
 
 JEDEC_CONFIGS = [  # May contain any type that has a `get_configs(self) -> List[QfpConfig]` method
-    # Datasheet designators       D1    E1   A   e           D     E    b
-    # Description                 body-x,y       ptch   pin  span-x,y
+    # Datasheet designators       D1    E1       A   e           D     E    b
+    # Description                 body-x,y           ptch   pin  span-x,y
 
-    LTQfpConfig(QfpConfig('QFP',  4.0,  4.0, -1, 0.65,  20,  6.0,  6.0, 0.32, ''), 'AKA', 'BKA'),
-    LTQfpConfig(QfpConfig('QFP',  4.0,  4.0, -1, 0.50,  24,  6.0,  6.0, 0.22, ''), 'AKB', 'BKB'),
-    LTQfpConfig(QfpConfig('QFP',  4.0,  4.0, -1, 0.40,  32,  6.0,  6.0, 0.18, ''), 'AKC', 'BKC'),
+    LTQfpConfig(QfpConfig('QFP',  4.0,  4.0, -1, -1, 0.65,  20,  6.0,  6.0, 0.32, ''), 'AKA', 'BKA'),
+    LTQfpConfig(QfpConfig('QFP',  4.0,  4.0, -1, -1, 0.50,  24,  6.0,  6.0, 0.22, ''), 'AKB', 'BKB'),
+    LTQfpConfig(QfpConfig('QFP',  4.0,  4.0, -1, -1, 0.40,  32,  6.0,  6.0, 0.18, ''), 'AKC', 'BKC'),
 
-    LTQfpConfig(QfpConfig('QFP',  5.0,  5.0, -1, 0.50,  32,  7.0,  7.0, 0.22, ''), 'AAA', 'BAA'),
-    LTQfpConfig(QfpConfig('QFP',  5.0,  5.0, -1, 0.40,  40,  7.0,  7.0, 0.18, ''), 'AAB', 'BAB'),
+    LTQfpConfig(QfpConfig('QFP',  5.0,  5.0, -1, -1, 0.50,  32,  7.0,  7.0, 0.22, ''), 'AAA', 'BAA'),
+    LTQfpConfig(QfpConfig('QFP',  5.0,  5.0, -1, -1, 0.40,  40,  7.0,  7.0, 0.18, ''), 'AAB', 'BAB'),
 
-    LTQfpConfig(QfpConfig('QFP',  7.0,  7.0, -1, 0.80,  32,  9.0,  9.0, 0.37, ''), 'ABA', 'BBA'),
-    LTQfpConfig(QfpConfig('QFP',  7.0,  7.0, -1, 0.65,  40,  9.0,  9.0, 0.32, ''), 'ABB', 'BBB'),
-    LTQfpConfig(QfpConfig('QFP',  7.0,  7.0, -1, 0.50,  48,  9.0,  9.0, 0.22, ''), 'ABC', 'BBC'),
-    LTQfpConfig(QfpConfig('QFP',  7.0,  7.0, -1, 0.40,  64,  9.0,  9.0, 0.18, ''), 'ABD', 'BBD'),
+    LTQfpConfig(QfpConfig('QFP',  7.0,  7.0, -1, -1, 0.80,  32,  9.0,  9.0, 0.37, ''), 'ABA', 'BBA'),
+    LTQfpConfig(QfpConfig('QFP',  7.0,  7.0, -1, -1, 0.65,  40,  9.0,  9.0, 0.32, ''), 'ABB', 'BBB'),
+    LTQfpConfig(QfpConfig('QFP',  7.0,  7.0, -1, -1, 0.50,  48,  9.0,  9.0, 0.22, ''), 'ABC', 'BBC'),
+    LTQfpConfig(QfpConfig('QFP',  7.0,  7.0, -1, -1, 0.40,  64,  9.0,  9.0, 0.18, ''), 'ABD', 'BBD'),
 
-    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, 1.00,  36, 12.0, 12.0, 0.42, ''), 'ACA', 'BCA'),
-    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, 0.80,  44, 12.0, 12.0, 0.37, ''), 'ACB', 'BCB'),
-    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, 0.65,  52, 12.0, 12.0, 0.32, ''), 'ACC', 'BCC'),
-    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, 0.50,  64, 12.0, 12.0, 0.22, ''), 'ACD', 'BCD'),
-    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, 0.40,  80, 12.0, 12.0, 0.18, ''), 'ACE', 'BCE'),
+    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, -1, 1.00,  36, 12.0, 12.0, 0.42, ''), 'ACA', 'BCA'),
+    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, -1, 0.80,  44, 12.0, 12.0, 0.37, ''), 'ACB', 'BCB'),
+    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, -1, 0.65,  52, 12.0, 12.0, 0.32, ''), 'ACC', 'BCC'),
+    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, -1, 0.50,  64, 12.0, 12.0, 0.22, ''), 'ACD', 'BCD'),
+    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, -1, 0.40,  80, 12.0, 12.0, 0.18, ''), 'ACE', 'BCE'),
 
-    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, 1.00,  44, 14.0, 14.0, 0.42, ''), 'ADA', 'BDA'),
-    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, 0.80,  52, 14.0, 14.0, 0.37, ''), 'ADB', 'BDB'),
-    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, 0.65,  64, 14.0, 14.0, 0.32, ''), 'ADC', 'BDC'),
-    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, 0.50,  80, 14.0, 14.0, 0.22, ''), 'ADD', 'BDD'),
-    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, 0.40, 100, 14.0, 14.0, 0.18, ''), 'ADE', 'BDE'),
+    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, -1, 1.00,  44, 14.0, 14.0, 0.42, ''), 'ADA', 'BDA'),
+    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, -1, 0.80,  52, 14.0, 14.0, 0.37, ''), 'ADB', 'BDB'),
+    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, -1, 0.65,  64, 14.0, 14.0, 0.32, ''), 'ADC', 'BDC'),
+    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, -1, 0.50,  80, 14.0, 14.0, 0.22, ''), 'ADD', 'BDD'),
+    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, -1, 0.40, 100, 14.0, 14.0, 0.18, ''), 'ADE', 'BDE'),
 
-    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, 1.00,  52, 16.0, 16.0, 0.42, ''), 'AEA', 'BEA'),
-    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, 0.80,  64, 16.0, 16.0, 0.37, ''), 'AEB', 'BEB'),
-    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, 0.65,  80, 16.0, 16.0, 0.32, ''), 'AEC', 'BEC'),
-    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, 0.50, 100, 16.0, 16.0, 0.22, ''), 'AED', 'BED'),
-    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, 0.40, 120, 16.0, 16.0, 0.18, ''), 'AEE', 'BEE'),
+    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, -1, 1.00,  52, 16.0, 16.0, 0.42, ''), 'AEA', 'BEA'),
+    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, -1, 0.80,  64, 16.0, 16.0, 0.37, ''), 'AEB', 'BEB'),
+    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, -1, 0.65,  80, 16.0, 16.0, 0.32, ''), 'AEC', 'BEC'),
+    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, -1, 0.50, 100, 16.0, 16.0, 0.22, ''), 'AED', 'BED'),
+    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, -1, 0.40, 120, 16.0, 16.0, 0.18, ''), 'AEE', 'BEE'),
 
-    LTQfpConfig(QfpConfig('QFP', 20.0, 20.0, -1, 0.65, 112, 22.0, 22.0, 0.32, ''), 'AFA', 'BFA'),
-    LTQfpConfig(QfpConfig('QFP', 20.0, 20.0, -1, 0.50, 144, 22.0, 22.0, 0.22, ''), 'AFB', 'BFB'),
-    LTQfpConfig(QfpConfig('QFP', 20.0, 20.0, -1, 0.40, 176, 22.0, 22.0, 0.18, ''), 'AFC', 'BFC'),
+    LTQfpConfig(QfpConfig('QFP', 20.0, 20.0, -1, -1, 0.65, 112, 22.0, 22.0, 0.32, ''), 'AFA', 'BFA'),
+    LTQfpConfig(QfpConfig('QFP', 20.0, 20.0, -1, -1, 0.50, 144, 22.0, 22.0, 0.22, ''), 'AFB', 'BFB'),
+    LTQfpConfig(QfpConfig('QFP', 20.0, 20.0, -1, -1, 0.40, 176, 22.0, 22.0, 0.18, ''), 'AFC', 'BFC'),
 
-    LTQfpConfig(QfpConfig('QFP', 24.0, 24.0, -1, 0.50, 176, 26.0, 26.0, 0.22, ''), 'AGA', 'BGA'),
-    LTQfpConfig(QfpConfig('QFP', 24.0, 24.0, -1, 0.40, 216, 26.0, 26.0, 0.18, ''), 'AGB', 'BGB'),
+    LTQfpConfig(QfpConfig('QFP', 24.0, 24.0, -1, -1, 0.50, 176, 26.0, 26.0, 0.22, ''), 'AGA', 'BGA'),
+    LTQfpConfig(QfpConfig('QFP', 24.0, 24.0, -1, -1, 0.40, 216, 26.0, 26.0, 0.18, ''), 'AGB', 'BGB'),
 
-    # LTQfpConfig(QfpConfig('QFP', 20.0, 14.0, -1, 0.65, 100, 22.0, 16.0, 0.32, ''), 'AHA', 'BHA'),
-    # LTQfpConfig(QfpConfig('QFP', 20.0, 14.0, -1, 0.50, 128, 22.0, 16.0, 0.22, ''), 'AHB', 'BHB'),
+    # LTQfpConfig(QfpConfig('QFP', 20.0, 14.0, -1, -1, 0.65, 100, 22.0, 16.0, 0.32, ''), 'AHA', 'BHA'),
+    # LTQfpConfig(QfpConfig('QFP', 20.0, 14.0, -1, -1, 0.50, 128, 22.0, 16.0, 0.22, ''), 'AHB', 'BHB'),
 
-    LTQfpConfig(QfpConfig('QFP', 28.0, 28.0, -1, 0.65, 160, 30.0, 30.0, 0.32, ''),  None, 'BJA'),
-    LTQfpConfig(QfpConfig('QFP', 28.0, 28.0, -1, 0.50, 208, 30.0, 30.0, 0.22, ''),  None, 'BJB'),
-    LTQfpConfig(QfpConfig('QFP', 28.0, 28.0, -1, 0.40, 256, 30.0, 30.0, 0.18, ''),  None, 'BJC'),
+    LTQfpConfig(QfpConfig('QFP', 28.0, 28.0, -1, -1, 0.65, 160, 30.0, 30.0, 0.32, ''),  None, 'BJA'),
+    LTQfpConfig(QfpConfig('QFP', 28.0, 28.0, -1, -1, 0.50, 208, 30.0, 30.0, 0.22, ''),  None, 'BJB'),
+    LTQfpConfig(QfpConfig('QFP', 28.0, 28.0, -1, -1, 0.40, 256, 30.0, 30.0, 0.18, ''),  None, 'BJC'),
 ]
 
 
