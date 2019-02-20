@@ -133,12 +133,12 @@ def generate_dev(
 
         # Datasheet section in description
         if fet_config.datasheets:
-            if len(fet_config.datasheets) > 1:
-                datasheet_parts = ['Datasheet:']
+            if isinstance(fet_config.datasheets, list):
+                datasheet_parts = ['Datasheets:']
                 datasheet_parts.extend('- {}'.format(d) for d in fet_config.datasheets)
                 datasheet = r'\n'.join(datasheet_parts) + r'\n\n'
             else:
-                datasheet = 'Datasheet: {}\\n\\n'.format(fet_config.datasheet)
+                datasheet = 'Datasheet: {}\\n\\n'.format(fet_config.datasheets)
         else:
             datasheet = ''
 
