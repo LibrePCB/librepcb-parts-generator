@@ -379,4 +379,24 @@ if __name__ == '__main__':
         version='0.2',
         create_date='2018-11-10T20:32:03Z',
     )
+    generate_pkg(
+        dirpath='out/soic/pkg',
+        author='Pelle W.',
+        name='SOIC127P670X{height}-{pin_count}',
+        description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
+                    'standardized by JEDEC (MS-012G).\\n\\n'
+                    'Pitch: 1.27 mm\\nNominal width: 6.70mm\\nHeight: {height:.2f}mm',
+        pitch=1.27,
+        pins=[6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32, 36, 40, 42, 44, 48],
+        heights=[1.75],
+        body_width=3.9,
+        total_width=6.0,
+        lead_width=0.41,
+        lead_contact_length=0.835,
+        pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
+        keywords='so,soic,small outline,smd,jedec',
+        top_offset=0.8,
+        version='0.2',
+        create_date='2019-05-23T20:32:03Z',
+    )
     save_cache(uuid_cache_file, uuid_cache)
