@@ -54,7 +54,7 @@ uuid_cache_file = 'uuid_cache_chip.csv'
 uuid_cache = init_cache(uuid_cache_file)
 
 
-def uuid(category: str, full_name: str, identifier: str) -> str:
+def uuid(category: str, full_name: str, identifier: str, create: bool = True) -> str:
     """
     Return a uuid for the specified pin.
 
@@ -68,6 +68,8 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
     """
     key = '{}-{}-{}'.format(category, full_name, identifier).lower().replace(' ', '~')
     if key not in uuid_cache:
+        if not create:
+            raise ValueError('Unknown UUID: {}'.format(key))
         uuid_cache[key] = str(uuid4())
     return uuid_cache[key]
 
@@ -132,7 +134,7 @@ def generate_pkg(
         uuid_pkg = _uuid('pkg')
         uuid_pads = [_uuid('pad-1'), _uuid('pad-2')]
 
-        print('Generating {}: {}'.format(full_name, uuid_pkg))
+        print('Generating pkg "{}": {}'.format(full_name, uuid_pkg))
 
         # General info
         lines.append('(librepcb_package {}'.format(uuid_pkg))
@@ -295,6 +297,66 @@ def generate_pkg(
             f.write('\n')
 
 
+def generate_dev(
+    dirpath: str,
+    author: str,
+    name: str,
+    description: str,
+    packages: Iterable[str],
+    cmp: str,
+    cat: str,
+    signals: Iterable[str],
+    keywords: str,
+    version: str,
+    create_date: Optional[str],
+):
+    category = 'dev'
+    for (size_metric, size_imperial, pkg_name) in packages:
+        lines = []
+
+        fmt_params = {
+            'size_metric': size_metric,
+            'size_imperial': size_imperial,
+        }  # type: Dict[str, Any]
+        full_name = name.format(**fmt_params)
+        full_desc = description.format(**fmt_params)
+
+        def _uuid(identifier):
+            return uuid(category, full_name, identifier)
+
+        # UUIDs
+        uuid_dev = _uuid('dev')
+        pkg = uuid('pkg', pkg_name, 'pkg', create=False)
+        pads = [uuid('pkg', pkg_name, 'pad-{}'.format(i), create=False) for i in range(1, 3)]
+
+        print('Generating dev "{}": {}'.format(full_name, uuid_dev))
+
+        # General info
+        lines.append('(librepcb_device {}'.format(uuid_dev))
+        lines.append(' (name "{}")'.format(full_name))
+        lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_desc, generator))
+        lines.append(' (keywords "{},{},{}")'.format(size_metric, size_imperial, keywords))
+        lines.append(' (author "{}")'.format(author))
+        lines.append(' (version "{}")'.format(version))
+        lines.append(' (created {})'.format(create_date or now()))
+        lines.append(' (deprecated false)')
+        lines.append(' (category {})'.format(cat))
+        lines.append(' (component {})'.format(cmp))
+        lines.append(' (package {})'.format(pkg))
+        for (pad, signal) in sorted(zip(pads, signals)):
+            lines.append(' (pad {} (signal {}))'.format(pad, signal))
+        lines.append(')')
+
+        dev_dir_path = path.join(dirpath, uuid_dev)
+        if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
+            makedirs(dev_dir_path)
+        with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
+            f.write('0.1\n')
+        with open(path.join(dev_dir_path, 'device.lp'), 'w') as f:
+            f.write('\n'.join(lines))
+            f.write('\n')
+
+
 if __name__ == '__main__':
     def _make(dirpath: str):
         if not (path.exists(dirpath) and path.isdir(dirpath)):
@@ -341,5 +403,35 @@ if __name__ == '__main__':
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,j-lead,generic',
         create_date='2019-01-04T23:06:17Z',
+    )
+    _make('out/chip/dev')
+    generate_dev(
+        dirpath='out/chip/dev',
+        author='Danilo B.',
+        name='Resistor {size_metric} ({size_imperial})',
+        description='Generic SMD resistor {size_metric} (imperial {size_imperial}).',
+        packages=[
+            # Metric, Imperial, Name
+            ('0402', '01005', 'RESC0402 (01005)'),
+            ('0603', '0201', 'RESC0603 (0201)'),
+            ('1005', '0402', 'RESC1005 (0402)'),
+            ('1608', '0603', 'RESC1608 (0603)'),
+            ('2012', '0805', 'RESC2012 (0805)'),
+            ('3216', '1206', 'RESC3216 (1206)'),
+            ('3225', '1210', 'RESC3225 (1210)'),
+            ('3246', '1218', 'RESC3246 (1218)'),
+            ('5025', '2010', 'RESC5025 (2010)'),
+            ('6432', '2512', 'RESC6432 (2512)'),
+            ('11569', '4527', 'RESJ11569 (4527)'),
+        ],
+        cmp='ef80cd5e-2689-47ee-8888-31d04fc99174',
+        cat='1039f038-20a6-4bfe-89c1-99f34fbb45bd',
+        signals=[
+            '3452d36e-1ce8-4b7c-8e5b-90c2e4929ed8',
+            'ad623f98-9e73-49c3-9404-f7cfa99d17cd',
+        ],
+        keywords='r,resistor,resistance,smd,smt',
+        version='0.3',
+        create_date='2019-01-29T19:47:42Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
