@@ -372,6 +372,7 @@ def generate_cmp(
     default_value: str,
     min_pads: int,
     max_pads: int,
+    version: str,
     create_date: Optional[str],
 ):
     category = 'cmp'
@@ -397,7 +398,7 @@ def generate_cmp(
                      'Generated with {}")'.format(i, name_lower, generator))
         lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
         lines.append(' (author "{}")'.format(author))
-        lines.append(' (version "0.1")')
+        lines.append(' (version "{}")'.format(version))
         lines.append(' (created {})'.format(create_date or now()))
         lines.append(' (deprecated false)')
         lines.append(' (category {})'.format(cmpcat))
@@ -553,6 +554,7 @@ if __name__ == '__main__':
         default_value='{{PARTNUMBER}}',
         min_pads=1,
         max_pads=40,
+        version='0.1',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_cmp(
@@ -566,12 +568,13 @@ if __name__ == '__main__':
         default_value='{{PARTNUMBER}}',
         min_pads=1,
         max_pads=40,
+        version='0.1',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_cmp(
         dirpath='out/connectors/cmp',
         author='Danilo B.',
-        name='Soldered Wire Connector',
+        name='Generic Connector',
         name_lower='soldered wire connector',
         kind=KIND_WIRE_CONNECTOR,
         cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
@@ -579,6 +582,7 @@ if __name__ == '__main__':
         default_value='',
         min_pads=1,
         max_pads=40,
+        version='0.2',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_pkg(
