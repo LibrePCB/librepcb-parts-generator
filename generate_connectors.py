@@ -415,11 +415,13 @@ def generate_cmp(
         lines.append('  (gate {}'.format(uuid_gate))
         lines.append('   (symbol {})'.format(uuid_symbol))
         lines.append('   (position 0.0 0.0) (rotation 0.0) (required true) (suffix "")')
+        pin_lines = []
         for j in range(1, i + 1):
-            lines.append('   (pin {} (signal {}) (text pin))'.format(
+            pin_lines.append('   (pin {} (signal {}) (text pin))'.format(
                 uuid_pins[j - 1],
                 uuid_signals[j - 1],
             ))
+        lines.extend(sorted(pin_lines))
         lines.append('  )')
         lines.append(' )')
         lines.append(')')
