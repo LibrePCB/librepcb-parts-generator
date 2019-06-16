@@ -107,7 +107,7 @@ def generate_pkg(
         lines.append('(librepcb_package {}'.format(uuid_pkg))
         lines.append(' (name "{}-{} {}mm")'.format(name, pin_count, width))
         lines.append(' (description "{}-lead {}mm wide {}\\n\\n'
-                       'Generated with {}")'.format(pin_count, width, name_lower, generator))
+                     'Generated with {}")'.format(pin_count, width, name_lower, generator))
         lines.append(' (keywords "dip{},pdip{},{}")'.format(pin_count, pin_count, keywords))
         lines.append(' (author "{}")'.format(author))
         lines.append(' (version "0.1")')
@@ -157,7 +157,7 @@ def generate_pkg(
             lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
             y_max, y_min = get_rectangle_bounds(pin_count // 2, spacing, top_offset, False)
             silkscreen_x_offset = pad_x_offset - pad_size[0] / 2 \
-                                - silkscreen_offset - line_width / 2
+                - silkscreen_offset - line_width / 2
             sxo = ff(silkscreen_x_offset)  # Used for shorter lines below :)
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(sxo, ff(y_max)))  # NW
             lines.append('   (vertex (position -{} {}) (angle 180.0))'.format(
@@ -190,12 +190,11 @@ def generate_pkg(
             pin1_dot_diameter = float(width) / 7.62
             lines.append('  (circle {} (layer top_placement)'.format(uuid_pin1_dot))
             lines.append('   (width 0.0) (fill true) (grab_area false) '
-                '(diameter {}) (position -{} {})'.format(
-                    ff(pin1_dot_diameter),
-                    ff(silkscreen_x_offset - pin1_dot_diameter),
-                    ff(y_max - pin1_dot_diameter),
-                )
-            )
+                         '(diameter {}) (position -{} {})'.format(
+                             ff(pin1_dot_diameter),
+                             ff(silkscreen_x_offset - pin1_dot_diameter),
+                             ff(y_max - pin1_dot_diameter),
+                         ))
             lines.append('  )')
 
             # Labels

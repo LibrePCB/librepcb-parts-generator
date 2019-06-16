@@ -133,8 +133,8 @@ def generate_pkg(
             lines.append('(librepcb_package {}'.format(uuid_pkg))
             lines.append(' (name "{} 1x{} ⌀{:.1f}mm")'.format(name, i, drill))
             lines.append(' (description "A 1x{} {} with {}mm pin spacing '
-                           'and {:.1f}mm drill holes.\\n\\n'
-                           'Generated with {}")'.format(i, name_lower, spacing, drill, generator))
+                         'and {:.1f}mm drill holes.\\n\\n'
+                         'Generated with {}")'.format(i, name_lower, spacing, drill, generator))
             lines.append(' (keywords "connector, 1x{}, d{:.1f}, {}")'.format(i, drill, keywords))
             lines.append(' (author "{}")'.format(author))
             lines.append(' (version "0.1")')
@@ -437,8 +437,8 @@ def generate_dev(
             lines.append('(librepcb_device {}'.format(uuid_dev))
             lines.append(' (name "{} 1x{} ⌀{:.1f}mm")'.format(name, i, drill))
             lines.append(' (description "A 1x{} {} with {}mm pin spacing '
-                           'and {:.1f}mm drill holes.\\n\\n'
-                           'Generated with {}")'.format(i, name_lower, spacing, drill, generator))
+                         'and {:.1f}mm drill holes.\\n\\n'
+                         'Generated with {}")'.format(i, name_lower, spacing, drill, generator))
             lines.append(' (keywords "connector, 1x{}, d{:.1f}, {}")'.format(i, drill, keywords))
             lines.append(' (author "{}")'.format(author))
             lines.append(' (version "0.1")')
