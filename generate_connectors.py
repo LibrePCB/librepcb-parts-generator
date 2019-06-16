@@ -341,7 +341,7 @@ def generate_sym(
             ff(sym_text_height), ff(y_max),
         ))
         lines.append(' )')
-        lines.append(' (text {} (layer sym_names) (value "{{{{VALUE}}}}")'.format(uuid_text_value))
+        lines.append(' (text {} (layer sym_values) (value "{{{{VALUE}}}}")'.format(uuid_text_value))
         lines.append('  (align center top) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
             ff(sym_text_height), ff(y_min),
         ))
