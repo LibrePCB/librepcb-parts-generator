@@ -17,3 +17,4 @@ script:
     #test_common.py
     #test_generate_connectors.py
     #test_generate_qfn.py
+  - flake8
