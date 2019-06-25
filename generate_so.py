@@ -2,6 +2,7 @@
 Generate the following SO packages:
 
 - SOIC (both EIAJ and JEDEC)
+- TSSOP
 
 """
 from os import path, makedirs
@@ -114,15 +115,33 @@ def generate_pkg(
         pitch = config.pitch
         pin_count = config.pin_count
         height = config.height
-        lead_width = lead_width_lookup[pitch]
         body_width = config.body_width
         total_width = config.total_width
         body_length = config.body_length
+        lead_width = lead_width_lookup[pitch]
+        lead_length = (total_width - body_width) / 2
 
         lines = []
 
-        full_name = name.format(height=fd(height), pitch=fd(pitch), pin_count=pin_count)
-        full_description = description.format(height=height, pin_count=pin_count, pitch=pitch)
+        full_name = name.format(
+            height=fd(height),
+            pitch=fd(pitch),
+            pin_count=pin_count,
+            body_length=fd(body_length),
+            lead_span=fd(total_width),
+            lead_width=fd(lead_width),
+            lead_length=fd(lead_length),
+        )
+        full_description = description.format(
+            height=height,
+            pin_count=pin_count,
+            pitch=pitch,
+            body_length=body_length,
+            body_width=body_width,
+            lead_span=total_width,
+            lead_width=lead_width,
+            lead_length=lead_length,
+        )
 
         def _uuid(identifier: str) -> str:
             return uuid(category, full_name, identifier)
@@ -380,5 +399,56 @@ if __name__ == '__main__':
         keywords='so,soic,small outline,smd,jedec',
         version='0.2',
         create_date='2018-11-10T20:32:03Z',
+    )
+    _make('out/tssop')
+    _make('out/tssop/pkg')
+    generate_pkg(
+        dirpath='out/tssop/pkg',
+        author='Danilo B.',
+        # Name according to IPC7351C
+        name='TSSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
+        description='{pin_count}-pin Thin-Shrink Small Outline Package (TSSOP).\\n\\n'
+                    'Pitch: {pitch:.2f} mm\\nBody length: {body_length:.2f} mm\\n'
+                    'Body width: {body_width:.2f} mm\\nLead span: {lead_span:.2f} mm\\n'
+                    'Height: {height:.2f} mm\\n'
+                    'Lead length: {lead_length:.2f} mm\\nLead width: {lead_width:.2f} mm',
+        configs=[
+            # pin count, pitch, body length, body width, total width, height
+
+            # Values based on TI and Microchip package specs
+            # http://www.ti.com/packaging/docs/searchtipackages.tsp?packageName=SO
+            # https://www.microchip.com/quality/packaging-specifications?packageFamily=TSSOP
+            SoConfig( 8,  0.65, 3.0,  4.4, 6.4, 1.2),
+            SoConfig(14,  0.65, 5.0,  4.4, 6.4, 1.2),
+            SoConfig(16,  0.65, 5.0,  4.4, 6.4, 1.2),
+            SoConfig(20,  0.65, 6.5,  4.4, 6.4, 1.2),
+            SoConfig(20,  0.50, 5.0,  4.4, 6.4, 1.2),
+            SoConfig(24,  0.65, 7.8,  4.4, 6.4, 1.2),
+            SoConfig(24,  0.50, 6.4,  4.4, 6.4, 1.2),
+            SoConfig(28,  0.65, 9.7,  4.4, 6.4, 1.2),
+            SoConfig(28,  0.50, 7.8,  4.4, 6.4, 1.2),
+            SoConfig(30,  0.65, 11.0, 6.2, 8.1, 1.2),
+            SoConfig(30,  0.50, 7.8,  4.4, 6.4, 1.2),
+            SoConfig(32,  0.65, 11.0, 6.2, 8.1, 1.2),
+            SoConfig(38,  0.65, 12.5, 6.2, 8.1, 1.2),
+            SoConfig(38,  0.50, 9.7,  4.4, 6.4, 1.2),
+            SoConfig(44,  0.50, 11.0, 4.4, 6.4, 1.2),
+            SoConfig(48,  0.50, 12.5, 6.1, 8.1, 1.2),
+            SoConfig(50,  0.50, 12.5, 4.4, 6.4, 1.2),
+            SoConfig(56,  0.50, 14.0, 6.1, 8.1, 1.2),
+            SoConfig(64,  0.50, 17.0, 6.1, 8.1, 1.2),
+            SoConfig(80,  0.40, 17.0, 6.1, 8.1, 1.2),
+            SoConfig(100, 0.40, 20.8, 6.1, 8.1, 1.2),
+        ],
+        lead_width_lookup={
+            0.65: 0.3,
+            0.5: 0.27,
+            0.4: 0.23,
+        },
+        lead_contact_length=0.6,
+        pkgcat='241d9d5d-8f74-4740-8901-3cf51cf50091',
+        keywords='so,sop,tssop,small outline package,smd',
+        version='0.1',
+        create_date='2019-06-16T12:46:54Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
