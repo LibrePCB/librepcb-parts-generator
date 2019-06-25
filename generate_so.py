@@ -5,7 +5,7 @@ Generate the following SO packages:
 
 """
 from os import path, makedirs
-from typing import Tuple, Iterable, Optional, List
+from typing import Iterable, Optional, List, Dict
 from uuid import uuid4
 
 from common import now, init_cache, save_cache
@@ -73,6 +73,8 @@ def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> 
     The pin number is 1 index based. Pin 1 is at the top. The middle pin will
     be at or near 0.
 
+    Coordinates are rounded to the next 0.01 mm.
+
     """
     if grid_align:
         mid = float((pin_count + 1) // 2)
@@ -84,28 +86,13 @@ def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> 
     return y
 
 
-def get_rectangle_bounds(
-    pin_count: int,
-    spacing: float,
-    top_offset: float,
-    grid_align: bool,
-) -> Tuple[float, float]:
-    """
-    Return (y_max/y_min) of the rectangle around the pins.
-    """
-    if grid_align:
-        even = pin_count % 2 == 0
-        offset = spacing / 2 if even else 0.0
-    else:
-        offset = 0.0
-    height = (pin_count - 1) / 2 * spacing + top_offset
-    return (height - offset, -height - offset)
-
-
 class SoConfig:
-    def __init__(self, pitch: float, pin_count: int, height: float):
-        self.pitch = pitch
+    def __init__(self, pin_count: int, pitch: float, body_length: float, body_width: float, total_width: float, height: float):
         self.pin_count = pin_count
+        self.pitch = pitch
+        self.body_length = body_length
+        self.body_width = body_width
+        self.total_width = total_width
         self.height = height
 
 
@@ -115,13 +102,10 @@ def generate_pkg(
     name: str,
     description: str,
     configs: Iterable[SoConfig],
-    body_width: float,
-    total_width: float,
-    lead_width: float,
+    lead_width_lookup: Dict[float, float],
     lead_contact_length: float,
     pkgcat: str,
     keywords: str,
-    top_offset: float,
     version: str,
     create_date: Optional[str],
 ) -> None:
@@ -130,10 +114,14 @@ def generate_pkg(
         pitch = config.pitch
         pin_count = config.pin_count
         height = config.height
+        lead_width = lead_width_lookup[pitch]
+        body_width = config.body_width
+        total_width = config.total_width
+        body_length = config.body_length
 
         lines = []
 
-        full_name = name.format(height=fd(height), pin_count=pin_count)
+        full_name = name.format(height=fd(height), pitch=fd(pitch), pin_count=pin_count)
         full_description = description.format(height=height, pin_count=pin_count, pitch=pitch)
 
         def _uuid(identifier: str) -> str:
@@ -242,10 +230,9 @@ def generate_pkg(
                 lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_max))
                 lines.append('  )')
 
-            # Silkscreen
-            bounds = get_rectangle_bounds(pin_count // 2, pitch, top_offset, False)
-            y_max = ff(bounds[0] + line_width / 2)
-            y_min = ff(bounds[1] - line_width / 2)
+            # Silkscreen (fully outside body)
+            y_max = ff(body_length / 2 + line_width / 2)
+            y_min = ff(-body_length / 2 - line_width / 2)
             short_x_offset = body_width / 2 - line_width / 2
             long_x_offset = total_width / 2 - line_width / 2 + pad_toe  # Pin1 marking
             lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_top))
@@ -261,11 +248,10 @@ def generate_pkg(
 
             # Documentation outline (fully inside body)
             outline_x_offset = body_width / 2 - line_width / 2
-            bounds = get_rectangle_bounds(pin_count // 2, pitch, top_offset, False)
             lines.append('  (polygon {} (layer top_documentation)'.format(uuid_outline))
             lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
-            y_max = ff(bounds[0] - line_width / 2)
-            y_min = ff(bounds[1] + line_width / 2)
+            y_max = ff(body_length / 2 - line_width / 2)
+            y_min = ff(-body_length / 2 + line_width / 2)
             oxo = ff(outline_x_offset)  # Used for shorter code lines below :)
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_max))
@@ -273,7 +259,7 @@ def generate_pkg(
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_min))
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
             lines.append('  )')
-            max_y = max(max_y, bounds[0])  # Body contour
+            max_y = max(max_y, body_length / 2)  # Body contour
 
             # Courtyard
             courtyard_excess = get_by_density(pitch, density_level, 'courtyard')
@@ -286,9 +272,8 @@ def generate_pkg(
             )))
 
             # Labels
-            bounds = get_rectangle_bounds(pin_count // 2, pitch, top_offset + 1.27, False)
-            y_max = ff(bounds[0])
-            y_min = ff(bounds[1])
+            y_max = ff(body_length / 2 + 1.27)
+            y_min = ff(-body_length / 2 - 1.27)
             text_attrs = '(height {}) (stroke_width 0.2) ' \
                          '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
             lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
@@ -330,65 +315,69 @@ if __name__ == '__main__':
     configs = []  # type: List[SoConfig]
     for pin_count in [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32]:
         for height in [1.2, 1.4, 1.7, 2.7]:
-            configs.append(SoConfig(1.27, pin_count, height))
+            pitch = 1.27
+            body_length = (pin_count / 2 - 1) * pitch + 2.0
+            body_width = 5.22
+            total_width = 8.42  # effective, not nominal (7.62)
+            configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
     generate_pkg(
         dirpath='out/soic/pkg',
         author='Danilo B.',
-        name='SOIC127P762X{height}-{pin_count}',
+        name='SOIC{pitch}P762X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
                     'standardized by EIAJ.\\n\\n'
                     'Pitch: {pitch:.2f} mm\\nNominal width: 7.62mm\\nHeight: {height:.2f}mm',
         configs=configs,
-        body_width=5.22,
-        total_width=8.42,  # effective, not nominal (7.62)
-        lead_width=0.4,
+        lead_width_lookup={1.27: 0.4},
         lead_contact_length=0.8,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
-        top_offset=1.0,
         version='0.2',
         create_date='2018-11-10T20:32:03Z',
     )
     configs = []
     for pin_count in [20, 22, 24, 28, 30, 32, 36, 40, 42, 44]:
         for height in [1.2, 1.4, 1.7, 2.7]:
-            configs.append(SoConfig(1.27, pin_count, height))
+            pitch = 1.27
+            body_length = (pin_count / 2 - 1) * pitch + 2.0
+            body_width = 12.84
+            total_width = 16.04  # effective, not nominal (15.42)
+            configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
     generate_pkg(
         dirpath='out/soic/pkg',
         author='Danilo B.',
-        name='SOIC127P1524X{height}-{pin_count}',
+        name='SOIC{pitch}P1524X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
                     'standardized by EIAJ.\\n\\n'
                     'Pitch: {pitch:.2f} mm\\nNominal width: 15.24mm\\nHeight: {height:.2f}mm',
         configs=configs,
-        body_width=12.84,
-        total_width=16.04,  # effective, not nominal (15.24)
-        lead_width=0.4,
+        lead_width_lookup={1.27: 0.4},
         lead_contact_length=0.8,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
-        top_offset=1.0,
         version='0.2',
         create_date='2018-11-10T20:32:03Z',
     )
     configs = []
     for pin_count in [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32, 36, 40, 42, 44, 48]:
-        configs.append(SoConfig(1.27, pin_count, 1.75))
+        pitch = 1.27
+        height = 1.75
+        body_length = (pin_count / 2 - 1) * pitch + 1.6
+        body_width = 3.9
+        total_width = 6.0
+        configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
     generate_pkg(
         dirpath='out/soic/pkg',
         author='Danilo B.',
-        name='SOIC127P600X{height}-{pin_count}',
+        name='SOIC{pitch}P600X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
                     'standardized by JEDEC (MS-012G).\\n\\n'
                     'Pitch: {pitch:.2f} mm\\nNominal width: 6.00mm\\nHeight: {height:.2f}mm',
         configs=configs,
-        body_width=3.9,
-        total_width=6.0,
-        lead_width=0.45,
+        lead_width_lookup={1.27: 0.45},
         lead_contact_length=0.835,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec',
-        top_offset=0.8,
         version='0.2',
         create_date='2018-11-10T20:32:03Z',
     )
