@@ -255,6 +255,7 @@ def generate_sym(
     keywords: str,
     min_pads: int,
     max_pads: int,
+    version: str,
     create_date: Optional[str],
 ):
     category = 'sym'
@@ -280,7 +281,7 @@ def generate_sym(
                      'Generated with {}")'.format(i, name_lower, generator))
         lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
         lines.append(' (author "{}")'.format(author))
-        lines.append(' (version "0.1")')
+        lines.append(' (version "{}")'.format(version))
         lines.append(' (created {})'.format(create_date or now()))
         lines.append(' (deprecated false)')
         lines.append(' (category {})'.format(cmpcat))
@@ -341,7 +342,7 @@ def generate_sym(
             ff(sym_text_height), ff(y_max),
         ))
         lines.append(' )')
-        lines.append(' (text {} (layer sym_names) (value "{{{{VALUE}}}}")'.format(uuid_text_value))
+        lines.append(' (text {} (layer sym_values) (value "{{{{VALUE}}}}")'.format(uuid_text_value))
         lines.append('  (align center top) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
             ff(sym_text_height), ff(y_min),
         ))
@@ -517,6 +518,7 @@ if __name__ == '__main__':
         keywords='pin header, male header',
         min_pads=1,
         max_pads=40,
+        version='0.2',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_sym(
@@ -529,6 +531,7 @@ if __name__ == '__main__':
         keywords='pin socket, female header',
         min_pads=1,
         max_pads=40,
+        version='0.2',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_sym(
@@ -541,6 +544,7 @@ if __name__ == '__main__':
         keywords='connector, generic',
         min_pads=1,
         max_pads=40,
+        version='0.2',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_cmp(
