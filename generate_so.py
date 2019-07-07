@@ -183,6 +183,9 @@ def generate_pkg(
             max_x = 0.0
             max_y = 0.0
 
+            # Max boundaries (copper only)
+            max_y_copper = 0.0
+
             lines.append(' (footprint {}'.format(uuid_footprint))
             lines.append('  (name "{}")'.format(name))
             lines.append('  (description "")')
@@ -210,6 +213,7 @@ def generate_pkg(
                     pxo, ff(y), ff(pad_length), ff(pad_width),
                 ))
                 lines.append('  )')
+                max_y_copper = max(max_y_copper, y + pad_width / 2)
             max_x = max(max_x, total_width / 2 + pad_toe)
 
             # Documentation: Leads
@@ -250,8 +254,13 @@ def generate_pkg(
                 lines.append('  )')
 
             # Silkscreen (fully outside body)
-            y_max = ff(body_length / 2 + line_width / 2)
-            y_min = ff(-body_length / 2 - line_width / 2)
+            # Ensure minimum clearance between copper and silkscreen
+            print('silkscreen_offset: {}'.format(silkscreen_offset))
+            print('actual clearance: {}'.format(body_length / 2 - max_y_copper))
+            y_offset = max(silkscreen_offset - (body_length / 2 - max_y_copper), 0)
+            print('offset: {}'.format(y_offset))
+            y_max = ff(body_length / 2 + line_width / 2 + y_offset)
+            y_min = ff(-body_length / 2 - line_width / 2 - y_offset)
             short_x_offset = body_width / 2 - line_width / 2
             long_x_offset = total_width / 2 - line_width / 2 + pad_toe  # Pin1 marking
             lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_top))
