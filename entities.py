@@ -8,7 +8,7 @@ class Position(object):
         self.x = x
         self.y = y
 
-    def to_s_exp(self) -> str:
+    def __str__(self) -> str:
         return '(position {} {})'.format(self.x, self.y)
 
 
@@ -16,7 +16,7 @@ class Rotation(object):
     def __init__(self, rotation: float):
         self.rotation = rotation
 
-    def to_s_exp(self) -> str:
+    def __str__(self) -> str:
         return '(rotation {})'.format(self.rotation)
 
 
@@ -24,7 +24,7 @@ class Length(object):
     def __init__(self, length: float):
         self.length = length
 
-    def to_s_exp(self) -> str:
+    def __str__(self) -> str:
         return '(length {})'.format(self.length)
 
 
@@ -36,9 +36,7 @@ class SchematicsPin(object):
         self.rotation = rotation
         self.length = length
 
-    def to_s_exp(self) -> [str]:
-        return [
-            '(pin {} (name "{}")'.format(self.uuid, self.name),
-            ' {} {} {}'.format(self.position.to_s_exp(), self.rotation.to_s_exp(), self.length.to_s_exp()),
-            ')',
-        ]
+    def __str__(self) -> str:
+        return '(pin {} (name "{}")\n'.format(self.uuid, self.name) +\
+            ' {} {} {}\n'.format(self.position, self.rotation, self.length) +\
+            ')'
