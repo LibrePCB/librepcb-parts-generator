@@ -8,16 +8,16 @@ install:
   - pip install -r requirements.txt
 script:
   - pytest
-  - mypy --check-untyped-defs --warn-return-any \
-    common.py \
-    generate_chip.py \
-    generate_dfn.py \
-    generate_mosfet_dual.py \
-    generate_so.py \
-    test_generate_connectors.py \
-    dfn_configs.py \
-    generate_connectors.py \
-    generate_dip.py \
-    generate_qfp.py \
-    test_common.py \
-    test_generate_qfn.py
+  - mypy --check-untyped-defs --warn-return-any
+    common.py
+    generate_mosfet_dual.py
+    generate_so.py
+    dfn_configs.py
+    generate_connectors.py
+    generate_dip.py
+    generate_qfp.py
+    #generate_chip.py
+    #generate_dfn.py
+    #test_common.py
+    #test_generate_connectors.py
+    #test_generate_qfn.py
