@@ -5,16 +5,16 @@ import collections
 import csv
 from datetime import datetime
 import re
-from typing import Iterable, Union
+from typing import Iterable, Union, Dict
 
 
 # Commonly used dimensions
 COURTYARD_LINE_WIDTH = 0.1
 
 
-def init_cache(uuid_cache_file: str) -> collections.OrderedDict:
+def init_cache(uuid_cache_file: str) -> Dict[str, str]:
     print('Loading cache: {}'.format(uuid_cache_file))
-    uuid_cache = collections.OrderedDict()
+    uuid_cache = collections.OrderedDict()  # type: Dict[str, str]
     try:
         with open(uuid_cache_file, 'r') as f:
             reader = csv.reader(f, delimiter=',', quotechar='"')
@@ -25,7 +25,7 @@ def init_cache(uuid_cache_file: str) -> collections.OrderedDict:
     return uuid_cache
 
 
-def save_cache(uuid_cache_file: str, uuid_cache: collections.OrderedDict) -> None:
+def save_cache(uuid_cache_file: str, uuid_cache: Dict[str, str]) -> None:
     print('Saving cache: {}'.format(uuid_cache_file))
     with open(uuid_cache_file, 'w') as f:
         writer = csv.writer(f, delimiter=',', quotechar='"', lineterminator='\n')
