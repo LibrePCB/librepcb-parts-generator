@@ -5,7 +5,7 @@ import collections
 import csv
 from datetime import datetime
 import re
-from typing import Iterable, Union, Dict
+from typing import Iterable, Union, Dict, List
 
 
 # Commonly used dimensions
@@ -64,7 +64,7 @@ def format_ipc_dimension(number: float, decimal_places: int = 2) -> str:
     return stripped.replace('.', '')
 
 
-def indent(level: int, lines: Iterable[str]):
+def indent(level: int, lines: Iterable[str]) -> List[str]:
     """
     Indent the lines by the specified level.
     """
@@ -77,7 +77,7 @@ def generate_courtyard(
     max_y: float,
     excess_x: float,
     excess_y: float,
-):
+) -> List[str]:
     """
     Generate a rectangular courtyard polygon.
 
@@ -108,7 +108,7 @@ def generate_courtyard(
     ]
 
 
-def sign(val: Union[int, float]):
+def sign(val: Union[int, float]) -> int:
     """
     Return 1 for positive or zero values, -1 otherwise.
     """
