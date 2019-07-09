@@ -8,8 +8,9 @@ install:
   - pip install -r requirements.txt
 script:
   - pytest
-  - mypy --check-untyped-defs --warn-return-any
+  - mypy --strict
     common.py
+  - mypy --check-untyped-defs --warn-return-any
     generate_mosfet_dual.py
     generate_so.py
     dfn_configs.py
