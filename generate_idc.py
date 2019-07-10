@@ -112,6 +112,8 @@ def generate_pkg(
     body_offset_x: float,
     body_offset_y: float,
     body_gap: float,
+    lead_width: float,
+    lead_span: float,
     pkgcat: str,
     keywords: str,
     version: str,
@@ -130,6 +132,7 @@ def generate_pkg(
 
         uuid_pkg = _uuid('pkg')
         uuid_pads = [_uuid('pad-{}'.format(p)) for p in range(pin_count)]
+        uuid_leads = [_uuid('lead-{}'.format(p)) for p in range(pin_count)]
         uuid_footprint = _uuid('footprint-default')
         uuid_text_name = _uuid('text-name')
         uuid_text_value = _uuid('text-value')
@@ -168,6 +171,21 @@ def generate_pkg(
             lines.append('  )')
 
         vertex = '   (vertex (position {} {}) (angle 0.0))'
+
+        # Legs on documentation layer
+        for i in range(1, pin_count + 1):
+            coords = get_coords(i, pin_count, 2, pitch, row_spacing)
+            x_offset_abs = pad_size[0] / 2 + pad_x_offset
+            x_offset = -x_offset_abs if i % 2 == 1 else x_offset_abs
+            sign = 1 if coords.x > 0 else -1
+            lines.append('  (polygon {} (layer top_documentation)'.format(uuid_leads[i - 1]))
+            lines.append('   (width 0.0) (fill true) (grab_area false)')
+            lines.append(vertex.format(ff(coords.x - lead_width / 2 * sign), ff(coords.y + lead_width / 2)))
+            lines.append(vertex.format(ff(coords.x - lead_width / 2 * sign), ff(coords.y - lead_width / 2)))
+            lines.append(vertex.format(ff(lead_span / 2 * sign), ff(coords.y - lead_width / 2)))
+            lines.append(vertex.format(ff(lead_span / 2 * sign), ff(coords.y + lead_width / 2)))
+            lines.append(vertex.format(ff(coords.x - lead_width / 2 * sign), ff(coords.y + lead_width / 2)))
+            lines.append('  )')
 
         # Body bounds
         pin1 = get_coords(1, pin_count, 2, pitch, row_spacing)
@@ -298,6 +316,8 @@ if __name__ == '__main__':
         body_offset_x=1.915,
         body_offset_y=3.785,
         body_gap=2.35,
+        lead_width=0.4,
+        lead_span=5.5,
         pkgcat='92186130-e1a4-4a82-8ce9-88f4aa854195',
         keywords='cnc tech,idc,header,male,box header,smd,3220,1.27mm',
         version='0.1',
@@ -316,6 +336,8 @@ if __name__ == '__main__':
         body_offset_x=1.75,
         body_offset_y=4.65,
         body_gap=3.7,
+        lead_width=0.5,
+        lead_span=7.5,
         pkgcat='92186130-e1a4-4a82-8ce9-88f4aa854195',
         keywords='cnc tech,idc,header,male,box header,smd,3120,2.00mm',
         version='0.1',
@@ -334,6 +356,8 @@ if __name__ == '__main__':
         body_offset_x=3.13,
         body_offset_y=5.08,
         body_gap=5.08,
+        lead_width=0.64,
+        lead_span=10.2,
         pkgcat='92186130-e1a4-4a82-8ce9-88f4aa854195',
         keywords='cnc tech,idc,header,male,box header,smd,3020,2.54mm',
         version='0.1',
