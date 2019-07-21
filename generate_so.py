@@ -3,7 +3,7 @@ Generate the following SO packages:
 
 - SOIC (both EIAJ and JEDEC)
 - TSSOP (JEDEC MO-153)
-- SSOP (JEDEC MO-152)
+- SSOP (JEDEC MO-150 and MO-152)
 
 """
 from os import makedirs, path
@@ -604,6 +604,43 @@ if __name__ == '__main__':
         lead_contact_length=0.6,
         pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
         keywords='so,sop,ssop,small outline package,smd,jedec,mo-152',
+        version='0.1',
+        create_date='2019-07-21T12:55:20Z',
+    )
+    generate_pkg(
+        dirpath='out/ssop/pkg',
+        author='Danilo B.',
+        # Name according to IPC7351C
+        name='SSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
+        description='{pin_count}-pin Plastic Shrink Small Outline Package (SSOP), '
+                    'standardized by JEDEC (MO-150), variation {variation}.\\n\\n'
+                    'Pitch: {pitch:.2f} mm\\nBody length: {body_length:.2f} mm\\n'
+                    'Body width: {body_width:.2f} mm\\nLead span: {lead_span:.2f} mm\\n'
+                    'Height: {height:.2f} mm\\n'
+                    'Lead length: {lead_length:.2f} mm\\nLead width: {lead_width:.2f} mm',
+        configs=[
+            # pin count, pitch, body length, body width, total width, height
+
+            # Symbols based on JEDEC MO-150:
+            #        N   e      D    E1   E    A
+
+            SoConfig( 8, 0.65,  3.0, 5.3, 7.8, 2.0, 'AA'),
+            SoConfig(14, 0.65,  6.2, 5.3, 7.8, 2.0, 'AB'),
+            SoConfig(16, 0.65,  6.2, 5.3, 7.8, 2.0, 'AC'),
+            SoConfig(18, 0.65,  7.2, 5.3, 7.8, 2.0, 'AD'),
+            SoConfig(20, 0.65,  7.2, 5.3, 7.8, 2.0, 'AE'),
+            SoConfig(22, 0.65,  8.2, 5.3, 7.8, 2.0, 'AF'),
+            SoConfig(24, 0.65,  8.2, 5.3, 7.8, 2.0, 'AG'),
+            SoConfig(28, 0.65, 10.2, 5.3, 7.8, 2.0, 'AH'),
+            SoConfig(30, 0.65, 10.2, 5.3, 7.8, 2.0, 'AJ'),
+            SoConfig(38, 0.65, 12.6, 5.3, 7.8, 2.0, 'AK'),
+        ],
+        lead_width_lookup={
+            0.65: 0.38,
+        },
+        lead_contact_length=0.75,
+        pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
+        keywords='so,sop,ssop,small outline package,smd,jedec,mo-150',
         version='0.1',
         create_date='2019-07-21T12:55:20Z',
     )
