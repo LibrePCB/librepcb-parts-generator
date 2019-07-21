@@ -2,7 +2,7 @@
 Generate the following SO packages:
 
 - SOIC (both EIAJ and JEDEC)
-- TSSOP
+- TSSOP (JEDEC MO-153)
 
 """
 from os import path, makedirs
@@ -88,13 +88,23 @@ def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> 
 
 
 class SoConfig:
-    def __init__(self, pin_count: int, pitch: float, body_length: float, body_width: float, total_width: float, height: float):
+    def __init__(
+        self,
+        pin_count: int,
+        pitch: float,
+        body_length: float,
+        body_width: float,
+        total_width: float,
+        height: float,
+        variation: Optional[str] = None,
+    ):
         self.pin_count = pin_count
         self.pitch = pitch
         self.body_length = body_length
         self.body_width = body_width
         self.total_width = total_width
         self.height = height
+        self.variation = variation
 
 
 def generate_pkg(
@@ -141,6 +151,7 @@ def generate_pkg(
             lead_span=total_width,
             lead_width=lead_width,
             lead_length=lead_length,
+            variation=config.variation,
         )
 
         def _uuid(identifier: str) -> str:
@@ -255,10 +266,7 @@ def generate_pkg(
 
             # Silkscreen (fully outside body)
             # Ensure minimum clearance between copper and silkscreen
-            print('silkscreen_offset: {}'.format(silkscreen_offset))
-            print('actual clearance: {}'.format(body_length / 2 - max_y_copper))
             y_offset = max(silkscreen_offset - (body_length / 2 - max_y_copper), 0)
-            print('offset: {}'.format(y_offset))
             y_max = ff(body_length / 2 + line_width / 2 + y_offset)
             y_min = ff(-body_length / 2 - line_width / 2 - y_offset)
             short_x_offset = body_width / 2 - line_width / 2
@@ -416,7 +424,8 @@ if __name__ == '__main__':
         author='Danilo B.',
         # Name according to IPC7351C
         name='TSSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
-        description='{pin_count}-pin Thin-Shrink Small Outline Package (TSSOP).\\n\\n'
+        description='{pin_count}-pin Thin-Shrink Small Outline Package (TSSOP), '
+                    'standardized by JEDEC (MO-153), variation {variation}.\\n\\n'
                     'Pitch: {pitch:.2f} mm\\nBody length: {body_length:.2f} mm\\n'
                     'Body width: {body_width:.2f} mm\\nLead span: {lead_span:.2f} mm\\n'
                     'Height: {height:.2f} mm\\n'
@@ -424,30 +433,75 @@ if __name__ == '__main__':
         configs=[
             # pin count, pitch, body length, body width, total width, height
 
-            # Values based on TI and Microchip package specs
-            # http://www.ti.com/packaging/docs/searchtipackages.tsp?packageName=SO
-            # https://www.microchip.com/quality/packaging-specifications?packageFamily=TSSOP
-            SoConfig( 8,  0.65, 3.0,  4.4, 6.4, 1.2),
-            SoConfig(14,  0.65, 5.0,  4.4, 6.4, 1.2),
-            SoConfig(16,  0.65, 5.0,  4.4, 6.4, 1.2),
-            SoConfig(20,  0.65, 6.5,  4.4, 6.4, 1.2),
-            SoConfig(20,  0.50, 5.0,  4.4, 6.4, 1.2),
-            SoConfig(24,  0.65, 7.8,  4.4, 6.4, 1.2),
-            SoConfig(24,  0.50, 6.4,  4.4, 6.4, 1.2),
-            SoConfig(28,  0.65, 9.7,  4.4, 6.4, 1.2),
-            SoConfig(28,  0.50, 7.8,  4.4, 6.4, 1.2),
-            SoConfig(30,  0.65, 11.0, 6.2, 8.1, 1.2),
-            SoConfig(30,  0.50, 7.8,  4.4, 6.4, 1.2),
-            SoConfig(32,  0.65, 11.0, 6.2, 8.1, 1.2),
-            SoConfig(38,  0.65, 12.5, 6.2, 8.1, 1.2),
-            SoConfig(38,  0.50, 9.7,  4.4, 6.4, 1.2),
-            SoConfig(44,  0.50, 11.0, 4.4, 6.4, 1.2),
-            SoConfig(48,  0.50, 12.5, 6.1, 8.1, 1.2),
-            SoConfig(50,  0.50, 12.5, 4.4, 6.4, 1.2),
-            SoConfig(56,  0.50, 14.0, 6.1, 8.1, 1.2),
-            SoConfig(64,  0.50, 17.0, 6.1, 8.1, 1.2),
-            SoConfig(80,  0.40, 17.0, 6.1, 8.1, 1.2),
-            SoConfig(100, 0.40, 20.8, 6.1, 8.1, 1.2),
+            # Symbols based on JEDEC MO-153:
+            #        N    e     D     E1   E    A
+
+            # 4.40mm body width
+            #   0.65mm pitch
+            SoConfig( 8,  0.65,  3.0, 4.4, 6.4, 1.2, 'AA'),
+            SoConfig(14,  0.65,  5.0, 4.4, 6.4, 1.2, 'AB-1'),
+            SoConfig(16,  0.65,  5.0, 4.4, 6.4, 1.2, 'AB'),
+            SoConfig(20,  0.65,  6.5, 4.4, 6.4, 1.2, 'AC'),
+            SoConfig(24,  0.65,  7.8, 4.4, 6.4, 1.2, 'AD'),
+            SoConfig(28,  0.65,  9.7, 4.4, 6.4, 1.2, 'AE'),
+            #   0.5mm pitch
+            SoConfig(20,  0.50,  5.0, 4.4, 6.4, 1.2, 'BA'),
+            SoConfig(24,  0.50,  6.5, 4.4, 6.4, 1.2, 'BB'),
+            SoConfig(28,  0.50,  7.8, 4.4, 6.4, 1.2, 'BC'),
+            SoConfig(30,  0.50,  7.8, 4.4, 6.4, 1.2, 'BC-1'),
+            SoConfig(36,  0.50,  9.7, 4.4, 6.4, 1.2, 'BD'),
+            SoConfig(38,  0.50,  9.7, 4.4, 6.4, 1.2, 'BD-1'),
+            SoConfig(44,  0.50, 11.0, 4.4, 6.4, 1.2, 'BE'),
+            SoConfig(50,  0.50, 12.5, 4.4, 6.4, 1.2, 'BF'),
+            #   0.4mm pitch
+            SoConfig(24,  0.40,  5.0, 4.4, 6.4, 1.2, 'CA'),
+            SoConfig(32,  0.40,  6.5, 4.4, 6.4, 1.2, 'CB'),
+            SoConfig(36,  0.40,  7.8, 4.4, 6.4, 1.2, 'CC'),
+            SoConfig(48,  0.40,  9.7, 4.4, 6.4, 1.2, 'CD'),
+
+            # 6.10mm body width
+            #   0.65mm pitch
+            SoConfig(24,  0.65,  7.8, 6.1, 8.1, 1.2, 'DA'),
+            SoConfig(28,  0.65,  9.7, 6.1, 8.1, 1.2, 'DB'),
+            SoConfig(30,  0.65,  9.7, 6.1, 8.1, 1.2, 'DB-1'),
+            SoConfig(32,  0.65, 11.0, 6.1, 8.1, 1.2, 'DC'),
+            SoConfig(36,  0.65, 12.5, 6.1, 8.1, 1.2, 'DD'),
+            SoConfig(38,  0.65, 12.5, 6.1, 8.1, 1.2, 'DD-1'),
+            SoConfig(40,  0.65, 14.0, 6.1, 8.1, 1.2, 'DE'),
+            #  0.5mm pitch
+            SoConfig(28,  0.50,  7.8, 6.1, 8.1, 1.2, 'EA'),
+            SoConfig(36,  0.50,  9.7, 6.1, 8.1, 1.2, 'EB'),
+            SoConfig(40,  0.50, 11.0, 6.1, 8.1, 1.2, 'EC'),
+            SoConfig(44,  0.50, 11.0, 6.1, 8.1, 1.2, 'EC-1'),
+            SoConfig(48,  0.50, 12.5, 6.1, 8.1, 1.2, 'ED'),
+            SoConfig(56,  0.50, 14.0, 6.1, 8.1, 1.2, 'EE'),
+            SoConfig(64,  0.50, 17.0, 6.1, 8.1, 1.2, 'EF'),
+            #  0.4mm pitch
+            SoConfig(36,  0.40,  7.8, 6.1, 8.1, 1.2, 'FA'),
+            SoConfig(48,  0.40,  9.7, 6.1, 8.1, 1.2, 'FB'),
+            SoConfig(52,  0.40, 11.0, 6.1, 8.1, 1.2, 'FC'),
+            SoConfig(56,  0.40, 12.5, 6.1, 8.1, 1.2, 'FD'),
+            SoConfig(64,  0.40, 14.0, 6.1, 8.1, 1.2, 'FE'),
+            SoConfig(80,  0.40, 17.0, 6.1, 8.1, 1.2, 'FF'),
+
+            # 8.00mm body width
+            #   0.65mm pitch
+            SoConfig(28,  0.65,  9.7, 8.0, 10.0, 1.2, 'GA'),
+            SoConfig(32,  0.65, 11.0, 8.0, 10.0, 1.2, 'GB'),
+            SoConfig(36,  0.65, 12.5, 8.0, 10.0, 1.2, 'GC'),
+            SoConfig(40,  0.65, 14.0, 8.0, 10.0, 1.2, 'GD'),
+            #   0.5mm pitch
+            SoConfig(36,  0.50,  9.7, 8.0, 10.0, 1.2, 'HA'),
+            SoConfig(40,  0.50, 11.0, 8.0, 10.0, 1.2, 'HB'),
+            SoConfig(48,  0.50, 12.5, 8.0, 10.0, 1.2, 'HC'),
+            SoConfig(56,  0.50, 14.0, 8.0, 10.0, 1.2, 'HD'),
+            #   0.4mm pitch
+            SoConfig(48,  0.40,  9.7, 8.0, 10.0, 1.2, 'JA'),
+            SoConfig(52,  0.40, 11.0, 8.0, 10.0, 1.2, 'JB'),
+            SoConfig(56,  0.40, 12.5, 8.0, 10.0, 1.2, 'JC'),
+            SoConfig(60,  0.40, 12.5, 8.0, 10.0, 1.2, 'JC-1'),
+            SoConfig(64,  0.40, 14.0, 8.0, 10.0, 1.2, 'JD'),
+            SoConfig(68,  0.40, 14.0, 8.0, 10.0, 1.2, 'JD-1'),
         ],
         lead_width_lookup={
             0.65: 0.3,
@@ -458,6 +512,6 @@ if __name__ == '__main__':
         pkgcat='241d9d5d-8f74-4740-8901-3cf51cf50091',
         keywords='so,sop,tssop,small outline package,smd',
         version='0.1',
-        create_date='2019-06-16T12:46:54Z',
+        create_date='2019-07-21T12:15:54Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
