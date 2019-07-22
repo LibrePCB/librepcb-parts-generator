@@ -102,7 +102,7 @@ class Position(object):
         self.y = y
 
     def __str__(self) -> str:
-        return '(position {} {})'.format(self.x, self.y)
+        return '(position {} {})'.format(format_float(self.x), format_float(self.y))
 
 
 class Rotation(FloatValue):
