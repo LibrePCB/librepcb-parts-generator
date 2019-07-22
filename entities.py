@@ -6,7 +6,7 @@ from common import format_float
 from typing import List
 
 
-class DateValue(object):
+class DateValue():
     """Helper class to represent a single named date value"""
     def __init__(self, name: str, date: str):
         self.name = name
@@ -16,7 +16,7 @@ class DateValue(object):
         return '({} {})'.format(self.name, self.date)
 
 
-class UUIDValue(object):
+class UUIDValue():
     """Helper class to represent a single named UUID value"""
     def __init__(self, name: str, uuid: str):
         self.name = name
@@ -26,7 +26,7 @@ class UUIDValue(object):
         return '({} {})'.format(self.name, self.uuid)
 
 
-class BoolValue(object):
+class BoolValue():
     """Helper class to represent a single named boolean value"""
     def __init__(self, name: str, value: bool):
         self.name = name
@@ -36,7 +36,7 @@ class BoolValue(object):
         return '({} {})'.format(self.name, self.value)
 
 
-class StringValue(object):
+class StringValue():
     """Helper class to represent a single named string value"""
     def __init__(self, name: str, value: str):
         self.name = name
@@ -46,7 +46,7 @@ class StringValue(object):
         return '({} "{}")'.format(self.name, self.value)
 
 
-class FloatValue(object):
+class FloatValue():
     """Helper class to represent a single named float value"""
     def __init__(self, name: str, value: float):
         self.name = name
@@ -96,7 +96,7 @@ class Category(UUIDValue):
         super().__init__('category', category)
 
 
-class Position(object):
+class Position():
     def __init__(self, x: float, y: float):
         self.x = x
         self.y = y
@@ -115,7 +115,7 @@ class Length(FloatValue):
         super().__init__('length', length)
 
 
-class SchematicsPin(object):
+class SchematicsPin():
     def __init__(self, uuid: str, name: Name, position: Position, rotation: Rotation, length: Length):
         self.uuid = uuid
         self.name = name
@@ -154,7 +154,7 @@ class GrabArea(BoolValue):
         super().__init__('grab_area', grab_area)
 
 
-class Vertex(object):
+class Vertex():
     def __init__(self, position: Position, angle: Angle):
         self.position = position
         self.angle = angle
@@ -163,7 +163,7 @@ class Vertex(object):
         return '(vertex {} {})'.format(self.position, self.angle)
 
 
-class Layer(object):
+class Layer():
     def __init__(self, layer: str):
         self.layer = layer
 
@@ -171,7 +171,7 @@ class Layer(object):
         return '(layer {})'.format(self.layer)
 
 
-class Polygon(object):
+class Polygon():
     def __init__(self, uuid: str, layer: Layer, width: Width, fill: Fill, grab_area: GrabArea):
         self.uuid = uuid
         self.layer = layer
@@ -197,7 +197,7 @@ class Value(StringValue):
         super().__init__('value', value)
 
 
-class Align(object):
+class Align():
     def __init__(self, align: str):
         self.align = align
 
@@ -205,7 +205,7 @@ class Align(object):
         return '(align {})'.format(self.align)
 
 
-class Text(object):
+class Text():
     def __init__(self, uuid: str, layer: Layer, value: Value, align: Align, height: Height, position: Position, rotation: Rotation):
         self.uuid = uuid
         self.layer = layer
