@@ -58,7 +58,7 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
-def get_by_density(pitch: float, level: str, key: str):
+def get_by_density(pitch: float, level: str, key: str) -> float:
     if pitch >= 0.625:
         table = DENSITY_LEVELS
     else:
@@ -66,7 +66,7 @@ def get_by_density(pitch: float, level: str, key: str):
     return table[level][key]
 
 
-def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool):
+def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> float:
     """
     Return the y coordinate of the specified pin. Keep the pins grid aligned, if desired.
 
@@ -119,7 +119,7 @@ def generate_pkg(
     top_offset: float,
     version: str,
     create_date: Optional[str],
-):
+) -> None:
     category = 'pkg'
     for height in heights:
         for pin_count in pins:
@@ -128,7 +128,7 @@ def generate_pkg(
             full_name = name.format(height=fd(height), pin_count=pin_count)
             full_description = description.format(height=height, pin_count=pin_count)
 
-            def _uuid(identifier):
+            def _uuid(identifier: str) -> str:
                 return uuid(category, full_name, identifier)
 
             uuid_pkg = _uuid('pkg')
@@ -155,7 +155,7 @@ def generate_pkg(
                 key: str,
                 name: str,
                 density_level: str,
-            ):
+            ) -> None:
                 uuid_footprint = _uuid('footprint-{}'.format(key))
                 uuid_silkscreen_top = _uuid('polygon-silkscreen-{}'.format(key))
                 uuid_silkscreen_bot = _uuid('polygon-silkscreen2-{}'.format(key))
@@ -313,7 +313,7 @@ def generate_pkg(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str):
+    def _make(dirpath: str) -> None:
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
     _make('out')
