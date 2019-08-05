@@ -5,7 +5,7 @@ Generate the following packages:
 
 """
 from os import path, makedirs
-from typing import Iterable, Optional, Dict, Any  # noqa
+from typing import Iterable, Optional, Dict, Any, Tuple  # noqa
 from uuid import uuid4
 
 from common import now, init_cache, save_cache
@@ -41,7 +41,7 @@ DENSITY_LEVELS_SMALL = {  # Below 1608
 }
 
 
-def get_by_density(length: float, level: str, key: str):
+def get_by_density(length: float, level: str, key: str) -> float:
     if length >= 1.6:
         table = DENSITY_LEVELS
     else:
@@ -105,7 +105,7 @@ def generate_pkg(
     pkgcat: str,
     keywords: str,
     create_date: Optional[str],
-):
+) -> None:
     category = 'pkg'
     for config in configs:
         lines = []
@@ -127,7 +127,7 @@ def generate_pkg(
         full_name = name.format(**fmt_params_name)
         full_desc = description.format(**fmt_params_desc)
 
-        def _uuid(identifier):
+        def _uuid(identifier: str) -> str:
             return uuid(category, full_name, identifier)
 
         # UUIDs
@@ -151,7 +151,7 @@ def generate_pkg(
         lines.append(' (pad {} (name "1"))'.format(uuid_pads[0]))
         lines.append(' (pad {} (name "2"))'.format(uuid_pads[1]))
 
-        def add_footprint_variant(key: str, name: str, density_level: str, toe_extension: float):
+        def add_footprint_variant(key: str, name: str, density_level: str, toe_extension: float) -> None:
             uuid_footprint = _uuid('footprint-{}'.format(key))
             uuid_text_name = _uuid('text-name-{}'.format(key))
             uuid_text_value = _uuid('text-value-{}'.format(key))
@@ -191,14 +191,14 @@ def generate_pkg(
                 pad_width = config.width + get_by_density(config.length, density_level, 'side')
                 pad_toe = get_by_density(config.length, density_level, 'toe') + toe_extension
                 pad_length = (config.length - config.gap) / 2 + pad_toe
-                dx = sign * (config.gap / 2 + pad_length / 2)  # x offset (delta-x)
+                dx_v = sign * (config.gap / 2 + pad_length / 2)  # x offset (delta-x)
                 lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
                 lines.append('   (position {} 0.0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                    ff(dx),
+                    ff(dx_v),
                     ff(pad_length),
                     ff(pad_width),
                 ))
-                max_x = max(max_x, pad_length / 2 + dx)
+                max_x = max(max_x, pad_length / 2 + dx_v)
                 lines.append('  )')
 
             # Documentation
@@ -302,14 +302,14 @@ def generate_dev(
     author: str,
     name: str,
     description: str,
-    packages: Iterable[str],
+    packages: Iterable[Tuple[str, str, str]],
     cmp: str,
     cat: str,
     signals: Iterable[str],
     keywords: str,
     version: str,
     create_date: Optional[str],
-):
+) -> None:
     category = 'dev'
     for (size_metric, size_imperial, pkg_name) in packages:
         lines = []
@@ -321,7 +321,7 @@ def generate_dev(
         full_name = name.format(**fmt_params)
         full_desc = description.format(**fmt_params)
 
-        def _uuid(identifier):
+        def _uuid(identifier: str) -> str:
             return uuid(category, full_name, identifier)
 
         # UUIDs
@@ -358,7 +358,7 @@ def generate_dev(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str):
+    def _make(dirpath: str) -> None:
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
     _make('out')
