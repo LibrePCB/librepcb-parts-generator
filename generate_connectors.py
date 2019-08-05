@@ -17,7 +17,7 @@ from typing import Callable, List, Tuple, Iterable, Optional
 from uuid import uuid4
 
 from common import now, init_cache, save_cache, format_float as ff, indent
-from entities import SchematicsPin, Name, Position, Rotation, Length
+from entities import SchematicsPin, Name, Position, Rotation, Length, Polygon, Layer, Width, Fill, GrabArea, Vertex, Angle
 
 
 generator = 'librepcb-parts-generator (generate_connectors.py)'
@@ -292,14 +292,13 @@ def generate_sym(
 
         # Polygons
         y_max, y_min = get_rectangle_bounds(i, spacing, spacing, True)
-        lines.append(' (polygon {} (layer sym_outlines)'.format(uuid_polygon))
-        lines.append('  (width {}) (fill false) (grab_area true)'.format(line_width))
-        lines.append('  (vertex (position -{} {}) (angle 0.0))'.format(spacing, ff(y_max)))
-        lines.append('  (vertex (position {} {}) (angle 0.0))'.format(spacing, ff(y_max)))
-        lines.append('  (vertex (position {} {}) (angle 0.0))'.format(spacing, ff(y_min)))
-        lines.append('  (vertex (position -{} {}) (angle 0.0))'.format(spacing, ff(y_min)))
-        lines.append('  (vertex (position -{} {}) (angle 0.0))'.format(spacing, ff(y_max)))
-        lines.append(' )')
+        polygon = Polygon(uuid_polygon, Layer('sym_outlines'), Width(line_width), Fill(False), GrabArea(True))
+        polygon.add_vertex(Vertex(Position(-spacing, y_max), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(spacing, y_max), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(spacing, y_min), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-spacing, y_min), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-spacing, y_max), Angle(0.0)))
+        lines += indent(1, str(polygon).splitlines())
 
         # Decorations
         if kind == KIND_HEADER:
@@ -308,15 +307,13 @@ def generate_sym(
                 y = get_y(j, i, spacing, True)
                 dx = spacing / 8 * 1.5
                 dy = spacing / 8 / 1.5
-                lines.append(' (polygon {} (layer sym_outlines)'.format(uuid_decoration))
-                lines.append('  (width {}) (fill true) (grab_area true)'.format(line_width))
-                vertex = '  (vertex (position {} {}) (angle 0.0))'
-                lines.append(vertex.format(ff(spacing / 2 - dx), ff(y + dy)))
-                lines.append(vertex.format(ff(spacing / 2 + dx), ff(y + dy)))
-                lines.append(vertex.format(ff(spacing / 2 + dx), ff(y - dy)))
-                lines.append(vertex.format(ff(spacing / 2 - dx), ff(y - dy)))
-                lines.append(vertex.format(ff(spacing / 2 - dx), ff(y + dy)))
-                lines.append(' )')
+                polygon = Polygon(uuid_decoration, Layer('sym_outlines'), Width(line_width), Fill(True), GrabArea(True))
+                polygon.add_vertex(Vertex(Position(spacing / 2 - dx, y + dy), Angle(0.0)))
+                polygon.add_vertex(Vertex(Position(spacing / 2 + dx, y + dy), Angle(0.0)))
+                polygon.add_vertex(Vertex(Position(spacing / 2 + dx, y - dy), Angle(0.0)))
+                polygon.add_vertex(Vertex(Position(spacing / 2 - dx, y - dy), Angle(0.0)))
+                polygon.add_vertex(Vertex(Position(spacing / 2 - dx, y + dy), Angle(0.0)))
+                lines += indent(1, str(polygon).splitlines())
         elif kind == KIND_SOCKET:
             # Sockets: Small semicircle
             for j in range(1, i + 1):
