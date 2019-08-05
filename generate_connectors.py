@@ -16,7 +16,8 @@ from os import path, makedirs
 from typing import Callable, List, Tuple, Iterable, Optional
 from uuid import uuid4
 
-from common import now, init_cache, save_cache, format_float as ff
+from common import now, init_cache, save_cache, format_float as ff, indent
+from entities import SchematicsPin, Name, Position, Rotation, Length
 
 
 generator = 'librepcb-parts-generator (generate_connectors.py)'
@@ -286,11 +287,8 @@ def generate_sym(
         lines.append(' (deprecated false)')
         lines.append(' (category {})'.format(cmpcat))
         for j in range(1, i + 1):
-            lines.append(' (pin {} (name "{}")'.format(uuid_pins[j - 1], j))
-            lines.append('  (position 5.08 {}) (rotation 180.0) (length 3.81)'.format(
-                get_y(j, i, spacing, True)
-            ))
-            lines.append(' )')
+            pin = SchematicsPin(uuid_pins[j - 1], Name(str(j)), Position(5.08, get_y(j, i, spacing, True)), Rotation(180.0), Length(3.81))
+            lines += indent(1, str(pin).splitlines())
 
         # Polygons
         y_max, y_min = get_rectangle_bounds(i, spacing, spacing, True)
