@@ -11,12 +11,12 @@ script:
   - mypy --strict
     common.py
     entities/*.py
+    generate_connectors.py
   - mypy --check-untyped-defs --warn-return-any
     test_entities.py
     generate_mosfet_dual.py
     generate_so.py
     dfn_configs.py
-    generate_connectors.py
     generate_dip.py
     generate_qfp.py
     #generate_chip.py

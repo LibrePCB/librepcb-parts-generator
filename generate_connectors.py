@@ -61,7 +61,7 @@ def uuid(category: str, kind: str, variant: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
-def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool):
+def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> float:
     """
     Return the y coordinate of the specified pin. Keep the pins grid aligned, if desired.
 
@@ -111,7 +111,7 @@ def generate_pkg(
     pad_drills: Iterable[float],
     generate_silkscreen: Callable[[List[str], str, str, str, int, float], None],
     create_date: Optional[str],
-):
+) -> None:
     category = 'pkg'
     for i in range(min_pads, max_pads + 1):
         for drill in pad_drills:
@@ -119,7 +119,7 @@ def generate_pkg(
 
             variant = '1x{}-D{:.1f}'.format(i, drill)
 
-            def _uuid(identifier):
+            def _uuid(identifier: str) -> str:
                 return uuid(category, kind, variant, identifier)
 
             uuid_pkg = _uuid('pkg')
@@ -259,12 +259,12 @@ def generate_sym(
     max_pads: int,
     version: str,
     create_date: Optional[str],
-):
+) -> None:
     category = 'sym'
     for i in range(min_pads, max_pads + 1):
         variant = '1x{}'.format(i)
 
-        def _uuid(identifier):
+        def _uuid(identifier: str) -> str:
             return uuid(category, kind, variant, identifier)
 
         uuid_sym = _uuid('sym')
@@ -357,14 +357,14 @@ def generate_cmp(
     max_pads: int,
     version: str,
     create_date: Optional[str],
-):
+) -> None:
     category = 'cmp'
     for i in range(min_pads, max_pads + 1):
         lines = []
 
         variant = '1x{}'.format(i)
 
-        def _uuid(identifier):
+        def _uuid(identifier: str) -> str:
             return uuid(category, kind, variant, identifier)
 
         uuid_cmp = _uuid('cmp')
@@ -434,7 +434,7 @@ def generate_dev(
     max_pads: int,
     pad_drills: Iterable[float],
     create_date: Optional[str],
-):
+) -> None:
     category = 'dev'
     for i in range(min_pads, max_pads + 1):
         for drill in pad_drills:
@@ -443,7 +443,7 @@ def generate_dev(
             variant = '1x{}-D{:.1f}'.format(i, drill)
             broad_variant = '1x{}'.format(i)
 
-            def _uuid(identifier):
+            def _uuid(identifier: str) -> str:
                 return uuid(category, kind, variant, identifier)
 
             uuid_dev = _uuid('dev')
@@ -483,7 +483,7 @@ def generate_dev(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str):
+    def _make(dirpath: str) -> None:
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
     _make('out')
