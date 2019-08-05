@@ -1,4 +1,5 @@
-from entities import Name, Description, Position, Rotation, Length, SchematicsPin, Vertex, Angle, Polygon, Width, Fill, GrabArea, Layer, Align, Height, Text, Value
+from entities.common import Name, Description, Position, Rotation, Length, Vertex, Angle, Polygon, Width, Fill, GrabArea, Layer, Align, Height, Text, Value
+from entities.symbol import Pin as SymbolPin
 
 
 def test_name():
@@ -26,10 +27,10 @@ def test_length():
     assert length_s_exp == '(length 3.81)'
 
 
-def test_schematics_pin():
-    schematics_pin_s_exp = str(SchematicsPin('my_uuid', Name('foo'), Position(1.0, 2.0), Rotation(180.0), Length(3.81)))
+def test_symbol_pin():
+    symbol_pin_s_exp = str(SymbolPin('my_uuid', Name('foo'), Position(1.0, 2.0), Rotation(180.0), Length(3.81)))
 
-    assert schematics_pin_s_exp == '(pin my_uuid (name "foo")\n' + \
+    assert symbol_pin_s_exp == '(pin my_uuid (name "foo")\n' + \
         ' (position 1.0 2.0) (rotation 180.0) (length 3.81)\n' + \
         ')'
 

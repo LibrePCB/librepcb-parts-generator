@@ -17,7 +17,8 @@ from typing import Callable, List, Tuple, Iterable, Optional
 from uuid import uuid4
 
 from common import now, init_cache, save_cache, format_float as ff, indent
-from entities import SchematicsPin, Name, Position, Rotation, Length, Polygon, Layer, Width, Fill, GrabArea, Vertex, Angle
+from entities.common import Name, Position, Rotation, Length, Polygon, Layer, Width, Fill, GrabArea, Vertex, Angle
+from entities.symbol import Pin as SymbolPin
 
 
 generator = 'librepcb-parts-generator (generate_connectors.py)'
@@ -287,7 +288,7 @@ def generate_sym(
         lines.append(' (deprecated false)')
         lines.append(' (category {})'.format(cmpcat))
         for j in range(1, i + 1):
-            pin = SchematicsPin(uuid_pins[j - 1], Name(str(j)), Position(5.08, get_y(j, i, spacing, True)), Rotation(180.0), Length(3.81))
+            pin = SymbolPin(uuid_pins[j - 1], Name(str(j)), Position(5.08, get_y(j, i, spacing, True)), Rotation(180.0), Length(3.81))
             lines += indent(1, str(pin).splitlines())
 
         # Polygons

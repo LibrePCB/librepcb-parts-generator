@@ -10,8 +10,8 @@ script:
   - pytest
   - mypy --strict
     common.py
+    entities/*.py
   - mypy --check-untyped-defs --warn-return-any
-    entities.py
     test_entities.py
     generate_mosfet_dual.py
     generate_so.py
