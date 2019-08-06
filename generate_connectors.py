@@ -513,7 +513,7 @@ if __name__ == '__main__':
         keywords='pin socket, female header',
         min_pads=1,
         max_pads=40,
-        version='0.2',
+        version='0.3',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_sym(
