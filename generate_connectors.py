@@ -17,6 +17,8 @@ from typing import Callable, List, Tuple, Iterable, Optional
 from uuid import uuid4
 
 from common import now, init_cache, save_cache, format_float as ff
+from entities.common import Name, Position, Rotation, Length, Polygon, Layer, Width, Fill, GrabArea, Vertex, Angle, Description, Keywords, Author, Version, Created, Category, Text, Value, Align, Height
+from entities.symbol import Pin as SymbolPin, Symbol
 
 
 generator = 'librepcb-parts-generator (generate_connectors.py)'
@@ -260,8 +262,6 @@ def generate_sym(
 ):
     category = 'sym'
     for i in range(min_pads, max_pads + 1):
-        lines = []
-
         variant = '1x{}'.format(i)
 
         def _uuid(identifier):
@@ -275,33 +275,29 @@ def generate_sym(
         uuid_text_value = _uuid('text-value')
 
         # General info
-        lines.append('(librepcb_symbol {}'.format(uuid_sym))
-        lines.append(' (name "{} 1x{}")'.format(name, i))
-        lines.append(' (description "A 1x{} {}.\\n\\n'
-                     'Generated with {}")'.format(i, name_lower, generator))
-        lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
-        lines.append(' (author "{}")'.format(author))
-        lines.append(' (version "{}")'.format(version))
-        lines.append(' (created {})'.format(create_date or now()))
-        lines.append(' (deprecated false)')
-        lines.append(' (category {})'.format(cmpcat))
+        symbol = Symbol(uuid_sym,
+                        Name('{} 1x{}'.format(name, i)),
+                        Description('A 1x{} {}.\\n\\n'
+                                    'Generated with {}'.format(i, name_lower, generator)),
+                        Keywords('connector, 1x{}, {}'.format(i, keywords)),
+                        Author(author),
+                        Version(version),
+                        Created(create_date or now()),
+                        Category(cmpcat),
+                        )
         for j in range(1, i + 1):
-            lines.append(' (pin {} (name "{}")'.format(uuid_pins[j - 1], j))
-            lines.append('  (position 5.08 {}) (rotation 180.0) (length 3.81)'.format(
-                get_y(j, i, spacing, True)
-            ))
-            lines.append(' )')
+            pin = SymbolPin(uuid_pins[j - 1], Name(str(j)), Position(5.08, get_y(j, i, spacing, True)), Rotation(180.0), Length(3.81))
+            symbol.add_pin(pin)
 
         # Polygons
         y_max, y_min = get_rectangle_bounds(i, spacing, spacing, True)
-        lines.append(' (polygon {} (layer sym_outlines)'.format(uuid_polygon))
-        lines.append('  (width {}) (fill false) (grab_area true)'.format(line_width))
-        lines.append('  (vertex (position -{} {}) (angle 0.0))'.format(spacing, ff(y_max)))
-        lines.append('  (vertex (position {} {}) (angle 0.0))'.format(spacing, ff(y_max)))
-        lines.append('  (vertex (position {} {}) (angle 0.0))'.format(spacing, ff(y_min)))
-        lines.append('  (vertex (position -{} {}) (angle 0.0))'.format(spacing, ff(y_min)))
-        lines.append('  (vertex (position -{} {}) (angle 0.0))'.format(spacing, ff(y_max)))
-        lines.append(' )')
+        polygon = Polygon(uuid_polygon, Layer('sym_outlines'), Width(line_width), Fill(False), GrabArea(True))
+        polygon.add_vertex(Vertex(Position(-spacing, y_max), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(spacing, y_max), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(spacing, y_min), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-spacing, y_min), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-spacing, y_max), Angle(0.0)))
+        symbol.add_polygon(polygon)
 
         # Decorations
         if kind == KIND_HEADER:
@@ -310,45 +306,31 @@ def generate_sym(
                 y = get_y(j, i, spacing, True)
                 dx = spacing / 8 * 1.5
                 dy = spacing / 8 / 1.5
-                lines.append(' (polygon {} (layer sym_outlines)'.format(uuid_decoration))
-                lines.append('  (width {}) (fill true) (grab_area true)'.format(line_width))
-                vertex = '  (vertex (position {} {}) (angle 0.0))'
-                lines.append(vertex.format(ff(spacing / 2 - dx), ff(y + dy)))
-                lines.append(vertex.format(ff(spacing / 2 + dx), ff(y + dy)))
-                lines.append(vertex.format(ff(spacing / 2 + dx), ff(y - dy)))
-                lines.append(vertex.format(ff(spacing / 2 - dx), ff(y - dy)))
-                lines.append(vertex.format(ff(spacing / 2 - dx), ff(y + dy)))
-                lines.append(' )')
+                polygon = Polygon(uuid_decoration, Layer('sym_outlines'), Width(line_width), Fill(True), GrabArea(True))
+                polygon.add_vertex(Vertex(Position(spacing / 2 - dx, y + dy), Angle(0.0)))
+                polygon.add_vertex(Vertex(Position(spacing / 2 + dx, y + dy), Angle(0.0)))
+                polygon.add_vertex(Vertex(Position(spacing / 2 + dx, y - dy), Angle(0.0)))
+                polygon.add_vertex(Vertex(Position(spacing / 2 - dx, y - dy), Angle(0.0)))
+                polygon.add_vertex(Vertex(Position(spacing / 2 - dx, y + dy), Angle(0.0)))
+                symbol.add_polygon(polygon)
         elif kind == KIND_SOCKET:
             # Sockets: Small semicircle
             for j in range(1, i + 1):
                 y = get_y(j, i, spacing, True)
                 d = spacing / 4 * 0.75
                 w = line_width * 0.75
-                lines.append(' (polygon {} (layer sym_outlines)'.format(uuid_decoration))
-                lines.append('  (width {}) (fill false) (grab_area false)'.format(w))
-                lines.append('  (vertex (position {} {}) (angle 135.0))'.format(
-                    ff(spacing / 2 + d * 0.5 - d - w), ff(y - d)),
-                )
-                lines.append('  (vertex (position {} {}) (angle 0.0))'.format(
-                    ff(spacing / 2 + d * 0.5 - d - w), ff(y + d))
-                )
-                lines.append(' )')
+                polygon = Polygon(uuid_decoration, Layer('sym_outlines'), Width(w), Fill(False), GrabArea(False))
+                polygon.add_vertex(Vertex(Position(spacing / 2 + d * 0.5 - d - w, y - d), Angle(135.0)))
+                polygon.add_vertex(Vertex(Position(spacing / 2 + d * 0.5 - d - w, y + d), Angle(0.0)))
+                symbol.add_polygon(polygon)
 
         # Text
         y_max, y_min = get_rectangle_bounds(i, spacing, spacing, True)
-        lines.append(' (text {} (layer sym_names) (value "{{{{NAME}}}}")'.format(uuid_text_name))
-        lines.append('  (align center bottom) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
-            ff(sym_text_height), ff(y_max),
-        ))
-        lines.append(' )')
-        lines.append(' (text {} (layer sym_values) (value "{{{{VALUE}}}}")'.format(uuid_text_value))
-        lines.append('  (align center top) (height {}) (position 0.0 {}) (rotation 0.0)'.format(
-            ff(sym_text_height), ff(y_min),
-        ))
-        lines.append(' )')
+        text = Text(uuid_text_name, Layer('sym_names'), Value('{{NAME}}'), Align('center bottom'), Height(sym_text_height), Position(0.0, y_max), Rotation(0.0))
+        symbol.add_text(text)
 
-        lines.append(')')
+        text = Text(uuid_text_value, Layer('sym_values'), Value('{{VALUE}}'), Align('center top'), Height(sym_text_height), Position(0.0, y_min), Rotation(0.0))
+        symbol.add_text(text)
 
         sym_dir_path = path.join(dirpath, uuid_sym)
         if not (path.exists(sym_dir_path) and path.isdir(sym_dir_path)):
@@ -356,7 +338,7 @@ def generate_sym(
         with open(path.join(sym_dir_path, '.librepcb-sym'), 'w') as f:
             f.write('0.1\n')
         with open(path.join(sym_dir_path, 'symbol.lp'), 'w') as f:
-            f.write('\n'.join(lines))
+            f.write(str(symbol))
             f.write('\n')
 
         print('1x{} {}: Wrote symbol {}'.format(i, kind, uuid_sym))
@@ -531,7 +513,7 @@ if __name__ == '__main__':
         keywords='pin socket, female header',
         min_pads=1,
         max_pads=40,
-        version='0.2',
+        version='0.3',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_sym(
