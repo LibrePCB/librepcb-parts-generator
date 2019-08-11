@@ -50,7 +50,7 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
-def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool):
+def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> float:
     """
     Return the y coordinate of the specified pin. Keep the pins grid aligned, if desired.
 
@@ -78,7 +78,7 @@ def generate_pkg(
     config: DfnConfig,
     make_exposed: bool,
     create_date: Optional[str] = None,
-):
+) -> str:
     category = 'pkg'
     lines = []
 
@@ -117,7 +117,7 @@ def generate_pkg(
     if config.print_pad:
         full_description += "\\nPad length: {:.2f} mm".format(config.lead_length)
 
-    def _uuid(identifier):
+    def _uuid(identifier: str) -> str:
         return uuid(category, full_name, identifier)
 
     uuid_pkg = _uuid('pkg')
@@ -150,7 +150,7 @@ def generate_pkg(
         lines.append(' (pad {} (name "{}"))'.format(uuid_exp, 'ExposedPad'))
 
     # Create Footprint function
-    def _generate_footprint(key: str, name: str, pad_extension: float):
+    def _generate_footprint(key: str, name: str, pad_extension: float) -> None:
         # Create Meta-data
         uuid_footprint = _uuid('footprint-{}'.format(key))
         lines.append(' (footprint {}'.format(uuid_footprint))
@@ -365,7 +365,7 @@ def generate_pkg(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str):
+    def _make(dirpath: str) -> None:
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
     _make('out')
