@@ -43,7 +43,7 @@ def uuid(category: str, width: str, variant: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
-def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool):
+def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> float:
     """
     Return the y coordinate of the specified pin. Keep the pins grid aligned, if desired.
 
@@ -90,14 +90,14 @@ def generate_pkg(
     pins: Iterable[int],
     top_offset: float,
     create_date: Optional[str],
-):
+) -> None:
     category = 'pkg'
     for pin_count in pins:
         lines = []
 
         variant = '{}pin-D{:.1f}'.format(pin_count, drill_diameter)
 
-        def _uuid(identifier):
+        def _uuid(identifier: str) -> str:
             return uuid(category, width, variant, identifier)
 
         uuid_pkg = _uuid('pkg')
@@ -117,7 +117,7 @@ def generate_pkg(
         for p in range(1, pin_count + 1):
             lines.append(' (pad {} (name "{}"))'.format(uuid_pads[p - 1], p))
 
-        def add_footprint_variant(key: str, name: str, pad_size: Tuple[float, float]):
+        def add_footprint_variant(key: str, name: str, pad_size: Tuple[float, float]) -> None:
             uuid_footprint = _uuid('footprint-{}'.format(key))
             uuid_silkscreen = _uuid('polygon-silkscreen-{}'.format(key))
             uuid_pin1_dot = _uuid('pin1-dot-silkscreen-{}'.format(key))
@@ -237,7 +237,7 @@ def generate_pkg(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str):
+    def _make(dirpath: str) -> None:
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
     _make('out')

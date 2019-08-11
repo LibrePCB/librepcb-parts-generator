@@ -16,9 +16,9 @@ script:
     generate_chip.py
     generate_mosfet_dual.py
     generate_so.py
+    generate_dip.py
   - mypy --check-untyped-defs --warn-return-any
     test_entities.py
-    generate_dip.py
     generate_qfp.py
     #generate_dfn.py
     #test_common.py
