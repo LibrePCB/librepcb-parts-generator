@@ -109,7 +109,7 @@ def generate_dev(
     uuid_cat: str,
     uuid_cmp: str,
     configs: Iterable[FetConfig],
-):
+) -> None:
     for fet_config in configs:
         lines = []
 
@@ -171,7 +171,7 @@ def generate_dev(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str):
+    def _make(dirpath: str) -> None:
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
     _make('out')

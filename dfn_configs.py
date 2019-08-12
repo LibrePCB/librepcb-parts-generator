@@ -3,6 +3,8 @@ Configuration file, containing all available DFN configs.
 
 """
 
+from typing import Optional
+
 # Maximal lead width as a function of pitch, Table 4 in the JEDEC
 # standard MO-229F, available (with registration!) from
 # https://www.jedec.org/system/files/docs/MO-229F.pdf
@@ -42,9 +44,9 @@ class DfnConfig:
                  keywords: str,
                  no_exp: bool = True,    # By default we create variants w/o exp
                  print_pad: bool = False,    # By default, the pad length is not in the full name
-                 lead_width: float = None,
-                 name_prefix: str = None,
-                 pin1_corner_dx_dy: float = None,  # Some parts have a triangular pin1 marking
+                 lead_width: Optional[float] = None,
+                 name_prefix: Optional[str] = None,
+                 pin1_corner_dx_dy: Optional[float] = None,  # Some parts have a triangular pin1 marking
                  ):
         self.length = length
         self.width = width

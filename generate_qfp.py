@@ -99,7 +99,7 @@ class QfpConfig:
     def get_configs(self) -> List['QfpConfig']:
         return [self]
 
-    def ipc_name(self):
+    def ipc_name(self) -> str:
         return '{}{}{}P{}X{}X{}-{}'.format(
             self.name_prefix,
             self.name,
@@ -110,7 +110,7 @@ class QfpConfig:
             self.lead_count,
         )
 
-    def description(self):
+    def description(self) -> str:
         if self.name == 'LQFP':
             full_name = 'Low Profile Quad Flat Package (LQFP)'
         elif self.name == 'TQFP':
@@ -144,10 +144,10 @@ class QfpConfig:
         except KeyError:
             raise ValueError('Unhandled pitch: {}'.format(self.pitch))
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.ipc_name()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '<QfpConfig: {}>'.format(self.ipc_name())
 
 
@@ -328,7 +328,7 @@ def generate_pkg(
     pkgcat: str,
     version: str,
     create_date: Optional[str],
-):
+) -> None:
     category = 'pkg'
     for config in configs:
         lines = []
@@ -336,7 +336,7 @@ def generate_pkg(
         full_name = config.ipc_name()
         full_description = config.description()
 
-        def _uuid(identifier):
+        def _uuid(identifier: str) -> str:
             return uuid(category, full_name, identifier)
 
         uuid_pkg = _uuid('pkg')
@@ -363,7 +363,7 @@ def generate_pkg(
             key: str,
             name: str,
             density_level: str,
-        ):
+        ) -> None:
             # UUIDs
             uuid_footprint = _uuid('footprint-{}'.format(key))
             uuid_silkscreen = [_uuid('polygon-silkscreen-{}-{}'.format(quadrant, key)) for quadrant in [1, 2, 3, 4]]
@@ -553,7 +553,7 @@ def generate_pkg(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str):
+    def _make(dirpath: str) -> None:
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
     _make('out')

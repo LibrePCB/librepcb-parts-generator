@@ -4,7 +4,7 @@ Generate DFN packages
 """
 import numpy as np
 from os import path, makedirs
-from typing import Optional
+from typing import Optional, List
 from uuid import uuid4
 
 from common import now, init_cache, save_cache
@@ -50,7 +50,7 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
-def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool):
+def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> float:
     """
     Return the y coordinate of the specified pin. Keep the pins grid aligned, if desired.
 
@@ -78,7 +78,7 @@ def generate_pkg(
     config: DfnConfig,
     make_exposed: bool,
     create_date: Optional[str] = None,
-):
+) -> str:
     category = 'pkg'
     lines = []
 
@@ -117,7 +117,7 @@ def generate_pkg(
     if config.print_pad:
         full_description += "\\nPad length: {:.2f} mm".format(config.lead_length)
 
-    def _uuid(identifier):
+    def _uuid(identifier: str) -> str:
         return uuid(category, full_name, identifier)
 
     uuid_pkg = _uuid('pkg')
@@ -150,7 +150,7 @@ def generate_pkg(
         lines.append(' (pad {} (name "{}"))'.format(uuid_exp, 'ExposedPad'))
 
     # Create Footprint function
-    def _generate_footprint(key: str, name: str, pad_extension: float):
+    def _generate_footprint(key: str, name: str, pad_extension: float) -> None:
         # Create Meta-data
         uuid_footprint = _uuid('footprint-{}'.format(key))
         lines.append(' (footprint {}'.format(uuid_footprint))
@@ -266,16 +266,16 @@ def generate_pkg(
                 x_min, x_max = - x_min, - x_max
 
             # Convert numbers to librepcb format
-            x_min, x_max = ff(x_min), ff(x_max)
-            y_min, y_max = ff(y_min), ff(y_max)
+            x_min_str, x_max_str = ff(x_min), ff(x_max)
+            y_min_str, y_max_str = ff(y_min), ff(y_max)
 
             lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid))
             lines.append('   (width 0.0) (fill true) (grab_area false)')
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_max))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_max, y_max))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_max, y_min))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_min))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_max))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min_str, y_max_str))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_max_str, y_max_str))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_max_str, y_min_str))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min_str, y_min_str))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min_str, y_max_str))
             lines.append('  )')
 
         # Create exposed pad on docu
@@ -365,14 +365,14 @@ def generate_pkg(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str):
+    def _make(dirpath: str) -> None:
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
     _make('out')
     _make('out/dfn')
     _make('out/dfn/pkg')
 
-    generated_packages = []
+    generated_packages = []  # type: List[str]
 
     for config in JEDEC_CONFIGS:
         # Find out which configs to create
