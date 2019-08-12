@@ -5,7 +5,7 @@ Generate the following SO packages:
 
 """
 from os import path, makedirs
-from typing import Tuple, Iterable, Optional
+from typing import Iterable, Optional, List, Dict
 from uuid import uuid4
 
 from common import now, init_cache, save_cache
@@ -73,6 +73,8 @@ def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> 
     The pin number is 1 index based. Pin 1 is at the top. The middle pin will
     be at or near 0.
 
+    Coordinates are rounded to the next 0.01 mm.
+
     """
     if grid_align:
         mid = float((pin_count + 1) // 2)
@@ -84,22 +86,14 @@ def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> 
     return y
 
 
-def get_rectangle_bounds(
-    pin_count: int,
-    spacing: float,
-    top_offset: float,
-    grid_align: bool,
-) -> Tuple[float, float]:
-    """
-    Return (y_max/y_min) of the rectangle around the pins.
-    """
-    if grid_align:
-        even = pin_count % 2 == 0
-        offset = spacing / 2 if even else 0.0
-    else:
-        offset = 0.0
-    height = (pin_count - 1) / 2 * spacing + top_offset
-    return (height - offset, -height - offset)
+class SoConfig:
+    def __init__(self, pin_count: int, pitch: float, body_length: float, body_width: float, total_width: float, height: float):
+        self.pin_count = pin_count
+        self.pitch = pitch
+        self.body_length = body_length
+        self.body_width = body_width
+        self.total_width = total_width
+        self.height = height
 
 
 def generate_pkg(
@@ -107,209 +101,208 @@ def generate_pkg(
     author: str,
     name: str,
     description: str,
-    pitch: float,
-    pins: Iterable[int],
-    heights: Iterable[float],
-    body_width: float,
-    total_width: float,
-    lead_width: float,
+    configs: Iterable[SoConfig],
+    lead_width_lookup: Dict[float, float],
     lead_contact_length: float,
     pkgcat: str,
     keywords: str,
-    top_offset: float,
     version: str,
     create_date: Optional[str],
 ) -> None:
     category = 'pkg'
-    for height in heights:
-        for pin_count in pins:
-            lines = []
+    for config in configs:
+        pitch = config.pitch
+        pin_count = config.pin_count
+        height = config.height
+        lead_width = lead_width_lookup[pitch]
+        body_width = config.body_width
+        total_width = config.total_width
+        body_length = config.body_length
 
-            full_name = name.format(height=fd(height), pin_count=pin_count)
-            full_description = description.format(height=height, pin_count=pin_count)
+        lines = []
 
-            def _uuid(identifier: str) -> str:
-                return uuid(category, full_name, identifier)
+        full_name = name.format(height=fd(height), pitch=fd(pitch), pin_count=pin_count)
+        full_description = description.format(height=height, pin_count=pin_count, pitch=pitch)
 
-            uuid_pkg = _uuid('pkg')
-            uuid_pads = [_uuid('pad-{}'.format(p)) for p in range(1, pin_count + 1)]
-            uuid_leads1 = [_uuid('lead-contact-{}'.format(p)) for p in range(1, pin_count + 1)]
-            uuid_leads2 = [_uuid('lead-proj-{}'.format(p)) for p in range(1, pin_count + 1)]
+        def _uuid(identifier: str) -> str:
+            return uuid(category, full_name, identifier)
 
-            print('Generating {}: {}'.format(full_name, uuid_pkg))
+        uuid_pkg = _uuid('pkg')
+        uuid_pads = [_uuid('pad-{}'.format(p)) for p in range(1, pin_count + 1)]
+        uuid_leads1 = [_uuid('lead-contact-{}'.format(p)) for p in range(1, pin_count + 1)]
+        uuid_leads2 = [_uuid('lead-proj-{}'.format(p)) for p in range(1, pin_count + 1)]
 
-            # General info
-            lines.append('(librepcb_package {}'.format(uuid_pkg))
-            lines.append(' (name "{}")'.format(full_name))
-            lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_description, generator))
-            lines.append(' (keywords "soic{},so{},{}")'.format(pin_count, pin_count, keywords))
-            lines.append(' (author "{}")'.format(author))
-            lines.append(' (version "{}")'.format(version))
-            lines.append(' (created {})'.format(create_date or now()))
-            lines.append(' (deprecated false)')
-            lines.append(' (category {})'.format(pkgcat))
+        print('Generating {}: {}'.format(full_name, uuid_pkg))
+
+        # General info
+        lines.append('(librepcb_package {}'.format(uuid_pkg))
+        lines.append(' (name "{}")'.format(full_name))
+        lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_description, generator))
+        lines.append(' (keywords "soic{},so{},{}")'.format(pin_count, pin_count, keywords))
+        lines.append(' (author "{}")'.format(author))
+        lines.append(' (version "{}")'.format(version))
+        lines.append(' (created {})'.format(create_date or now()))
+        lines.append(' (deprecated false)')
+        lines.append(' (category {})'.format(pkgcat))
+        for p in range(1, pin_count + 1):
+            lines.append(' (pad {} (name "{}"))'.format(uuid_pads[p - 1], p))
+
+        def add_footprint_variant(
+            key: str,
+            name: str,
+            density_level: str,
+        ) -> None:
+            uuid_footprint = _uuid('footprint-{}'.format(key))
+            uuid_silkscreen_top = _uuid('polygon-silkscreen-{}'.format(key))
+            uuid_silkscreen_bot = _uuid('polygon-silkscreen2-{}'.format(key))
+            uuid_outline = _uuid('polygon-outline-{}'.format(key))
+            uuid_courtyard = _uuid('polygon-courtyard-{}'.format(key))
+            uuid_text_name = _uuid('text-name-{}'.format(key))
+            uuid_text_value = _uuid('text-value-{}'.format(key))
+
+            # Max boundaries (pads or body)
+            max_x = 0.0
+            max_y = 0.0
+
+            lines.append(' (footprint {}'.format(uuid_footprint))
+            lines.append('  (name "{}")'.format(name))
+            lines.append('  (description "")')
+
+            # Pad excess according to IPC density levels
+            pad_heel = get_by_density(pitch, density_level, 'heel')
+            pad_toe = get_by_density(pitch, density_level, 'toe')
+            pad_side = get_by_density(pitch, density_level, 'side')
+
+            # Pads
+            pad_width = lead_width + pad_side
+            pad_length = lead_contact_length + pad_heel + pad_toe
+            pad_x_offset = total_width / 2 - lead_contact_length / 2 - pad_heel / 2 + pad_toe / 2
             for p in range(1, pin_count + 1):
-                lines.append(' (pad {} (name "{}"))'.format(uuid_pads[p - 1], p))
-
-            def add_footprint_variant(
-                key: str,
-                name: str,
-                density_level: str,
-            ) -> None:
-                uuid_footprint = _uuid('footprint-{}'.format(key))
-                uuid_silkscreen_top = _uuid('polygon-silkscreen-{}'.format(key))
-                uuid_silkscreen_bot = _uuid('polygon-silkscreen2-{}'.format(key))
-                uuid_outline = _uuid('polygon-outline-{}'.format(key))
-                uuid_courtyard = _uuid('polygon-courtyard-{}'.format(key))
-                uuid_text_name = _uuid('text-name-{}'.format(key))
-                uuid_text_value = _uuid('text-value-{}'.format(key))
-
-                # Max boundaries (pads or body)
-                max_x = 0.0
-                max_y = 0.0
-
-                lines.append(' (footprint {}'.format(uuid_footprint))
-                lines.append('  (name "{}")'.format(name))
-                lines.append('  (description "")')
-
-                # Pad excess according to IPC density levels
-                pad_heel = get_by_density(pitch, density_level, 'heel')
-                pad_toe = get_by_density(pitch, density_level, 'toe')
-                pad_side = get_by_density(pitch, density_level, 'side')
-
-                # Pads
-                pad_width = lead_width + pad_side
-                pad_length = lead_contact_length + pad_heel + pad_toe
-                pad_x_offset = total_width / 2 - lead_contact_length / 2 - pad_heel / 2 + pad_toe / 2
-                for p in range(1, pin_count + 1):
-                    mid = pin_count // 2
-                    if p <= mid:
-                        y = get_y(p, pin_count // 2, pitch, False)
-                        pxo = ff(-pad_x_offset)
-                    else:
-                        y = -get_y(p - mid, pin_count // 2, pitch, False)
-                        pxo = ff(pad_x_offset)
-                    pad_uuid = uuid_pads[p - 1]
-                    lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
-                    lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                        pxo, ff(y), ff(pad_length), ff(pad_width),
-                    ))
-                    lines.append('  )')
-                max_x = max(max_x, total_width / 2 + pad_toe)
-
-                # Documentation: Leads
-                lead_contact_x_offset = total_width / 2 - lead_contact_length  # this is the inner side of the contact area
-                for p in range(1, pin_count + 1):
-                    mid = pin_count // 2
-                    if p <= mid:  # left side
-                        y = get_y(p, pin_count // 2, pitch, False)
-                        lcxo_max = ff(-lead_contact_x_offset - lead_contact_length)
-                        lcxo_min = ff(-lead_contact_x_offset)
-                        body_side = ff(-body_width / 2)
-                    else:  # right side
-                        y = -get_y(p - mid, pin_count // 2, pitch, False)
-                        lcxo_min = ff(lead_contact_x_offset)
-                        lcxo_max = ff(lead_contact_x_offset + lead_contact_length)
-                        body_side = ff(body_width / 2)
-                    y_max = ff(y - lead_width / 2)
-                    y_min = ff(y + lead_width / 2)
-                    lead_uuid_ctct = uuid_leads1[p - 1]  # Contact area
-                    lead_uuid_proj = uuid_leads2[p - 1]  # Vertical projection
-                    # Contact area
-                    lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid_ctct))
-                    lines.append('   (width 0.0) (fill true) (grab_area false)')
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_max))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_max, y_max))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_max, y_min))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_min))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_max))
-                    lines.append('  )')
-                    # Vertical projection, between contact area and body
-                    lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid_proj))
-                    lines.append('   (width 0.0) (fill true) (grab_area false)')
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_max))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_max))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_min))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_min))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_max))
-                    lines.append('  )')
-
-                # Silkscreen
-                bounds = get_rectangle_bounds(pin_count // 2, pitch, top_offset, False)
-                y_max = ff(bounds[0] + line_width / 2)
-                y_min = ff(bounds[1] - line_width / 2)
-                short_x_offset = body_width / 2 - line_width / 2
-                long_x_offset = total_width / 2 - line_width / 2 + pad_toe  # Pin1 marking
-                lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_top))
-                lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-long_x_offset), y_max))  # noqa
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(short_x_offset), y_max))  # noqa
+                mid = pin_count // 2
+                if p <= mid:
+                    y = get_y(p, pin_count // 2, pitch, False)
+                    pxo = ff(-pad_x_offset)
+                else:
+                    y = -get_y(p - mid, pin_count // 2, pitch, False)
+                    pxo = ff(pad_x_offset)
+                pad_uuid = uuid_pads[p - 1]
+                lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
+                lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
+                    pxo, ff(y), ff(pad_length), ff(pad_width),
+                ))
                 lines.append('  )')
-                lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_bot))
-                lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-short_x_offset), y_min))  # noqa
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(short_x_offset), y_min))  # noqa
+            max_x = max(max_x, total_width / 2 + pad_toe)
+
+            # Documentation: Leads
+            lead_contact_x_offset = total_width / 2 - lead_contact_length  # this is the inner side of the contact area
+            for p in range(1, pin_count + 1):
+                mid = pin_count // 2
+                if p <= mid:  # left side
+                    y = get_y(p, pin_count // 2, pitch, False)
+                    lcxo_max = ff(-lead_contact_x_offset - lead_contact_length)
+                    lcxo_min = ff(-lead_contact_x_offset)
+                    body_side = ff(-body_width / 2)
+                else:  # right side
+                    y = -get_y(p - mid, pin_count // 2, pitch, False)
+                    lcxo_min = ff(lead_contact_x_offset)
+                    lcxo_max = ff(lead_contact_x_offset + lead_contact_length)
+                    body_side = ff(body_width / 2)
+                y_max = ff(y - lead_width / 2)
+                y_min = ff(y + lead_width / 2)
+                lead_uuid_ctct = uuid_leads1[p - 1]  # Contact area
+                lead_uuid_proj = uuid_leads2[p - 1]  # Vertical projection
+                # Contact area
+                lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid_ctct))
+                lines.append('   (width 0.0) (fill true) (grab_area false)')
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_max))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_max, y_max))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_max, y_min))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_min))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_max))
+                lines.append('  )')
+                # Vertical projection, between contact area and body
+                lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid_proj))
+                lines.append('   (width 0.0) (fill true) (grab_area false)')
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_max))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_max))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_min))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_min))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_max))
                 lines.append('  )')
 
-                # Documentation outline (fully inside body)
-                outline_x_offset = body_width / 2 - line_width / 2
-                bounds = get_rectangle_bounds(pin_count // 2, pitch, top_offset, False)
-                lines.append('  (polygon {} (layer top_documentation)'.format(uuid_outline))
-                lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
-                y_max = ff(bounds[0] - line_width / 2)
-                y_min = ff(bounds[1] + line_width / 2)
-                oxo = ff(outline_x_offset)  # Used for shorter code lines below :)
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_max))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_min))
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_min))
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
-                lines.append('  )')
-                max_y = max(max_y, bounds[0])  # Body contour
+            # Silkscreen (fully outside body)
+            y_max = ff(body_length / 2 + line_width / 2)
+            y_min = ff(-body_length / 2 - line_width / 2)
+            short_x_offset = body_width / 2 - line_width / 2
+            long_x_offset = total_width / 2 - line_width / 2 + pad_toe  # Pin1 marking
+            lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_top))
+            lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-long_x_offset), y_max))  # noqa
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(short_x_offset), y_max))  # noqa
+            lines.append('  )')
+            lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_bot))
+            lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-short_x_offset), y_min))  # noqa
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(short_x_offset), y_min))  # noqa
+            lines.append('  )')
 
-                # Courtyard
-                courtyard_excess = get_by_density(pitch, density_level, 'courtyard')
-                lines.extend(indent(2, generate_courtyard(
-                    uuid=uuid_courtyard,
-                    max_x=max_x,
-                    max_y=max_y,
-                    excess_x=courtyard_excess,
-                    excess_y=courtyard_excess,
-                )))
+            # Documentation outline (fully inside body)
+            outline_x_offset = body_width / 2 - line_width / 2
+            lines.append('  (polygon {} (layer top_documentation)'.format(uuid_outline))
+            lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
+            y_max = ff(body_length / 2 - line_width / 2)
+            y_min = ff(-body_length / 2 + line_width / 2)
+            oxo = ff(outline_x_offset)  # Used for shorter code lines below :)
+            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_max))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_min))
+            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_min))
+            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
+            lines.append('  )')
+            max_y = max(max_y, body_length / 2)  # Body contour
 
-                # Labels
-                bounds = get_rectangle_bounds(pin_count // 2, pitch, top_offset + 1.27, False)
-                y_max = ff(bounds[0])
-                y_min = ff(bounds[1])
-                text_attrs = '(height {}) (stroke_width 0.2) ' \
-                             '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
-                lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
-                lines.append('   {}'.format(text_attrs))
-                lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(y_max))
-                lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
-                lines.append('  )')
-                lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
-                lines.append('   {}'.format(text_attrs))
-                lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(y_min))
-                lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
-                lines.append('  )')
+            # Courtyard
+            courtyard_excess = get_by_density(pitch, density_level, 'courtyard')
+            lines.extend(indent(2, generate_courtyard(
+                uuid=uuid_courtyard,
+                max_x=max_x,
+                max_y=max_y,
+                excess_x=courtyard_excess,
+                excess_y=courtyard_excess,
+            )))
 
-                lines.append(' )')
+            # Labels
+            y_max = ff(body_length / 2 + 1.27)
+            y_min = ff(-body_length / 2 - 1.27)
+            text_attrs = '(height {}) (stroke_width 0.2) ' \
+                         '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
+            lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
+            lines.append('   {}'.format(text_attrs))
+            lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(y_max))
+            lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
+            lines.append('  )')
+            lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
+            lines.append('   {}'.format(text_attrs))
+            lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(y_min))
+            lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
+            lines.append('  )')
 
-            add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B')
-            add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A')
-            add_footprint_variant('density~c', 'Density Level C (min protrusion)', 'C')
+            lines.append(' )')
 
-            lines.append(')')
+        add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B')
+        add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A')
+        add_footprint_variant('density~c', 'Density Level C (min protrusion)', 'C')
 
-            pkg_dir_path = path.join(dirpath, uuid_pkg)
-            if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-                makedirs(pkg_dir_path)
-            with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-                f.write('0.1\n')
-            with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
-                f.write('\n'.join(lines))
-                f.write('\n')
+        lines.append(')')
+
+        pkg_dir_path = path.join(dirpath, uuid_pkg)
+        if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
+            makedirs(pkg_dir_path)
+        with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
+            f.write('0.1\n')
+        with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
+            f.write('\n'.join(lines))
+            f.write('\n')
 
 
 if __name__ == '__main__':
@@ -319,63 +312,72 @@ if __name__ == '__main__':
     _make('out')
     _make('out/soic')
     _make('out/soic/pkg')
+    configs = []  # type: List[SoConfig]
+    for pin_count in [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32]:
+        for height in [1.2, 1.4, 1.7, 2.7]:
+            pitch = 1.27
+            body_length = (pin_count / 2 - 1) * pitch + 2.0
+            body_width = 5.22
+            total_width = 8.42  # effective, not nominal (7.62)
+            configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
     generate_pkg(
         dirpath='out/soic/pkg',
         author='Danilo B.',
-        name='SOIC127P762X{height}-{pin_count}',
+        name='SOIC{pitch}P762X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
                     'standardized by EIAJ.\\n\\n'
-                    'Pitch: 1.27 mm\\nNominal width: 7.62mm\\nHeight: {height:.2f}mm',
-        pitch=1.27,
-        pins=[6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32],
-        heights=[1.2, 1.4, 1.7, 2.7],
-        body_width=5.22,
-        total_width=8.42,  # effective, not nominal (7.62)
-        lead_width=0.4,
+                    'Pitch: {pitch:.2f} mm\\nNominal width: 7.62mm\\nHeight: {height:.2f}mm',
+        configs=configs,
+        lead_width_lookup={1.27: 0.4},
         lead_contact_length=0.8,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
-        top_offset=1.0,
         version='0.2',
         create_date='2018-11-10T20:32:03Z',
     )
+    configs = []
+    for pin_count in [20, 22, 24, 28, 30, 32, 36, 40, 42, 44]:
+        for height in [1.2, 1.4, 1.7, 2.7]:
+            pitch = 1.27
+            body_length = (pin_count / 2 - 1) * pitch + 2.0
+            body_width = 12.84
+            total_width = 16.04  # effective, not nominal (15.42)
+            configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
     generate_pkg(
         dirpath='out/soic/pkg',
         author='Danilo B.',
-        name='SOIC127P1524X{height}-{pin_count}',
+        name='SOIC{pitch}P1524X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
                     'standardized by EIAJ.\\n\\n'
-                    'Pitch: 1.27 mm\\nNominal width: 15.24mm\\nHeight: {height:.2f}mm',
-        pitch=1.27,
-        pins=[20, 22, 24, 28, 30, 32, 36, 40, 42, 44],
-        heights=[1.2, 1.4, 1.7, 2.7],
-        body_width=12.84,
-        total_width=16.04,  # effective, not nominal (15.24)
-        lead_width=0.4,
+                    'Pitch: {pitch:.2f} mm\\nNominal width: 15.24mm\\nHeight: {height:.2f}mm',
+        configs=configs,
+        lead_width_lookup={1.27: 0.4},
         lead_contact_length=0.8,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
-        top_offset=1.0,
         version='0.2',
         create_date='2018-11-10T20:32:03Z',
     )
+    configs = []
+    for pin_count in [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32, 36, 40, 42, 44, 48]:
+        pitch = 1.27
+        height = 1.75
+        body_length = (pin_count / 2 - 1) * pitch + 1.6
+        body_width = 3.9
+        total_width = 6.0
+        configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
     generate_pkg(
         dirpath='out/soic/pkg',
         author='Danilo B.',
-        name='SOIC127P600X{height}-{pin_count}',
+        name='SOIC{pitch}P600X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
                     'standardized by JEDEC (MS-012G).\\n\\n'
-                    'Pitch: 1.27 mm\\nNominal width: 6.00mm\\nHeight: {height:.2f}mm',
-        pitch=1.27,
-        pins=[6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32, 36, 40, 42, 44, 48],
-        heights=[1.75],
-        body_width=3.9,
-        total_width=6.0,
-        lead_width=0.45,
+                    'Pitch: {pitch:.2f} mm\\nNominal width: 6.00mm\\nHeight: {height:.2f}mm',
+        configs=configs,
+        lead_width_lookup={1.27: 0.45},
         lead_contact_length=0.835,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec',
-        top_offset=0.8,
         version='0.2',
         create_date='2018-11-10T20:32:03Z',
     )
