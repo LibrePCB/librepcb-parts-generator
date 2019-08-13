@@ -2,8 +2,19 @@
 LibrePCB S-expression entities
 """
 
+from enum import Enum
+
 from common import format_float
 from typing import List
+
+
+class EnumValue(Enum):
+    """Helper class to represent enumeration like values"""
+    def get_name(self) -> str:
+        raise NotImplementedError('Override get_name in subclass')
+
+    def __str__(self) -> str:
+        return '({} {})'.format(self.get_name(), self.value)
 
 
 class DateValue():
