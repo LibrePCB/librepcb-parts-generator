@@ -115,9 +115,11 @@ class Gate():
         ret = '(gate {}\n'.format(self.uuid) +\
             ' {}\n'.format(self.symbol_uuid) +\
             ' {} {} {} {}\n'.format(self.position, self.rotation, self.required, self.suffix)
+        pin_lines = []
         for pin in self.pins:
-            ret += ' {}\n'.format(pin)
-        ret += ')'
+            pin_lines.append(' {}'.format(pin))
+        ret += '\n'.join(sorted(pin_lines))
+        ret += '\n)'
         return ret
 
 
