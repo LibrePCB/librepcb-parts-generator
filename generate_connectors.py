@@ -17,8 +17,9 @@ from typing import Callable, List, Tuple, Iterable, Optional
 from uuid import uuid4
 
 from common import now, init_cache, save_cache, format_float as ff
-from entities.common import Name, Position, Rotation, Length, Polygon, Layer, Width, Fill, GrabArea, Vertex, Angle, Description, Keywords, Author, Version, Created, Category, Text, Value, Align, Height
+from entities.common import Name, Position, Rotation, Length, Polygon, Layer, Width, Fill, GrabArea, Vertex, Angle, Description, Keywords, Author, Version, Created, Category, Text, Value, Align, Height, Deprecated
 from entities.symbol import Pin as SymbolPin, Symbol
+from entities.component import Component, SchematicOnly, DefaultValue, Prefix, Signal, Role, Required, Negated, Clock, ForcedNet, Gate, SymbolUUID, Suffix, Variant, Norm, PinSignalMap, SignalUUID, TextDesignator
 
 
 generator = 'librepcb-parts-generator (generate_connectors.py)'
@@ -360,8 +361,6 @@ def generate_cmp(
 ) -> None:
     category = 'cmp'
     for i in range(min_pads, max_pads + 1):
-        lines = []
-
         variant = '1x{}'.format(i)
 
         def _uuid(identifier: str) -> str:
@@ -375,49 +374,31 @@ def generate_cmp(
         uuid_symbol = uuid('sym', kind, variant, 'sym')
 
         # General info
-        lines.append('(librepcb_component {}'.format(uuid_cmp))
-        lines.append(' (name "{} 1x{}")'.format(name, i))
-        lines.append(' (description "A 1x{} {}.\\n\\n'
-                     'Generated with {}")'.format(i, name_lower, generator))
-        lines.append(' (keywords "connector, 1x{}, {}")'.format(i, keywords))
-        lines.append(' (author "{}")'.format(author))
-        lines.append(' (version "{}")'.format(version))
-        lines.append(' (created {})'.format(create_date or now()))
-        lines.append(' (deprecated false)')
-        lines.append(' (category {})'.format(cmpcat))
-        lines.append(' (schematic_only false)')
-        lines.append(' (default_value "{}")'.format(default_value))
-        lines.append(' (prefix "J")')
+        component = Component(
+            uuid_cmp,
+            Name('{} 1x{}'.format(name, i)),
+            Description('A 1x{} {}.\\n\\n'
+                        'Generated with {}'.format(i, name_lower, generator)),
+            Keywords('connector, 1x{}, {}'.format(i, keywords)),
+            Author(author),
+            Version(version),
+            Created(create_date or now()),
+            Deprecated(False),
+            Category(cmpcat),
+            SchematicOnly(False),
+            DefaultValue(default_value),
+            Prefix('J'),
+        )
 
         for j in range(1, i + 1):
-            lines.append(' (signal {} (name "{}") (role passive)'.format(uuid_signals[j - 1], j))
-            lines.append('  (required false) (negated false) (clock false) (forced_net "")')
-            lines.append(' )')
-        lines.append(' (variant {} (norm "")'.format(uuid_variant))
-        lines.append('  (name "default")')
-        lines.append('  (description "")')
-        lines.append('  (gate {}'.format(uuid_gate))
-        lines.append('   (symbol {})'.format(uuid_symbol))
-        lines.append('   (position 0.0 0.0) (rotation 0.0) (required true) (suffix "")')
-        pin_lines = []
+            component.add_signal(Signal(uuid_signals[j - 1], Name(str(j)), Role.PASSIVE, Required(False), Negated(False), Clock(False), ForcedNet('')))
+        gate = Gate(uuid_gate, SymbolUUID(uuid_symbol), Position(0.0, 0.0), Rotation(0.0), Required(True), Suffix(''))
         for j in range(1, i + 1):
-            pin_lines.append('   (pin {} (signal {}) (text pin))'.format(
-                uuid_pins[j - 1],
-                uuid_signals[j - 1],
-            ))
-        lines.extend(sorted(pin_lines))
-        lines.append('  )')
-        lines.append(' )')
-        lines.append(')')
+            gate.add_pin_signal_map(PinSignalMap(uuid_pins[j - 1], SignalUUID(uuid_signals[j - 1]), TextDesignator.SYMBOL_PIN_NAME))
 
-        cmp_dir_path = path.join(dirpath, uuid_cmp)
-        if not (path.exists(cmp_dir_path) and path.isdir(cmp_dir_path)):
-            makedirs(cmp_dir_path)
-        with open(path.join(cmp_dir_path, '.librepcb-cmp'), 'w') as f:
-            f.write('0.1\n')
-        with open(path.join(cmp_dir_path, 'component.lp'), 'w') as f:
-            f.write('\n'.join(lines))
-            f.write('\n')
+        component.add_variant(Variant(uuid_variant, Norm.EMPTY, Name('default'), Description(''), gate))
+
+        component.serialize(dirpath)
 
         print('1x{} {}: Wrote component {}'.format(i, kind, uuid_cmp))
 

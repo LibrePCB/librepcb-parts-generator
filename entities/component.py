@@ -1,3 +1,5 @@
+from os import path, makedirs
+
 from typing import List
 from .common import Name, Description, Keywords, Author, Version, Created, Category, StringValue, BoolValue, EnumValue, Deprecated, Position, Rotation, UUIDValue
 from common import indent
@@ -115,9 +117,11 @@ class Gate():
         ret = '(gate {}\n'.format(self.uuid) +\
             ' {}\n'.format(self.symbol_uuid) +\
             ' {} {} {} {}\n'.format(self.position, self.rotation, self.required, self.suffix)
+        pin_lines = []
         for pin in self.pins:
-            ret += ' {}\n'.format(pin)
-        ret += ')'
+            pin_lines.append(' {}'.format(pin))
+        ret += '\n'.join(sorted(pin_lines))
+        ret += '\n)'
         return ret
 
 
@@ -196,3 +200,13 @@ class Component:
 
     def add_variant(self, variant: Variant) -> None:
         self.variants.append(variant)
+
+    def serialize(self, output_directory: str) -> None:
+        cmp_dir_path = path.join(output_directory, self.uuid)
+        if not (path.exists(cmp_dir_path) and path.isdir(cmp_dir_path)):
+            makedirs(cmp_dir_path)
+        with open(path.join(cmp_dir_path, '.librepcb-cmp'), 'w') as f:
+            f.write('0.1\n')
+        with open(path.join(cmp_dir_path, 'component.lp'), 'w') as f:
+            f.write(str(self))
+            f.write('\n')
