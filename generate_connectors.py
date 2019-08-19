@@ -398,14 +398,7 @@ def generate_cmp(
 
         component.add_variant(Variant(uuid_variant, Norm.EMPTY, Name('default'), Description(''), gate))
 
-        cmp_dir_path = path.join(dirpath, uuid_cmp)
-        if not (path.exists(cmp_dir_path) and path.isdir(cmp_dir_path)):
-            makedirs(cmp_dir_path)
-        with open(path.join(cmp_dir_path, '.librepcb-cmp'), 'w') as f:
-            f.write('0.1\n')
-        with open(path.join(cmp_dir_path, 'component.lp'), 'w') as f:
-            f.write(str(component))
-            f.write('\n')
+        component.serialize(dirpath)
 
         print('1x{} {}: Wrote component {}'.format(i, kind, uuid_cmp))
 
