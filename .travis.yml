@@ -13,7 +13,6 @@ script:
     entities/*.py
     dfn_configs.py
     generate*.py
-  - mypy --check-untyped-defs --warn-return-any
     test_entities.py
     #test_common.py
     #test_generate_connectors.py
