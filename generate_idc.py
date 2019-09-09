@@ -114,7 +114,7 @@ def generate_pkg(
     body_gap: float,
     lead_width: float,
     lead_span: float,
-    pkgcat: str,
+    pkgcats: Iterable[str],
     keywords: str,
     version: str,
     create_date: str,
@@ -151,7 +151,8 @@ def generate_pkg(
         lines.append(' (version "{}")'.format(version))
         lines.append(' (created {})'.format(create_date))
         lines.append(' (deprecated false)')
-        lines.append(' (category {})'.format(pkgcat))
+        for pkgcat in sorted(pkgcats):
+            lines.append(' (category {})'.format(pkgcat))
         for j in range(1, pin_count + 1):
             lines.append(' (pad {} (name "{}"))'.format(uuid_pads[j - 1], j))
         lines.append(' (footprint {}'.format(uuid_footprint))
@@ -318,7 +319,7 @@ if __name__ == '__main__':
         body_gap=2.35,
         lead_width=0.4,
         lead_span=5.5,
-        pkgcat='92186130-e1a4-4a82-8ce9-88f4aa854195',
+        pkgcats=['92186130-e1a4-4a82-8ce9-88f4aa854195', 'e4d3a6bf-af32-48a2-b427-5e794bed949a'],
         keywords='cnc tech,idc,header,male,box header,smd,3220,1.27mm',
         version='0.1',
         create_date='2019-07-09T21:31:21Z',
@@ -338,7 +339,7 @@ if __name__ == '__main__':
         body_gap=3.7,
         lead_width=0.5,
         lead_span=7.5,
-        pkgcat='92186130-e1a4-4a82-8ce9-88f4aa854195',
+        pkgcats=['92186130-e1a4-4a82-8ce9-88f4aa854195', 'e4d3a6bf-af32-48a2-b427-5e794bed949a'],
         keywords='cnc tech,idc,header,male,box header,smd,3120,2.00mm',
         version='0.1',
         create_date='2019-07-09T21:31:21Z',
@@ -358,7 +359,7 @@ if __name__ == '__main__':
         body_gap=5.08,
         lead_width=0.64,
         lead_span=10.2,
-        pkgcat='92186130-e1a4-4a82-8ce9-88f4aa854195',
+        pkgcats=['92186130-e1a4-4a82-8ce9-88f4aa854195', 'e4d3a6bf-af32-48a2-b427-5e794bed949a'],
         keywords='cnc tech,idc,header,male,box header,smd,3020,2.54mm',
         version='0.1',
         create_date='2019-07-09T21:31:21Z',
