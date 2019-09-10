@@ -11,14 +11,15 @@ Relevant standards:
 from collections import namedtuple
 from copy import deepcopy
 from itertools import chain
-from os import path, makedirs
-from typing import Iterable, List, Optional
+from os import makedirs, path
 from uuid import uuid4
 
-from common import now, init_cache, save_cache
-from common import format_float as ff, format_ipc_dimension as fd
-from common import COURTYARD_LINE_WIDTH, sign
+from typing import Iterable, List, Optional
 
+from common import COURTYARD_LINE_WIDTH
+from common import format_float as ff
+from common import format_ipc_dimension as fd
+from common import init_cache, now, save_cache, sign
 
 generator = 'librepcb-parts-generator (generate_qfp.py)'
 

@@ -1,6 +1,13 @@
-from entities.common import Name, Description, Position, Rotation, Length, Vertex, Angle, Polygon, Width, Fill, GrabArea, Layer, Align, Height, Text, Value, Keywords, Author, Version, Created, Category, Deprecated
-from entities.symbol import Pin as SymbolPin, Symbol
-from entities.component import Role, Signal, Required, Negated, Clock, ForcedNet, PinSignalMap, SignalUUID, TextDesignator, Gate, SymbolUUID, Suffix, Norm, Variant, Component, SchematicOnly, DefaultValue, Prefix
+from entities.common import (
+    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GrabArea, Height, Keywords, Layer, Length,
+    Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
+)
+from entities.component import (
+    Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
+    Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
+)
+from entities.symbol import Pin as SymbolPin
+from entities.symbol import Symbol
 
 
 def test_name() -> None:

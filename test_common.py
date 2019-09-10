@@ -1,6 +1,7 @@
 import pytest
 
-from common import format_float as ff, format_ipc_dimension, sign
+from common import format_float as ff
+from common import format_ipc_dimension, sign
 
 
 @pytest.mark.parametrize(['inval', 'outval'], [

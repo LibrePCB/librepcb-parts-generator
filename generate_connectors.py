@@ -12,15 +12,23 @@ Generate pin header and socket packages.
              +---+
 
 """
-from os import path, makedirs
-from typing import Callable, List, Tuple, Iterable, Optional
+from os import makedirs, path
 from uuid import uuid4
 
-from common import now, init_cache, save_cache, format_float as ff
-from entities.common import Name, Position, Rotation, Length, Polygon, Layer, Width, Fill, GrabArea, Vertex, Angle, Description, Keywords, Author, Version, Created, Category, Text, Value, Align, Height, Deprecated
-from entities.symbol import Pin as SymbolPin, Symbol
-from entities.component import Component, SchematicOnly, DefaultValue, Prefix, Signal, Role, Required, Negated, Clock, ForcedNet, Gate, SymbolUUID, Suffix, Variant, Norm, PinSignalMap, SignalUUID, TextDesignator
+from typing import Callable, Iterable, List, Optional, Tuple
 
+from common import format_float as ff
+from common import init_cache, now, save_cache
+from entities.common import (
+    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GrabArea, Height, Keywords, Layer, Length,
+    Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
+)
+from entities.component import (
+    Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
+    Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
+)
+from entities.symbol import Pin as SymbolPin
+from entities.symbol import Symbol
 
 generator = 'librepcb-parts-generator (generate_connectors.py)'
 
