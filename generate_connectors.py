@@ -479,6 +479,8 @@ if __name__ == '__main__':
     _make('out/connectors')
     _make('out/connectors/pkg')
     _make('out/connectors/sym')
+
+    # Male pin headers
     generate_sym(
         dirpath='out/connectors/sym',
         author='Danilo B.',
@@ -492,6 +494,50 @@ if __name__ == '__main__':
         version='0.2',
         create_date='2018-10-17T19:13:41Z',
     )
+    generate_cmp(
+        dirpath='out/connectors/cmp',
+        author='Danilo B.',
+        name='Pin Header',
+        name_lower='male pin header',
+        kind=KIND_HEADER,
+        cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
+        keywords='pin header, male header',
+        default_value='{{PARTNUMBER}}',
+        min_pads=1,
+        max_pads=40,
+        version='0.1',
+        create_date='2018-10-17T19:13:41Z',
+    )
+    generate_pkg(
+        dirpath='out/connectors/pkg',
+        author='Danilo B.',
+        name='Pin Header 2.54mm',
+        name_lower='male pin header',
+        kind=KIND_HEADER,
+        pkgcat='e4d3a6bf-af32-48a2-b427-5e794bed949a',
+        keywords='pin header, male header, tht',
+        min_pads=1,
+        max_pads=40,
+        top_offset=1.27,
+        pad_drills=[0.9, 1.0, 1.1],
+        generate_silkscreen=generate_silkscreen_male,
+        create_date='2018-10-17T19:13:41Z',
+    )
+    generate_dev(
+        dirpath='out/connectors/dev',
+        author='Danilo B.',
+        name='Generic Pin Header 2.54mm',
+        name_lower='generic male pin header',
+        kind=KIND_HEADER,
+        cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
+        keywords='pin header, male header, tht, generic',
+        min_pads=1,
+        max_pads=40,
+        pad_drills=[0.9, 1.0, 1.1],
+        create_date='2018-10-17T19:13:41Z',
+    )
+
+    # Female pin sockets
     generate_sym(
         dirpath='out/connectors/sym',
         author='Danilo B.',
@@ -505,33 +551,6 @@ if __name__ == '__main__':
         version='0.3',
         create_date='2018-10-17T19:13:41Z',
     )
-    generate_sym(
-        dirpath='out/connectors/sym',
-        author='Danilo B.',
-        name='Connector',
-        name_lower='connector',
-        kind=KIND_WIRE_CONNECTOR,
-        cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
-        keywords='connector, generic',
-        min_pads=1,
-        max_pads=40,
-        version='0.2',
-        create_date='2018-10-17T19:13:41Z',
-    )
-    generate_cmp(
-        dirpath='out/connectors/cmp',
-        author='Danilo B.',
-        name='Pin Header',
-        name_lower='male pin header',
-        kind=KIND_HEADER,
-        cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
-        keywords='pin header, male header',
-        default_value='{{PARTNUMBER}}',
-        min_pads=1,
-        max_pads=40,
-        version='0.1',
-        create_date='2018-10-17T19:13:41Z',
-    )
     generate_cmp(
         dirpath='out/connectors/cmp',
         author='Danilo B.',
@@ -541,20 +560,6 @@ if __name__ == '__main__':
         cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
         keywords='pin socket, female header',
         default_value='{{PARTNUMBER}}',
-        min_pads=1,
-        max_pads=40,
-        version='0.1',
-        create_date='2018-10-17T19:13:41Z',
-    )
-    generate_cmp(
-        dirpath='out/connectors/cmp',
-        author='Danilo B.',
-        name='Soldered Wire Connector',
-        name_lower='soldered wire connector',
-        kind=KIND_WIRE_CONNECTOR,
-        cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
-        keywords='connector, soldering, generic',
-        default_value='',
         min_pads=1,
         max_pads=40,
         version='0.1',
@@ -575,19 +580,48 @@ if __name__ == '__main__':
         generate_silkscreen=generate_silkscreen_female,
         create_date='2018-10-17T19:13:41Z',
     )
-    generate_pkg(
-        dirpath='out/connectors/pkg',
+    generate_dev(
+        dirpath='out/connectors/dev',
         author='Danilo B.',
-        name='Pin Header 2.54mm',
-        name_lower='male pin header',
-        kind=KIND_HEADER,
-        pkgcat='e4d3a6bf-af32-48a2-b427-5e794bed949a',
-        keywords='pin header, male header, tht',
+        name='Generic Pin Socket 2.54mm',
+        name_lower='generic female pin socket',
+        kind=KIND_SOCKET,
+        cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
+        keywords='pin socket, female header, tht, generic',
         min_pads=1,
         max_pads=40,
-        top_offset=1.27,
         pad_drills=[0.9, 1.0, 1.1],
-        generate_silkscreen=generate_silkscreen_male,
+        create_date='2018-10-17T19:13:41Z',
+    )
+
+    # Generic connector
+    generate_sym(
+        dirpath='out/connectors/sym',
+        author='Danilo B.',
+        name='Connector',
+        name_lower='connector',
+        kind=KIND_WIRE_CONNECTOR,
+        cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
+        keywords='connector, generic',
+        min_pads=1,
+        max_pads=40,
+        version='0.2',
+        create_date='2018-10-17T19:13:41Z',
+    )
+
+    # Soldered wire connector
+    generate_cmp(
+        dirpath='out/connectors/cmp',
+        author='Danilo B.',
+        name='Soldered Wire Connector',
+        name_lower='soldered wire connector',
+        kind=KIND_WIRE_CONNECTOR,
+        cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
+        keywords='connector, soldering, generic',
+        default_value='',
+        min_pads=1,
+        max_pads=40,
+        version='0.1',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_pkg(
@@ -608,32 +642,6 @@ if __name__ == '__main__':
     generate_dev(
         dirpath='out/connectors/dev',
         author='Danilo B.',
-        name='Generic Pin Socket 2.54mm',
-        name_lower='generic female pin socket',
-        kind=KIND_SOCKET,
-        cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
-        keywords='pin socket, female header, tht, generic',
-        min_pads=1,
-        max_pads=40,
-        pad_drills=[0.9, 1.0, 1.1],
-        create_date='2018-10-17T19:13:41Z',
-    )
-    generate_dev(
-        dirpath='out/connectors/dev',
-        author='Danilo B.',
-        name='Generic Pin Header 2.54mm',
-        name_lower='generic male pin header',
-        kind=KIND_HEADER,
-        cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
-        keywords='pin header, male header, tht, generic',
-        min_pads=1,
-        max_pads=40,
-        pad_drills=[0.9, 1.0, 1.1],
-        create_date='2018-10-17T19:13:41Z',
-    )
-    generate_dev(
-        dirpath='out/connectors/dev',
-        author='Danilo B.',
         name='Soldered Wire Connector 2.54mm',
         name_lower='generic soldered wire connector',
         kind=KIND_WIRE_CONNECTOR,
@@ -644,5 +652,5 @@ if __name__ == '__main__':
         pad_drills=[1.0],
         create_date='2018-10-17T19:13:41Z',
     )
-    # TODO: Generate sym, cmp and dev for soldered wire connector
+
     save_cache(uuid_cache_file, uuid_cache)
