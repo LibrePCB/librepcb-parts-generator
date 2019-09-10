@@ -112,7 +112,7 @@ def generate_pkg(
                                           length=config.length)
     if make_exposed:
         full_description += "\\nExposed Pad: {:.2f} x {:.2f} mm".format(
-                config.exposed_width, config.exposed_length)
+            config.exposed_width, config.exposed_length)
 
     if config.print_pad:
         full_description += "\\nPad length: {:.2f} mm".format(config.lead_length)
@@ -331,7 +331,7 @@ def generate_pkg(
         lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
         lines.append('   {}'.format(TEXT_ATTRS))
         lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(
-             config.length / 2 + LABEL_OFFSET))
+            config.length / 2 + LABEL_OFFSET))
         lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
         lines.append('  )')
         lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))

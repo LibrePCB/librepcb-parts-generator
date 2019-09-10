@@ -377,7 +377,6 @@ def generate_pkg(
 
             # Lead contact offsets
             lead_contact_x_offset = config.lead_span_x / 2 - config.lead_contact_length  # this is the inner side of the contact area
-            lead_contact_y_offset = config.lead_span_y / 2 - config.lead_contact_length  # this is the inner side of the contact area
 
             # Position of the first and last pad
             pos_first = get_pad_coords(1, config.lead_count, config.pitch, lead_contact_x_offset)
@@ -393,7 +392,6 @@ def generate_pkg(
             for p in range(1, config.lead_count + 1):
                 pad_uuid = uuid_pads[p - 1]
                 pad_center_offset_x = config.lead_span_x / 2 - pad_length / 2 + excess.toe
-                pad_center_offset_y = config.lead_span_y / 2 - pad_length / 2 + excess.toe
                 pos = get_pad_coords(p, config.lead_count, config.pitch, pad_center_offset_x)
                 pad_rotation = 90.0 if pos.orientation == 'horizontal' else 0.0
                 lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
@@ -405,7 +403,6 @@ def generate_pkg(
             # Documentation: Leads
             for p in range(1, config.lead_count + 1):
                 pad_center_offset_x = config.lead_span_x / 2 - pad_length / 2
-                pad_center_offset_y = config.lead_span_y / 2 - pad_length / 2
                 pos = get_pad_coords(p, config.lead_count, config.pitch, lead_contact_x_offset)
                 lead_uuid_ctct = uuid_leads1[p - 1]  # Contact area
                 lead_uuid_proj = uuid_leads2[p - 1]  # Vertical projection
