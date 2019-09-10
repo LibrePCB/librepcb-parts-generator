@@ -9,12 +9,13 @@ Implemented so far:
 
 """
 from math import sqrt
-from os import path, makedirs
-from typing import Iterable, Tuple
+from os import makedirs, path
 from uuid import uuid4
 
-from common import init_cache, save_cache, format_float as ff
+from typing import Iterable, Tuple
 
+from common import format_float as ff
+from common import init_cache, save_cache
 
 generator = 'librepcb-parts-generator (generate_idc.py)'
 
@@ -51,7 +52,7 @@ def uuid(category: str, kind: str, variant: str, identifier: str) -> str:
 
 
 class Coord:
-    def __init__(self, x: float, y: float, round_values=True):
+    def __init__(self, x: float, y: float, round_values: bool = True):
         if x == -0.0:
             x = 0.0
         if y == -0.0:
@@ -119,7 +120,7 @@ def generate_pkg(
     keywords: str,
     version: str,
     create_date: str,
-):
+) -> None:
     category = 'pkg'
     for pin_count in pins:
         lines = []
@@ -127,7 +128,7 @@ def generate_pkg(
         formatted_name = name.format(pin_count=str(pin_count).rjust(2, '0'))
         formatted_desc = description.format(pin_count=pin_count)
 
-        def _uuid(identifier):
+        def _uuid(identifier: str) -> str:
             kind = formatted_name.replace(' ', '-').lower()
             return uuid(category, kind, str(pin_count), identifier)
 
@@ -312,7 +313,7 @@ def generate_pkg(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str):
+    def _make(dirpath: str) -> None:
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
     _make('out')
