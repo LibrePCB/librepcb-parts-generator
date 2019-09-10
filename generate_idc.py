@@ -8,6 +8,7 @@ Implemented so far:
 - CNC Tech 3220-xx-0300-00 (1.27 mm pitch)
 
 """
+from math import sqrt
 from os import path, makedirs
 from typing import Iterable, Tuple
 from uuid import uuid4
@@ -139,6 +140,7 @@ def generate_pkg(
         uuid_placement_north = _uuid('placement-north')
         uuid_placement_south = _uuid('placement-south')
         uuid_doc_contour = _uuid('documentation-contour')
+        uuid_doc_triangle = _uuid('documentation-triangle')
         uuid_grab_area = _uuid('grab-area')
         uuid_courtyard = _uuid('courtyard')
 
@@ -229,6 +231,18 @@ def generate_pkg(
         lines.append(vertex.format(ff(x_inside_body), ff(-y_inside_body)))
         lines.append(vertex.format(ff(-x_inside_body), ff(-y_inside_body)))
         lines.append(vertex.format(ff(-x_inside_body), ff(-body_gap / 2)))
+        lines.append('  )')
+
+        # Triangle on doc layer
+        triangle_size = 1.0
+        triangle_width = sqrt(3) / 2.0 * triangle_size * 0.8
+        triangle_offset = triangle_size / 2  # Offset from doc layer
+        lines.append('  (polygon {} (layer top_documentation)'.format(uuid_doc_triangle))
+        lines.append('   (width 0.0) (fill true) (grab_area false)')
+        lines.append(vertex.format(ff(-x_inside_body + triangle_offset), ff(y_inside_body - triangle_offset)))
+        lines.append(vertex.format(ff(-x_inside_body + triangle_offset), ff(y_inside_body - triangle_offset - triangle_size)))
+        lines.append(vertex.format(ff(-x_inside_body + triangle_offset + triangle_width), ff(y_inside_body - triangle_offset - triangle_size / 2)))
+        lines.append(vertex.format(ff(-x_inside_body + triangle_offset), ff(y_inside_body - triangle_offset)))
         lines.append('  )')
 
         # Grab area

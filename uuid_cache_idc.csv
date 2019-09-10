@@ -1,5 +1,6 @@
 pkg-cnctech_3020-06-0300-xx-6-courtyard,7ae8e857-1b5b-4de7-a621-d5913c6f79ec
 pkg-cnctech_3020-06-0300-xx-6-documentation-contour,55fc355f-f76d-491f-bba7-e61fafe8862b
+pkg-cnctech_3020-06-0300-xx-6-documentation-triangle,9fea1f4d-cc57-41f3-bacd-6d74ec01300d
 pkg-cnctech_3020-06-0300-xx-6-footprint-default,1360e5b6-56a0-4f5d-b9c4-c93413f75871
 pkg-cnctech_3020-06-0300-xx-6-grab-area,51cd49c9-b8c9-4aa3-aa03-a2e3746ff0f9
 pkg-cnctech_3020-06-0300-xx-6-lead-0,a1ed2b11-1602-4d08-bf03-f463f5c19112
@@ -21,6 +22,7 @@ pkg-cnctech_3020-06-0300-xx-6-text-name,5c7d5234-5399-4865-ad9d-71c9fbde145d
 pkg-cnctech_3020-06-0300-xx-6-text-value,fe244ef6-f057-4d97-bead-dd0665dc27de
 pkg-cnctech_3020-08-0300-xx-8-courtyard,c4fee059-67f7-4004-be23-5c65eded606c
 pkg-cnctech_3020-08-0300-xx-8-documentation-contour,a9aeb4f7-48b8-4e18-9633-cda9d571bc77
+pkg-cnctech_3020-08-0300-xx-8-documentation-triangle,30aa7cd7-3b48-485b-83bc-bfeb4d96c8be
 pkg-cnctech_3020-08-0300-xx-8-footprint-default,f4deea66-ffff-4922-984f-ba64161f95c2
 pkg-cnctech_3020-08-0300-xx-8-grab-area,ded22b63-9f24-41ef-8fc5-e0bff1fbe43f
 pkg-cnctech_3020-08-0300-xx-8-lead-0,61efca2f-3f08-471e-a8c1-b998a92ced19
@@ -46,6 +48,7 @@ pkg-cnctech_3020-08-0300-xx-8-text-name,85eb91e8-2ecb-4c3a-b32e-4c69ff7c79a9
 pkg-cnctech_3020-08-0300-xx-8-text-value,82b88cb4-39f0-4f03-b497-ec3582b08566
 pkg-cnctech_3020-10-0300-xx-10-courtyard,bf38c9e2-262c-4991-9c11-cb177f23c6b6
 pkg-cnctech_3020-10-0300-xx-10-documentation-contour,4c72c273-36f5-45ad-84b1-877ab4ff4633
+pkg-cnctech_3020-10-0300-xx-10-documentation-triangle,41bb7f12-533a-4f34-8b18-8e3123aaac28
 pkg-cnctech_3020-10-0300-xx-10-footprint-default,56f08a50-f8f7-44e2-9ab5-c75cdb9d5870
 pkg-cnctech_3020-10-0300-xx-10-grab-area,98fe71a7-e687-49cc-89e3-7e89498227f6
 pkg-cnctech_3020-10-0300-xx-10-lead-0,78dd8b45-312f-46e7-a6e9-6b17e1d9a49e
@@ -75,6 +78,7 @@ pkg-cnctech_3020-10-0300-xx-10-text-name,960c7012-433b-4435-a45e-331dd7a28f63
 pkg-cnctech_3020-10-0300-xx-10-text-value,08ff9edf-79e1-4680-9074-92b64cc2e1b8
 pkg-cnctech_3020-12-0300-xx-12-courtyard,451b902b-ace2-44c2-8776-b147a63a40fa
 pkg-cnctech_3020-12-0300-xx-12-documentation-contour,ed0fee0d-5c20-49a1-b4fe-571df5779d63
+pkg-cnctech_3020-12-0300-xx-12-documentation-triangle,cb6c948d-eb52-492c-b18a-70860b1c1749
 pkg-cnctech_3020-12-0300-xx-12-footprint-default,f2290fb1-e231-4b1c-8ed8-d3a9efe49893
 pkg-cnctech_3020-12-0300-xx-12-grab-area,dca9e21b-9451-4481-941f-3076d274eb5e
 pkg-cnctech_3020-12-0300-xx-12-lead-0,d7ca97ab-8fdf-443f-af38-baf3b6c4799b
@@ -108,6 +112,7 @@ pkg-cnctech_3020-12-0300-xx-12-text-name,d97f1e75-38b0-4738-8739-7f2fa63736a5
 pkg-cnctech_3020-12-0300-xx-12-text-value,b2014c80-a642-4671-b4e5-d7f0ea6e87e5
 pkg-cnctech_3020-14-0300-xx-14-courtyard,c8ec99e2-82be-4228-883b-efce9c5c6a57
 pkg-cnctech_3020-14-0300-xx-14-documentation-contour,447f198e-f763-488f-8241-2a5f3f6ca547
+pkg-cnctech_3020-14-0300-xx-14-documentation-triangle,ea431e4f-f478-4a2c-8e44-4c2748f8cc18
 pkg-cnctech_3020-14-0300-xx-14-footprint-default,9bc7ec5b-cb61-4718-bce2-80d689fba88d
 pkg-cnctech_3020-14-0300-xx-14-grab-area,03e2e992-669f-4cc9-ab90-287a1d392375
 pkg-cnctech_3020-14-0300-xx-14-lead-0,071552e3-8cca-4bd8-8a66-d3e255a97690
@@ -145,6 +150,7 @@ pkg-cnctech_3020-14-0300-xx-14-text-name,e6b80b67-cfd4-4187-8318-3512c66f18d8
 pkg-cnctech_3020-14-0300-xx-14-text-value,97342b34-96be-414d-966a-7bd83e996aa3
 pkg-cnctech_3020-16-0300-xx-16-courtyard,f43b9953-b462-4651-861b-cef4d6e850c0
 pkg-cnctech_3020-16-0300-xx-16-documentation-contour,7f0b0aa0-8e27-4e30-9e90-868f56f2ba9e
+pkg-cnctech_3020-16-0300-xx-16-documentation-triangle,10b6a226-7af3-4a52-a33b-dd53f75af1af
 pkg-cnctech_3020-16-0300-xx-16-footprint-default,784644c1-a46f-41ce-9e28-e0d3525a3021
 pkg-cnctech_3020-16-0300-xx-16-grab-area,6577a86b-f6c3-48b4-b8b8-31d15be64f9f
 pkg-cnctech_3020-16-0300-xx-16-lead-0,a6f63314-7d6f-4794-a6e0-a97f319ba7d4
@@ -186,6 +192,7 @@ pkg-cnctech_3020-16-0300-xx-16-text-name,8038de2d-455d-44e3-8038-40bddc2e7ef2
 pkg-cnctech_3020-16-0300-xx-16-text-value,53e65937-4c36-4c3c-a214-361b2dc367d0
 pkg-cnctech_3020-18-0300-xx-18-courtyard,9db3abd6-d899-4274-b1ef-9a496c2b1c80
 pkg-cnctech_3020-18-0300-xx-18-documentation-contour,997196c6-d929-4111-9742-dd4187b389d5
+pkg-cnctech_3020-18-0300-xx-18-documentation-triangle,a11deae3-78cc-4861-af95-df9f971abf8e
 pkg-cnctech_3020-18-0300-xx-18-footprint-default,898b18b1-da6e-462b-a10d-7823fefff918
 pkg-cnctech_3020-18-0300-xx-18-grab-area,9467d7ec-e50c-40f3-9abd-67bc0a4ca2b2
 pkg-cnctech_3020-18-0300-xx-18-lead-0,392b88b3-4b9e-4794-ad21-57830df0b485
@@ -231,6 +238,7 @@ pkg-cnctech_3020-18-0300-xx-18-text-name,e31be749-936a-487f-9ee5-a85e7e43a2bb
 pkg-cnctech_3020-18-0300-xx-18-text-value,010e2ae3-39d8-476f-a759-06830ff1ae1c
 pkg-cnctech_3020-20-0300-xx-20-courtyard,f2e71b4b-8daf-4a2f-ab03-8060f0016c43
 pkg-cnctech_3020-20-0300-xx-20-documentation-contour,6bf40335-38d1-4232-840b-05c15604294b
+pkg-cnctech_3020-20-0300-xx-20-documentation-triangle,9911546b-db6b-45e2-a65a-34c7e4ac1a32
 pkg-cnctech_3020-20-0300-xx-20-footprint-default,4c2f40f4-0bd3-441e-a1ff-39707fdf009c
 pkg-cnctech_3020-20-0300-xx-20-grab-area,83a59627-2536-4c6f-99d6-a74b7823eebd
 pkg-cnctech_3020-20-0300-xx-20-lead-0,2fc0e982-ae8b-4ce3-b345-36a2376e4261
@@ -280,6 +288,7 @@ pkg-cnctech_3020-20-0300-xx-20-text-name,fa247e79-8149-4975-ac32-fe7386fbb75b
 pkg-cnctech_3020-20-0300-xx-20-text-value,f6722017-359f-4baa-a106-e686f59709c7
 pkg-cnctech_3020-22-0300-xx-22-courtyard,227e04db-2143-4c91-89a9-8e57a95e3356
 pkg-cnctech_3020-22-0300-xx-22-documentation-contour,cdc33497-1cdc-4947-a3f9-740948131f04
+pkg-cnctech_3020-22-0300-xx-22-documentation-triangle,2a1d5112-2f2a-4ca2-93cb-0543680f39bd
 pkg-cnctech_3020-22-0300-xx-22-footprint-default,aa7ba87f-ca14-451c-b9dc-7bccbdf5d933
 pkg-cnctech_3020-22-0300-xx-22-grab-area,ae20a7e2-2a73-41ef-a155-532d399a4d5a
 pkg-cnctech_3020-22-0300-xx-22-lead-0,ddc5a430-b363-4b43-a29c-4dc8957f5783
@@ -333,6 +342,7 @@ pkg-cnctech_3020-22-0300-xx-22-text-name,c0cc4f84-c19e-46a7-92d1-f4029314d1ba
 pkg-cnctech_3020-22-0300-xx-22-text-value,eb825096-3fc5-4b2f-aea7-ac6e7abc66c3
 pkg-cnctech_3020-24-0300-xx-24-courtyard,81652341-b4ab-43c4-8452-6e603b32cc2d
 pkg-cnctech_3020-24-0300-xx-24-documentation-contour,7b3a6f59-7764-4228-9b8a-9cfec57cb0da
+pkg-cnctech_3020-24-0300-xx-24-documentation-triangle,c5655bbe-f974-495c-bd82-51b3ebe323d7
 pkg-cnctech_3020-24-0300-xx-24-footprint-default,9ba10d54-5385-42c0-8225-9226cb416161
 pkg-cnctech_3020-24-0300-xx-24-grab-area,01dac11c-af41-4dcb-ae2d-393be97fa99b
 pkg-cnctech_3020-24-0300-xx-24-lead-0,4e76f656-d987-4dae-acb2-d82c8e047630
@@ -390,6 +400,7 @@ pkg-cnctech_3020-24-0300-xx-24-text-name,ff1af99f-d467-4e2a-bdb2-a55d2e84f396
 pkg-cnctech_3020-24-0300-xx-24-text-value,53957bca-19e6-49ee-91b5-94da7f52f85e
 pkg-cnctech_3020-26-0300-xx-26-courtyard,85a32168-b6ed-4bfc-8a38-d7ffe7ee9fb4
 pkg-cnctech_3020-26-0300-xx-26-documentation-contour,65730dbf-71f0-4c47-8da7-cbdb4eba4532
+pkg-cnctech_3020-26-0300-xx-26-documentation-triangle,ac86a068-e39b-4fb0-88d6-11cb7c5eab4c
 pkg-cnctech_3020-26-0300-xx-26-footprint-default,fd4bf467-fa5d-4162-849a-f2ed64925310
 pkg-cnctech_3020-26-0300-xx-26-grab-area,8f22a915-eb04-459b-bdf4-ffff51740fa9
 pkg-cnctech_3020-26-0300-xx-26-lead-0,f87a64b2-9a8d-4d19-8e30-7ff28e31b818
@@ -451,6 +462,7 @@ pkg-cnctech_3020-26-0300-xx-26-text-name,c2e510e7-0934-4976-98df-ddcb1380cb5e
 pkg-cnctech_3020-26-0300-xx-26-text-value,82284e51-d954-45d1-9bc5-9c60e8e097aa
 pkg-cnctech_3020-28-0300-xx-28-courtyard,dc2894f9-75a5-4ded-99a6-c8cd0ed5ea52
 pkg-cnctech_3020-28-0300-xx-28-documentation-contour,1f6b32d9-99e2-4b60-9e5a-57e0a283e41c
+pkg-cnctech_3020-28-0300-xx-28-documentation-triangle,f8e672f5-5c53-4046-b199-63f4433eb58c
 pkg-cnctech_3020-28-0300-xx-28-footprint-default,e7cda4a8-730a-4fe4-8fc3-afad7774287a
 pkg-cnctech_3020-28-0300-xx-28-grab-area,3b4e5c20-64e2-40f4-b244-6e71dbbe73ec
 pkg-cnctech_3020-28-0300-xx-28-lead-0,95f49e42-2bad-497d-8dff-6ca7d434cbff
@@ -516,6 +528,7 @@ pkg-cnctech_3020-28-0300-xx-28-text-name,8c32feaf-f1c2-4bc0-95bc-1ec36089a397
 pkg-cnctech_3020-28-0300-xx-28-text-value,c3b1bca7-b9ae-4c9f-acec-3d0b3f6d671f
 pkg-cnctech_3020-30-0300-xx-30-courtyard,10d0f63f-c081-4aa5-90d5-91e64ccd9f9e
 pkg-cnctech_3020-30-0300-xx-30-documentation-contour,99f5ca14-fe1d-4266-8064-2621557422c0
+pkg-cnctech_3020-30-0300-xx-30-documentation-triangle,3f12226d-048b-4a6d-93b1-460cc67fbdc7
 pkg-cnctech_3020-30-0300-xx-30-footprint-default,9709c54b-3e55-48d0-a915-9f93b425bef6
 pkg-cnctech_3020-30-0300-xx-30-grab-area,dcf2f7cc-b800-480d-b2b2-f8088e6b292e
 pkg-cnctech_3020-30-0300-xx-30-lead-0,7b5387e0-bf7f-4165-918e-b3b302de43c7
@@ -585,6 +598,7 @@ pkg-cnctech_3020-30-0300-xx-30-text-name,5d7372f5-2bcc-47d2-aa88-a02d178fac26
 pkg-cnctech_3020-30-0300-xx-30-text-value,598227cb-b2ec-457f-88a0-3077d6a55ba9
 pkg-cnctech_3020-32-0300-xx-32-courtyard,4f350dab-0751-4877-81e5-bab97641e583
 pkg-cnctech_3020-32-0300-xx-32-documentation-contour,415d6ed6-4865-4789-ae94-dac9eec39c27
+pkg-cnctech_3020-32-0300-xx-32-documentation-triangle,51d5e357-ed28-4a85-8509-1836a637a166
 pkg-cnctech_3020-32-0300-xx-32-footprint-default,2fa50d47-9618-4e3e-96d6-45b76626bf06
 pkg-cnctech_3020-32-0300-xx-32-grab-area,fe92cc42-117b-4587-bed8-c52edc25abe3
 pkg-cnctech_3020-32-0300-xx-32-lead-0,6b5978ad-16de-4fbd-9c4c-bd74a7615d8e
@@ -658,6 +672,7 @@ pkg-cnctech_3020-32-0300-xx-32-text-name,e4849b88-02c8-4b51-833b-dc099c2f0c9e
 pkg-cnctech_3020-32-0300-xx-32-text-value,62e1c484-b730-4cf7-905b-1524c0ec35e2
 pkg-cnctech_3020-34-0300-xx-34-courtyard,585ab406-b0b8-46cf-987f-6138d0c8212f
 pkg-cnctech_3020-34-0300-xx-34-documentation-contour,bf0835e9-467c-43a5-8da7-ebaa311d7797
+pkg-cnctech_3020-34-0300-xx-34-documentation-triangle,2f5243e9-fa82-4607-94cc-e193ba0c46e5
 pkg-cnctech_3020-34-0300-xx-34-footprint-default,7933f90d-3c8d-4f04-866d-49f1bc5e1f55
 pkg-cnctech_3020-34-0300-xx-34-grab-area,6cc968aa-c44f-45f4-8f74-43d02cce0e0a
 pkg-cnctech_3020-34-0300-xx-34-lead-0,6944481d-413d-4f15-b049-4eba403e8dd0
@@ -735,6 +750,7 @@ pkg-cnctech_3020-34-0300-xx-34-text-name,e09fe631-2f87-4eda-bf11-1e4058a2e9bc
 pkg-cnctech_3020-34-0300-xx-34-text-value,da377b42-14bf-4d01-9714-0f22ea197a87
 pkg-cnctech_3020-36-0300-xx-36-courtyard,b6b0ea67-78c3-4a78-a1b9-e49ed9a1c25a
 pkg-cnctech_3020-36-0300-xx-36-documentation-contour,ffc11f81-a53f-42f8-8049-3cb600689443
+pkg-cnctech_3020-36-0300-xx-36-documentation-triangle,86ea5c50-c29f-41e5-9e58-b39e85b635f1
 pkg-cnctech_3020-36-0300-xx-36-footprint-default,590942d6-54b0-4085-8a66-7ac11c17be3e
 pkg-cnctech_3020-36-0300-xx-36-grab-area,92e4df39-9273-4b02-825c-7e76bccb2216
 pkg-cnctech_3020-36-0300-xx-36-lead-0,eed79ee6-0f4b-4804-ae30-3862e150ab62
@@ -816,6 +832,7 @@ pkg-cnctech_3020-36-0300-xx-36-text-name,fbd8113f-355e-4961-93ac-5085a97d5c72
 pkg-cnctech_3020-36-0300-xx-36-text-value,97e53097-46a8-4cc2-938f-a8b60a0c7e6c
 pkg-cnctech_3020-40-0300-xx-40-courtyard,1f2994d5-82a7-4e4c-b8fe-2bd9ded3269c
 pkg-cnctech_3020-40-0300-xx-40-documentation-contour,9db6752f-6be4-49de-a97f-04e15d9325a0
+pkg-cnctech_3020-40-0300-xx-40-documentation-triangle,bb81721f-e2e9-4ac1-a6f9-1143c695d797
 pkg-cnctech_3020-40-0300-xx-40-footprint-default,28e17f12-725b-431d-b58c-6b3a890671c9
 pkg-cnctech_3020-40-0300-xx-40-grab-area,46ad2e28-f06e-4465-9cdc-b03b4eb69870
 pkg-cnctech_3020-40-0300-xx-40-lead-0,3f2a17fd-df42-4024-a2a2-6ceb4bc870b2
@@ -905,6 +922,7 @@ pkg-cnctech_3020-40-0300-xx-40-text-name,617ba1da-ee59-4117-a53d-f42808680277
 pkg-cnctech_3020-40-0300-xx-40-text-value,3f7f1876-6633-476e-8d4b-04c43e3af6e3
 pkg-cnctech_3020-44-0300-xx-44-courtyard,707c54cd-cd4e-4409-aa25-37d4a4d7c13b
 pkg-cnctech_3020-44-0300-xx-44-documentation-contour,a7302d97-10be-4ba7-b7aa-a97fd6b21064
+pkg-cnctech_3020-44-0300-xx-44-documentation-triangle,3696b974-cc3f-4c24-97ae-e26be3d8952a
 pkg-cnctech_3020-44-0300-xx-44-footprint-default,312d0544-2d41-468e-a742-e2e60eae1b13
 pkg-cnctech_3020-44-0300-xx-44-grab-area,7f0858de-f616-4aac-8e9b-778d0010ee7a
 pkg-cnctech_3020-44-0300-xx-44-lead-0,a07aacdd-33ad-47c9-b967-994ed5a2bc5e
@@ -1002,6 +1020,7 @@ pkg-cnctech_3020-44-0300-xx-44-text-name,d2b2d45e-95d2-4aa4-9e8f-465db656d855
 pkg-cnctech_3020-44-0300-xx-44-text-value,c8b7a0ff-f731-4035-b556-c1fe63ae1ca0
 pkg-cnctech_3020-50-0300-xx-50-courtyard,f9d48196-7ed8-43d6-b1a8-b6c3fa2cfae3
 pkg-cnctech_3020-50-0300-xx-50-documentation-contour,93d50b4e-8145-47c3-8df2-d88c6eb87ff4
+pkg-cnctech_3020-50-0300-xx-50-documentation-triangle,8545af49-b054-42a2-a46f-f81438d7b468
 pkg-cnctech_3020-50-0300-xx-50-footprint-default,7c3c9d38-d788-432e-a27b-9d2b63e7c495
 pkg-cnctech_3020-50-0300-xx-50-grab-area,4ab29633-f49b-4323-a8d5-781dbb022a2f
 pkg-cnctech_3020-50-0300-xx-50-lead-0,efe93ac8-fb8e-4e52-88c1-205196ad5e48
@@ -1111,6 +1130,7 @@ pkg-cnctech_3020-50-0300-xx-50-text-name,dda721e7-71b6-4ae0-aaaf-3308a6467711
 pkg-cnctech_3020-50-0300-xx-50-text-value,39729e1c-730d-4c91-b3e5-4899f67f2ec8
 pkg-cnctech_3020-60-0300-xx-60-courtyard,116f4dea-d5a4-4c28-a5c7-2eeefbf75748
 pkg-cnctech_3020-60-0300-xx-60-documentation-contour,2705004a-4486-41f2-bce2-ee1149965ee1
+pkg-cnctech_3020-60-0300-xx-60-documentation-triangle,69bad9f0-abc8-4358-b102-ff4f79c367c7
 pkg-cnctech_3020-60-0300-xx-60-footprint-default,2c41c4ef-a4ed-4c65-989d-8767f2ee5ed8
 pkg-cnctech_3020-60-0300-xx-60-grab-area,d32d2220-9104-4e64-98c2-e363c1cddc17
 pkg-cnctech_3020-60-0300-xx-60-lead-0,62968d66-f29d-450d-8805-0aba73d5ff30
@@ -1240,6 +1260,7 @@ pkg-cnctech_3020-60-0300-xx-60-text-name,42d5547f-d469-412b-bf88-4a9a6561050e
 pkg-cnctech_3020-60-0300-xx-60-text-value,c2e4dd25-8988-49df-96e0-bf2e5b8fc357
 pkg-cnctech_3020-64-0300-xx-64-courtyard,6393faa9-7b2a-43a9-a4b8-ace12b441dc8
 pkg-cnctech_3020-64-0300-xx-64-documentation-contour,2e18cb81-8932-4f0b-baf8-ff37602bafaa
+pkg-cnctech_3020-64-0300-xx-64-documentation-triangle,7b28aeec-8aca-4590-b96d-e944fd2c27a4
 pkg-cnctech_3020-64-0300-xx-64-footprint-default,cc803cea-f130-42e7-9d65-c3adb0bb58e1
 pkg-cnctech_3020-64-0300-xx-64-grab-area,2c8664c8-8434-4f9c-a173-aa5ac16b4763
 pkg-cnctech_3020-64-0300-xx-64-lead-0,41eae9c1-1f9e-4561-bc70-54a55fa1a03f
@@ -1377,6 +1398,7 @@ pkg-cnctech_3020-64-0300-xx-64-text-name,7d4f2dfe-7df1-4261-ab9b-11424913e85c
 pkg-cnctech_3020-64-0300-xx-64-text-value,07639bcf-fea3-4235-b64c-a929649622e1
 pkg-cnctech_3120-06-0300-xx-6-courtyard,3c20e356-9f41-4add-b0ad-795662008d11
 pkg-cnctech_3120-06-0300-xx-6-documentation-contour,656e948b-3775-4702-a5f1-e3cc44f9b85f
+pkg-cnctech_3120-06-0300-xx-6-documentation-triangle,fbdce2a7-76aa-4a37-b240-3a493b5be1b5
 pkg-cnctech_3120-06-0300-xx-6-footprint-default,4667e1a9-b823-4d69-a8e3-80470a4e67c2
 pkg-cnctech_3120-06-0300-xx-6-grab-area,29e9bdc4-e49e-4777-b4b3-5eba4449cc95
 pkg-cnctech_3120-06-0300-xx-6-lead-0,022e52ab-299b-430a-b95d-8b9c613041ac
@@ -1398,6 +1420,7 @@ pkg-cnctech_3120-06-0300-xx-6-text-name,911a83af-0106-4276-99e1-f78c6d163444
 pkg-cnctech_3120-06-0300-xx-6-text-value,0959dfd4-921f-42c0-b5fe-987ea196ea2e
 pkg-cnctech_3120-08-0300-xx-8-courtyard,3e63d6f4-654a-43c4-80da-e5affb16c68e
 pkg-cnctech_3120-08-0300-xx-8-documentation-contour,d35cfe54-f240-4386-946c-27866dd0a824
+pkg-cnctech_3120-08-0300-xx-8-documentation-triangle,712af6a9-f312-4f81-9b41-771c0b0e9c8c
 pkg-cnctech_3120-08-0300-xx-8-footprint-default,a723cd4b-4f48-4bf7-9518-58d53d513bdd
 pkg-cnctech_3120-08-0300-xx-8-grab-area,fdf35525-d3f1-43ef-b312-de14f51e0aa5
 pkg-cnctech_3120-08-0300-xx-8-lead-0,3ef62c33-8bf7-4705-b2f6-0b9027ee2635
@@ -1423,6 +1446,7 @@ pkg-cnctech_3120-08-0300-xx-8-text-name,f1249848-9949-46db-abb0-1eda68ec5330
 pkg-cnctech_3120-08-0300-xx-8-text-value,9283d1d7-f87e-4f1a-937c-f8906311b777
 pkg-cnctech_3120-10-0300-xx-10-courtyard,0c0a45c2-4be1-4cce-bdb6-7c5153eed8c2
 pkg-cnctech_3120-10-0300-xx-10-documentation-contour,bdc89265-d89e-4f9d-8505-d2a184adc0ae
+pkg-cnctech_3120-10-0300-xx-10-documentation-triangle,a495bd01-742a-471e-99ce-38db0c45a2fa
 pkg-cnctech_3120-10-0300-xx-10-footprint-default,595a692f-3f55-431a-878c-a14a48c4a68b
 pkg-cnctech_3120-10-0300-xx-10-grab-area,d874d1d2-81d0-405d-a974-b8a7164eab50
 pkg-cnctech_3120-10-0300-xx-10-lead-0,b573ea2f-b5c0-4502-88b6-9fec0b61b04e
@@ -1452,6 +1476,7 @@ pkg-cnctech_3120-10-0300-xx-10-text-name,902a1a7d-e441-4775-a0e6-4409672c4991
 pkg-cnctech_3120-10-0300-xx-10-text-value,1f2b7380-88f1-411d-9493-7c55082964c3
 pkg-cnctech_3120-12-0300-xx-12-courtyard,7c7ee04b-26b4-4e73-95f6-75a8fe103762
 pkg-cnctech_3120-12-0300-xx-12-documentation-contour,04704c05-d709-41da-b06a-e4f9dbfff96d
+pkg-cnctech_3120-12-0300-xx-12-documentation-triangle,85488e64-0fd4-4b9d-8943-96f3ce003ff9
 pkg-cnctech_3120-12-0300-xx-12-footprint-default,da731527-53ab-4335-957c-7fb7c7b14dc6
 pkg-cnctech_3120-12-0300-xx-12-grab-area,8a4fa913-23c8-4b7d-996c-be642680fef2
 pkg-cnctech_3120-12-0300-xx-12-lead-0,ab0b3df1-0034-4afc-b477-de1333982296
@@ -1485,6 +1510,7 @@ pkg-cnctech_3120-12-0300-xx-12-text-name,ab01a062-5ced-49c1-9f76-ac0fe26c5124
 pkg-cnctech_3120-12-0300-xx-12-text-value,a119ed91-dfd5-4747-b7eb-ecff82d01045
 pkg-cnctech_3120-14-0300-xx-14-courtyard,429272ef-57c1-4d78-b696-90a59316dabe
 pkg-cnctech_3120-14-0300-xx-14-documentation-contour,37343158-cfd5-4d1e-bc2c-1c58005da6de
+pkg-cnctech_3120-14-0300-xx-14-documentation-triangle,0f87fdc1-15f3-4ad2-b9c3-4e084d0c8c7f
 pkg-cnctech_3120-14-0300-xx-14-footprint-default,935bb740-118d-4051-8171-32fdbb52a5b3
 pkg-cnctech_3120-14-0300-xx-14-grab-area,0b7c2bad-4149-48fe-8858-b80b060665b3
 pkg-cnctech_3120-14-0300-xx-14-lead-0,ef595c06-d7f6-4b9a-aeba-9256305f9d89
@@ -1522,6 +1548,7 @@ pkg-cnctech_3120-14-0300-xx-14-text-name,ece29696-0d7e-496e-be6f-804f062a01c8
 pkg-cnctech_3120-14-0300-xx-14-text-value,ba3529aa-db0e-4103-8394-64fafaac0f6f
 pkg-cnctech_3120-16-0300-xx-16-courtyard,2e27c563-f1d1-41df-9c79-0d694ed0a4c0
 pkg-cnctech_3120-16-0300-xx-16-documentation-contour,7fb9292f-2154-4600-a2d0-88eafbf5e5f9
+pkg-cnctech_3120-16-0300-xx-16-documentation-triangle,afc6abad-2852-4dfa-be18-eaadc9f09bea
 pkg-cnctech_3120-16-0300-xx-16-footprint-default,894e9d29-b4d4-489f-82b4-a542152e94db
 pkg-cnctech_3120-16-0300-xx-16-grab-area,78f984ba-a68a-4fdd-9ce4-83d61cc05629
 pkg-cnctech_3120-16-0300-xx-16-lead-0,41b58f9b-0d48-4780-93a8-426c0da7b9ff
@@ -1563,6 +1590,7 @@ pkg-cnctech_3120-16-0300-xx-16-text-name,502925ea-b84c-4d00-ac72-97f148a93cdd
 pkg-cnctech_3120-16-0300-xx-16-text-value,053f8c17-072f-493a-ab11-04494929543f
 pkg-cnctech_3120-18-0300-xx-18-courtyard,4e22b0af-972f-4581-b865-09a076002738
 pkg-cnctech_3120-18-0300-xx-18-documentation-contour,4101461a-ec94-4799-baa5-5b0353be2fbb
+pkg-cnctech_3120-18-0300-xx-18-documentation-triangle,519f05a2-b635-4841-82cd-6089f6aaf1c5
 pkg-cnctech_3120-18-0300-xx-18-footprint-default,0d94d07d-7270-460a-bc59-609e55af3d58
 pkg-cnctech_3120-18-0300-xx-18-grab-area,52a152a7-6845-4c22-bfab-e11d2ddd97e2
 pkg-cnctech_3120-18-0300-xx-18-lead-0,17821f61-1fb7-444d-8e21-b06dce4cc354
@@ -1608,6 +1636,7 @@ pkg-cnctech_3120-18-0300-xx-18-text-name,67afa053-3e6f-4c90-bab2-85f7ca22496e
 pkg-cnctech_3120-18-0300-xx-18-text-value,a743f3c4-1d3c-4837-8f7e-6f8bd6bdea56
 pkg-cnctech_3120-20-0300-xx-20-courtyard,aca220cb-c66f-4d9a-a48c-76cbd4b08c74
 pkg-cnctech_3120-20-0300-xx-20-documentation-contour,ecc255a4-455d-42a6-a847-7eca073b3962
+pkg-cnctech_3120-20-0300-xx-20-documentation-triangle,28cb3ccc-4fef-4d69-91a3-179055bb4641
 pkg-cnctech_3120-20-0300-xx-20-footprint-default,504ec460-e7ad-4b03-9b94-ae7e0e6c11cf
 pkg-cnctech_3120-20-0300-xx-20-grab-area,02a48e1c-c126-446b-a231-3137431b2ed7
 pkg-cnctech_3120-20-0300-xx-20-lead-0,64aa5a55-e103-4183-bf32-5ae2e1140b27
@@ -1657,6 +1686,7 @@ pkg-cnctech_3120-20-0300-xx-20-text-name,bab6772d-641f-43cb-b505-d9c588a61ab2
 pkg-cnctech_3120-20-0300-xx-20-text-value,c39beb8f-a866-4218-9593-bec83997a10b
 pkg-cnctech_3120-24-0300-xx-24-courtyard,b7bbe257-0131-41e9-a65a-b23f7594bc12
 pkg-cnctech_3120-24-0300-xx-24-documentation-contour,3d34996c-90c7-46a9-b3a0-c751880787bd
+pkg-cnctech_3120-24-0300-xx-24-documentation-triangle,507bb932-971a-4cc2-9d2c-2919f5e810d7
 pkg-cnctech_3120-24-0300-xx-24-footprint-default,204b58b0-49c2-4e2d-9bca-07cfe8a60b82
 pkg-cnctech_3120-24-0300-xx-24-grab-area,11bd8b69-5a10-4397-b5f4-acdf43d8521c
 pkg-cnctech_3120-24-0300-xx-24-lead-0,20efd33e-ca1c-4007-882c-4046e88e3608
@@ -1714,6 +1744,7 @@ pkg-cnctech_3120-24-0300-xx-24-text-name,dfd4f001-d5d3-4895-a58a-251517b132fe
 pkg-cnctech_3120-24-0300-xx-24-text-value,5cef4a32-ce64-4e0e-a2d6-0849a1c8a46f
 pkg-cnctech_3120-26-0300-xx-26-courtyard,82444b84-dfb4-4c58-92e4-d84762b4bf22
 pkg-cnctech_3120-26-0300-xx-26-documentation-contour,6a12d073-2f83-4225-871a-f72149daf667
+pkg-cnctech_3120-26-0300-xx-26-documentation-triangle,a1f7f3f6-d47a-43cc-b334-f1ae45f8d3c3
 pkg-cnctech_3120-26-0300-xx-26-footprint-default,6c551627-4c28-4923-8d11-4df0385a4854
 pkg-cnctech_3120-26-0300-xx-26-grab-area,4458512b-fc44-43a6-8c5d-058a089a271e
 pkg-cnctech_3120-26-0300-xx-26-lead-0,5db5fbcb-adc8-4e34-b907-ca01aa07b08e
@@ -1775,6 +1806,7 @@ pkg-cnctech_3120-26-0300-xx-26-text-name,40cc3cf4-b0a5-4d97-aeac-443c8512c8c6
 pkg-cnctech_3120-26-0300-xx-26-text-value,c1dfca46-0ab7-43cd-b94a-9519b3c64074
 pkg-cnctech_3120-30-0300-xx-30-courtyard,35cbc54d-46fe-4685-99b7-a81b4c047d59
 pkg-cnctech_3120-30-0300-xx-30-documentation-contour,55efb233-b6e0-4db5-af0d-cfb5e58d9962
+pkg-cnctech_3120-30-0300-xx-30-documentation-triangle,67cc29bc-64d8-4350-ac4b-908aacc92c1a
 pkg-cnctech_3120-30-0300-xx-30-footprint-default,73f81e5c-dac1-4573-919e-7db327b2b9d8
 pkg-cnctech_3120-30-0300-xx-30-grab-area,8d675b46-b744-449c-bd1d-90a7fe5d5884
 pkg-cnctech_3120-30-0300-xx-30-lead-0,403322de-208a-4d33-8645-397a072692ed
@@ -1844,6 +1876,7 @@ pkg-cnctech_3120-30-0300-xx-30-text-name,7d61902f-022b-4b5f-acd7-c4a7b818df10
 pkg-cnctech_3120-30-0300-xx-30-text-value,8299e72c-b09e-497d-8c2a-b7ae71293df0
 pkg-cnctech_3120-34-0300-xx-34-courtyard,f2a23a28-d9c4-4526-8387-8014e1eeea4f
 pkg-cnctech_3120-34-0300-xx-34-documentation-contour,dcc0151c-a5e9-47f2-aec0-d29ffb0adcb7
+pkg-cnctech_3120-34-0300-xx-34-documentation-triangle,721133ff-84c2-40b3-81cd-ecb6ba642fd6
 pkg-cnctech_3120-34-0300-xx-34-footprint-default,e237c17f-3ed0-4e0d-9cff-a98e41a270a4
 pkg-cnctech_3120-34-0300-xx-34-grab-area,d81f576d-7733-4475-a83e-5e30cefdd19e
 pkg-cnctech_3120-34-0300-xx-34-lead-0,6127f15c-30e1-448e-8ad9-9f47abe81907
@@ -1921,6 +1954,7 @@ pkg-cnctech_3120-34-0300-xx-34-text-name,942e294e-03f8-4ed1-af33-a7c76f67e151
 pkg-cnctech_3120-34-0300-xx-34-text-value,fbb0cdc4-3053-455c-9f4c-a5625d94062e
 pkg-cnctech_3120-40-0300-xx-40-courtyard,3fa5c159-69ce-4a21-a53b-09e4b26648a3
 pkg-cnctech_3120-40-0300-xx-40-documentation-contour,b4382d41-fbe0-4815-8e46-d7878414bb6e
+pkg-cnctech_3120-40-0300-xx-40-documentation-triangle,ac5c1dd6-3ec4-4a66-a732-f2a6dfe875f1
 pkg-cnctech_3120-40-0300-xx-40-footprint-default,7974577a-0f5e-4c13-a20b-62ca8887ea2a
 pkg-cnctech_3120-40-0300-xx-40-grab-area,2ea956a5-6a5c-4414-aa2a-70fa860248a8
 pkg-cnctech_3120-40-0300-xx-40-lead-0,776807a0-f684-4cf4-9f94-9cd264fc04a6
@@ -2010,6 +2044,7 @@ pkg-cnctech_3120-40-0300-xx-40-text-name,1d7f7ddd-57be-4516-8fbf-00d673ecebd2
 pkg-cnctech_3120-40-0300-xx-40-text-value,4bbfcf2c-b958-45c6-87ba-737df1037299
 pkg-cnctech_3120-44-0300-xx-44-courtyard,bb15dcb2-5eae-4a3e-a06e-e356e94dd8d8
 pkg-cnctech_3120-44-0300-xx-44-documentation-contour,afde1253-717b-4f82-88d7-13a6c0176e30
+pkg-cnctech_3120-44-0300-xx-44-documentation-triangle,e3dde15e-aa8b-4ea6-a568-4bdaebc29174
 pkg-cnctech_3120-44-0300-xx-44-footprint-default,bcfa766b-c8c9-41de-addf-e298e012388a
 pkg-cnctech_3120-44-0300-xx-44-grab-area,e51eb0d3-a80f-4ddb-b7cc-2d000aa9e988
 pkg-cnctech_3120-44-0300-xx-44-lead-0,f5ca5832-ecbd-443d-b9a1-50f4a280f98a
@@ -2107,6 +2142,7 @@ pkg-cnctech_3120-44-0300-xx-44-text-name,4783b4fb-0429-46cc-a9f4-21d6d3e2e7ce
 pkg-cnctech_3120-44-0300-xx-44-text-value,30f24ef2-ad8b-43a4-a5b4-c35f23f8c1d8
 pkg-cnctech_3120-50-0300-xx-50-courtyard,92090cfb-60f0-42d7-b770-3e57ba760c75
 pkg-cnctech_3120-50-0300-xx-50-documentation-contour,51354353-ab0c-46c0-83d8-c0a69aa94e5d
+pkg-cnctech_3120-50-0300-xx-50-documentation-triangle,d782a0b9-1d37-4a5e-8b22-4c9c3f3e3894
 pkg-cnctech_3120-50-0300-xx-50-footprint-default,318f07fd-9151-451d-a622-fac0320f36ea
 pkg-cnctech_3120-50-0300-xx-50-grab-area,35dd4be4-4a0a-4c01-a7d1-785feed18081
 pkg-cnctech_3120-50-0300-xx-50-lead-0,cb930c84-bbce-469c-937b-5ec033d41f56
@@ -2216,6 +2252,7 @@ pkg-cnctech_3120-50-0300-xx-50-text-name,df8581d2-c254-407e-a6e8-874eb0a1ae7f
 pkg-cnctech_3120-50-0300-xx-50-text-value,40cf2eba-a268-400b-ace6-da2d8554bc48
 pkg-cnctech_3120-60-0300-xx-60-courtyard,d5ffeb8b-d4a4-46fd-8a9d-5c0b6922c937
 pkg-cnctech_3120-60-0300-xx-60-documentation-contour,d6573591-0b1d-4eb4-9d7f-d7e17c821bb7
+pkg-cnctech_3120-60-0300-xx-60-documentation-triangle,984cbdde-9335-4081-a60c-2333e320b650
 pkg-cnctech_3120-60-0300-xx-60-footprint-default,8a623ecf-9834-45c6-877d-50992d209bfd
 pkg-cnctech_3120-60-0300-xx-60-grab-area,b5406fc5-20f8-4962-a64d-474b9bebcfbe
 pkg-cnctech_3120-60-0300-xx-60-lead-0,d5bdab45-6b23-4c8f-8b73-e8d259f3085f
@@ -2345,6 +2382,7 @@ pkg-cnctech_3120-60-0300-xx-60-text-name,f98b353c-858d-4a0e-b965-e7d8a9c1967b
 pkg-cnctech_3120-60-0300-xx-60-text-value,50e48cfd-33c3-432e-ab72-da075422e8c9
 pkg-cnctech_3120-64-0300-xx-64-courtyard,e241c984-7c13-4bc5-a35c-466e00aca438
 pkg-cnctech_3120-64-0300-xx-64-documentation-contour,31d77e01-b98e-4d70-be1c-9b4178b93404
+pkg-cnctech_3120-64-0300-xx-64-documentation-triangle,65a54dae-d6cc-4d37-851b-14cc78f44fdf
 pkg-cnctech_3120-64-0300-xx-64-footprint-default,c542a230-b1ef-4b90-b737-bf94663e0e13
 pkg-cnctech_3120-64-0300-xx-64-grab-area,f8809e16-5938-4f90-81a7-4718f656efa7
 pkg-cnctech_3120-64-0300-xx-64-lead-0,b4f90af6-ff33-448a-a716-6c82b0c7e2f6
@@ -2482,6 +2520,7 @@ pkg-cnctech_3120-64-0300-xx-64-text-name,79789a0d-d866-47c8-a0aa-a93ab8ce8f80
 pkg-cnctech_3120-64-0300-xx-64-text-value,292907c6-da21-4730-9eba-a3ce11151a7a
 pkg-cnctech_3220-10-0300-xx-10-courtyard,bdf950c6-2d38-4362-bd19-5207e3a2e8f9
 pkg-cnctech_3220-10-0300-xx-10-documentation-contour,61587312-8a90-4bc3-8dd9-e1357d7d3084
+pkg-cnctech_3220-10-0300-xx-10-documentation-triangle,5cf86782-9f1e-4cbd-a276-32c4f43955ba
 pkg-cnctech_3220-10-0300-xx-10-footprint-default,c49a6e60-8be6-4679-9d2b-13f514d28482
 pkg-cnctech_3220-10-0300-xx-10-grab-area,c207536b-69fe-482c-8439-37b3c8ed7f43
 pkg-cnctech_3220-10-0300-xx-10-lead-0,49a4eddb-44e2-4639-9056-22b0840459b0
@@ -2511,6 +2550,7 @@ pkg-cnctech_3220-10-0300-xx-10-text-name,31f3f6dd-7928-4708-9140-3c3c24fcc773
 pkg-cnctech_3220-10-0300-xx-10-text-value,c56be9d1-3d38-4823-8c56-8a8a27c58de6
 pkg-cnctech_3220-14-0300-xx-14-courtyard,dab8ecd8-3c49-433c-bdd6-fa6ca6484d05
 pkg-cnctech_3220-14-0300-xx-14-documentation-contour,8af40060-ce79-4e81-b579-a3e5eb19efe2
+pkg-cnctech_3220-14-0300-xx-14-documentation-triangle,5e28ccc3-f130-4152-86ce-4eab07cdc6ec
 pkg-cnctech_3220-14-0300-xx-14-footprint-default,5e541f03-8415-42bf-b336-5141b19677ec
 pkg-cnctech_3220-14-0300-xx-14-grab-area,33eb2112-9e23-4035-be23-d059854f366d
 pkg-cnctech_3220-14-0300-xx-14-lead-0,38544663-6ad4-49f4-8a58-152b32824ffa
@@ -2548,6 +2588,7 @@ pkg-cnctech_3220-14-0300-xx-14-text-name,f461854a-c4ca-45b7-9a34-dfd0a099cd31
 pkg-cnctech_3220-14-0300-xx-14-text-value,dcfbefbb-3964-47b1-8afc-9b473d028c48
 pkg-cnctech_3220-16-0300-xx-16-courtyard,28c157e1-73a9-4c2c-9875-5fee681d58c7
 pkg-cnctech_3220-16-0300-xx-16-documentation-contour,3fb89bac-b7b5-4a9d-923b-f15bbdd1ab92
+pkg-cnctech_3220-16-0300-xx-16-documentation-triangle,99e0766d-93fb-41b4-9912-253b9bd98823
 pkg-cnctech_3220-16-0300-xx-16-footprint-default,a5ed6e0b-93b4-4507-916d-e3e1cf95c63e
 pkg-cnctech_3220-16-0300-xx-16-grab-area,214c6273-6fe1-435f-877f-ea3f4d5f74ed
 pkg-cnctech_3220-16-0300-xx-16-lead-0,58706e07-de77-49bc-aec9-4dcb741e1584
@@ -2589,6 +2630,7 @@ pkg-cnctech_3220-16-0300-xx-16-text-name,476209e9-f401-4396-ba8d-a521b563c432
 pkg-cnctech_3220-16-0300-xx-16-text-value,705f99e2-d567-4649-b31d-3b11a30f6bd5
 pkg-cnctech_3220-20-0300-xx-20-courtyard,6ccd5eff-6223-4160-8a64-89a71cbefcd4
 pkg-cnctech_3220-20-0300-xx-20-documentation-contour,83ed8578-cbcf-408c-83aa-53d70bed5016
+pkg-cnctech_3220-20-0300-xx-20-documentation-triangle,ca05e9c8-c3ac-4c5f-81bb-e695f9b37735
 pkg-cnctech_3220-20-0300-xx-20-footprint-default,febfabca-74d8-44f5-9327-24ad91a029a7
 pkg-cnctech_3220-20-0300-xx-20-grab-area,e0ca90b1-2982-424c-897a-bdb8cacb6033
 pkg-cnctech_3220-20-0300-xx-20-lead-0,f512f8be-84fe-4330-9679-4ef088cbe7b1
@@ -2638,6 +2680,7 @@ pkg-cnctech_3220-20-0300-xx-20-text-name,c5d2b17e-9aa5-47dc-a27d-d65101c6aaf8
 pkg-cnctech_3220-20-0300-xx-20-text-value,fd60bdfe-45f3-4a16-b36f-5a0851957177
 pkg-cnctech_3220-26-0300-xx-26-courtyard,ff1d710b-7a13-4051-b53d-aa190de7ffb9
 pkg-cnctech_3220-26-0300-xx-26-documentation-contour,d6001fa4-8800-4062-a668-47f764f6df33
+pkg-cnctech_3220-26-0300-xx-26-documentation-triangle,91401c45-ac67-42cc-b88e-7863b406c7cb
 pkg-cnctech_3220-26-0300-xx-26-footprint-default,3832759c-9c70-4305-bc5a-42bed0e9aaee
 pkg-cnctech_3220-26-0300-xx-26-grab-area,add25582-b7e0-45bc-8854-6c2d46c49787
 pkg-cnctech_3220-26-0300-xx-26-lead-0,aade3152-a45e-42bc-975b-a37dbc4fa4d0
@@ -2699,6 +2742,7 @@ pkg-cnctech_3220-26-0300-xx-26-text-name,6d61f465-742f-4cd7-8242-8ad435e415be
 pkg-cnctech_3220-26-0300-xx-26-text-value,3ad1ba89-3e54-4cdd-9f00-c74914e9dead
 pkg-cnctech_3220-30-0300-xx-30-courtyard,fd4cd838-b853-4eda-afe4-6e929dfb1b38
 pkg-cnctech_3220-30-0300-xx-30-documentation-contour,0b3823ac-668e-4ad2-87b0-29d7ecf2f35f
+pkg-cnctech_3220-30-0300-xx-30-documentation-triangle,0f3dbe74-de39-452f-b2b2-52ba04455e96
 pkg-cnctech_3220-30-0300-xx-30-footprint-default,b6a01d0d-ed0a-468f-a2c9-6f260dd06d5c
 pkg-cnctech_3220-30-0300-xx-30-grab-area,78ae32a8-5596-4e9f-af10-6cdfbe2ac3e7
 pkg-cnctech_3220-30-0300-xx-30-lead-0,987f358e-80eb-4bf1-b56f-c743a9f89d1a
@@ -2768,6 +2812,7 @@ pkg-cnctech_3220-30-0300-xx-30-text-name,67b73f2b-45fb-4abb-b04f-9b690b9b89d7
 pkg-cnctech_3220-30-0300-xx-30-text-value,57de1dd9-9eb8-4b84-bf11-82235a3c53dd
 pkg-cnctech_3220-34-0300-xx-34-courtyard,7051a5ae-e3e7-49fc-bdb5-dd5f66f5c0a7
 pkg-cnctech_3220-34-0300-xx-34-documentation-contour,c8bd5f6f-2b57-4722-8046-894a787e203f
+pkg-cnctech_3220-34-0300-xx-34-documentation-triangle,98c2edfd-1704-418a-bc61-fd86aba6dd87
 pkg-cnctech_3220-34-0300-xx-34-footprint-default,5bcb4635-5854-4228-b173-5d789c31a42d
 pkg-cnctech_3220-34-0300-xx-34-grab-area,acf49170-5f97-45e7-9f35-d7718677b81b
 pkg-cnctech_3220-34-0300-xx-34-lead-0,9c3a3290-4d52-481b-a3c8-30890832cfc2
@@ -2845,6 +2890,7 @@ pkg-cnctech_3220-34-0300-xx-34-text-name,7e0871fe-fd4e-47ca-a8cf-02904b1626b1
 pkg-cnctech_3220-34-0300-xx-34-text-value,b71818fd-7890-4f60-8228-16ff2d0b10a9
 pkg-cnctech_3220-40-0300-xx-40-courtyard,9108def7-72c8-4d3d-bcd8-6aad59234da7
 pkg-cnctech_3220-40-0300-xx-40-documentation-contour,69274600-1793-4321-a9a8-2ca9879d0e14
+pkg-cnctech_3220-40-0300-xx-40-documentation-triangle,bde82b3f-7309-470d-a16e-4c5fe2a09bb8
 pkg-cnctech_3220-40-0300-xx-40-footprint-default,ffcff5e9-3843-429d-9a48-4437afd9acd4
 pkg-cnctech_3220-40-0300-xx-40-grab-area,ec2e9c68-d8e7-4662-9902-84a676ae9c9f
 pkg-cnctech_3220-40-0300-xx-40-lead-0,f93875bb-8c61-48e8-bd9d-faf2f8331084
@@ -2934,6 +2980,7 @@ pkg-cnctech_3220-40-0300-xx-40-text-name,85a104d0-f9cf-405c-ac80-de6a023751a7
 pkg-cnctech_3220-40-0300-xx-40-text-value,d3b9b569-8bc8-4e8c-a979-2dd8b68f3c54
 pkg-cnctech_3220-50-0300-xx-50-courtyard,f4d3e0bf-7c0f-49a4-96e4-4b3c5acf0eb3
 pkg-cnctech_3220-50-0300-xx-50-documentation-contour,1d9be67d-b99c-4041-ad58-cf7485ac6c90
+pkg-cnctech_3220-50-0300-xx-50-documentation-triangle,50354dab-bdff-44a3-8ec3-c3c4c7613eb5
 pkg-cnctech_3220-50-0300-xx-50-footprint-default,46889718-4618-40c4-a734-9087776a4ec3
 pkg-cnctech_3220-50-0300-xx-50-grab-area,5ce682ce-deb2-4a48-b3fc-70acfce7b87b
 pkg-cnctech_3220-50-0300-xx-50-lead-0,77764702-c001-4269-8ea3-b48950379501
@@ -3043,6 +3090,7 @@ pkg-cnctech_3220-50-0300-xx-50-text-name,90b6ab9f-4fc5-4983-9882-b434e7c8afb4
 pkg-cnctech_3220-50-0300-xx-50-text-value,7075ddf7-aaee-4052-b6f7-a4d8a5ac7445
 pkg-cnctech_3220-60-0300-xx-60-courtyard,0be6d6d1-4629-477a-826b-5196c476bf6d
 pkg-cnctech_3220-60-0300-xx-60-documentation-contour,d091cb50-36b1-44bf-85b6-46af4803bc88
+pkg-cnctech_3220-60-0300-xx-60-documentation-triangle,2abf600d-5d0b-4853-8cce-2c77f86f7d29
 pkg-cnctech_3220-60-0300-xx-60-footprint-default,37b84cfe-da52-49e8-9060-60ed63105c10
 pkg-cnctech_3220-60-0300-xx-60-grab-area,d505f349-44c0-42d7-9484-9a15abfa15f1
 pkg-cnctech_3220-60-0300-xx-60-lead-0,17863dc8-4c23-4bd7-bdcc-3a8b759c9af5
