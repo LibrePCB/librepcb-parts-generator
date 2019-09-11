@@ -404,14 +404,17 @@ def generate_cmp(
     cmpcat: str,
     keywords: str,
     default_value: str,
+    rows: int,
     min_pads: int,
     max_pads: int,
     version: str,
     create_date: Optional[str],
 ) -> None:
     category = 'cmp'
-    for i in range(min_pads, max_pads + 1):
-        variant = '1x{}'.format(i)
+    assert rows in [1, 2]
+    for i in range(min_pads, max_pads + 1, rows):
+        per_row = i // rows
+        variant = '{}x{}'.format(rows, per_row)
 
         def _uuid(identifier: str) -> str:
             return uuid(category, kind, variant, identifier)
@@ -426,10 +429,10 @@ def generate_cmp(
         # General info
         component = Component(
             uuid_cmp,
-            Name('{} 1x{}'.format(name, i)),
-            Description('A 1x{} {}.\\n\\n'
-                        'Generated with {}'.format(i, name_lower, generator)),
-            Keywords('connector, 1x{}, {}'.format(i, keywords)),
+            Name('{} {}x{}'.format(name, rows, per_row)),
+            Description('A {}x{} {}.\\n\\n'
+                        'Generated with {}'.format(rows, per_row, name_lower, generator)),
+            Keywords('connector, {}x{}, {}'.format(rows, per_row, keywords)),
             Author(author),
             Version(version),
             Created(create_date or now()),
@@ -441,16 +444,36 @@ def generate_cmp(
         )
 
         for p in range(1, i + 1):
-            component.add_signal(Signal(uuid_signals[p - 1], Name(str(p)), Role.PASSIVE, Required(False), Negated(False), Clock(False), ForcedNet('')))
-        gate = Gate(uuid_gate, SymbolUUID(uuid_symbol), Position(0.0, 0.0), Rotation(0.0), Required(True), Suffix(''))
+            component.add_signal(Signal(
+                uuid_signals[p - 1],
+                Name(str(p)),
+                Role.PASSIVE,
+                Required(False),
+                Negated(False),
+                Clock(False),
+                ForcedNet(''),
+            ))
+
+        gate = Gate(
+            uuid_gate,
+            SymbolUUID(uuid_symbol),
+            Position(0.0, 0.0),
+            Rotation(0.0),
+            Required(True),
+            Suffix(''),
+        )
         for p in range(1, i + 1):
-            gate.add_pin_signal_map(PinSignalMap(uuid_pins[p - 1], SignalUUID(uuid_signals[p - 1]), TextDesignator.SYMBOL_PIN_NAME))
+            gate.add_pin_signal_map(PinSignalMap(
+                uuid_pins[p - 1],
+                SignalUUID(uuid_signals[p - 1]),
+                TextDesignator.SYMBOL_PIN_NAME,
+            ))
 
         component.add_variant(Variant(uuid_variant, Norm.EMPTY, Name('default'), Description(''), gate))
 
         component.serialize(dirpath)
 
-        print('1x{} {}: Wrote component {}'.format(i, kind, uuid_cmp))
+        print('{}x{} {}: Wrote component {}'.format(rows, i, kind, uuid_cmp))
 
 
 def generate_dev(
@@ -560,10 +583,26 @@ if __name__ == '__main__':
         cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
         keywords='pin header, male header',
         default_value='{{PARTNUMBER}}',
+        rows=1,
         min_pads=1,
         max_pads=40,
         version='0.1',
         create_date='2018-10-17T19:13:41Z',
+    )
+    generate_cmp(
+        dirpath='out/connectors/cmp',
+        author='Danilo B.',
+        name='Pin Header',
+        name_lower='male pin header',
+        kind=KIND_HEADER,
+        cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
+        keywords='pin header, male header',
+        default_value='{{PARTNUMBER}}',
+        rows=2,
+        min_pads=4,
+        max_pads=80,
+        version='0.1',
+        create_date='2019-09-11T19:13:41Z',
     )
     generate_pkg(
         dirpath='out/connectors/pkg',
@@ -632,10 +671,26 @@ if __name__ == '__main__':
         cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
         keywords='pin socket, female header',
         default_value='{{PARTNUMBER}}',
+        rows=1,
         min_pads=1,
         max_pads=40,
         version='0.1',
         create_date='2018-10-17T19:13:41Z',
+    )
+    generate_cmp(
+        dirpath='out/connectors/cmp',
+        author='Danilo B.',
+        name='Pin Socket',
+        name_lower='female pin socket',
+        kind=KIND_SOCKET,
+        cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
+        keywords='pin socket, female header',
+        default_value='{{PARTNUMBER}}',
+        rows=2,
+        min_pads=4,
+        max_pads=80,
+        version='0.1',
+        create_date='2019-09-11T19:13:41Z',
     )
     generate_pkg(
         dirpath='out/connectors/pkg',
@@ -692,6 +747,7 @@ if __name__ == '__main__':
         cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
         keywords='connector, soldering, generic',
         default_value='',
+        rows=1,
         min_pads=1,
         max_pads=40,
         version='0.1',
