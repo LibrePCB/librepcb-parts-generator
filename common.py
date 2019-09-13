@@ -3,10 +3,10 @@ Common functionality for generator scripts.
 """
 import collections
 import csv
-from datetime import datetime
 import re
-from typing import Iterable, Union, Dict, List
+from datetime import datetime
 
+from typing import Dict, Iterable, List, Union
 
 # Commonly used dimensions
 COURTYARD_LINE_WIDTH = 0.1

@@ -1,12 +1,13 @@
 """
 Generate DIP packages.
 """
-from os import path, makedirs
-from typing import Tuple, Iterable, Optional
+from os import makedirs, path
 from uuid import uuid4
 
-from common import now, init_cache, save_cache, format_float as ff
+from typing import Iterable, Optional, Tuple
 
+from common import format_float as ff
+from common import init_cache, now, save_cache
 
 generator = 'librepcb-parts-generator (generate_dip.py)'
 

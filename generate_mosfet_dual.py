@@ -1,12 +1,12 @@
 """
 Generate dual mosfet devices.
 """
-from os import path, makedirs
-from typing import Iterable, List, Optional, Dict, Any  # noqa
+from os import makedirs, path
 from uuid import uuid4
 
-from common import now, init_cache, save_cache
+from typing import Any, Dict, Iterable, List, Optional
 
+from common import init_cache, now, save_cache
 
 generator = 'librepcb-parts-generator (generate_mosfet_dual.py)'
 

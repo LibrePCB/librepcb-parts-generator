@@ -4,14 +4,14 @@ Generate the following packages:
 - Chip resistors SMT
 
 """
-from os import path, makedirs
-from typing import Iterable, Optional, Dict, Any, Tuple  # noqa
+from os import makedirs, path
 from uuid import uuid4
 
-from common import now, init_cache, save_cache
-from common import format_float as ff, format_ipc_dimension as fd
-from common import generate_courtyard, indent
+from typing import Any, Dict, Iterable, Optional, Tuple
 
+from common import format_float as ff
+from common import format_ipc_dimension as fd
+from common import generate_courtyard, indent, init_cache, now, save_cache
 
 generator = 'librepcb-parts-generator (generate_chip.py)'
 

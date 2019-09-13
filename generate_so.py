@@ -5,14 +5,14 @@ Generate the following SO packages:
 - TSSOP (JEDEC MO-153)
 
 """
-from os import path, makedirs
-from typing import Iterable, Optional, List, Dict
+from os import makedirs, path
 from uuid import uuid4
 
-from common import now, init_cache, save_cache
-from common import format_float as ff, format_ipc_dimension as fd
-from common import generate_courtyard, indent
+from typing import Dict, Iterable, List, Optional
 
+from common import format_float as ff
+from common import format_ipc_dimension as fd
+from common import generate_courtyard, indent, init_cache, now, save_cache
 
 generator = 'librepcb-parts-generator (generate_so.py)'
 

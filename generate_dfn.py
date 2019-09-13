@@ -2,19 +2,17 @@
 Generate DFN packages
 
 """
-import numpy as np
-from os import path, makedirs
-from typing import Optional, List
+from os import makedirs, path
 from uuid import uuid4
 
-from common import now, init_cache, save_cache
-from common import format_ipc_dimension as fd
+from typing import List, Optional
+
+import numpy as np
+
 from common import format_float as ff
-
-from dfn_configs import DfnConfig
-from dfn_configs import JEDEC_CONFIGS
-from dfn_configs import THIRD_CONFIGS
-
+from common import format_ipc_dimension as fd
+from common import init_cache, now, save_cache
+from dfn_configs import JEDEC_CONFIGS, THIRD_CONFIGS, DfnConfig
 
 GENERATOR_NAME = 'librepcb-parts-generator (generate_dfn.py)'
 
