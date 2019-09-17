@@ -4,8 +4,9 @@ LibrePCB S-expression entities
 
 from enum import Enum
 
-from common import format_float
 from typing import List
+
+from common import format_float
 
 from .helper import indent_entities
 

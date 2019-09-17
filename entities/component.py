@@ -1,8 +1,13 @@
-from os import path, makedirs
+from os import makedirs, path
 
 from typing import List
-from .common import Name, Description, Keywords, Author, Version, Created, Category, StringValue, BoolValue, EnumValue, Deprecated, Position, Rotation, UUIDValue
+
 from common import indent
+
+from .common import (
+    Author, BoolValue, Category, Created, Deprecated, Description, EnumValue, Keywords, Name, Position, Rotation,
+    StringValue, UUIDValue, Version
+)
 from .helper import indent_entities
 
 
