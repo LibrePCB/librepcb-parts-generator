@@ -3,6 +3,7 @@ from os import path, makedirs
 from typing import List
 from .common import Name, Description, Keywords, Author, Version, Created, Category, StringValue, BoolValue, EnumValue, Deprecated, Position, Rotation, UUIDValue
 from common import indent
+from .helper import indent_entities
 
 
 class DefaultValue(StringValue):
@@ -186,12 +187,8 @@ class Component:
             ' {}\n'.format(self.schematic_only) +\
             ' {}\n'.format(self.default_value) +\
             ' {}\n'.format(self.prefix)
-        for signal in self.signals:
-            ret += '\n'.join(indent(1, str(signal).splitlines()))
-            ret += '\n'
-        for variant in self.variants:
-            ret += '\n'.join(indent(1, str(variant).splitlines()))
-            ret += '\n'
+        ret += indent_entities(self.signals)
+        ret += indent_entities(self.variants)
         ret += ')'
         return ret
 

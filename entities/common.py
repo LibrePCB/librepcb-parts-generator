@@ -7,6 +7,8 @@ from enum import Enum
 from common import format_float
 from typing import List
 
+from .helper import indent_entities
+
 
 class EnumValue(Enum):
     """Helper class to represent enumeration like values"""
@@ -183,8 +185,7 @@ class Polygon():
     def __str__(self) -> str:
         ret = '(polygon {} {}\n'.format(self.uuid, self.layer) +\
             ' {} {} {}\n'.format(self.width, self.fill, self.grab_area)
-        for vertex in self.vertices:
-            ret += ' {}\n'.format(vertex)
+        ret += indent_entities(self.vertices)
         ret += ')'
         return ret
 
