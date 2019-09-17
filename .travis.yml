@@ -18,4 +18,4 @@ script:
     #test_generate_connectors.py
     #test_generate_qfn.py
   - flake8
-  - isort --check-only *.py
+  - isort --check-only

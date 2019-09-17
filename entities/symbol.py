@@ -1,6 +1,10 @@
-from .common import Name, Position, Rotation, Length, Description, Keywords, Author, Version, Created, Category, Deprecated, Polygon, Text
 from typing import List
-from common import indent
+
+from .common import (
+    Author, Category, Created, Deprecated, Description, Keywords, Length, Name, Polygon, Position, Rotation, Text,
+    Version
+)
+from .helper import indent_entities
 
 
 class Pin():
@@ -54,14 +58,8 @@ class Symbol:
             ' {}\n'.format(self.created) +\
             ' {}\n'.format(self.deprecated) +\
             ' {}\n'.format(self.category)
-        for pin in self.pins:
-            ret += '\n'.join(indent(1, str(pin).splitlines()))
-            ret += '\n'
-        for polygon in self.polygons:
-            ret += '\n'.join(indent(1, str(polygon).splitlines()))
-            ret += '\n'
-        for text in self.texts:
-            ret += '\n'.join(indent(1, str(text).splitlines()))
-            ret += '\n'
+        ret += indent_entities(self.pins)
+        ret += indent_entities(self.polygons)
+        ret += indent_entities(self.texts)
         ret += ')'
         return ret
