@@ -346,8 +346,9 @@ if __name__ == '__main__':
     def _make(dirpath: str) -> None:
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
-    _make('out')
-    _make('out/soic')
+
+    # SOIC
+
     _make('out/soic/pkg')
     configs = []  # type: List[SoConfig]
     for pin_count in [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32]:
@@ -418,7 +419,9 @@ if __name__ == '__main__':
         version='0.2',
         create_date='2018-11-10T20:32:03Z',
     )
-    _make('out/tssop')
+
+    # TSSOP
+
     _make('out/tssop/pkg')
     generate_pkg(
         dirpath='out/tssop/pkg',
@@ -515,7 +518,9 @@ if __name__ == '__main__':
         version='0.1',
         create_date='2019-07-21T12:15:54Z',
     )
-    _make('out/ssop')
+
+    # SSOP
+
     _make('out/ssop/pkg')
     generate_pkg(
         dirpath='out/ssop/pkg',
