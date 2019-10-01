@@ -75,14 +75,14 @@ def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> 
     The pin number is 1 index based. Pin 1 is at the top. The middle pin will
     be at or near 0.
 
-    Coordinates are rounded to the next 0.01 mm.
+    Coordinates are rounded to the next 0.001 mm.
 
     """
     if grid_align:
         mid = float((pin_count + 1) // 2)
     else:
         mid = (pin_count + 1) / 2
-    y = -round(pin_number * spacing - mid * spacing, 2)
+    y = -round(pin_number * spacing - mid * spacing, 3)
     if y == -0.0:  # Returns true for 0.0 too, but that doesn't matter
         return 0.0
     return y
