@@ -3,6 +3,7 @@ Generate the following SO packages:
 
 - SOIC (both EIAJ and JEDEC)
 - TSSOP (JEDEC MO-153)
+- SSOP (JEDEC MO-150 and MO-152)
 
 """
 from os import makedirs, path
@@ -74,14 +75,14 @@ def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> 
     The pin number is 1 index based. Pin 1 is at the top. The middle pin will
     be at or near 0.
 
-    Coordinates are rounded to the next 0.01 mm.
+    Coordinates are rounded to the next 0.001 mm.
 
     """
     if grid_align:
         mid = float((pin_count + 1) // 2)
     else:
         mid = (pin_count + 1) / 2
-    y = -round(pin_number * spacing - mid * spacing, 2)
+    y = -round(pin_number * spacing - mid * spacing, 3)
     if y == -0.0:  # Returns true for 0.0 too, but that doesn't matter
         return 0.0
     return y
@@ -345,8 +346,9 @@ if __name__ == '__main__':
     def _make(dirpath: str) -> None:
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
-    _make('out')
-    _make('out/soic')
+
+    # SOIC
+
     _make('out/soic/pkg')
     configs = []  # type: List[SoConfig]
     for pin_count in [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32]:
@@ -417,7 +419,9 @@ if __name__ == '__main__':
         version='0.2',
         create_date='2018-11-10T20:32:03Z',
     )
-    _make('out/tssop')
+
+    # TSSOP
+
     _make('out/tssop/pkg')
     generate_pkg(
         dirpath='out/tssop/pkg',
@@ -513,5 +517,136 @@ if __name__ == '__main__':
         keywords='so,sop,tssop,small outline package,smd',
         version='0.1',
         create_date='2019-07-21T12:15:54Z',
+    )
+
+    # SSOP
+
+    _make('out/ssop/pkg')
+    generate_pkg(
+        dirpath='out/ssop/pkg',
+        author='Danilo B.',
+        # Name according to IPC7351C
+        name='SSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
+        description='{pin_count}-pin Plastic Shrink Small Outline Package (SSOP), '
+                    'standardized by JEDEC (MO-152), variation {variation}.\\n\\n'
+                    'Pitch: {pitch:.2f} mm\\nBody length: {body_length:.2f} mm\\n'
+                    'Body width: {body_width:.2f} mm\\nLead span: {lead_span:.2f} mm\\n'
+                    'Height: {height:.2f} mm\\n'
+                    'Lead length: {lead_length:.2f} mm\\nLead width: {lead_width:.2f} mm',
+        configs=[
+            # pin count, pitch, body length, body width, total width, height
+
+            # Symbols based on JEDEC MO-152:
+            #        N    e     D    E1   E    A
+
+            # 4.40mm body width
+            #   0.65mm pitch
+            SoConfig( 8,  0.65, 3.0, 4.4, 6.4, 2.0, 'AA'),
+            SoConfig(14,  0.65, 5.0, 4.4, 6.4, 2.0, 'AB-1'),
+            SoConfig(16,  0.65, 5.0, 4.4, 6.4, 2.0, 'AB'),
+            SoConfig(20,  0.65, 6.5, 4.4, 6.4, 2.0, 'AC'),
+            SoConfig(24,  0.65, 7.8, 4.4, 6.4, 2.0, 'AD'),
+            SoConfig(28,  0.65, 9.7, 4.4, 6.4, 2.0, 'AE'),
+            #   0.5mm pitch
+            SoConfig(20,  0.50, 5.0, 4.4, 6.4, 2.0, 'BA'),
+            SoConfig(24,  0.50, 6.5, 4.4, 6.4, 2.0, 'BB'),
+            SoConfig(28,  0.50, 7.8, 4.4, 6.4, 2.0, 'BC'),
+            SoConfig(36,  0.50, 9.7, 4.4, 6.4, 2.0, 'BD'),
+            #   0.4mm pitch
+            SoConfig(24,  0.40, 5.0, 4.4, 6.4, 2.0, 'CA'),
+            SoConfig(32,  0.40, 6.5, 4.4, 6.4, 2.0, 'CB'),
+            SoConfig(36,  0.40, 7.8, 4.4, 6.4, 2.0, 'CC'),
+            SoConfig(48,  0.40, 9.7, 4.4, 6.4, 2.0, 'CD'),
+
+            # 6.10mm body width
+            #   0.65mm pitch
+            SoConfig(24,  0.65,  7.8, 6.1, 8.1, 2.0, 'DA'),
+            SoConfig(28,  0.65,  9.7, 6.1, 8.1, 2.0, 'DB'),
+            SoConfig(30,  0.65,  9.7, 6.1, 8.1, 2.0, 'DB-1'),
+            SoConfig(32,  0.65, 11.0, 6.1, 8.1, 2.0, 'DC'),
+            SoConfig(36,  0.65, 12.5, 6.1, 8.1, 2.0, 'DD'),
+            SoConfig(40,  0.65, 14.0, 6.1, 8.1, 2.0, 'DE'),
+            #  0.5mm pitch
+            SoConfig(28,  0.50,  7.8, 6.1, 8.1, 2.0, 'EA'),
+            SoConfig(36,  0.50,  9.7, 6.1, 8.1, 2.0, 'EB'),
+            SoConfig(40,  0.50, 11.0, 6.1, 8.1, 2.0, 'EC'),
+            SoConfig(44,  0.50, 11.0, 6.1, 8.1, 2.0, 'EC-1'),
+            SoConfig(48,  0.50, 12.5, 6.1, 8.1, 2.0, 'ED'),
+            SoConfig(56,  0.50, 14.0, 6.1, 8.1, 2.0, 'EE'),
+            SoConfig(64,  0.50, 17.0, 6.1, 8.1, 2.0, 'EF'),
+            #  0.4mm pitch
+            SoConfig(36,  0.40,  7.8, 6.1, 8.1, 2.0, 'FA'),
+            SoConfig(48,  0.40,  9.7, 6.1, 8.1, 2.0, 'FB'),
+            SoConfig(52,  0.40, 11.0, 6.1, 8.1, 2.0, 'FC'),
+            SoConfig(56,  0.40, 12.5, 6.1, 8.1, 2.0, 'FD'),
+            SoConfig(64,  0.40, 14.0, 6.1, 8.1, 2.0, 'FE'),
+            SoConfig(80,  0.40, 17.0, 6.1, 8.1, 2.0, 'FF'),
+
+            # 8.00mm body width
+            #   0.65mm pitch
+            SoConfig(28,  0.65,  9.7, 8.0, 10.0, 2.0, 'GA'),
+            SoConfig(32,  0.65, 11.0, 8.0, 10.0, 2.0, 'GB'),
+            SoConfig(36,  0.65, 12.5, 8.0, 10.0, 2.0, 'GC'),
+            SoConfig(40,  0.65, 14.0, 8.0, 10.0, 2.0, 'GD'),
+            #   0.5mm pitch
+            SoConfig(36,  0.50,  9.7, 8.0, 10.0, 2.0, 'HA'),
+            SoConfig(40,  0.50, 11.0, 8.0, 10.0, 2.0, 'HB'),
+            SoConfig(48,  0.50, 12.5, 8.0, 10.0, 2.0, 'HC'),
+            SoConfig(56,  0.50, 14.0, 8.0, 10.0, 2.0, 'HD'),
+            #   0.4mm pitch
+            SoConfig(48,  0.40,  9.7, 8.0, 10.0, 2.0, 'JA'),
+            SoConfig(52,  0.40, 11.0, 8.0, 10.0, 2.0, 'JB'),
+            SoConfig(56,  0.40, 12.5, 8.0, 10.0, 2.0, 'JC'),
+            SoConfig(60,  0.40, 12.5, 8.0, 10.0, 2.0, 'JC-1'),
+            SoConfig(64,  0.40, 14.0, 8.0, 10.0, 2.0, 'JD'),
+            SoConfig(68,  0.40, 14.0, 8.0, 10.0, 2.0, 'JD-1'),
+        ],
+        lead_width_lookup={
+            0.65: 0.30,
+            0.50: 0.27,
+            0.40: 0.23,
+        },
+        lead_contact_length=0.6,
+        pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
+        keywords='so,sop,ssop,small outline package,smd,jedec,mo-152',
+        version='0.1',
+        create_date='2019-07-21T12:55:20Z',
+    )
+    generate_pkg(
+        dirpath='out/ssop/pkg',
+        author='Danilo B.',
+        # Name according to IPC7351C
+        name='SSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
+        description='{pin_count}-pin Plastic Shrink Small Outline Package (SSOP), '
+                    'standardized by JEDEC (MO-150), variation {variation}.\\n\\n'
+                    'Pitch: {pitch:.2f} mm\\nBody length: {body_length:.2f} mm\\n'
+                    'Body width: {body_width:.2f} mm\\nLead span: {lead_span:.2f} mm\\n'
+                    'Height: {height:.2f} mm\\n'
+                    'Lead length: {lead_length:.2f} mm\\nLead width: {lead_width:.2f} mm',
+        configs=[
+            # pin count, pitch, body length, body width, total width, height
+
+            # Symbols based on JEDEC MO-150:
+            #        N   e      D    E1   E    A
+
+            SoConfig( 8, 0.65,  3.0, 5.3, 7.8, 2.0, 'AA'),
+            SoConfig(14, 0.65,  6.2, 5.3, 7.8, 2.0, 'AB'),
+            SoConfig(16, 0.65,  6.2, 5.3, 7.8, 2.0, 'AC'),
+            SoConfig(18, 0.65,  7.2, 5.3, 7.8, 2.0, 'AD'),
+            SoConfig(20, 0.65,  7.2, 5.3, 7.8, 2.0, 'AE'),
+            SoConfig(22, 0.65,  8.2, 5.3, 7.8, 2.0, 'AF'),
+            SoConfig(24, 0.65,  8.2, 5.3, 7.8, 2.0, 'AG'),
+            SoConfig(28, 0.65, 10.2, 5.3, 7.8, 2.0, 'AH'),
+            SoConfig(30, 0.65, 10.2, 5.3, 7.8, 2.0, 'AJ'),
+            SoConfig(38, 0.65, 12.6, 5.3, 7.8, 2.0, 'AK'),
+        ],
+        lead_width_lookup={
+            0.65: 0.38,
+        },
+        lead_contact_length=0.75,
+        pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
+        keywords='so,sop,ssop,small outline package,smd,jedec,mo-150',
+        version='0.1',
+        create_date='2019-07-21T12:55:20Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
