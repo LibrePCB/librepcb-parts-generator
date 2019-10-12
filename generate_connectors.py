@@ -505,18 +505,21 @@ def generate_dev(
     kind: str,
     cmpcat: str,
     keywords: str,
+    rows: int,
     min_pads: int,
     max_pads: int,
     pad_drills: Iterable[float],
     create_date: Optional[str],
 ) -> None:
     category = 'dev'
-    for i in range(min_pads, max_pads + 1):
+    assert rows in [1, 2]
+    for i in range(min_pads, max_pads + 1, rows):
+        per_row = i // rows
         for drill in pad_drills:
             lines = []
 
-            variant = '1x{}-D{:.1f}'.format(i, drill)
-            broad_variant = '1x{}'.format(i)
+            variant = '{}x{}-D{:.1f}'.format(rows, per_row, drill)
+            broad_variant = '{}x{}'.format(rows, per_row)
 
             def _uuid(identifier: str) -> str:
                 return uuid(category, kind, variant, identifier)
@@ -529,11 +532,11 @@ def generate_dev(
 
             # General info
             lines.append('(librepcb_device {}'.format(uuid_dev))
-            lines.append(' (name "{} 1x{} ⌀{:.1f}mm")'.format(name, i, drill))
-            lines.append(' (description "A 1x{} {} with {}mm pin spacing '
+            lines.append(' (name "{} {}x{:02d} ⌀{:.1f}mm")'.format(name, rows, per_row, drill))
+            lines.append(' (description "A {}x{} {} with {}mm pin spacing '
                          'and {:.1f}mm drill holes.\\n\\n'
-                         'Generated with {}")'.format(i, name_lower, spacing, drill, generator))
-            lines.append(' (keywords "connector, 1x{}, d{:.1f}, {}")'.format(i, drill, keywords))
+                         'Generated with {}")'.format(rows, per_row, name_lower, spacing, drill, generator))
+            lines.append(' (keywords "connector, {}x{}, d{:.1f}, {}")'.format(rows, per_row, drill, keywords))
             lines.append(' (author "{}")'.format(author))
             lines.append(' (version "0.1")')
             lines.append(' (created {})'.format(create_date or now()))
@@ -541,8 +544,10 @@ def generate_dev(
             lines.append(' (category {})'.format(cmpcat))
             lines.append(' (component {})'.format(uuid_cmp))
             lines.append(' (package {})'.format(uuid_pkg))
-            for j in range(1, i + 1):
-                lines.append(' (pad {} (signal {}))'.format(uuid_pads[j - 1], uuid_signals[j - 1]))
+            signalmappings = []
+            for p in range(1, i + 1):
+                signalmappings.append(' (pad {} (signal {}))'.format(uuid_pads[p - 1], uuid_signals[p - 1]))
+            lines.extend(sorted(signalmappings))
             lines.append(')')
 
             dev_dir_path = path.join(dirpath, uuid_dev)
@@ -554,7 +559,7 @@ def generate_dev(
                 f.write('\n'.join(lines))
                 f.write('\n')
 
-            print('1x{} {} ⌀{:.1f}mm: Wrote device {}'.format(i, kind, drill, uuid_dev))
+            print('{}x{} {} ⌀{:.1f}mm: Wrote device {}'.format(rows, per_row, kind, drill, uuid_dev))
 
 
 if __name__ == '__main__':
@@ -665,10 +670,25 @@ if __name__ == '__main__':
         kind=KIND_HEADER,
         cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
         keywords='pin header, male header, tht, generic',
+        rows=1,
         min_pads=1,
         max_pads=40,
         pad_drills=[0.9, 1.0, 1.1],
         create_date='2018-10-17T19:13:41Z',
+    )
+    generate_dev(
+        dirpath='out/connectors/dev',
+        author='Danilo B.',
+        name='Generic Pin Header 2.54mm',
+        name_lower='generic male pin header',
+        kind=KIND_HEADER,
+        cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
+        keywords='pin header, male header, tht, generic',
+        rows=2,
+        min_pads=4,
+        max_pads=80,
+        pad_drills=[0.9, 1.0, 1.1],
+        create_date='2019-10-12T23:40:41Z',
     )
 
     # Female pin sockets
@@ -770,10 +790,25 @@ if __name__ == '__main__':
         kind=KIND_SOCKET,
         cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
         keywords='pin socket, female header, tht, generic',
+        rows=1,
         min_pads=1,
         max_pads=40,
         pad_drills=[0.9, 1.0, 1.1],
         create_date='2018-10-17T19:13:41Z',
+    )
+    generate_dev(
+        dirpath='out/connectors/dev',
+        author='Danilo B.',
+        name='Generic Pin Socket 2.54mm',
+        name_lower='generic female pin socket',
+        kind=KIND_SOCKET,
+        cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
+        keywords='pin socket, female header, tht, generic',
+        rows=2,
+        min_pads=4,
+        max_pads=80,
+        pad_drills=[0.9, 1.0, 1.1],
+        create_date='2019-10-12T23:40:41Z',
     )
 
     # Generic connector
@@ -832,6 +867,7 @@ if __name__ == '__main__':
         kind=KIND_WIRE_CONNECTOR,
         cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
         keywords='connector, soldering, generic',
+        rows=1,
         min_pads=1,
         max_pads=40,
         pad_drills=[1.0],
