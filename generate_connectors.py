@@ -549,7 +549,7 @@ if __name__ == '__main__':
     generate_cmp(
         dirpath='out/connectors/cmp',
         author='Danilo B.',
-        name='Generic Connector',
+        name='Soldered Wire Connector',
         name_lower='soldered wire connector',
         kind=KIND_WIRE_CONNECTOR,
         cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
@@ -557,7 +557,7 @@ if __name__ == '__main__':
         default_value='',
         min_pads=1,
         max_pads=40,
-        version='0.2',
+        version='0.1',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_pkg(
