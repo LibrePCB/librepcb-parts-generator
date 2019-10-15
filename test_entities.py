@@ -317,8 +317,8 @@ def test_device() -> None:
         ComponentUUID('bc911fcc-8b5c-4728-b596-d644797c55da'),
         PackageUUID('b4e92c64-18c4-44a6-aa39-d1be3e8c29bd'),
     )
-    device.add_pad(ComponentPad('67a7b034-b30b-4644-b8d3-d7a99606efdc', SignalUUID('9bccea5e-e23f-4b88-9de1-4be00dc0c12a')))
     device.add_pad(ComponentPad('aec3f475-28c4-4508-ab4f-e1b618a0d77d', SignalUUID('726fd1ce-a01b-4287-bb61-e3ff165a0644')))
+    device.add_pad(ComponentPad('67a7b034-b30b-4644-b8d3-d7a99606efdc', SignalUUID('9bccea5e-e23f-4b88-9de1-4be00dc0c12a')))
     assert str(device) == """(librepcb_device 00652f30-9f89-4027-91f5-7bd684eee751
  (name "Foo")
  (description "Bar")
