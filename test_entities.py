@@ -6,6 +6,10 @@ from entities.component import (
     Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
     Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
 )
+from entities.package import (
+    AutoRotate, Drill, Footprint, FootprintPad, LetterSpacing, LineSpacing, Mirror, Package, PackagePad, Shape, Side,
+    Size, StrokeText, StrokeWidth
+)
 from entities.symbol import Pin as SymbolPin
 from entities.symbol import Symbol
 
@@ -185,6 +189,114 @@ def test_component() -> None:
    (symbol 8f1a97f2-4cdf-43da-b38d-b3787c47b5ad)
    (position 0.0 0.0) (rotation 0.0) (required true) (suffix "")
    (pin 0189aafc-f88a-4e65-8fb4-09a047a3e334 (signal 46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c) (text pin))
+  )
+ )
+)"""
+
+
+def test_package_pad() -> None:
+    package_pad = PackagePad('5c4d39d3-35cc-4836-a082-693143ee9135', Name('1'))
+    assert str(package_pad) == '(pad 5c4d39d3-35cc-4836-a082-693143ee9135 (name "1"))'
+
+
+def test_footprint_pad() -> None:
+    footprint_pad = FootprintPad('5c4d39d3-35cc-4836-a082-693143ee9135', Side.THT, Shape.RECT, Position(0.0, 22.86), Rotation(0.0), Size(2.54, 1.5875), Drill(1.0))
+    assert str(footprint_pad) == """(pad 5c4d39d3-35cc-4836-a082-693143ee9135 (side tht) (shape rect)
+ (position 0.0 22.86) (rotation 0.0) (size 2.54 1.587) (drill 1.0)
+)"""
+
+
+def test_stroke_text() -> None:
+    stroke_text = StrokeText('f16d1604-8a82-4688-bc58-be1c1375873f', Layer('top_names'), Height(1.0), StrokeWidth(0.2), LetterSpacing.AUTO, LineSpacing.AUTO, Align('center bottom'), Position(0.0, 25.63), Rotation(0.0), AutoRotate(True), Mirror(False), Value('{{NAME}}'))
+    assert str(stroke_text) == """(stroke_text f16d1604-8a82-4688-bc58-be1c1375873f (layer top_names)
+ (height 1.0) (stroke_width 0.2) (letter_spacing auto) (line_spacing auto)
+ (align center bottom) (position 0.0 25.63) (rotation 0.0)
+ (auto_rotate true) (mirror false) (value "{{NAME}}")
+)"""
+
+
+def create_footprint() -> Footprint:
+    footprint = Footprint('17b9f232-2b15-4281-a07d-ad0db5213f92', Name('default'), Description(''))
+    footprint.add_pad(FootprintPad('5c4d39d3-35cc-4836-a082-693143ee9135', Side.THT, Shape.RECT, Position(0.0, 22.86), Rotation(0.0), Size(2.54, 1.5875), Drill(1.0)))
+    footprint.add_pad(FootprintPad('6100dd55-d3b3-4139-9085-d5a75e783c37', Side.THT, Shape.ROUND, Position(0.0, 20.32), Rotation(0.0), Size(2.54, 1.5875), Drill(1.0)))
+    polygon = Polygon('5e18e4ea-5667-42b3-b60f-fcc91b0461d3', Layer('top_placement'), Width(0.25), Fill(False), GrabArea(True))
+    polygon.add_vertex(Vertex(Position(-1.27, +24.36), Angle(0.0)))
+    polygon.add_vertex(Vertex(Position(+1.27, +24.36), Angle(0.0)))
+    polygon.add_vertex(Vertex(Position(+1.27, -24.36), Angle(0.0)))
+    polygon.add_vertex(Vertex(Position(-1.27, -24.36), Angle(0.0)))
+    polygon.add_vertex(Vertex(Position(-1.27, +24.36), Angle(0.0)))
+    footprint.add_polygon(polygon)
+    stroke_text = StrokeText('f16d1604-8a82-4688-bc58-be1c1375873f', Layer('top_names'), Height(1.0), StrokeWidth(0.2), LetterSpacing.AUTO, LineSpacing.AUTO, Align('center bottom'), Position(0.0, 25.63), Rotation(0.0), AutoRotate(True), Mirror(False), Value('{{NAME}}'))
+    footprint.add_text(stroke_text)
+    return footprint
+
+
+def test_footprint() -> None:
+    footprint = create_footprint()
+    assert str(footprint) == """(footprint 17b9f232-2b15-4281-a07d-ad0db5213f92
+ (name "default")
+ (description "")
+ (pad 5c4d39d3-35cc-4836-a082-693143ee9135 (side tht) (shape rect)
+  (position 0.0 22.86) (rotation 0.0) (size 2.54 1.587) (drill 1.0)
+ )
+ (pad 6100dd55-d3b3-4139-9085-d5a75e783c37 (side tht) (shape round)
+  (position 0.0 20.32) (rotation 0.0) (size 2.54 1.587) (drill 1.0)
+ )
+ (polygon 5e18e4ea-5667-42b3-b60f-fcc91b0461d3 (layer top_placement)
+  (width 0.25) (fill false) (grab_area true)
+  (vertex (position -1.27 24.36) (angle 0.0))
+  (vertex (position 1.27 24.36) (angle 0.0))
+  (vertex (position 1.27 -24.36) (angle 0.0))
+  (vertex (position -1.27 -24.36) (angle 0.0))
+  (vertex (position -1.27 24.36) (angle 0.0))
+ )
+ (stroke_text f16d1604-8a82-4688-bc58-be1c1375873f (layer top_names)
+  (height 1.0) (stroke_width 0.2) (letter_spacing auto) (line_spacing auto)
+  (align center bottom) (position 0.0 25.63) (rotation 0.0)
+  (auto_rotate true) (mirror false) (value "{{NAME}}")
+ )
+)"""
+
+
+def test_package() -> None:
+    package = Package('009e35ef-1f50-4bf3-ab58-11eb85bf5503', Name('Soldered Wire Connector 1x19 ⌀1.0mm'), Description('A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\n\nGenerated with librepcb-parts-generator (generate_connectors.py)'), Keywords('connector, 1x19, d1.0, connector, soldering, generic'), Author('Danilo B.'), Version('0.1'), Created('2018-10-17T19:13:41Z'), Deprecated(False), Category('56a5773f-eeb4-4b39-8cb9-274f3da26f4f'))
+
+    package.add_pad(PackagePad('5c4d39d3-35cc-4836-a082-693143ee9135', Name('1')))
+    package.add_pad(PackagePad('6100dd55-d3b3-4139-9085-d5a75e783c37', Name('2')))
+
+    package.add_footprint(create_footprint())
+    assert str(package) == """(librepcb_package 009e35ef-1f50-4bf3-ab58-11eb85bf5503
+ (name "Soldered Wire Connector 1x19 ⌀1.0mm")
+ (description "A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\n\nGenerated with librepcb-parts-generator (generate_connectors.py)")
+ (keywords "connector, 1x19, d1.0, connector, soldering, generic")
+ (author "Danilo B.")
+ (version "0.1")
+ (created 2018-10-17T19:13:41Z)
+ (deprecated false)
+ (category 56a5773f-eeb4-4b39-8cb9-274f3da26f4f)
+ (pad 5c4d39d3-35cc-4836-a082-693143ee9135 (name "1"))
+ (pad 6100dd55-d3b3-4139-9085-d5a75e783c37 (name "2"))
+ (footprint 17b9f232-2b15-4281-a07d-ad0db5213f92
+  (name "default")
+  (description "")
+  (pad 5c4d39d3-35cc-4836-a082-693143ee9135 (side tht) (shape rect)
+   (position 0.0 22.86) (rotation 0.0) (size 2.54 1.587) (drill 1.0)
+  )
+  (pad 6100dd55-d3b3-4139-9085-d5a75e783c37 (side tht) (shape round)
+   (position 0.0 20.32) (rotation 0.0) (size 2.54 1.587) (drill 1.0)
+  )
+  (polygon 5e18e4ea-5667-42b3-b60f-fcc91b0461d3 (layer top_placement)
+   (width 0.25) (fill false) (grab_area true)
+   (vertex (position -1.27 24.36) (angle 0.0))
+   (vertex (position 1.27 24.36) (angle 0.0))
+   (vertex (position 1.27 -24.36) (angle 0.0))
+   (vertex (position -1.27 -24.36) (angle 0.0))
+   (vertex (position -1.27 24.36) (angle 0.0))
+  )
+  (stroke_text f16d1604-8a82-4688-bc58-be1c1375873f (layer top_names)
+   (height 1.0) (stroke_width 0.2) (letter_spacing auto) (line_spacing auto)
+   (align center bottom) (position 0.0 25.63) (rotation 0.0)
+   (auto_rotate true) (mirror false) (value "{{NAME}}")
   )
  )
 )"""
