@@ -75,6 +75,8 @@ class StrokeText():
 
 
 class Side(EnumValue):
+    TOP = 'top'
+    BOTTOM = 'bottom'
     THT = 'tht'
 
     def get_name(self) -> str:
@@ -84,6 +86,7 @@ class Side(EnumValue):
 class Shape(EnumValue):
     ROUND = 'round'
     RECT = 'rect'
+    OCTAGON = 'octagon'
 
     def get_name(self) -> str:
         return 'shape'
