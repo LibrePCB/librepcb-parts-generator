@@ -6,6 +6,7 @@ from entities.component import (
     Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
     Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
 )
+from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.package import (
     AutoRotate, Drill, Footprint, FootprintPad, LetterSpacing, LineSpacing, Mirror, Package, PackagePad, Shape, Side,
     Size, StrokeText, StrokeWidth
@@ -299,4 +300,36 @@ def test_package() -> None:
    (auto_rotate true) (mirror false) (value "{{NAME}}")
   )
  )
+)"""
+
+
+def test_component_pad() -> None:
+    component_pad = ComponentPad('67a7b034-b30b-4644-b8d3-d7a99606efdc', SignalUUID('9bccea5e-e23f-4b88-9de1-4be00dc0c12a'))
+    assert str(component_pad) == '(pad 67a7b034-b30b-4644-b8d3-d7a99606efdc (signal 9bccea5e-e23f-4b88-9de1-4be00dc0c12a))'
+
+
+def test_device() -> None:
+    device = Device(
+        '00652f30-9f89-4027-91f5-7bd684eee751', Name('Foo'), Description('Bar'),
+        Keywords('foo, bar'), Author('J. Rando'), Version('0.1'),
+        Created('2018-10-17T19:13:41Z'), Deprecated(False),
+        Category('ade6d8ff-3c4f-4dac-a939-cc540c87c280'),
+        ComponentUUID('bc911fcc-8b5c-4728-b596-d644797c55da'),
+        PackageUUID('b4e92c64-18c4-44a6-aa39-d1be3e8c29bd'),
+    )
+    device.add_pad(ComponentPad('aec3f475-28c4-4508-ab4f-e1b618a0d77d', SignalUUID('726fd1ce-a01b-4287-bb61-e3ff165a0644')))
+    device.add_pad(ComponentPad('67a7b034-b30b-4644-b8d3-d7a99606efdc', SignalUUID('9bccea5e-e23f-4b88-9de1-4be00dc0c12a')))
+    assert str(device) == """(librepcb_device 00652f30-9f89-4027-91f5-7bd684eee751
+ (name "Foo")
+ (description "Bar")
+ (keywords "foo, bar")
+ (author "J. Rando")
+ (version "0.1")
+ (created 2018-10-17T19:13:41Z)
+ (deprecated false)
+ (category ade6d8ff-3c4f-4dac-a939-cc540c87c280)
+ (component bc911fcc-8b5c-4728-b596-d644797c55da)
+ (package b4e92c64-18c4-44a6-aa39-d1be3e8c29bd)
+ (pad 67a7b034-b30b-4644-b8d3-d7a99606efdc (signal 9bccea5e-e23f-4b88-9de1-4be00dc0c12a))
+ (pad aec3f475-28c4-4508-ab4f-e1b618a0d77d (signal 726fd1ce-a01b-4287-bb61-e3ff165a0644))
 )"""
