@@ -6,6 +6,12 @@ This is a collection of Python 3 based scripts to generate parts for the
 [LibrePCB](https://librepcb.org) default library.
 
 
+## Requirements
+
+- Python 3.5+
+- For testing and type checking: See `requirements.txt`
+
+
 ## Introduction / Concepts
 
 While it's easy to create a one-off script to generate LibrePCB library
