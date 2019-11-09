@@ -268,4 +268,7 @@ THIRD_CONFIGS = [
               name_prefix='Sensirion ', lead_width=0.35, no_exp=False, pin1_corner_dx_dy=0.2),
     DfnConfig(3.0, 3.0, 1.0, 6, 1.1, 1.20, 0.4, 2.4, 1.5, 'sensirion,sht,sht2x,sht20,sht21,sht25',
               name_prefix='Sensirion ', lead_width=0.4, no_exp=False, pin1_corner_dx_dy=0.2),
+
+    # Microchip
+    DfnConfig(2.0, 3.0, 0.5, 8, 0.90, 1.00, 0.40, 1.75, 1.45, '', no_exp=False),
 ]
