@@ -389,6 +389,27 @@ if __name__ == '__main__':
         keywords='r,resistor,chip,generic',
         create_date='2018-12-19T00:08:03Z',
     )
+    # Chip capacitors (CAPC)
+    generate_pkg(
+        dirpath='out/chip/pkg',
+        author='Danilo B.',
+        name='CAPC{size_metric} ({size_imperial})',
+        description='Generic non-polarized chip capacitor '
+                    '{size_metric} (imperial {size_imperial}).\\n\\n'
+                    'Length: {length}mm\\nWidth: {width}mm',
+        configs=[
+            #        imperial, len, wid,  hght, gap
+            ChipConfig('0201',  .6,  .3,  0.00, 0.3),  # noqa
+            ChipConfig('0402', 1.0,  .5,  0.00, 0.5),   # noqa
+            ChipConfig('0603', 1.6,  .8,  0.00, 0.9),   # noqa
+            ChipConfig('0805', 2.0, 1.25, 0.00, 1.0),   # noqa
+            ChipConfig('1206', 3.2, 1.6,  0.00, 1.8),   # noqa
+            ChipConfig('1210', 3.2, 2.5,  0.00, 1.8),   # noqa
+        ],
+        pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
+        keywords='c,capacitor,chip,mlcc,generic',
+        create_date='2019-02-02T17:52:00Z',
+    )
     # J-Lead resistors (RESJ)
     generate_pkg(
         dirpath='out/chip/pkg',
