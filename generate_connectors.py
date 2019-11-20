@@ -124,8 +124,8 @@ def generate_pkg(
     max_pads: int,
     pad_size: Tuple[float, float],
     pad_drills: Iterable[float],
-    generate_silkscreen: Callable[[List[str], str, str, str, int, int], None],
-    line_width: int,
+    generate_silkscreen: Callable[[List[str], str, str, str, int, int, float, float], None],
+    line_width: float,
     version: str,
     create_date: Optional[str],
 ) -> None:
@@ -225,8 +225,8 @@ def generate_silkscreen_box(
     variant: str,
     pin_count: int,
     rows: int,
-    spacing: int,
-    line_width: int,
+    spacing: float,
+    line_width: float,
 ) -> None:
     uuid_polygon = uuid(category, kind, variant, 'polygon-contour')
 
@@ -251,8 +251,8 @@ def generate_silkscreen_male(
     variant: str,
     pin_count: int,
     rows: int,
-    spacing: int,
-    line_width: int,
+    spacing: float,
+    line_width: float,
 ) -> None:
     uuid_polygon = uuid(category, kind, variant, 'polygon-contour')
 
@@ -527,7 +527,7 @@ def generate_dev(
     cmpcat: str,
     keywords: str,
     rows: int,
-    spacing: int,
+    spacing: float,
     min_pads: int,
     max_pads: int,
     pad_drills: Iterable[float],
@@ -984,7 +984,6 @@ if __name__ == '__main__':
         pad_drills=[0.6, 0.65, 0.7],
         create_date='2019-11-20T16:20:00Z'
     )
-
 
     # Generic connector
     generate_sym(
