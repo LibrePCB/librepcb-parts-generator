@@ -125,6 +125,7 @@ def generate_pkg(
     pad_size: Tuple[float, float],
     pad_drills: Iterable[float],
     generate_silkscreen: Callable[[List[str], str, str, str, int, int], None],
+    line_width: int,
     version: str,
     create_date: Optional[str],
 ) -> None:
@@ -181,7 +182,7 @@ def generate_pkg(
                 lines.append('  )')
 
             # Silkscreen
-            generate_silkscreen(lines, category, kind, variant, i, rows, spacing)
+            generate_silkscreen(lines, category, kind, variant, i, rows, spacing, line_width)
 
             # Labels
             y_max, y_min = get_rectangle_bounds(i, rows, spacing, top_offset + 1.27, False)
@@ -217,7 +218,7 @@ def generate_pkg(
             print('{}mm {}x{:02d} {} ⌀{:.2f}mm: Wrote package {}'.format(spacing, rows, per_row, kind, drill, uuid_pkg))
 
 
-def generate_silkscreen_female(
+def generate_silkscreen_box(
     lines: List[str],
     category: str,
     kind: str,
@@ -225,10 +226,11 @@ def generate_silkscreen_female(
     pin_count: int,
     rows: int,
     spacing: int,
+    line_width: int,
 ) -> None:
     uuid_polygon = uuid(category, kind, variant, 'polygon-contour')
 
-    x = 1.27 * rows + line_width / 2
+    x = (spacing / 2) * rows + line_width / 2
     top_offset = spacing / 2 + line_width / 2
 
     lines.append('  (polygon {} (layer top_placement)'.format(uuid_polygon))
@@ -250,13 +252,16 @@ def generate_silkscreen_male(
     pin_count: int,
     rows: int,
     spacing: int,
+    line_width: int,
 ) -> None:
     uuid_polygon = uuid(category, kind, variant, 'polygon-contour')
 
     per_row = pin_count // rows
-    x_outer = 1.27 * rows + line_width / 2
-    x_inner = x_outer - 0.27
-    offset = line_width / 2
+    x_outer = (spacing / 2) * rows + line_width / 2
+
+    corner_cut_len = 0.27
+    x_inner = x_outer - corner_cut_len
+    offset = (spacing / 2) - corner_cut_len
 
     # Start in top right corner, go around the pads clockwise
     lines.append('  (polygon {} (layer top_placement)'.format(uuid_polygon))
@@ -264,24 +269,38 @@ def generate_silkscreen_male(
     # Down on the right
     for pin in range(1, per_row + 1):
         y = get_y(pin, per_row, 1, spacing, False)
-        top_offset = offset if pin == 1 else 0
-        bot_offset = offset if pin == per_row else 0
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_outer), ff(y + 1 + top_offset)))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_outer), ff(y - 1 - bot_offset)))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_inner), ff(y - 1.27 - bot_offset)))
+
+        top_offset = offset
+        if pin == 1:
+            top_offset += line_width / 2
+
+        bot_offset = offset
+        if pin == per_row:
+            bot_offset += line_width / 2
+
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_outer), ff(y + top_offset)))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_outer), ff(y - bot_offset)))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_inner), ff(y - bot_offset - corner_cut_len)))
     # Up on the left
     for pin in range(per_row, 0, -1):
         y = get_y(pin, per_row, 1, spacing, False)
-        top_offset = offset if pin == 1 else 0
-        bot_offset = offset if pin == per_row else 0
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_inner), ff(y - 1.27 - bot_offset)))
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_outer), ff(y - 1 - bot_offset)))
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_outer), ff(y + 1 + top_offset)))
+
+        top_offset = offset
+        if pin == 1:
+            top_offset += line_width / 2
+
+        bot_offset = offset
+        if pin == per_row:
+            bot_offset += line_width / 2
+
+        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_inner), ff(y - bot_offset - corner_cut_len)))
+        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_outer), ff(y - bot_offset)))
+        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_outer), ff(y + top_offset)))
     # Back to start
-    top_y = get_y(1, per_row, 1, spacing, False) + spacing / 2 + offset
+    top_y = get_y(1, per_row, 1, spacing, False) + spacing / 2 + line_width / 2
     lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_inner), ff(top_y)))
     lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_inner), ff(top_y)))
-    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_outer), ff(top_y - 0.27)))
+    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_outer), ff(top_y - corner_cut_len)))
     lines.append('  )')
 
 
@@ -648,6 +667,7 @@ if __name__ == '__main__':
         pad_size=(2.54 - 0.35, 1.27 * 1.25),
         pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_male,
+        line_width=line_width,
         version='0.2',
         create_date='2018-10-17T19:13:41Z',
     )
@@ -666,6 +686,7 @@ if __name__ == '__main__':
         pad_size=(2.54 - 0.35, 1.27 * 1.25),
         pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_male,
+        line_width=line_width,
         version='0.2',
         create_date='2019-09-17T20:00:41Z',
     )
@@ -698,6 +719,74 @@ if __name__ == '__main__':
         max_pads=80,
         pad_drills=[0.9, 1.0, 1.1],
         create_date='2019-10-12T23:40:41Z',
+    )
+    generate_pkg(
+        dirpath='out/connectors/pkg',
+        author='Steph Hobbs',
+        name='Pin Header 1.27mm',
+        name_lower='male pin header',
+        kind=KIND_HEADER,
+        pkgcat='e4d3a6bf-af32-48a2-b427-5e794bed949a',
+        keywords='pin header, male header, tht',
+        rows=1,
+        spacing=1.27,
+        min_pads=1,
+        max_pads=40,
+        pad_size=(0.96, 0.96),
+        pad_drills=[0.6, 0.65, 0.7],
+        generate_silkscreen=generate_silkscreen_box,
+        line_width=line_width / 2,
+        version='0.1',
+        create_date='2019-11-20T16:20:00Z'
+    )
+    generate_pkg(
+        dirpath='out/connectors/pkg',
+        author='Steph Hobbs',
+        name='Pin Header 1.27mm',
+        name_lower='male pin header',
+        kind=KIND_HEADER,
+        pkgcat='e4d3a6bf-af32-48a2-b427-5e794bed949a',
+        keywords='pin header, male header, tht',
+        rows=2,
+        spacing=1.27,
+        min_pads=4,
+        max_pads=80,
+        pad_size=(0.96, 0.96),
+        pad_drills=[0.6, 0.65, 0.7],
+        generate_silkscreen=generate_silkscreen_box,
+        line_width=line_width / 2,
+        version='0.1',
+        create_date='2019-11-20T16:20:00Z'
+    )
+    generate_dev(
+        dirpath='out/connectors/dev',
+        author='Steph Hobbs',
+        name='Generic Pin Header 1.27mm',
+        name_lower='generic male pin header',
+        kind=KIND_HEADER,
+        cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
+        keywords='pin header, male header, tht, generic',
+        rows=1,
+        spacing=1.27,
+        min_pads=1,
+        max_pads=40,
+        pad_drills=[0.6, 0.65, 0.7],
+        create_date='2019-11-20T16:20:00Z'
+    )
+    generate_dev(
+        dirpath='out/connectors/dev',
+        author='Steph Hobbs',
+        name='Generic Pin Header 1.27mm',
+        name_lower='generic male pin header',
+        kind=KIND_HEADER,
+        cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
+        keywords='pin header, male header, tht, generic',
+        rows=2,
+        spacing=1.27,
+        min_pads=4,
+        max_pads=80,
+        pad_drills=[0.6, 0.65, 0.7],
+        create_date='2019-11-20T16:20:00Z'
     )
 
     # Female pin sockets
@@ -773,7 +862,8 @@ if __name__ == '__main__':
         max_pads=40,
         pad_size=(2.54 - 0.35, 1.27 * 1.25),
         pad_drills=[0.9, 1.0, 1.1],
-        generate_silkscreen=generate_silkscreen_female,
+        generate_silkscreen=generate_silkscreen_box,
+        line_width=line_width,
         version='0.2',
         create_date='2018-10-17T19:13:41Z',
     )
@@ -791,7 +881,8 @@ if __name__ == '__main__':
         max_pads=80,
         pad_size=(2.54 - 0.35, 1.27 * 1.25),
         pad_drills=[0.9, 1.0, 1.1],
-        generate_silkscreen=generate_silkscreen_female,
+        generate_silkscreen=generate_silkscreen_box,
+        line_width=line_width,
         version='0.2',
         create_date='2019-09-17T20:00:41Z',
     )
@@ -825,6 +916,75 @@ if __name__ == '__main__':
         pad_drills=[0.9, 1.0, 1.1],
         create_date='2019-10-12T23:40:41Z',
     )
+    generate_pkg(
+        dirpath='out/connectors/pkg',
+        author='Steph Hobbs',
+        name='Pin Socket 1.27mm',
+        name_lower='female pin socket',
+        kind=KIND_SOCKET,
+        pkgcat='6183d171-e810-475a-a568-2a270aff8f5e',
+        keywords='pin socket, female header, tht',
+        rows=1,
+        spacing=1.27,
+        min_pads=1,
+        max_pads=40,
+        pad_size=(0.96, 0.96),
+        pad_drills=[0.6, 0.65, 0.7],
+        generate_silkscreen=generate_silkscreen_box,
+        line_width=line_width / 2,
+        version='0.1',
+        create_date='2019-11-20T16:20:00Z'
+    )
+    generate_pkg(
+        dirpath='out/connectors/pkg',
+        author='Steph Hobbs',
+        name='Pin Socket 1.27mm',
+        name_lower='female pin socket',
+        kind=KIND_SOCKET,
+        pkgcat='6183d171-e810-475a-a568-2a270aff8f5e',
+        keywords='pin socket, female header, tht',
+        rows=2,
+        spacing=1.27,
+        min_pads=4,
+        max_pads=80,
+        pad_size=(0.96, 0.96),
+        pad_drills=[0.6, 0.65, 0.7],
+        generate_silkscreen=generate_silkscreen_box,
+        line_width=line_width / 2,
+        version='0.1',
+        create_date='2019-11-20T16:20:00Z'
+    )
+    generate_dev(
+        dirpath='out/connectors/dev',
+        author='Steph Hobbs',
+        name='Generic Pin Socket 1.27mm',
+        name_lower='generic female pin socket',
+        kind=KIND_SOCKET,
+        cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
+        keywords='pin socket, female header, tht, generic',
+        rows=1,
+        spacing=1.27,
+        min_pads=1,
+        max_pads=40,
+        pad_drills=[0.6, 0.65, 0.7],
+        create_date='2019-11-20T16:20:00Z'
+    )
+    generate_dev(
+        dirpath='out/connectors/dev',
+        author='Steph Hobbs',
+        name='Generic Pin Socket 1.27mm',
+        name_lower='generic female pin socket',
+        kind=KIND_SOCKET,
+        cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
+        keywords='pin socket, female header, tht, generic',
+        rows=2,
+        spacing=1.27,
+        min_pads=4,
+        max_pads=80,
+        pad_drills=[0.6, 0.65, 0.7],
+        create_date='2019-11-20T16:20:00Z'
+    )
+
 
     # Generic connector
     generate_sym(
@@ -872,7 +1032,8 @@ if __name__ == '__main__':
         max_pads=40,
         pad_size=(2.54 - 0.35, 1.27 * 1.25),
         pad_drills=[1.0],
-        generate_silkscreen=generate_silkscreen_female,
+        generate_silkscreen=generate_silkscreen_box,
+        line_width=line_width,
         version='0.2',
         create_date='2018-10-17T19:13:41Z',
     )
