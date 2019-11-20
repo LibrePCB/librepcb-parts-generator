@@ -32,9 +32,6 @@ from entities.symbol import Symbol
 
 generator = 'librepcb-parts-generator (generate_connectors.py)'
 
-width = 2.54
-spacing = 2.54
-pad_size = (2.54 - 0.35, 1.27 * 1.25)
 line_width = 0.25
 pkg_text_height = 1.0
 sym_text_height = 2.54
@@ -60,7 +57,7 @@ def uuid(category: str, kind: str, variant: str, identifier: str) -> str:
         kind:
             For example 'pinheader' or 'pinsocket'.
         variant:
-            For example '1x5-D1.1' or '1x13'.
+            For example '2.54-1x5-D1.10' or '1x13'.
         identifier:
             For example 'pad-1' or 'pin-13'.
     """
@@ -122,8 +119,10 @@ def generate_pkg(
     pkgcat: str,
     keywords: str,
     rows: int,
+    spacing: float,
     min_pads: int,
     max_pads: int,
+    pad_size: Tuple[float, float],
     pad_drills: Iterable[float],
     generate_silkscreen: Callable[[List[str], str, str, str, int, int], None],
     version: str,
@@ -136,7 +135,7 @@ def generate_pkg(
             per_row = i // rows
             top_offset = spacing / 2
 
-            variant = '{}x{}-D{:.1f}'.format(rows, per_row, drill)
+            variant = '{}-{}x{}-D{:.2f}'.format(spacing, rows, per_row, drill)
 
             lines = []
 
@@ -151,11 +150,11 @@ def generate_pkg(
 
             # General info
             lines.append('(librepcb_package {}'.format(uuid_pkg))
-            lines.append(' (name "{} {}x{:02d} ⌀{:.1f}mm")'.format(name, rows, per_row, drill))
+            lines.append(' (name "{} {}x{:02d} ⌀{:.2f}mm")'.format(name, rows, per_row, drill))
             lines.append(' (description "A {}x{} {} with {}mm pin spacing '
-                         'and {:.1f}mm drill holes.\\n\\n'
+                         'and {:.2f}mm drill holes.\\n\\n'
                          'Generated with {}")'.format(rows, per_row, name_lower, spacing, drill, generator))
-            lines.append(' (keywords "connector, {}x{}, d{:.1f}, {}")'.format(rows, per_row, drill, keywords))
+            lines.append(' (keywords "connector, {}x{}, d{:.2f}, {}mm, {}")'.format(rows, per_row, drill, spacing, keywords))
             lines.append(' (author "{}")'.format(author))
             lines.append(' (version "{}")'.format(version))
             lines.append(' (created {})'.format(create_date or now()))
@@ -182,7 +181,7 @@ def generate_pkg(
                 lines.append('  )')
 
             # Silkscreen
-            generate_silkscreen(lines, category, kind, variant, i, rows)
+            generate_silkscreen(lines, category, kind, variant, i, rows, spacing)
 
             # Labels
             y_max, y_min = get_rectangle_bounds(i, rows, spacing, top_offset + 1.27, False)
@@ -215,7 +214,7 @@ def generate_pkg(
                 f.write('\n'.join(lines))
                 f.write('\n')
 
-            print('{}x{:02d} {} ⌀{:.1f}mm: Wrote package {}'.format(rows, per_row, kind, drill, uuid_pkg))
+            print('{}mm {}x{:02d} {} ⌀{:.2f}mm: Wrote package {}'.format(spacing, rows, per_row, kind, drill, uuid_pkg))
 
 
 def generate_silkscreen_female(
@@ -225,6 +224,7 @@ def generate_silkscreen_female(
     variant: str,
     pin_count: int,
     rows: int,
+    spacing: int,
 ) -> None:
     uuid_polygon = uuid(category, kind, variant, 'polygon-contour')
 
@@ -249,6 +249,7 @@ def generate_silkscreen_male(
     variant: str,
     pin_count: int,
     rows: int,
+    spacing: int,
 ) -> None:
     uuid_polygon = uuid(category, kind, variant, 'polygon-contour')
 
@@ -299,10 +300,11 @@ def generate_sym(
     create_date: Optional[str],
 ) -> None:
     category = 'sym'
+    spacing = 2.54
     assert rows in [1, 2]
     for i in range(min_pads, max_pads + 1, rows):
         per_row = i // rows
-        w = width * rows  # Make double-row symbols wider!
+        w = spacing * rows  # Make double-row symbols wider!
 
         variant = '{}x{}'.format(rows, per_row)
 
@@ -506,6 +508,7 @@ def generate_dev(
     cmpcat: str,
     keywords: str,
     rows: int,
+    spacing: int,
     min_pads: int,
     max_pads: int,
     pad_drills: Iterable[float],
@@ -518,7 +521,7 @@ def generate_dev(
         for drill in pad_drills:
             lines = []
 
-            variant = '{}x{}-D{:.1f}'.format(rows, per_row, drill)
+            variant = '{}-{}x{}-D{:.2f}'.format(spacing, rows, per_row, drill)
             broad_variant = '{}x{}'.format(rows, per_row)
 
             def _uuid(identifier: str) -> str:
@@ -532,11 +535,11 @@ def generate_dev(
 
             # General info
             lines.append('(librepcb_device {}'.format(uuid_dev))
-            lines.append(' (name "{} {}x{:02d} ⌀{:.1f}mm")'.format(name, rows, per_row, drill))
+            lines.append(' (name "{} {}x{:02d} ⌀{:.2f}mm")'.format(name, rows, per_row, drill))
             lines.append(' (description "A {}x{} {} with {}mm pin spacing '
-                         'and {:.1f}mm drill holes.\\n\\n'
+                         'and {:.2f}mm drill holes.\\n\\n'
                          'Generated with {}")'.format(rows, per_row, name_lower, spacing, drill, generator))
-            lines.append(' (keywords "connector, {}x{}, d{:.1f}, {}")'.format(rows, per_row, drill, keywords))
+            lines.append(' (keywords "connector, {}x{}, d{:.2f}, {}mm, {}")'.format(rows, per_row, drill, spacing, keywords))
             lines.append(' (author "{}")'.format(author))
             lines.append(' (version "0.1")')
             lines.append(' (created {})'.format(create_date or now()))
@@ -559,7 +562,7 @@ def generate_dev(
                 f.write('\n'.join(lines))
                 f.write('\n')
 
-            print('{}x{} {} ⌀{:.1f}mm: Wrote device {}'.format(rows, per_row, kind, drill, uuid_dev))
+            print('{}mm {}x{} {} ⌀{:.2f}mm: Wrote device {}'.format(spacing, rows, per_row, kind, drill, uuid_dev))
 
 
 if __name__ == '__main__':
@@ -639,8 +642,10 @@ if __name__ == '__main__':
         pkgcat='e4d3a6bf-af32-48a2-b427-5e794bed949a',
         keywords='pin header, male header, tht',
         rows=1,
+        spacing=2.54,
         min_pads=1,
         max_pads=40,
+        pad_size=(2.54 - 0.35, 1.27 * 1.25),
         pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_male,
         version='0.2',
@@ -655,8 +660,10 @@ if __name__ == '__main__':
         pkgcat='e4d3a6bf-af32-48a2-b427-5e794bed949a',
         keywords='pin header, male header, tht',
         rows=2,
+        spacing=2.54,
         min_pads=4,
         max_pads=80,
+        pad_size=(2.54 - 0.35, 1.27 * 1.25),
         pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_male,
         version='0.2',
@@ -671,6 +678,7 @@ if __name__ == '__main__':
         cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
         keywords='pin header, male header, tht, generic',
         rows=1,
+        spacing=2.54,
         min_pads=1,
         max_pads=40,
         pad_drills=[0.9, 1.0, 1.1],
@@ -685,6 +693,7 @@ if __name__ == '__main__':
         cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
         keywords='pin header, male header, tht, generic',
         rows=2,
+        spacing=2.54,
         min_pads=4,
         max_pads=80,
         pad_drills=[0.9, 1.0, 1.1],
@@ -759,8 +768,10 @@ if __name__ == '__main__':
         pkgcat='6183d171-e810-475a-a568-2a270aff8f5e',
         keywords='pin socket, female header, tht',
         rows=1,
+        spacing=2.54,
         min_pads=1,
         max_pads=40,
+        pad_size=(2.54 - 0.35, 1.27 * 1.25),
         pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_female,
         version='0.2',
@@ -775,8 +786,10 @@ if __name__ == '__main__':
         pkgcat='6183d171-e810-475a-a568-2a270aff8f5e',
         keywords='pin socket, female header, tht',
         rows=2,
+        spacing=2.54,
         min_pads=4,
         max_pads=80,
+        pad_size=(2.54 - 0.35, 1.27 * 1.25),
         pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_female,
         version='0.2',
@@ -791,6 +804,7 @@ if __name__ == '__main__':
         cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
         keywords='pin socket, female header, tht, generic',
         rows=1,
+        spacing=2.54,
         min_pads=1,
         max_pads=40,
         pad_drills=[0.9, 1.0, 1.1],
@@ -805,6 +819,7 @@ if __name__ == '__main__':
         cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
         keywords='pin socket, female header, tht, generic',
         rows=2,
+        spacing=2.54,
         min_pads=4,
         max_pads=80,
         pad_drills=[0.9, 1.0, 1.1],
@@ -852,8 +867,10 @@ if __name__ == '__main__':
         pkgcat='56a5773f-eeb4-4b39-8cb9-274f3da26f4f',
         keywords='connector, soldering, generic',
         rows=1,
+        spacing=2.54,
         min_pads=1,
         max_pads=40,
+        pad_size=(2.54 - 0.35, 1.27 * 1.25),
         pad_drills=[1.0],
         generate_silkscreen=generate_silkscreen_female,
         version='0.2',
@@ -868,6 +885,7 @@ if __name__ == '__main__':
         cmpcat='d0618c29-0436-42da-a388-fdadf7b23892',
         keywords='connector, soldering, generic',
         rows=1,
+        spacing=2.54,
         min_pads=1,
         max_pads=40,
         pad_drills=[1.0],
