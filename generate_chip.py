@@ -104,6 +104,7 @@ def generate_pkg(
     configs: Iterable[ChipConfig],
     pkgcat: str,
     keywords: str,
+    version: str,
     create_date: Optional[str],
 ) -> None:
     category = 'pkg'
@@ -144,7 +145,7 @@ def generate_pkg(
             config.size_metric(), config.size_imperial(), keywords,
         ))
         lines.append(' (author "{}")'.format(author))
-        lines.append(' (version "0.3")')
+        lines.append(' (version "{}")'.format(version))
         lines.append(' (created {})'.format(create_date or now()))
         lines.append(' (deprecated false)')
         lines.append(' (category {})'.format(pkgcat))
@@ -387,6 +388,7 @@ if __name__ == '__main__':
         ],
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,chip,generic',
+        version='0.3.1',
         create_date='2018-12-19T00:08:03Z',
     )
     # J-Lead resistors (RESJ)
@@ -402,6 +404,7 @@ if __name__ == '__main__':
         ],
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,j-lead,generic',
+        version='0.3.1',
         create_date='2019-01-04T23:06:17Z',
     )
     _make('out/chip/dev')
