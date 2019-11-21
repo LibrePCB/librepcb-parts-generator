@@ -184,22 +184,22 @@ def generate_pkg(
             lines.append('  (description "")')
 
             # Pads
+            # Note: We are using the gap from the actual resistors (Samsung), but calculate
+            # the protrusion (toe and side) based on IPC7351.
+            pad_width = config.width + get_by_density(config.length, density_level, 'side')
+            pad_toe = get_by_density(config.length, density_level, 'toe') + toe_extension
+            pad_length = (config.length - config.gap) / 2 + pad_toe
+            pad_dx = (config.gap / 2 + pad_length / 2)  # x offset (delta-x)
             for p in [0, 1]:
                 pad_uuid = uuid_pads[p - 1]
                 sign = -1 if p == 1 else 1
-                # Note: We are using the gap from the actual resistors (Samsung), but calculate
-                # the protrusion (toe and side) based on IPC7351.
-                pad_width = config.width + get_by_density(config.length, density_level, 'side')
-                pad_toe = get_by_density(config.length, density_level, 'toe') + toe_extension
-                pad_length = (config.length - config.gap) / 2 + pad_toe
-                dx_v = sign * (config.gap / 2 + pad_length / 2)  # x offset (delta-x)
                 lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
                 lines.append('   (position {} 0.0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                    ff(dx_v),
+                    ff(sign * pad_dx),
                     ff(pad_length),
                     ff(pad_width),
                 ))
-                max_x = max(max_x, pad_length / 2 + dx_v)
+                max_x = max(max_x, pad_length / 2 + sign * pad_dx)
                 lines.append('  )')
 
             # Documentation
@@ -249,7 +249,7 @@ def generate_pkg(
                 lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy))
                 lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))
                 lines.append('  )')
-                max_y = max(max_y, config.width / 2 + silk_lw)
+                max_y = max(max_y, config.width / 2)
 
             # Courtyard
             courtyard_excess = get_by_density(config.length, density_level, 'courtyard')
