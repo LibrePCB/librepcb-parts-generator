@@ -96,11 +96,27 @@ class ChipConfig:
         return self._size_imperial
 
 
+class PolarizationConfig:
+    def __init__(
+        self,
+        *,
+        name_marked: str,
+        id_marked: str,
+        name_unmarked: str,
+        id_unmarked: str,
+    ):
+        self.name_marked = name_marked
+        self.id_marked = id_marked
+        self.name_unmarked = name_unmarked
+        self.id_unmarked = id_unmarked
+
+
 def generate_pkg(
     dirpath: str,
     author: str,
     name: str,
     description: str,
+    polarization: Optional[PolarizationConfig],
     configs: Iterable[ChipConfig],
     pkgcat: str,
     keywords: str,
@@ -133,7 +149,13 @@ def generate_pkg(
 
         # UUIDs
         uuid_pkg = _uuid('pkg')
-        uuid_pads = [_uuid('pad-1'), _uuid('pad-2')]
+        if polarization:
+            uuid_pads = [
+                _uuid('pad-{}'.format(polarization.id_marked)),
+                _uuid('pad-{}'.format(polarization.id_unmarked)),
+            ]
+        else:
+            uuid_pads = [_uuid('pad-1'), _uuid('pad-2')]
 
         print('Generating pkg "{}": {}'.format(full_name, uuid_pkg))
 
@@ -149,8 +171,12 @@ def generate_pkg(
         lines.append(' (created {})'.format(create_date or now()))
         lines.append(' (deprecated false)')
         lines.append(' (category {})'.format(pkgcat))
-        lines.append(' (pad {} (name "1"))'.format(uuid_pads[0]))
-        lines.append(' (pad {} (name "2"))'.format(uuid_pads[1]))
+        if polarization:
+            lines.append(' (pad {} (name "{}"))'.format(uuid_pads[0], polarization.name_marked))
+            lines.append(' (pad {} (name "{}"))'.format(uuid_pads[1], polarization.name_unmarked))
+        else:
+            lines.append(' (pad {} (name "1"))'.format(uuid_pads[0]))
+            lines.append(' (pad {} (name "2"))'.format(uuid_pads[1]))
 
         def add_footprint_variant(key: str, name: str, density_level: str, toe_extension: float) -> None:
             uuid_footprint = _uuid('footprint-{}'.format(key))
@@ -237,19 +263,30 @@ def generate_pkg(
 
             # Silkscreen
             if config.length > 1.0:
-                dx = ff(config.gap / 2 - silk_lw / 2 - silkscreen_clearance)
-                dy = ff(config.width / 2 + silk_lw / 2)
-                lines.append('  (polygon {} (layer {})'.format(uuid_silkscreen_top, 'top_placement'))
-                lines.append('   (width {}) (fill false) (grab_area false)'.format(silk_lw))
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))
-                lines.append('  )')
-                lines.append('  (polygon {} (layer {})'.format(uuid_silkscreen_bot, 'top_placement'))
-                lines.append('   (width {}) (fill false) (grab_area false)'.format(silk_lw))
-                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy))
-                lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))
-                lines.append('  )')
-                max_y = max(max_y, config.width / 2)
+                if polarization:
+                    dx_unmarked = pad_dx + pad_length / 2
+                    dx_marked = dx_unmarked + silk_lw / 2 + silkscreen_clearance
+                    dy = ff(pad_width / 2 + silk_lw / 2 + silkscreen_clearance)
+                    lines.append('  (polygon {} (layer {})'.format(uuid_silkscreen_top, 'top_placement'))
+                    lines.append('   (width {}) (fill false) (grab_area false)'.format(silk_lw))
+                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(dx_unmarked), dy))
+                    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(dx_marked), dy))
+                    lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(ff(dx_marked), dy))
+                    lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(ff(dx_unmarked), dy))
+                    lines.append('  )')
+                else:
+                    dx = ff(config.gap / 2 - silk_lw / 2 - silkscreen_clearance)
+                    dy = ff(config.width / 2 + silk_lw / 2)
+                    lines.append('  (polygon {} (layer {})'.format(uuid_silkscreen_top, 'top_placement'))
+                    lines.append('   (width {}) (fill false) (grab_area false)'.format(silk_lw))
+                    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))
+                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))
+                    lines.append('  )')
+                    lines.append('  (polygon {} (layer {})'.format(uuid_silkscreen_bot, 'top_placement'))
+                    lines.append('   (width {}) (fill false) (grab_area false)'.format(silk_lw))
+                    lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy))
+                    lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))
+                    lines.append('  )')
 
             # Courtyard
             courtyard_excess = get_by_density(config.length, density_level, 'courtyard')
@@ -372,6 +409,7 @@ if __name__ == '__main__':
         name='RESC{size_metric} ({size_imperial})',
         description='Generic chip resistor {size_metric} (imperial {size_imperial}).\\n\\n'
                     'Length: {length}mm\\nWidth: {width}mm',
+        polarization=None,
         configs=[
             # Configuration: Values taken from Samsung specs.
             #        imperial, len, wid,  hght, gap
@@ -398,6 +436,7 @@ if __name__ == '__main__':
         name='RESJ{size_metric} ({size_imperial})',
         description='Generic J-lead resistor {size_metric} (imperial {size_imperial}).\\n\\n'
                     'Length: {length}mm\\nWidth: {width}mm',
+        polarization=None,
         configs=[
             #        imperial, len,   wid,  hght, gap
             ChipConfig('4527', 11.56, 6.98, 5.84, 5.2),
@@ -407,6 +446,7 @@ if __name__ == '__main__':
         version='0.3.2',
         create_date='2019-01-04T23:06:17Z',
     )
+    # Generic devices
     _make('out/chip/dev')
     generate_dev(
         dirpath='out/chip/dev',
