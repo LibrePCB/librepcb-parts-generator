@@ -75,22 +75,77 @@ def uuid(category: str, full_name: str, identifier: str, create: bool = True) ->
 
 
 class BodyDimensions:
-    def __init__(self, length: float, width: float, height: float):
+    """
+    Dimensions of the physical body.
+    """
+    def __init__(
+        self,
+        length: float,
+        width: float,
+        height: float,
+        gap: Optional[float] = None,
+        lead_width: Optional[float] = None,
+    ):
         self.length = length
         self.width = width
         self.height = height
+        self.gap = gap
+        self.lead_width = lead_width
+
+    @property
+    def lead_length(self) -> Optional[float]:
+        if self.gap:
+            return (self.length - self.gap) / 2
+        return None
+
+
+class FootprintDimensions:
+    """
+    Information about the footprint itself.
+
+     L
+    +--+   +--+
+    |  | G |  | W
+    +--+   +--+
+
+    L = Length, W = Width, G = Gap
+
+    """
+    def __init__(self, pad_length: float, pad_width: float, pad_gap: float):
+        self.pad_length = pad_length
+        self.pad_width = pad_width
+        self.pad_gap = pad_gap
 
 
 class ChipConfig:
+    """
+    Chip configuration.
+
+    Note: Specify either footprints or gap, but not both.
+
+    """
     def __init__(
         self,
         size_imperial: str,  # String, e.g. "1206"
         body: BodyDimensions,
-        gap: float,
+        *,
+        footprints: Optional[Dict[str, FootprintDimensions]] = None,
+        gap: Optional[float] = None,
+        meta: Optional[Dict[str, str]] = None  # Metadata that can be used in description
     ):
         self._size_imperial = size_imperial
         self.body = body
+        self.footprints = footprints
         self.gap = gap
+        self.meta = meta
+        if self.footprints and self.gap:
+            raise ValueError('Only set either footprints or gap, but not both')
+        if not self.footprints and not self.gap:
+            raise ValueError('Set footprints or gap')
+        if self.footprints:
+            for density_level in self.footprints.keys():
+                if density_level not in ['A', 'B', 'C']:
+                    raise ValueError('Invalid density level: {}'.format(density_level))
 
     def size_metric(self) -> str:
         return str(int(self.body.length * 10)).rjust(2, '0') + \
@@ -107,7 +162,7 @@ class PolarizationConfig:
         name_marked: str,
         id_marked: str,
         name_unmarked: str,
-        id_unmarked: str,
+        id_unmarked: str
     ):
         self.name_marked = name_marked
         self.id_marked = id_marked
@@ -125,7 +180,7 @@ def generate_pkg(
     pkgcat: str,
     keywords: str,
     version: str,
-    create_date: Optional[str],
+    create_date: Optional[str]
 ) -> None:
     category = 'pkg'
     for config in configs:
@@ -140,12 +195,15 @@ def generate_pkg(
             'length': fd(config.body.length),
             'width': fd(config.body.width),
             'height': fd(config.body.height),
+            'lead_length': fd(config.body.lead_length) if config.body.lead_length else None,
+            'lead_width': fd(config.body.lead_width) if config.body.lead_width else None,
         }
         fmt_params_desc = {
             **fmt_params,
             'length': config.body.length,
             'width': config.body.width,
             'height': config.body.height,
+            'meta': config.meta,
         }
         full_name = name.format(**fmt_params_name)
         full_desc = description.format(**fmt_params_desc)
@@ -169,9 +227,9 @@ def generate_pkg(
         lines.append('(librepcb_package {}'.format(uuid_pkg))
         lines.append(' (name "{}")'.format(full_name))
         lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_desc, generator))
-        lines.append(' (keywords "{},{},{}")'.format(
+        lines.append(' (keywords "{}")'.format(','.join(filter(None, [
             config.size_metric(), config.size_imperial(), keywords,
-        ))
+        ]))))
         lines.append(' (author "{}")'.format(author))
         lines.append(' (version "{}")'.format(version))
         lines.append(' (created {})'.format(create_date or now()))
@@ -184,7 +242,23 @@ def generate_pkg(
             lines.append(' (pad {} (name "1"))'.format(uuid_pads[0]))
             lines.append(' (pad {} (name "2"))'.format(uuid_pads[1]))
 
-        def add_footprint_variant(key: str, name: str, density_level: str, toe_extension: float) -> None:
+        def add_footprint_variant(
+            key: str,
+            name: str,
+            density_level: str,
+            *,
+            gap: Optional[float] = None,
+            footprint: Optional[FootprintDimensions] = None
+        ) -> None:
+            """
+            Generate a footprint variant.
+
+            Note: Either the toe extension or footprint dimensions must be set.
+            """
+            if gap is not None and footprint is not None:
+                raise ValueError('Only toe extension or footprint may be set')
+            if gap is None and footprint is None:
+                raise ValueError('Either toe extension or footprint must be set')
             uuid_footprint = _uuid('footprint-{}'.format(key))
             uuid_text_name = _uuid('text-name-{}'.format(key))
             uuid_text_value = _uuid('text-value-{}'.format(key))
@@ -195,6 +269,7 @@ def generate_pkg(
             uuid_outline_bot = _uuid('polygon-outline-bot-{}'.format(key))
             uuid_outline_left = _uuid('polygon-outline-left-{}'.format(key))
             uuid_outline_right = _uuid('polygon-outline-right-{}'.format(key))
+            uuid_outline_around = _uuid('polygon-outline-around-{}'.format(key))
 
             # Max boundary
             max_x = 0.0
@@ -216,12 +291,19 @@ def generate_pkg(
             lines.append('  (description "")')
 
             # Pads
-            # Note: We are using the gap from the actual resistors (Samsung), but calculate
-            # the protrusion (toe and side) based on IPC7351.
-            pad_width = config.body.width + get_by_density(config.body.length, density_level, 'side')
-            pad_toe = get_by_density(config.body.length, density_level, 'toe') + toe_extension
-            pad_length = (config.body.length - config.gap) / 2 + pad_toe
-            pad_dx = (config.gap / 2 + pad_length / 2)  # x offset (delta-x)
+            if footprint is not None:
+                pad_width = footprint.pad_width
+                pad_length = footprint.pad_length
+                pad_gap = footprint.pad_gap
+                pad_dx = (pad_gap / 2 + pad_length / 2)  # x offset (delta-x)
+            elif gap is not None:
+                pad_gap = gap
+                pad_width = config.body.width + get_by_density(config.body.length, density_level, 'side')
+                pad_toe = get_by_density(config.body.length, density_level, 'toe')
+                pad_length = (config.body.length - gap) / 2 + pad_toe
+                pad_dx = (gap / 2 + pad_length / 2)  # x offset (delta-x)
+            else:
+                raise ValueError('Either footprint or gap must be set')
             for p in [0, 1]:
                 pad_uuid = uuid_pads[p - 1]
                 sign = -1 if p == 1 else 1
@@ -233,46 +315,80 @@ def generate_pkg(
                 ))
                 max_x = max(max_x, pad_length / 2 + sign * pad_dx)
                 lines.append('  )')
+            max_y = max(max_y, config.body.width / 2)
+            max_y = max(max_y, pad_width / 2)
 
             # Documentation
-            half_gap = ff(config.gap / 2)
-            dx = ff(config.body.length / 2)
-            dy = ff(config.body.width / 2)
-            lines.append('  (polygon {} (layer {})'.format(uuid_outline_left, 'top_documentation'))
-            lines.append('   (width 0.0) (fill true) (grab_area false)')
-            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))  # NW
-            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(half_gap, dy))  # NE
-            lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(half_gap, dy))  # SE
-            lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy))  # SW
-            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))  # NW
-            lines.append('  )')
-            lines.append('  (polygon {} (layer {})'.format(uuid_outline_right, 'top_documentation'))
-            lines.append('   (width 0.0) (fill true) (grab_area false)')
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))  # NE
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(half_gap, dy))  # NW
-            lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))  # SW
-            lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))  # SE
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))  # NE
-            lines.append('  )')
-            dy = ff(config.body.width / 2 - doc_lw / 2)
-            lines.append('  (polygon {} (layer {})'.format(uuid_outline_top, 'top_documentation'))
-            lines.append('   (width {}) (fill false) (grab_area false)'.format(doc_lw))
-            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(half_gap, dy))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(half_gap, dy))
-            lines.append('  )')
-            lines.append('  (polygon {} (layer {})'.format(uuid_outline_bot, 'top_documentation'))
-            lines.append('   (width {}) (fill false) (grab_area false)'.format(doc_lw))
-            lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(half_gap, dy))
-            lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))
-            lines.append('  )')
-            max_y = max(max_y, config.body.width / 2)
+            half_gap = ff((config.body.gap or pad_gap) / 2)
+            if footprint is None:
+                # We assume that leads are across the entire width of the part (e.g. MLCC)
+                dx = ff(config.body.length / 2)
+                dy = ff(config.body.width / 2)
+                lines.append('  (polygon {} (layer {})'.format(uuid_outline_left, 'top_documentation'))
+                lines.append('   (width 0.0) (fill true) (grab_area false)')
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))  # NW
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(half_gap, dy))  # NE
+                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(half_gap, dy))  # SE
+                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy))  # SW
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))  # NW
+                lines.append('  )')
+                lines.append('  (polygon {} (layer {})'.format(uuid_outline_right, 'top_documentation'))
+                lines.append('   (width 0.0) (fill true) (grab_area false)')
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))  # NE
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(half_gap, dy))  # NW
+                lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))  # SW
+                lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))  # SE
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))  # NE
+                lines.append('  )')
+                dy = ff(config.body.width / 2 - doc_lw / 2)
+                lines.append('  (polygon {} (layer {})'.format(uuid_outline_top, 'top_documentation'))
+                lines.append('   (width {}) (fill false) (grab_area false)'.format(doc_lw))
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(half_gap, dy))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(half_gap, dy))
+                lines.append('  )')
+                lines.append('  (polygon {} (layer {})'.format(uuid_outline_bot, 'top_documentation'))
+                lines.append('   (width {}) (fill false) (grab_area false)'.format(doc_lw))
+                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(half_gap, dy))
+                lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))
+                lines.append('  )')
+            else:
+                # We have more precise information about the lead (e.g. molded
+                # packages where leads are not the full width of the package).
+                dx = ff(config.body.length / 2 - doc_lw / 2)
+                dy = ff(config.body.width / 2 - doc_lw / 2)
+                lines.append('  (polygon {} (layer {})'.format(uuid_outline_around, 'top_documentation'))
+                lines.append('   (width {}) (fill false) (grab_area false)'.format(doc_lw))
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))
+                lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))
+                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy))
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))
+                lines.append('  )')
+                dx = ff(config.body.length / 2)
+                dy = ff((config.body.lead_width or footprint.pad_width) / 2)
+                lines.append('  (polygon {} (layer {})'.format(uuid_outline_left, 'top_documentation'))
+                lines.append('   (width 0.0) (fill true) (grab_area false)')
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(half_gap, dy))
+                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(half_gap, dy))
+                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy))
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))
+                lines.append('  )')
+                lines.append('  (polygon {} (layer {})'.format(uuid_outline_right, 'top_documentation'))
+                lines.append('   (width 0.0) (fill true) (grab_area false)')
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(half_gap, dy))
+                lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))
+                lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))
+                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))
+                lines.append('  )')
 
             # Silkscreen
             if config.body.length > 1.0:
                 if polarization:
                     dx_unmarked = pad_dx + pad_length / 2
                     dx_marked = dx_unmarked + silk_lw / 2 + silkscreen_clearance
-                    dy = ff(pad_width / 2 + silk_lw / 2 + silkscreen_clearance)
+                    dy = ff(max_y + silk_lw / 2 + silkscreen_clearance)
                     lines.append('  (polygon {} (layer {})'.format(uuid_silkscreen_top, 'top_placement'))
                     lines.append('   (width {}) (fill false) (grab_area false)'.format(silk_lw))
                     lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(dx_unmarked), dy))
@@ -281,7 +397,9 @@ def generate_pkg(
                     lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(ff(dx_unmarked), dy))
                     lines.append('  )')
                 else:
-                    dx = ff(config.gap / 2 - silk_lw / 2 - silkscreen_clearance)
+                    assert gap is not None, \
+                        "Support for non-polarized packages with irregular pads not yet fully implemented"
+                    dx = ff(gap / 2 - silk_lw / 2 - silkscreen_clearance)
                     dy = ff(config.body.width / 2 + silk_lw / 2)
                     lines.append('  (polygon {} (layer {})'.format(uuid_silkscreen_top, 'top_placement'))
                     lines.append('   (width {}) (fill false) (grab_area false)'.format(silk_lw))
@@ -325,9 +443,21 @@ def generate_pkg(
 
             lines.append(' )')
 
-        add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B', 0.0)
-        add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A', 0.0)
-        # add_footprint_variant('density~hs', 'Hand Soldering', 'A', handsoldering_toe_extension)
+        if config.gap:
+            add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B', gap=config.gap)
+            add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A', gap=config.gap)
+        elif config.footprints:
+            a = config.footprints.get('A')
+            b = config.footprints.get('B')
+            c = config.footprints.get('C')
+            if b:
+                add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B', footprint=b)
+            if a:
+                add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A', footprint=a)
+            if c:
+                add_footprint_variant('density~c', 'Density Level C (min protrusion)', 'C', footprint=c)
+        else:
+            raise ValueError('Either gap or footprints must be set')
 
         lines.append(')')
 
@@ -352,7 +482,7 @@ def generate_dev(
     signals: Iterable[str],
     keywords: str,
     version: str,
-    create_date: Optional[str],
+    create_date: Optional[str]
 ) -> None:
     category = 'dev'
     for (size_metric, size_imperial, pkg_name) in packages:
@@ -418,17 +548,16 @@ if __name__ == '__main__':
         polarization=None,
         configs=[
             # Configuration: Values taken from Samsung specs.
-            #        imperial,  l,w,h,                           gap
-            ChipConfig('01005', BodyDimensions(.4,   .2,  0.15), 0.2),   # noqa
-            ChipConfig('0201',  BodyDimensions(.6,   .3,  0.26), 0.28),  # noqa
-            ChipConfig('0402',  BodyDimensions(1.0,  .5,  0.35), 0.5),   # noqa
-            ChipConfig('0603',  BodyDimensions(1.6,  .8,  0.55), 0.8),   # noqa
-            ChipConfig('0805',  BodyDimensions(2.0, 1.25, 0.70), 1.2),   # noqa
-            ChipConfig('1206',  BodyDimensions(3.2, 1.6,  0.70), 1.8),   # noqa
-            ChipConfig('1210',  BodyDimensions(3.2, 2.55, 0.70), 1.8),   # noqa
-            ChipConfig('1218',  BodyDimensions(3.2, 4.6,  0.70), 1.8),   # noqa
-            ChipConfig('2010',  BodyDimensions(5.0, 2.5,  0.70), 3.3),   # noqa
-            ChipConfig('2512',  BodyDimensions(6.4, 3.2,  0.70), 4.6),   # noqa
+            ChipConfig('01005', BodyDimensions(.4,   .2,  0.15), gap=0.2),   # noqa
+            ChipConfig('0201',  BodyDimensions(.6,   .3,  0.26), gap=0.28),  # noqa
+            ChipConfig('0402',  BodyDimensions(1.0,  .5,  0.35), gap=0.5),   # noqa
+            ChipConfig('0603',  BodyDimensions(1.6,  .8,  0.55), gap=0.8),   # noqa
+            ChipConfig('0805',  BodyDimensions(2.0, 1.25, 0.70), gap=1.2),   # noqa
+            ChipConfig('1206',  BodyDimensions(3.2, 1.6,  0.70), gap=1.8),   # noqa
+            ChipConfig('1210',  BodyDimensions(3.2, 2.55, 0.70), gap=1.8),   # noqa
+            ChipConfig('1218',  BodyDimensions(3.2, 4.6,  0.70), gap=1.8),   # noqa
+            ChipConfig('2010',  BodyDimensions(5.0, 2.5,  0.70), gap=3.3),   # noqa
+            ChipConfig('2512',  BodyDimensions(6.4, 3.2,  0.70), gap=4.6),   # noqa
         ],
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,chip,generic',
@@ -444,8 +573,7 @@ if __name__ == '__main__':
                     'Length: {length}mm\\nWidth: {width}mm',
         polarization=None,
         configs=[
-            #        imperial, len,   wid,  hght, gap
-            ChipConfig('4527', 11.56, 6.98, 5.84, 5.2),
+            ChipConfig('4527', BodyDimensions(11.56, 6.98, 5.84), gap=5.2),
         ],
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,j-lead,generic',
