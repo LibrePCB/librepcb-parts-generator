@@ -83,19 +83,19 @@ class BodyDimensions:
         length: float,
         width: float,
         height: float,
-        gap: Optional[float] = None,
+        lead_length: Optional[float] = None,
         lead_width: Optional[float] = None,
     ):
         self.length = length
         self.width = width
         self.height = height
-        self.gap = gap
+        self.lead_length = lead_length
         self.lead_width = lead_width
 
     @property
-    def lead_length(self) -> Optional[float]:
-        if self.gap:
-            return (self.length - self.gap) / 2
+    def gap(self) -> Optional[float]:
+        if self.lead_length:
+            return (self.length - 2 * self.lead_length)
         return None
 
 
@@ -207,6 +207,7 @@ def generate_pkg(
         }
         full_name = name.format(**fmt_params_name)
         full_desc = description.format(**fmt_params_desc)
+        full_keywords = keywords.format(**fmt_params_desc).lower()
 
         def _uuid(identifier: str) -> str:
             return uuid(category, full_name, identifier)
@@ -228,7 +229,7 @@ def generate_pkg(
         lines.append(' (name "{}")'.format(full_name))
         lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_desc, generator))
         lines.append(' (keywords "{}")'.format(','.join(filter(None, [
-            config.size_metric(), config.size_imperial(), keywords,
+            config.size_metric(), config.size_imperial(), full_keywords,
         ]))))
         lines.append(' (author "{}")'.format(author))
         lines.append(' (version "{}")'.format(version))
@@ -388,7 +389,10 @@ def generate_pkg(
                 if polarization:
                     dx_unmarked = pad_dx + pad_length / 2
                     dx_marked = dx_unmarked + silk_lw / 2 + silkscreen_clearance
-                    dy = ff(max_y + silk_lw / 2 + silkscreen_clearance)
+                    dy = ff(max(
+                        config.body.width / 2 + silk_lw / 2,  # Based on body width
+                        pad_width / 2 + silk_lw / 2 + silkscreen_clearance,  # Based on pad width
+                    ))
                     lines.append('  (polygon {} (layer {})'.format(uuid_silkscreen_top, 'top_placement'))
                     lines.append('   (width {}) (fill false) (grab_area false)'.format(silk_lw))
                     lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(dx_unmarked), dy))
@@ -579,6 +583,86 @@ if __name__ == '__main__':
         keywords='r,resistor,j-lead,generic',
         version='0.3.2',
         create_date='2019-01-04T23:06:17Z',
+    )
+    # Molded polarized capacitors (CAPPM)
+    # Based on the table "Common Molded Body Tantalum Capacitors" in the IPC7351C draft
+    # and KEMET documentation: https://content.kemet.com/datasheets/KEM_T2005_T491.pdf
+    # (see Table 2: Land Dimensions / Courtyard)
+    generate_pkg(
+        dirpath='out/chip/pkg',
+        author='Danilo B.',
+        name='CAPPM{length}X{width}X{height}L{lead_length}X{lead_width}',
+        description='Generic polarized molded inward-L capacitor (EIA {meta[eia]}).\\n\\n'
+                    'Length: {length}mm\\nWidth: {width}mm\\nMax height: {height}mm\\n\\n'
+                    'EIA Size Code: {meta[eia]}\\n'
+                    'KEMET Case Code: {meta[kemet]}\\nAVX Case Code: {meta[avx]}',
+        polarization=PolarizationConfig(
+            name_marked='+',
+            id_marked='p',
+            name_unmarked='-',
+            id_unmarked='n',
+        ),
+        configs=[
+            ChipConfig('', BodyDimensions(3.2, 1.6, 1.0, 0.8, 1.2), footprints={
+                'A': FootprintDimensions(2.20, 1.35, 0.62),
+                'B': FootprintDimensions(1.80, 1.23, 0.82),
+                'C': FootprintDimensions(1.42, 1.13, 0.98),
+            }, meta={'eia': '3216-10', 'kemet': 'I', 'avx': 'K'}),
+            ChipConfig('', BodyDimensions(3.2, 1.6, 1.2, 0.8, 1.2), footprints={
+                'A': FootprintDimensions(2.20, 1.35, 0.62),
+                'B': FootprintDimensions(1.80, 1.23, 0.82),
+                'C': FootprintDimensions(1.42, 1.13, 0.98),
+            }, meta={'eia': '3216-12', 'kemet': 'S', 'avx': 'S'}),
+            ChipConfig('', BodyDimensions(3.2, 1.6, 1.8, 0.8, 1.2), footprints={
+                'A': FootprintDimensions(2.20, 1.35, 0.62),
+                'B': FootprintDimensions(1.80, 1.23, 0.82),
+                'C': FootprintDimensions(1.42, 1.13, 0.98),
+            }, meta={'eia': '3216-18', 'kemet': 'A', 'avx': 'A'}),
+            ChipConfig('', BodyDimensions(3.5, 2.8, 1.2, 0.8, 2.2), footprints={
+                'A': FootprintDimensions(2.20, 2.35, 0.92),
+                'B': FootprintDimensions(1.80, 2.23, 1.12),
+                'C': FootprintDimensions(1.42, 2.13, 1.28),
+            }, meta={'eia': '3528-12', 'kemet': 'T', 'avx': 'T'}),
+            ChipConfig('', BodyDimensions(3.5, 2.8, 2.1, 0.8, 2.2), footprints={
+                'A': FootprintDimensions(2.21, 2.35, 0.92),
+                'B': FootprintDimensions(1.80, 2.23, 1.12),
+                'C': FootprintDimensions(1.42, 2.13, 1.28),
+            }, meta={'eia': '3528-21', 'kemet': 'B', 'avx': 'B'}),
+            ChipConfig('', BodyDimensions(6.0, 3.2, 1.5, 1.3, 2.2), footprints={
+                'A': FootprintDimensions(2.77, 2.35, 2.37),
+                'B': FootprintDimensions(2.37, 2.23, 2.57),
+                'C': FootprintDimensions(1.99, 2.13, 2.73),
+            }, meta={'eia': '6032-15', 'kemet': 'U', 'avx': 'W'}),
+            ChipConfig('', BodyDimensions(6.0, 3.2, 2.8, 1.3, 2.2), footprints={
+                'A': FootprintDimensions(2.77, 2.35, 2.37),
+                'B': FootprintDimensions(2.37, 2.23, 2.57),
+                'C': FootprintDimensions(1.99, 2.13, 2.73),
+            }, meta={'eia': '6032-28', 'kemet': 'C', 'avx': 'C'}),
+            ChipConfig('', BodyDimensions(7.3, 6.0, 3.8, 1.3, 4.1), footprints={
+                'A': FootprintDimensions(2.77, 4.25, 3.68),
+                'B': FootprintDimensions(2.37, 4.13, 3.87),
+                'C': FootprintDimensions(1.99, 4.03, 4.03),
+            }, meta={'eia': '7360-38', 'kemet': 'E', 'avx': 'V'}),
+            ChipConfig('', BodyDimensions(7.3, 4.3, 2.0, 1.3, 2.4), footprints={
+                'A': FootprintDimensions(2.77, 2.55, 3.67),
+                'B': FootprintDimensions(2.37, 2.43, 3.87),
+                'C': FootprintDimensions(1.99, 2.33, 4.03),
+            }, meta={'eia': '7343-20', 'kemet': 'V', 'avx': 'Y'}),
+            ChipConfig('', BodyDimensions(7.3, 4.3, 3.1, 1.3, 2.4), footprints={
+                'A': FootprintDimensions(2.77, 2.55, 3.67),
+                'B': FootprintDimensions(2.37, 2.43, 3.87),
+                'C': FootprintDimensions(1.99, 2.33, 4.03),
+            }, meta={'eia': '7343-31', 'kemet': 'D', 'avx': 'D'}),
+            ChipConfig('', BodyDimensions(7.3, 4.3, 4.3, 1.3, 2.4), footprints={
+                'A': FootprintDimensions(2.77, 2.55, 3.67),
+                'B': FootprintDimensions(2.37, 2.43, 3.87),
+                'C': FootprintDimensions(1.99, 2.33, 4.03),
+            }, meta={'eia': '7343-43', 'kemet': 'X', 'avx': 'E'}),
+        ],
+        pkgcat='414f873f-4099-47fd-8526-bdd8419de581',
+        keywords='c,capacitor,j-lead,inward-l,molded,generic,kemet {meta[kemet]},avx {meta[avx]}',
+        version='0.1',
+        create_date='2019-11-18T21:56:00Z',
     )
     # Generic devices
     _make('out/chip/dev')
