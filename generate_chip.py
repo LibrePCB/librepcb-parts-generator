@@ -74,23 +74,27 @@ def uuid(category: str, full_name: str, identifier: str, create: bool = True) ->
     return uuid_cache[key]
 
 
+class BodyDimensions:
+    def __init__(self, length: float, width: float, height: float):
+        self.length = length
+        self.width = width
+        self.height = height
+
+
 class ChipConfig:
     def __init__(
         self,
         size_imperial: str,  # String, e.g. "1206"
-        length: float,
-        width: float,
-        height: float,
+        body: BodyDimensions,
         gap: float,
     ):
         self._size_imperial = size_imperial
-        self.length = length
-        self.width = width
-        self.height = height
+        self.body = body
         self.gap = gap
 
     def size_metric(self) -> str:
-        return str(int(self.length * 10)).rjust(2, '0') + str(int(self.width * 10)).rjust(2, '0')
+        return str(int(self.body.length * 10)).rjust(2, '0') + \
+            str(int(self.body.width * 10)).rjust(2, '0')
 
     def size_imperial(self) -> str:
         return self._size_imperial
@@ -133,13 +137,15 @@ def generate_pkg(
         }  # type: Dict[str, Any]
         fmt_params_name = {
             **fmt_params,
-            'height': fd(config.height),
+            'length': fd(config.body.length),
+            'width': fd(config.body.width),
+            'height': fd(config.body.height),
         }
         fmt_params_desc = {
             **fmt_params,
-            'length': config.length,
-            'width': config.width,
-            'height': config.height,
+            'length': config.body.length,
+            'width': config.body.width,
+            'height': config.body.height,
         }
         full_name = name.format(**fmt_params_name)
         full_desc = description.format(**fmt_params_desc)
@@ -195,10 +201,10 @@ def generate_pkg(
             max_y = 0.0
 
             # Line width adjusted for size of element
-            if config.length >= 2.0:
+            if config.body.length >= 2.0:
                 silk_lw = line_width
                 doc_lw = line_width
-            elif config.length >= 1.0:
+            elif config.body.length >= 1.0:
                 silk_lw = line_width_thin
                 doc_lw = line_width_thin
             else:
@@ -212,9 +218,9 @@ def generate_pkg(
             # Pads
             # Note: We are using the gap from the actual resistors (Samsung), but calculate
             # the protrusion (toe and side) based on IPC7351.
-            pad_width = config.width + get_by_density(config.length, density_level, 'side')
-            pad_toe = get_by_density(config.length, density_level, 'toe') + toe_extension
-            pad_length = (config.length - config.gap) / 2 + pad_toe
+            pad_width = config.body.width + get_by_density(config.body.length, density_level, 'side')
+            pad_toe = get_by_density(config.body.length, density_level, 'toe') + toe_extension
+            pad_length = (config.body.length - config.gap) / 2 + pad_toe
             pad_dx = (config.gap / 2 + pad_length / 2)  # x offset (delta-x)
             for p in [0, 1]:
                 pad_uuid = uuid_pads[p - 1]
@@ -230,8 +236,8 @@ def generate_pkg(
 
             # Documentation
             half_gap = ff(config.gap / 2)
-            dx = ff(config.length / 2)
-            dy = ff(config.width / 2)
+            dx = ff(config.body.length / 2)
+            dy = ff(config.body.width / 2)
             lines.append('  (polygon {} (layer {})'.format(uuid_outline_left, 'top_documentation'))
             lines.append('   (width 0.0) (fill true) (grab_area false)')
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))  # NW
@@ -248,7 +254,7 @@ def generate_pkg(
             lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))  # SE
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))  # NE
             lines.append('  )')
-            dy = ff(config.width / 2 - doc_lw / 2)
+            dy = ff(config.body.width / 2 - doc_lw / 2)
             lines.append('  (polygon {} (layer {})'.format(uuid_outline_top, 'top_documentation'))
             lines.append('   (width {}) (fill false) (grab_area false)'.format(doc_lw))
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(half_gap, dy))
@@ -259,10 +265,10 @@ def generate_pkg(
             lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(half_gap, dy))
             lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))
             lines.append('  )')
-            max_y = max(max_y, config.width / 2)
+            max_y = max(max_y, config.body.width / 2)
 
             # Silkscreen
-            if config.length > 1.0:
+            if config.body.length > 1.0:
                 if polarization:
                     dx_unmarked = pad_dx + pad_length / 2
                     dx_marked = dx_unmarked + silk_lw / 2 + silkscreen_clearance
@@ -276,7 +282,7 @@ def generate_pkg(
                     lines.append('  )')
                 else:
                     dx = ff(config.gap / 2 - silk_lw / 2 - silkscreen_clearance)
-                    dy = ff(config.width / 2 + silk_lw / 2)
+                    dy = ff(config.body.width / 2 + silk_lw / 2)
                     lines.append('  (polygon {} (layer {})'.format(uuid_silkscreen_top, 'top_placement'))
                     lines.append('   (width {}) (fill false) (grab_area false)'.format(silk_lw))
                     lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))
@@ -289,7 +295,7 @@ def generate_pkg(
                     lines.append('  )')
 
             # Courtyard
-            courtyard_excess = get_by_density(config.length, density_level, 'courtyard')
+            courtyard_excess = get_by_density(config.body.length, density_level, 'courtyard')
             lines.extend(indent(2, generate_courtyard(
                 uuid=uuid_courtyard,
                 max_x=max_x,
@@ -299,11 +305,11 @@ def generate_pkg(
             )))
 
             # Labels
-            if config.width < 2.0:
+            if config.body.width < 2.0:
                 offset = label_offset_thin
             else:
                 offset = label_offset
-            dy = ff(config.width / 2 + offset)  # y offset (delta-y)
+            dy = ff(config.body.width / 2 + offset)  # y offset (delta-y)
             text_attrs = '(height {}) (stroke_width 0.2) ' \
                          '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
             lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
@@ -412,17 +418,17 @@ if __name__ == '__main__':
         polarization=None,
         configs=[
             # Configuration: Values taken from Samsung specs.
-            #        imperial, len, wid,  hght, gap
-            ChipConfig('01005', .4,  .2,  0.15, 0.2),   # noqa
-            ChipConfig('0201',  .6,  .3,  0.26, 0.28),  # noqa
-            ChipConfig('0402', 1.0,  .5,  0.35, 0.5),   # noqa
-            ChipConfig('0603', 1.6,  .8,  0.55, 0.8),   # noqa
-            ChipConfig('0805', 2.0, 1.25, 0.70, 1.2),   # noqa
-            ChipConfig('1206', 3.2, 1.6,  0.70, 1.8),   # noqa
-            ChipConfig('1210', 3.2, 2.55, 0.70, 1.8),   # noqa
-            ChipConfig('1218', 3.2, 4.6,  0.70, 1.8),   # noqa
-            ChipConfig('2010', 5.0, 2.5,  0.70, 3.3),   # noqa
-            ChipConfig('2512', 6.4, 3.2,  0.70, 4.6),   # noqa
+            #        imperial,  l,w,h,                           gap
+            ChipConfig('01005', BodyDimensions(.4,   .2,  0.15), 0.2),   # noqa
+            ChipConfig('0201',  BodyDimensions(.6,   .3,  0.26), 0.28),  # noqa
+            ChipConfig('0402',  BodyDimensions(1.0,  .5,  0.35), 0.5),   # noqa
+            ChipConfig('0603',  BodyDimensions(1.6,  .8,  0.55), 0.8),   # noqa
+            ChipConfig('0805',  BodyDimensions(2.0, 1.25, 0.70), 1.2),   # noqa
+            ChipConfig('1206',  BodyDimensions(3.2, 1.6,  0.70), 1.8),   # noqa
+            ChipConfig('1210',  BodyDimensions(3.2, 2.55, 0.70), 1.8),   # noqa
+            ChipConfig('1218',  BodyDimensions(3.2, 4.6,  0.70), 1.8),   # noqa
+            ChipConfig('2010',  BodyDimensions(5.0, 2.5,  0.70), 3.3),   # noqa
+            ChipConfig('2512',  BodyDimensions(6.4, 3.2,  0.70), 4.6),   # noqa
         ],
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,chip,generic',
