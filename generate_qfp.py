@@ -480,7 +480,7 @@ def generate_pkg(
             outline_x_offset = config.body_size_x / 2 - line_width / 2
             outline_y_offset = config.body_size_y / 2 - line_width / 2
             lines.append('  (polygon {} (layer top_documentation)'.format(uuid_outline))
-            lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
+            lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
             oxo = ff(outline_x_offset)  # Used for shorter code lines below :)
             oyo = ff(outline_y_offset)  # Used for shorter code lines below :)
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, oyo))  # NE
@@ -563,7 +563,7 @@ if __name__ == '__main__':
         author='Danilo B.',
         configs=configs,
         pkgcat='3363b8b1-6fa8-4041-962e-5f839cfd86b7',
-        version='0.3',
+        version='0.3.1',
         create_date='2019-02-07T21:03:03Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
