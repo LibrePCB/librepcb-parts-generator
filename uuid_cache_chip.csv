@@ -39,6 +39,9 @@ pkg-cappm320x160x100l80x120-polygon-outline-right-density~c,fc8d1304-1db8-444a-9
 pkg-cappm320x160x100l80x120-polygon-outline-top-density~a,6c38f31a-254c-42e8-b4c4-7b3cbc8626c3
 pkg-cappm320x160x100l80x120-polygon-outline-top-density~b,76fa15ff-fa81-445e-9588-2d034f501e7a
 pkg-cappm320x160x100l80x120-polygon-outline-top-density~c,7cbe58f8-62c3-4efc-90ff-2c0a155715e9
+pkg-cappm320x160x100l80x120-polygon-polarization-mark-density~a,003dcec7-ddcf-4e48-a172-1da83b8a58e3
+pkg-cappm320x160x100l80x120-polygon-polarization-mark-density~b,029c15fb-7e57-49ab-b074-f33017515139
+pkg-cappm320x160x100l80x120-polygon-polarization-mark-density~c,bdb5b055-016f-489d-b8b7-890deca8d893
 pkg-cappm320x160x100l80x120-text-name-density~a,551d8e76-9ad9-4783-9095-531d6c98842d
 pkg-cappm320x160x100l80x120-text-name-density~b,3d867cb6-8080-4685-8800-949538072b94
 pkg-cappm320x160x100l80x120-text-name-density~c,4d68d435-3e0a-4d26-bdbb-b8f550d55393
@@ -75,6 +78,9 @@ pkg-cappm320x160x120l80x120-polygon-outline-right-density~c,e1c11e4e-2ae1-49ab-a
 pkg-cappm320x160x120l80x120-polygon-outline-top-density~a,e9d1ce65-908b-4b9b-931b-a655d97ff539
 pkg-cappm320x160x120l80x120-polygon-outline-top-density~b,113db02a-42d8-466b-959d-88d1cb43fc6f
 pkg-cappm320x160x120l80x120-polygon-outline-top-density~c,7c969468-80d3-4e7d-a4e8-8cf65b5a2568
+pkg-cappm320x160x120l80x120-polygon-polarization-mark-density~a,184217c6-8817-46e6-8da1-ffdca22f1321
+pkg-cappm320x160x120l80x120-polygon-polarization-mark-density~b,1072205c-3600-4e31-b670-883b59fa35ff
+pkg-cappm320x160x120l80x120-polygon-polarization-mark-density~c,1a8bff67-0451-480e-8847-20dcb8c5b963
 pkg-cappm320x160x120l80x120-text-name-density~a,7c2d3a3a-722a-40fc-b01a-ff7168f54914
 pkg-cappm320x160x120l80x120-text-name-density~b,6f478f5a-af56-4d0f-a924-4509503514cc
 pkg-cappm320x160x120l80x120-text-name-density~c,b6e0f69e-9c04-4e06-bf69-0b7c1b806a2c
@@ -111,6 +117,9 @@ pkg-cappm320x160x180l80x120-polygon-outline-right-density~c,ae8980db-6412-4327-9
 pkg-cappm320x160x180l80x120-polygon-outline-top-density~a,9b8e2a31-9f50-4e2f-a85c-f03c007e8940
 pkg-cappm320x160x180l80x120-polygon-outline-top-density~b,e133ea11-b912-4ae9-9f31-49deaa6e6a23
 pkg-cappm320x160x180l80x120-polygon-outline-top-density~c,8d157769-cf09-4c30-b673-843af679e8bd
+pkg-cappm320x160x180l80x120-polygon-polarization-mark-density~a,9696580a-575a-44e9-a982-d697be23db62
+pkg-cappm320x160x180l80x120-polygon-polarization-mark-density~b,513aad4f-8aba-4300-8cd0-6a5fb6eaa6ec
+pkg-cappm320x160x180l80x120-polygon-polarization-mark-density~c,4440197c-01cd-4107-9d03-98c18656b06d
 pkg-cappm320x160x180l80x120-text-name-density~a,5382d2a5-e2cc-41be-8cd6-cd3ed641469e
 pkg-cappm320x160x180l80x120-text-name-density~b,23f2019f-5bad-401a-b52a-386c5c5ec494
 pkg-cappm320x160x180l80x120-text-name-density~c,ae74f101-e68a-4fe0-8e4e-2a8263224ccc
@@ -147,6 +156,9 @@ pkg-cappm350x280x120l80x220-polygon-outline-right-density~c,e2b00ac0-9b6c-4e25-a
 pkg-cappm350x280x120l80x220-polygon-outline-top-density~a,5a54471a-a34f-495a-8595-be53c416cf04
 pkg-cappm350x280x120l80x220-polygon-outline-top-density~b,7ecc080d-e836-4653-a5f5-6997f8f7283b
 pkg-cappm350x280x120l80x220-polygon-outline-top-density~c,8027865d-9791-454f-bf9d-9e4d0b2be1e6
+pkg-cappm350x280x120l80x220-polygon-polarization-mark-density~a,c8facb03-0a2d-447f-b2a4-cd2e6d379d9d
+pkg-cappm350x280x120l80x220-polygon-polarization-mark-density~b,8c8c0fd0-ab1e-49c3-8476-2a1814382a98
+pkg-cappm350x280x120l80x220-polygon-polarization-mark-density~c,5c5de5ba-0753-40b6-820e-ea7634e6f069
 pkg-cappm350x280x120l80x220-text-name-density~a,76ff80c1-17cd-4e98-8a1e-a770e2c68040
 pkg-cappm350x280x120l80x220-text-name-density~b,f3ec16e0-ad0d-482a-bd88-40f4ea55ad92
 pkg-cappm350x280x120l80x220-text-name-density~c,38f23b5c-24e0-4218-92cb-3731d1ce37cd
@@ -183,6 +195,9 @@ pkg-cappm350x280x210l80x220-polygon-outline-right-density~c,c931970d-0069-43f5-a
 pkg-cappm350x280x210l80x220-polygon-outline-top-density~a,3c17bb80-b4af-4045-91dd-8b8c6153a573
 pkg-cappm350x280x210l80x220-polygon-outline-top-density~b,a33ffd45-89e7-46e3-a246-2dea57d78b8b
 pkg-cappm350x280x210l80x220-polygon-outline-top-density~c,258e3842-6bd5-4ed3-9b4e-c7eacca4df78
+pkg-cappm350x280x210l80x220-polygon-polarization-mark-density~a,8797fcf5-d0e2-4798-ab4b-b55fcee5ab91
+pkg-cappm350x280x210l80x220-polygon-polarization-mark-density~b,f66a0a97-b3eb-47bd-9643-2a722c245661
+pkg-cappm350x280x210l80x220-polygon-polarization-mark-density~c,853b7934-7f0e-49c4-8fd6-81fb516ff82b
 pkg-cappm350x280x210l80x220-text-name-density~a,6ba5a904-2bee-403f-89ff-c705acbcb4f7
 pkg-cappm350x280x210l80x220-text-name-density~b,ed7e15ee-26ec-4d6e-80ca-2ea1577de951
 pkg-cappm350x280x210l80x220-text-name-density~c,6dd428f9-3fca-48b8-a0a2-0a8c13af8486
@@ -219,6 +234,9 @@ pkg-cappm600x320x150l130x220-polygon-outline-right-density~c,bb16ffeb-868d-46db-
 pkg-cappm600x320x150l130x220-polygon-outline-top-density~a,7dd7dba4-fa48-4dfc-b5a1-4cdbcf2530b7
 pkg-cappm600x320x150l130x220-polygon-outline-top-density~b,95f8f417-3886-4e71-8b8c-4e0702c9e272
 pkg-cappm600x320x150l130x220-polygon-outline-top-density~c,b6c953a0-d333-4b7c-bceb-e54b74d95a07
+pkg-cappm600x320x150l130x220-polygon-polarization-mark-density~a,ada8eaa5-703c-482b-a70e-7d0ece8002be
+pkg-cappm600x320x150l130x220-polygon-polarization-mark-density~b,d427e55c-5c3c-49ee-b15c-22ad5fac9601
+pkg-cappm600x320x150l130x220-polygon-polarization-mark-density~c,67cebf29-a3df-4468-8084-ce8b1fd81e47
 pkg-cappm600x320x150l130x220-text-name-density~a,7393627a-1373-420a-b633-6f9c24df14ae
 pkg-cappm600x320x150l130x220-text-name-density~b,575207c6-db4f-4c12-bf71-8d83be0534b7
 pkg-cappm600x320x150l130x220-text-name-density~c,3083e0d6-a5a5-4200-9709-152ae19f7b79
@@ -255,6 +273,9 @@ pkg-cappm600x320x280l130x220-polygon-outline-right-density~c,173b1889-b7da-4563-
 pkg-cappm600x320x280l130x220-polygon-outline-top-density~a,494bd978-fa74-48b7-b0c0-c2eb55889fb1
 pkg-cappm600x320x280l130x220-polygon-outline-top-density~b,7758ae1a-eaba-4cd2-a154-4206915b61a2
 pkg-cappm600x320x280l130x220-polygon-outline-top-density~c,4aafef0d-dfd4-4bd7-a882-e4ee5afab7f7
+pkg-cappm600x320x280l130x220-polygon-polarization-mark-density~a,cc642763-d7ff-4a93-b28b-a3c7de84df89
+pkg-cappm600x320x280l130x220-polygon-polarization-mark-density~b,fd65dc97-a4b9-432e-9c63-3862473322e3
+pkg-cappm600x320x280l130x220-polygon-polarization-mark-density~c,48321027-89ee-41bf-910a-f0f8409166e0
 pkg-cappm600x320x280l130x220-text-name-density~a,45d28a36-9ee5-4092-8c9a-ac7e5eeb6a62
 pkg-cappm600x320x280l130x220-text-name-density~b,5974559a-0b32-4079-a364-141cebd12ef4
 pkg-cappm600x320x280l130x220-text-name-density~c,8a38033a-f1a9-470d-876f-c429f80f65fb
@@ -291,6 +312,9 @@ pkg-cappm730x430x200l130x240-polygon-outline-right-density~c,e4275e1f-2bc2-44c9-
 pkg-cappm730x430x200l130x240-polygon-outline-top-density~a,aa22a97b-d81b-41d2-b779-cc4a23a45ae0
 pkg-cappm730x430x200l130x240-polygon-outline-top-density~b,57022d88-8363-4cdb-ad05-3a45a655bb37
 pkg-cappm730x430x200l130x240-polygon-outline-top-density~c,4408b81c-0a16-40d9-8ae4-0debaaf78afa
+pkg-cappm730x430x200l130x240-polygon-polarization-mark-density~a,4f816086-e83b-42d3-8e59-38da3a53e796
+pkg-cappm730x430x200l130x240-polygon-polarization-mark-density~b,7f427237-2e89-4e8a-b620-c2874a1ae56b
+pkg-cappm730x430x200l130x240-polygon-polarization-mark-density~c,9743befd-0f08-4320-aa19-33d714d949f7
 pkg-cappm730x430x200l130x240-text-name-density~a,d11c6150-1ec7-47df-be0c-15f56edf80d0
 pkg-cappm730x430x200l130x240-text-name-density~b,ab77a6aa-59dd-4313-bd71-6e40123ce577
 pkg-cappm730x430x200l130x240-text-name-density~c,41f5e38b-85b9-49b7-b98f-cf883fa6ac2b
@@ -327,6 +351,9 @@ pkg-cappm730x430x310l130x240-polygon-outline-right-density~c,69f9fed1-2ac1-4134-
 pkg-cappm730x430x310l130x240-polygon-outline-top-density~a,63773a83-419b-41fe-9912-efd62cf464e6
 pkg-cappm730x430x310l130x240-polygon-outline-top-density~b,5ed046f6-eb6f-451d-913d-1d7346c833ab
 pkg-cappm730x430x310l130x240-polygon-outline-top-density~c,8007ccdb-5ef1-4018-bdb2-08237c7e67ee
+pkg-cappm730x430x310l130x240-polygon-polarization-mark-density~a,947a8dcc-4879-4889-b267-bb7afa476f11
+pkg-cappm730x430x310l130x240-polygon-polarization-mark-density~b,7ada90e3-df46-44c5-ad3e-e6419bffd397
+pkg-cappm730x430x310l130x240-polygon-polarization-mark-density~c,ec76431c-447c-4d9a-9a0c-ca7197878a63
 pkg-cappm730x430x310l130x240-text-name-density~a,f5c7e670-5764-4c5d-88ac-7f4182f80b46
 pkg-cappm730x430x310l130x240-text-name-density~b,7782e12b-5650-4075-872c-948006e26d8f
 pkg-cappm730x430x310l130x240-text-name-density~c,7706ca9c-0ec0-4795-8558-e83410b18378
@@ -363,6 +390,9 @@ pkg-cappm730x430x430l130x240-polygon-outline-right-density~c,e6f313bc-76fb-42d3-
 pkg-cappm730x430x430l130x240-polygon-outline-top-density~a,db3afe30-e7a2-4682-ab5f-c6edb3073155
 pkg-cappm730x430x430l130x240-polygon-outline-top-density~b,8d2b8b3c-e3b1-4adb-b670-0332f0f3a3bd
 pkg-cappm730x430x430l130x240-polygon-outline-top-density~c,53fb188c-2b32-4460-ae5b-cde164611ea4
+pkg-cappm730x430x430l130x240-polygon-polarization-mark-density~a,377a6960-f989-427b-9efa-376f127e4b7e
+pkg-cappm730x430x430l130x240-polygon-polarization-mark-density~b,a007b6c6-ba16-4674-a150-ab23b3ed2add
+pkg-cappm730x430x430l130x240-polygon-polarization-mark-density~c,70851653-5929-46db-adcf-6b74168ac849
 pkg-cappm730x430x430l130x240-text-name-density~a,531e9879-d24d-41db-91c4-e985a1c7fb2f
 pkg-cappm730x430x430l130x240-text-name-density~b,cd38ee4a-392f-49b3-8b72-d3d1b725305f
 pkg-cappm730x430x430l130x240-text-name-density~c,cecc8457-70da-4786-b93e-c830a004ae1b
@@ -399,6 +429,9 @@ pkg-cappm730x600x380l130x410-polygon-outline-right-density~c,3472143f-c838-4cec-
 pkg-cappm730x600x380l130x410-polygon-outline-top-density~a,c7712aa3-8db1-4b0f-90a3-f7e253a1aa05
 pkg-cappm730x600x380l130x410-polygon-outline-top-density~b,c5d42be3-a425-418c-8695-0dddf7fd99e7
 pkg-cappm730x600x380l130x410-polygon-outline-top-density~c,fce39cf4-a21d-48d8-8fde-188c6f86fb33
+pkg-cappm730x600x380l130x410-polygon-polarization-mark-density~a,0097c782-a155-49e9-9682-1cde5df6c997
+pkg-cappm730x600x380l130x410-polygon-polarization-mark-density~b,4e2ee05d-f29a-4fff-910a-75e8d46bd668
+pkg-cappm730x600x380l130x410-polygon-polarization-mark-density~c,9bfea36a-9675-42f0-b9d7-f9974a251c88
 pkg-cappm730x600x380l130x410-text-name-density~a,634ac537-1e2d-40b8-9036-375898ef2d16
 pkg-cappm730x600x380l130x410-text-name-density~b,2619a95e-ce78-4526-870d-dee6397fbbfe
 pkg-cappm730x600x380l130x410-text-name-density~c,26eec489-c37c-4426-a709-14786bff89c9
@@ -426,6 +459,8 @@ pkg-resc0402~(01005)-polygon-outline-right-density~a,6140c8ae-dcd0-4bef-958e-9cb
 pkg-resc0402~(01005)-polygon-outline-right-density~b,c738402a-09b6-4925-aa35-98bfde496e63
 pkg-resc0402~(01005)-polygon-outline-top-density~a,4b27a7b8-6cd7-4a53-928e-bb656a2a0af5
 pkg-resc0402~(01005)-polygon-outline-top-density~b,21618fce-e2d9-46f3-9203-d9e67cd362b1
+pkg-resc0402~(01005)-polygon-polarization-mark-density~a,412f047c-c7ee-440e-a0af-6d2763f207d2
+pkg-resc0402~(01005)-polygon-polarization-mark-density~b,0e2b8245-bf28-43a0-8731-7a683eb6fcf2
 pkg-resc0402~(01005)-text-name-density~a,654e8c62-d8f9-4797-8a1d-82230a577f8b
 pkg-resc0402~(01005)-text-name-density~b,816289f0-dfcf-4d54-b0c9-c363b986e14c
 pkg-resc0402~(01005)-text-value-density~a,a20d54fe-9179-41c0-8943-33e03c04bf8e
@@ -451,6 +486,8 @@ pkg-resc0603~(0201)-polygon-outline-right-density~a,eb22b8f9-fecd-4474-b309-190c
 pkg-resc0603~(0201)-polygon-outline-right-density~b,6b4dfad9-732f-4c42-abd5-327d54909b2c
 pkg-resc0603~(0201)-polygon-outline-top-density~a,65292f1c-d927-4844-ba06-3b8b712aed94
 pkg-resc0603~(0201)-polygon-outline-top-density~b,de4b87a5-c7f8-46da-9bd5-613a743f88c0
+pkg-resc0603~(0201)-polygon-polarization-mark-density~a,cad1ccc0-f037-481e-a405-0e14446e092d
+pkg-resc0603~(0201)-polygon-polarization-mark-density~b,1bca3632-9df9-4747-a7ae-e0253d8192fb
 pkg-resc0603~(0201)-text-name-density~a,b936ef8c-71a2-4f16-bebc-2286d034ac43
 pkg-resc0603~(0201)-text-name-density~b,a34cf139-68f2-4e2f-b232-85582e2ec58a
 pkg-resc0603~(0201)-text-value-density~a,dcfbd410-396c-45eb-a780-c29c1ebcca4f
@@ -476,6 +513,8 @@ pkg-resc1005~(0402)-polygon-outline-right-density~a,0f4652a7-1c89-444d-90ac-0e3f
 pkg-resc1005~(0402)-polygon-outline-right-density~b,fe2d006f-b740-4643-8686-01c6d489e35c
 pkg-resc1005~(0402)-polygon-outline-top-density~a,320ebfdd-af0a-4505-a4ca-f033dbdf3404
 pkg-resc1005~(0402)-polygon-outline-top-density~b,729a27fa-94e0-41f9-9944-3b116af017d5
+pkg-resc1005~(0402)-polygon-polarization-mark-density~a,41ac8145-c1e0-485e-8b90-265889bf203a
+pkg-resc1005~(0402)-polygon-polarization-mark-density~b,40df27d4-d317-424e-91f9-9bca89676798
 pkg-resc1005~(0402)-text-name-density~a,637a4a70-f61f-42cd-b153-ca8d0c2cb4ba
 pkg-resc1005~(0402)-text-name-density~b,4a8fbb61-7d39-4aea-b728-4553fbf9d277
 pkg-resc1005~(0402)-text-value-density~a,bb2ad320-2956-402f-968a-ac4e51ed6364
@@ -501,6 +540,8 @@ pkg-resc1608~(0603)-polygon-outline-right-density~a,c0e1aa5c-97e8-457d-bc60-b0f7
 pkg-resc1608~(0603)-polygon-outline-right-density~b,42d928e5-a698-4e73-a2c3-daa18d9bcebc
 pkg-resc1608~(0603)-polygon-outline-top-density~a,c9524d3e-1f1e-4c9d-a75c-0a8a7c5f1c8d
 pkg-resc1608~(0603)-polygon-outline-top-density~b,0a2eedee-dd2a-466e-86f4-08012e5965fb
+pkg-resc1608~(0603)-polygon-polarization-mark-density~a,df497aee-b1f9-4b3b-83c0-8049f3c889a8
+pkg-resc1608~(0603)-polygon-polarization-mark-density~b,2e7099fd-34c6-4f7f-bb83-7e0c0eb80704
 pkg-resc1608~(0603)-text-name-density~a,8e9560af-ad15-43c7-9089-5091c274409e
 pkg-resc1608~(0603)-text-name-density~b,0523853e-390b-480d-80f0-22df28be1042
 pkg-resc1608~(0603)-text-value-density~a,2908ba24-cc11-4fab-8a0c-3afad79255b9
@@ -526,6 +567,8 @@ pkg-resc2012~(0805)-polygon-outline-right-density~a,5634e0e8-94df-409c-940b-4ffe
 pkg-resc2012~(0805)-polygon-outline-right-density~b,1620c3bd-7491-4bcb-9887-6f614a3ce301
 pkg-resc2012~(0805)-polygon-outline-top-density~a,26554d51-2893-4f23-b394-1cda53be3c25
 pkg-resc2012~(0805)-polygon-outline-top-density~b,c646d954-1eff-45d5-8341-d1a963a6ba55
+pkg-resc2012~(0805)-polygon-polarization-mark-density~a,165949c0-9e53-457d-80f6-09b640d61b81
+pkg-resc2012~(0805)-polygon-polarization-mark-density~b,a4038ffc-8d93-46a3-b873-13ca5c808409
 pkg-resc2012~(0805)-text-name-density~a,e72d97da-70f0-4595-b92d-2c67ab3eeac3
 pkg-resc2012~(0805)-text-name-density~b,4950b973-32f3-4283-a608-5ba302ece963
 pkg-resc2012~(0805)-text-value-density~a,ff99e004-056c-46d0-a157-acce83932e7f
@@ -551,6 +594,8 @@ pkg-resc3216~(1206)-polygon-outline-right-density~a,fab5eb2b-ea10-42b9-863b-750e
 pkg-resc3216~(1206)-polygon-outline-right-density~b,15cabae1-1ff1-4a67-abe8-d9054cd95af1
 pkg-resc3216~(1206)-polygon-outline-top-density~a,84165d03-631b-4ac6-b1d7-0630f26beb2f
 pkg-resc3216~(1206)-polygon-outline-top-density~b,11666e6f-138e-44e3-9b55-b93f6b578fd0
+pkg-resc3216~(1206)-polygon-polarization-mark-density~a,d7caddbb-b399-4a36-b724-7687de4e0a1f
+pkg-resc3216~(1206)-polygon-polarization-mark-density~b,c6848867-0373-4bca-87d3-3e5d449e3a66
 pkg-resc3216~(1206)-text-name-density~a,dc46cfac-cd12-45c0-af56-4bc565c8bcb0
 pkg-resc3216~(1206)-text-name-density~b,49a0d0fc-aeb5-43ac-a7d9-a5d687ab224c
 pkg-resc3216~(1206)-text-value-density~a,cbeaeee2-44a7-4a54-b1f1-bc74b9585cb7
@@ -576,6 +621,8 @@ pkg-resc3225~(1210)-polygon-outline-right-density~a,6d1326f8-4f42-44fe-a801-a78b
 pkg-resc3225~(1210)-polygon-outline-right-density~b,bc21b861-454d-43ec-a2ea-8a689cdedbee
 pkg-resc3225~(1210)-polygon-outline-top-density~a,59db1f9f-9553-4b3b-a9ac-1e80cac7622d
 pkg-resc3225~(1210)-polygon-outline-top-density~b,5e965d66-9e00-41ef-bbd1-019cc28976bc
+pkg-resc3225~(1210)-polygon-polarization-mark-density~a,0d09bb72-2a3a-420f-8483-46e0665b9c45
+pkg-resc3225~(1210)-polygon-polarization-mark-density~b,28edfb5e-3ff5-480b-884c-a0200c905e09
 pkg-resc3225~(1210)-text-name-density~a,7098d51d-705d-4714-8d82-ef1969f463a5
 pkg-resc3225~(1210)-text-name-density~b,e0af076b-e3d0-4864-8e6f-16be85e9e2ca
 pkg-resc3225~(1210)-text-value-density~a,cb3e9c1a-08d2-4ccc-885f-c7548854e681
@@ -601,6 +648,8 @@ pkg-resc3246~(1218)-polygon-outline-right-density~a,273f30b3-1d36-4c85-9745-e99f
 pkg-resc3246~(1218)-polygon-outline-right-density~b,5ab637ed-83bb-4fba-b81a-d2792492b0f5
 pkg-resc3246~(1218)-polygon-outline-top-density~a,6c935a51-55cd-4497-b3fe-0f6a735c50f9
 pkg-resc3246~(1218)-polygon-outline-top-density~b,47580bdc-88e2-476b-9964-a745c237e2ea
+pkg-resc3246~(1218)-polygon-polarization-mark-density~a,70c2b3bb-ad0d-4476-9268-f6a1b88da281
+pkg-resc3246~(1218)-polygon-polarization-mark-density~b,75d4a720-9623-4953-ab98-0fc9a3f1e3e7
 pkg-resc3246~(1218)-text-name-density~a,58f0ffa3-2c9e-444e-a70b-667f25dda91b
 pkg-resc3246~(1218)-text-name-density~b,9f28365f-27c6-4e5b-aca6-4145007d787a
 pkg-resc3246~(1218)-text-value-density~a,0c918266-f8a7-4349-9db9-ed72fbb9526a
@@ -626,6 +675,8 @@ pkg-resc5025~(2010)-polygon-outline-right-density~a,68010528-8539-4570-be2b-ee96
 pkg-resc5025~(2010)-polygon-outline-right-density~b,617faa33-3ca4-4303-b410-d131b7d33132
 pkg-resc5025~(2010)-polygon-outline-top-density~a,b5feab11-31fe-44f0-adec-3e468f84ffc5
 pkg-resc5025~(2010)-polygon-outline-top-density~b,6ab085fa-32f1-417e-9a4f-4d65477bc07e
+pkg-resc5025~(2010)-polygon-polarization-mark-density~a,59c62a5c-e7fe-4b81-a608-5af484d42ef4
+pkg-resc5025~(2010)-polygon-polarization-mark-density~b,50a70328-e782-4901-9e82-4dbf1efcbd8b
 pkg-resc5025~(2010)-text-name-density~a,31361b7f-3382-4d65-815b-c695b921f09b
 pkg-resc5025~(2010)-text-name-density~b,b836798a-708a-454c-86e3-fadcb58f5c22
 pkg-resc5025~(2010)-text-value-density~a,adec4047-3988-4cf9-bdba-f70cb880c2e0
@@ -651,6 +702,8 @@ pkg-resc6432~(2512)-polygon-outline-right-density~a,64937b55-8e64-49eb-8378-fb52
 pkg-resc6432~(2512)-polygon-outline-right-density~b,f15334fa-c7e1-44d4-a248-d21764977c75
 pkg-resc6432~(2512)-polygon-outline-top-density~a,5315d100-b7c8-41bd-a782-0fefb0b4b2d2
 pkg-resc6432~(2512)-polygon-outline-top-density~b,9292d07d-6ee4-4565-9713-87f4afa88ef3
+pkg-resc6432~(2512)-polygon-polarization-mark-density~a,acc1c160-c72c-4bd6-af35-6f144bef9c4f
+pkg-resc6432~(2512)-polygon-polarization-mark-density~b,150559c0-267d-4abb-bc29-3ce0d816ace4
 pkg-resc6432~(2512)-text-name-density~a,d5dfa210-e02d-4fc7-a92e-54fa974dfcde
 pkg-resc6432~(2512)-text-name-density~b,dfa7f4a2-6dfd-49cb-a004-4c38853a2899
 pkg-resc6432~(2512)-text-value-density~a,1ec90d97-ae5e-40dd-ad0f-ef600ec68561
@@ -676,6 +729,8 @@ pkg-resj11569~(4527)-polygon-outline-right-density~a,a2a952e7-8a28-46c3-a058-b15
 pkg-resj11569~(4527)-polygon-outline-right-density~b,ee758768-7c4e-4c1b-b053-d603d9c17bac
 pkg-resj11569~(4527)-polygon-outline-top-density~a,07868d85-ce7e-4c90-a873-38d6f85b07dd
 pkg-resj11569~(4527)-polygon-outline-top-density~b,8007772e-e7da-4810-aceb-ba058c6e6564
+pkg-resj11569~(4527)-polygon-polarization-mark-density~a,bceaa87d-79fd-484c-8d65-51bc968b7ae8
+pkg-resj11569~(4527)-polygon-polarization-mark-density~b,8dd2290d-0036-4b48-b90c-1f8526a43c7b
 pkg-resj11569~(4527)-text-name-density~a,6c3385ba-a156-4faf-a882-90620f1a3e2d
 pkg-resj11569~(4527)-text-name-density~b,3c8a0bdf-d887-4b34-be1f-894f01440afc
 pkg-resj11569~(4527)-text-value-density~a,acbebc0b-57d8-4a0c-b9c8-57b6e7d603dd

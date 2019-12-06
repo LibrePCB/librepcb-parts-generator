@@ -271,6 +271,7 @@ def generate_pkg(
             uuid_outline_left = _uuid('polygon-outline-left-{}'.format(key))
             uuid_outline_right = _uuid('polygon-outline-right-{}'.format(key))
             uuid_outline_around = _uuid('polygon-outline-around-{}'.format(key))
+            uuid_polarization_mark = _uuid('polygon-polarization-mark-{}'.format(key))
 
             # Max boundary
             max_x = 0.0
@@ -320,7 +321,8 @@ def generate_pkg(
             max_y = max(max_y, pad_width / 2)
 
             # Documentation
-            half_gap = ff((config.body.gap or pad_gap) / 2)
+            half_gap_raw = (config.body.gap or pad_gap) / 2
+            half_gap = ff(half_gap_raw)
             if footprint is None:
                 # We assume that leads are across the entire width of the part (e.g. MLCC)
                 dx = ff(config.body.length / 2)
@@ -382,6 +384,19 @@ def generate_pkg(
                 lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))
                 lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))
                 lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))
+                lines.append('  )')
+            if polarization:
+                polarization_mark_width = config.body.width / 8
+                dx_outer = ff(half_gap_raw - polarization_mark_width / 2)
+                dx_inner = ff(half_gap_raw - polarization_mark_width * 1.5)
+                dy = ff(config.body.width / 2 - doc_lw)
+                lines.append('  (polygon {} (layer {})'.format(uuid_polarization_mark, 'top_documentation'))
+                lines.append('   (width 0.0) (fill true) (grab_area true)')
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx_outer, dy))
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx_inner, dy))
+                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx_inner, dy))
+                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx_outer, dy))
+                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx_outer, dy))
                 lines.append('  )')
 
             # Silkscreen
