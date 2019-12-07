@@ -207,7 +207,7 @@ def generate_pkg(
             dx = ff(config.length / 2)
             dy = ff(config.width / 2)
             lines.append('  (polygon {} (layer {})'.format(uuid_outline_left, 'top_documentation'))
-            lines.append('   (width 0.0) (fill true) (grab_area true)')
+            lines.append('   (width 0.0) (fill true) (grab_area false)')
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))  # NW
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(half_gap, dy))  # NE
             lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(half_gap, dy))  # SE
@@ -215,7 +215,7 @@ def generate_pkg(
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))  # NW
             lines.append('  )')
             lines.append('  (polygon {} (layer {})'.format(uuid_outline_right, 'top_documentation'))
-            lines.append('   (width 0.0) (fill true) (grab_area true)')
+            lines.append('   (width 0.0) (fill true) (grab_area false)')
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))  # NE
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(half_gap, dy))  # NW
             lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))  # SW
@@ -224,12 +224,12 @@ def generate_pkg(
             lines.append('  )')
             dy = ff(config.width / 2 - doc_lw / 2)
             lines.append('  (polygon {} (layer {})'.format(uuid_outline_top, 'top_documentation'))
-            lines.append('   (width {}) (fill false) (grab_area true)'.format(doc_lw))
+            lines.append('   (width {}) (fill false) (grab_area false)'.format(doc_lw))
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(half_gap, dy))
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(half_gap, dy))
             lines.append('  )')
             lines.append('  (polygon {} (layer {})'.format(uuid_outline_bot, 'top_documentation'))
-            lines.append('   (width {}) (fill false) (grab_area true)'.format(doc_lw))
+            lines.append('   (width {}) (fill false) (grab_area false)'.format(doc_lw))
             lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(half_gap, dy))
             lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))
             lines.append('  )')
@@ -388,7 +388,7 @@ if __name__ == '__main__':
         ],
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,chip,generic',
-        version='0.3.1',
+        version='0.3.2',
         create_date='2018-12-19T00:08:03Z',
     )
     # J-Lead resistors (RESJ)
@@ -404,7 +404,7 @@ if __name__ == '__main__':
         ],
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,j-lead,generic',
-        version='0.3.1',
+        version='0.3.2',
         create_date='2019-01-04T23:06:17Z',
     )
     _make('out/chip/dev')
@@ -434,7 +434,7 @@ if __name__ == '__main__':
             'ad623f98-9e73-49c3-9404-f7cfa99d17cd',
         ],
         keywords='r,resistor,resistance,smd,smt',
-        version='0.3',
+        version='0.3.2',
         create_date='2019-01-29T19:47:42Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
