@@ -241,9 +241,7 @@ def generate_pkg(
 
             lines.append(' )')
 
-        add_footprint_variant('density~b', 'Reflow', 'B')
-
-
+        add_footprint_variant('density~b', 'Reflow nom', 'nom')
         lines.append(')')
 
         pkg_dir_path = path.join(dirpath, uuid_pkg)
@@ -305,11 +303,25 @@ if __name__ == '__main__':
             12: "N",
             13: "P",
             14: "R",
-            15: "S",
-            16: "T",
-            17: "U",
-            18: "V",
-            19: "W",
+            15: "T",
+            16: "U",
+            17: "V",
+            18: "W",
+            19: "Z",
+            20: "BA",
+            21: "BB",
+            22: "BC",
+            23: "BD",
+            24: "BE",
+            25: "BF",
+            26: "BG",
+            27: "BH",
+            28: "BJ",
+            29: "BK",
+            30: "BL",
+            31: "BM",
+            32: "BN",
+            
         },
         pkgcat='a1216e37-110e-4abc-b896-4b74fe38684c',
         keywords='bga, package,smd,jedec,MO-216',
