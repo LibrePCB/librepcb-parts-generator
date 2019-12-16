@@ -194,11 +194,11 @@ def generate_pkg(
             lines.append('  )')
 
             # Documentation outline (fully inside body)
-            outline_x_offset = body_width / 2 
+            outline_x_offset = body_width/2   -line_width /2
             lines.append('  (polygon {} (layer top_documentation)'.format(uuid_outline))
             lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
-            y_max = ff(body_width / 2 )
-            y_min = ff(-body_width / 2 )
+            y_max = ff(body_width/2  -line_width /2)
+            y_min = ff(-body_width/2  +line_width /2)
             oxo = ff(outline_x_offset)  # Used for shorter code lines below :)
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_max))
@@ -277,15 +277,15 @@ if __name__ == '__main__':
         configs=[
        #               pin   row  pitch  ball   body      height variation
        #              count count        width  width    
-            BgaConfig(  36,   6,  0.40,  0.25,  2.00,      1.00,    'None'),
-            BgaConfig(  49,   7,  0.40,  0.25,  3.00,      1.00,    'None'),
-            BgaConfig(  64,   8,  0.40,  0.25,  2.80,      1.00,    'None'),
-            BgaConfig(  81,   9,  0.40,  0.25,  4.00,      1.00,    'None'),
-            BgaConfig( 121,  11,  0.40,  0.25,  5.00,      1.00,    'None'),
-            BgaConfig( 121,  11,  0.50,  0.25,  6.00,      1.00,    'None'),
-            BgaConfig( 121,  11,  0.80,  0.40,  9.00,      1.10,    'None'),
-            BgaConfig( 225,  15,  0.40,  0.25,  7.00,      1.00,    'None'),
-            BgaConfig( 256,  16,  0.80,  0.45,  14.0,      1.70,    'None'),
+            BgaConfig(  36,   6,  0.40,  0.25,  2.50,      1.00,    'ucBGA'),
+            BgaConfig(  49,   7,  0.40,  0.25,  3.00,      1.00,    'ucBGA'),
+            BgaConfig(  64,   8,  0.40,  0.25,  4.00,      1.00,    'ucBGA'),
+            BgaConfig(  81,   9,  0.40,  0.25,  4.00,      1.00,    'ucBGA'),
+            BgaConfig( 121,  11,  0.40,  0.25,  5.00,      1.00,    'ucBGA'),
+            BgaConfig( 121,  11,  0.50,  0.25,  6.00,      1.00,    'csBGA'),
+            BgaConfig( 121,  11,  0.80,  0.40,  9.00,      1.10,    'caBGA'),
+            BgaConfig( 225,  15,  0.40,  0.25,  7.00,      1.00,    'ucBGA'),
+            BgaConfig( 256,  16,  0.80,  0.45,  14.0,      1.70,    'caBGA'),
         ],
         row_lookup={
             0: "A",
