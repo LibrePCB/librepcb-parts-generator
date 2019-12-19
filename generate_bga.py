@@ -92,7 +92,7 @@ def generate_pkg(
 
 
         lines = []
-
+        balls = []
         full_name = name.format(
             height=fd(height),
             pitch=fd(pitch),
@@ -116,9 +116,7 @@ def generate_pkg(
             return uuid(category, full_name, identifier)
 
         uuid_pkg = _uuid('pkg')
-        uuid_pads = [_uuid('pad-{}'.format(p)) for p in range(1, pin_count + 1)]
-        uuid_leads1 = [_uuid('lead-contact-{}'.format(p)) for p in range(1, pin_count + 1)]
-        uuid_leads2 = [_uuid('lead-proj-{}'.format(p)) for p in range(1, pin_count + 1)]
+
 
         print('Generating {}: {}'.format(full_name, uuid_pkg))
 
@@ -132,12 +130,26 @@ def generate_pkg(
         lines.append(' (created {})'.format(create_date or now()))
         lines.append(' (deprecated false)')
         lines.append(' (category {})'.format(pkgcat))
+
+
+
         for p in range(1, pin_count + 1):
             xo =   ( (p-1)  % row_count)+1    
             yo =   ( (p-1) // row_count)
             Zo=    row_lookup[yo]
-            lines.append(' (pad {} (name "{}{}"))'.format(uuid_pads[p - 1], Zo,xo))
+            balls.append ( "%s%s"%(Zo,xo))
 
+
+
+
+
+        uuid_pads = [_uuid('pad-{}'.format(balls[p-1])) for p in range(1, pin_count + 1)]
+
+        for p in range(1, pin_count + 1):
+            lines.append(' (pad {} (name "{}"))'.format(uuid_pads[p - 1], balls[p-1]))
+
+
+            
         def add_footprint_variant(
             key: str,
             name: str,
