@@ -51,7 +51,7 @@ uuid_cache_file = 'uuid_cache_fpgas.csv'
 uuid_cache = init_cache(uuid_cache_file)
 
 
-def uuid(category: str, kind: str, variant: str, identifier: str) -> str:
+def uuid(category: str, kind: str, identifier: str) -> str:
     """
     Return a uuid for the specified pin.
 
@@ -60,12 +60,10 @@ def uuid(category: str, kind: str, variant: str, identifier: str) -> str:
             For example 'cmp' or 'pkg'.
         kind:
             For example 'pinheader' or 'pinsocket'.
-        variant:
-            For example '1x5-D1.1' or '1x13'.
         identifier:
             For example 'pad-1' or 'pin-13'.
     """
-    key = '{}-{}-{}-{}'.format(category, kind, variant, identifier).lower().replace(' ', '~')
+    key = '{}-{}-{}'.format(category, kind, identifier).lower().replace(' ', '~')
     if key not in uuid_cache:
         uuid_cache[key] = str(uuid4())
     return uuid_cache[key]
@@ -136,9 +134,8 @@ def generate_sym(
 
 
     def _uuid(identifier: str) -> str:
-            return uuid(category, kind, variant, identifier)
+            return uuid(category, kind, identifier)
 
-    variant = '--'
           
 
     for i in range(1, num_of_pins + 1, 1):

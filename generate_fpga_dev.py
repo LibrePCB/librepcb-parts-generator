@@ -7,9 +7,12 @@ import argparse
 parser = argparse.ArgumentParser(description='create a fpga from csv file')
 parser.add_argument("--design")
 parser.add_argument("--file")
+parser.add_argument("--package")
 args = parser.parse_args()
 design_name = args.design
 file_name = args.file
+package = args.package
+
 
 # initializing 
 
@@ -38,10 +41,10 @@ from entities.component import (
 from entities.symbol import Pin as SymbolPin
 from entities.symbol import Symbol
 
-generator = 'librepcb-parts-generator (generate_fpga_cmp.py)'
+generator = 'librepcb-parts-generator (generate_fpga_dev.py)'
 
 # Initialize UUID cache
-uuid_cache_file = 'uuid_cache_fpgas.csv'
+uuid_cache_file = 'uuid_cache_fpgas_pkg.csv'
 uuid_cache = init_cache(uuid_cache_file)
 
 
@@ -64,7 +67,7 @@ def uuid(category: str, kind: str, identifier: str) -> str:
 
 
 
-def generate_cmp(
+def generate_dev(
     cvs_file: str, 
     dirpath: str,
     author: str,
@@ -77,8 +80,8 @@ def generate_cmp(
     version: str,
     create_date: Optional[str],
 ) -> None:
-    category      = 'cmp'
-    
+    category      = 'dev'
+    print("device: %s   %s  %s"%(design_name, file_name, package ))    
     with open(cvs_file, 'r') as CSVxfile: 
           # creating a csv reader object 
           CSVxreader = csv.reader(CSVxfile)  
@@ -89,8 +92,13 @@ def generate_cmp(
           print("Total no. of pins: %d"%(CSVxreader.line_num))
           num_of_pins = CSVxreader.line_num
 
+
+
+          
     pad_list =[]
     pad_name =[]
+    lines = []
+
     for row in cvs_raw_data[:num_of_pins]: 
       # parsing each column of a row
       pad_name.append(row[0])
@@ -100,77 +108,56 @@ def generate_cmp(
     def _uuid(identifier: str) -> str:
             return uuid(category, kind, identifier)
 
-
+ 
           
 
     for i in range(1, num_of_pins + 1, 1):
-        uuid_pins = [uuid('sym', kind,'pin-{}_{}'.format(pad_name[p],pad_list[p])) for p in range(i)]
-        
-    uuid_signals = [_uuid('signal-{}'.format(p)) for p in range(i)]
-    uuid_cmp = _uuid('cmp')
-    uuid_variant = _uuid('variant-default')
-    uuid_gate = _uuid('gate-default')
-    uuid_symbol = uuid('sym', kind, 'sym')
+        uuid_pads = [uuid('pkg', package,'pad-{}'.format(pad_list[p-1])) for p in range(i)]
+        uuid_signals = [uuid('cmp', kind, 'signal-{}_{}'.format(pad_name[p-1],pad_list[p-1])) for p in range(i)]
 
-
+    uuid_dev = _uuid('dev')
+    uuid_cmp = uuid('cmp', kind, 'cmp')
+    uuid_pkg = uuid('pkg', package, 'pkg')
+      
     # General info
-    component = Component(
-            uuid_cmp,
-            Name('{}'.format(name)),
-            Description('created from file---  {}.\\n'
-                        'Generated with {}'.format(cvs_file, generator)),
-            Keywords('{}'.format( keywords)),
-            Author(author),
-            Version(version),
-            Created(create_date or now()),
-            Deprecated(False),
-            Category(cmpcat),
-            SchematicOnly(False),
-            DefaultValue(default_value),
-            Prefix('U'),
-        )
+
+    lines.append('(librepcb_device {}'.format(uuid_dev))
+    lines.append(' (name "{}")'.format(name))
+    lines.append(' (description "A  '
+                   'Generated with {}")'.format(generator))
+    lines.append(' (keywords "{}")'.format(keywords))
+    lines.append(' (author "{}")'.format(author))
+    lines.append(' (version "0.1")')
+    lines.append(' (created {})'.format(create_date or now()))
+    lines.append(' (deprecated false)')
+    lines.append(' (category {})'.format(cmpcat))
+    lines.append(' (component {})'.format(uuid_cmp))
+    lines.append(' (package {})'.format(uuid_pkg))
+    signalmappings = []
+
 
 
     for p in range(1, num_of_pins + 1):
-            component.add_signal(Signal(
-                uuid_signals[p - 1],
-                Name('{}_{}'.format(pad_name[p-1],pad_list[p-1])),
-                Role.PASSIVE,
-                Required(False),
-                Negated(False),
-                Clock(False),
-                ForcedNet(''),
-            ))
+                signalmappings.append(' (pad {} (signal {}))'.format(uuid_pads[p - 1], uuid_signals[p - 1]))
+    lines.extend(sorted(signalmappings))
+    lines.append(')')
 
-    gate = Gate(
-            uuid_gate,
-            SymbolUUID(uuid_symbol),
-            Position(0.0, 0.0),
-            Rotation(0.0),
-            Required(True),
-            Suffix(''),
-        )
-    for p in range(1, num_of_pins+ 1):
-            gate.add_pin_signal_map(PinSignalMap(
-                uuid_pins[p - 1],
-                SignalUUID(uuid_signals[p - 1]),
-                TextDesignator.SYMBOL_PIN_NAME,
-            ))
+    dev_dir_path = path.join(dirpath, uuid_dev)
+    if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
+               makedirs(dev_dir_path)
+    with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
+                f.write('0.1\n')
+    with open(path.join(dev_dir_path, 'device.lp'), 'w') as f:
+               f.write('\n'.join(lines))
+               f.write('\n')
 
-    component.add_variant(Variant(uuid_variant, Norm.EMPTY, Name('default'), Description(''), gate))
+    print(' {}'.format(uuid_dev))
 
-    component.serialize(dirpath)
-      
-    cmp_dir_path = path.join(dirpath, uuid_cmp)
-    if not (path.exists(cmp_dir_path) and path.isdir(cmp_dir_path)):
-            makedirs(cmp_dir_path)
-    with open(path.join(cmp_dir_path, '.librepcb-cmp'), 'w') as f:
-            f.write('0.1\n')
-    with open(path.join(cmp_dir_path, 'component.lp'), 'w') as f:
-            f.write(str(component))
-            f.write('\n')
 
-    print(': Wrote component {}'.format( uuid_cmp))
+
+
+
+
 
             
 if __name__ == '__main__':
@@ -179,11 +166,11 @@ if __name__ == '__main__':
             makedirs(dirpath)
     _make('out')
     _make('out/fpgas')
-    _make('out/fpgas/cmp')
+    _make('out/fpgas/dev')
 
-    generate_cmp(
+    generate_dev(
         cvs_file=file_name,
-        dirpath='out/fpgas/cmp',
+        dirpath='out/fpgas/dev',
         author='John E.',
         name=design_name,
         name_lower='fpga',
