@@ -6,10 +6,12 @@ import argparse
 
 parser = argparse.ArgumentParser(description='create a fpga from csv file')
 parser.add_argument("--design")
+parser.add_argument("--group")
 parser.add_argument("--file")
 parser.add_argument("--package")
 args = parser.parse_args()
 design_name = args.design
+group_name = args.group
 file_name = args.file
 package = args.package
 
@@ -45,7 +47,7 @@ from entities.symbol import Symbol
 generator = 'librepcb-parts-generator (generate_fpga_dev.py)'
 
 # Initialize UUID cache
-uuid_cache_file = 'uuid_cache_fpgas_pkg.csv'
+uuid_cache_file = 'uuid_cache_{}_pkg.csv'.format(group_name)
 uuid_cache = init_cache(uuid_cache_file)
 
 
@@ -73,7 +75,6 @@ def generate_dev(
     dirpath: str,
     author: str,
     name: str,
-    name_lower: str,
     kind: str,
     cmpcat: str,
     keywords: str,
@@ -166,15 +167,16 @@ if __name__ == '__main__':
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
     _make('out')
-    _make('out/fpgas')
-    _make('out/fpgas/dev')
+    _make('out/{}'.format(group_name))
+    _make('out/{}/dev'.format(group_name))
 
+
+    
     generate_dev(
         cvs_file=file_name,
-        dirpath='out/fpgas/dev',
+        dirpath='out/fpga/dev',
         author='John E.',
         name=design_name,
-        name_lower='fpga',
         kind=design_name,
         cmpcat='c3dfb625-e6e4-46c1-a1df-d14eeecfc965',
         keywords='Fpga',

@@ -6,9 +6,11 @@ import argparse
 
 parser = argparse.ArgumentParser(description='create a fpga from csv file')
 parser.add_argument("--design")
+parser.add_argument("--group")
 parser.add_argument("--file")
 args = parser.parse_args()
 design_name = args.design
+group_name = args.group
 file_name = args.file
 
 # initializing 
@@ -41,7 +43,7 @@ from entities.symbol import Symbol
 generator = 'librepcb-parts-generator (generate_fpga_cmp.py)'
 
 # Initialize UUID cache
-uuid_cache_file = 'uuid_cache_fpgas.csv'
+uuid_cache_file = 'uuid_cache_{}.csv'.format(group_name)
 uuid_cache = init_cache(uuid_cache_file)
 
 
@@ -69,7 +71,6 @@ def generate_cmp(
     dirpath: str,
     author: str,
     name: str,
-    name_lower: str,
     kind: str,
     cmpcat: str,
     keywords: str,
@@ -199,15 +200,16 @@ if __name__ == '__main__':
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
     _make('out')
-    _make('out/fpgas')
-    _make('out/fpgas/cmp')
+    _make('out/{}'.format(group_name))
+    _make('out/{}/cmp'.format(group_name))
 
+
+    
     generate_cmp(
         cvs_file=file_name,
-        dirpath='out/fpgas/cmp',
+        dirpath='out/fpga/cmp',
         author='John E.',
         name=design_name,
-        name_lower='fpga',
         kind=design_name,
         cmpcat='c3dfb625-e6e4-46c1-a1df-d14eeecfc965',
         keywords='Fpga',
