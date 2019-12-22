@@ -103,7 +103,9 @@ def generate_sym(
           num_of_pins = CSVxreader.line_num
 
     pad_list =[]
+    pad_type =[]
     pad_name =[]
+    uuid_pins = []
     for row in cvs_raw_data[:num_of_pins]: 
       # parsing each column of a row
       pin_type =row[1]
@@ -112,8 +114,9 @@ def generate_sym(
       if pin_type == "T" :top_count    = top_count    +1
       if pin_type == "B" :bottom_count = bottom_count +1
       pad_name.append(row[0])
+      pad_type.append(row[1])
       pad_list.append(row[2])
-
+      uuid_pins.append(uuid('sym',kind,'pin-{}_{}'.format(row[0],row[2])))
       
 
 
@@ -138,8 +141,7 @@ def generate_sym(
 
           
 
-    for i in range(1, num_of_pins + 1, 1):
-        uuid_pins = [_uuid('pin-{}_{}'.format(pad_name[p],pad_list[p])) for p in range(i)]
+
 
     uuid_sym = _uuid('sym')
     uuid_polygon = _uuid('polygon-contour')
@@ -147,6 +149,12 @@ def generate_sym(
     uuid_text_name = _uuid('text-name')
     uuid_text_value = _uuid('text-value')
 
+    for p in range(1, num_of_pins + 1, 1):
+
+         print('Sym   {} {} {}  '.format(pad_name[p-1],pad_list[p-1],  uuid_pins[p-1] ))
+
+
+    
     # General info
     symbol = Symbol(
             uuid_sym,
@@ -166,7 +174,7 @@ def generate_sym(
 
 
     
-    p          = 1
+
     y_max      =  round(real_height/2) * width 
     y_min      = -round(real_height/2) * width
     w          =  round(real_width/2+.5) *width
@@ -176,15 +184,14 @@ def generate_sym(
     right_pin  = y_max -width*2
     top_pin    = w -width*2
     bottom_pin = w -width*2
-    
-    for row in cvs_raw_data[:CSVxreader.line_num]: 
+
+    for p in range(1, num_of_pins + 1, 1):
       # parsing each column of a row
-      pin_type =row[1]
-      pin_name =row[0]
-      pin_number =row[2]
+      pin_type =pad_type[p-1]
+      pin_name =pad_name[p-1]
       if pin_type == "L" :      pin = SymbolPin(
                             uuid_pins[p - 1],
-                            Name(row[0]),
+                            Name( pin_name),
                             Position((x_min-width) , left_pin),
                             Rotation(0.0),
                             Length(width)
@@ -192,7 +199,7 @@ def generate_sym(
 
       if pin_type == "R" :      pin = SymbolPin(
                             uuid_pins[p - 1],
-                            Name(row[0]),
+                            Name( pin_name),
                             Position((x_max+width) , right_pin),
                             Rotation(180.0),
                             Length(width)
@@ -200,7 +207,7 @@ def generate_sym(
 
       if pin_type == "T" :      pin = SymbolPin(
                             uuid_pins[p - 1],
-                            Name(row[0]),
+                            Name( pin_name),
                             Position((top_pin) , y_max+ width),
                             Rotation(270.0),
                             Length(width)
@@ -209,7 +216,7 @@ def generate_sym(
 
       if pin_type == "B" :      pin = SymbolPin(
                             uuid_pins[p - 1],
-                            Name(row[0]),
+                            Name( pin_name),
                             Position((bottom_pin) , y_min - width),
                             Rotation(90.0),
                             Length(width)

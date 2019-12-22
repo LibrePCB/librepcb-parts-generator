@@ -16,8 +16,9 @@ package = args.package
 
 # initializing 
 
-cvs_raw_data = [] 
-
+cvs_raw_data = []
+uuid_pads = [] 
+uuid_signals = []
 
 
 """
@@ -103,19 +104,15 @@ def generate_dev(
       # parsing each column of a row
       pad_name.append(row[0])
       pad_list.append(row[2])
+      uuid_pads.append(uuid('pkg', package,'pad-{}'.format(row[2]))) 
+      uuid_signals.append(uuid('cmp', kind, 'signal-{}_{}'.format(row[0],row[2])) )
+      print(' {} {} {} {} '.format(row[0],row[2],uuid('cmp', kind, 'signal-{}_{}'.format(row[0],row[2])),uuid('pkg', package,'pad-{}'.format(row[2]))  ))
+
+    for p in range(1, num_of_pins + 1):
+       print(' {} {} {}  '.format(p ,uuid_signals[p-1],uuid_pads[p-1]))
 
       
-    def _uuid(identifier: str) -> str:
-            return uuid(category, kind, identifier)
-
- 
-          
-
-    for i in range(1, num_of_pins + 1, 1):
-        uuid_pads = [uuid('pkg', package,'pad-{}'.format(pad_list[p-1])) for p in range(i)]
-        uuid_signals = [uuid('cmp', kind, 'signal-{}_{}'.format(pad_name[p-1],pad_list[p-1])) for p in range(i)]
-
-    uuid_dev = _uuid('dev')
+    uuid_dev = uuid('dev', kind, 'dev')
     uuid_cmp = uuid('cmp', kind, 'cmp')
     uuid_pkg = uuid('pkg', package, 'pkg')
       
@@ -142,6 +139,10 @@ def generate_dev(
     lines.extend(sorted(signalmappings))
     lines.append(')')
 
+    for p in range(1, num_of_pins + 1):
+       print(' {} {} {}  '.format(p ,uuid_signals[p-1],uuid_pads[p-1]))
+
+    
     dev_dir_path = path.join(dirpath, uuid_dev)
     if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
                makedirs(dev_dir_path)

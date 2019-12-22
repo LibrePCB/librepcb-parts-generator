@@ -91,11 +91,17 @@ def generate_cmp(
 
     pad_list =[]
     pad_name =[]
+    uuid_pins =[]
+    uuid_signals =[]
     for row in cvs_raw_data[:num_of_pins]: 
       # parsing each column of a row
       pad_name.append(row[0])
       pad_list.append(row[2])
+      uuid_pins.append(uuid('sym', kind,'pin-{}_{}'.format(row[0],row[2])))
+      uuid_signals.append(uuid('cmp', kind,'signal-{}_{}'.format(row[0],row[2])))
 
+
+      
       
     def _uuid(identifier: str) -> str:
             return uuid(category, kind, identifier)
@@ -103,9 +109,8 @@ def generate_cmp(
 
           
 
-    for i in range(1, num_of_pins + 1, 1):
-        uuid_pins = [uuid('sym', kind,'pin-{}_{}'.format(pad_name[p-1],pad_list[p-1] )) for p in range(i)]
-        uuid_signals = [_uuid('signal-{}_{}'.format(pad_name[p-1],pad_list[p-1])) for p in range(i)]
+
+
 
     uuid_cmp = _uuid('cmp')
     uuid_variant = _uuid('variant-default')
@@ -114,6 +119,13 @@ def generate_cmp(
     uuid_dev =   uuid('dev', kind, 'dev')
 
 
+
+    for p in range(1, num_of_pins + 1, 1):
+
+         print('Cmp  {} {} {} {} '.format(pad_name[p-1],pad_list[p-1],  uuid_signals[p-1], uuid_pins[p-1] ))
+
+
+    
     # General info
     component = Component(
             uuid_cmp,
