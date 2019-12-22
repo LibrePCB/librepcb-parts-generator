@@ -104,13 +104,14 @@ def generate_cmp(
           
 
     for i in range(1, num_of_pins + 1, 1):
-        uuid_pins = [uuid('sym', kind,'pin-{}_{}'.format(pad_name[p],pad_list[p])) for p in range(i)]
-        
-    uuid_signals = [_uuid('signal-{}'.format(p)) for p in range(i)]
+        uuid_pins = [uuid('sym', kind,'pin-{}_{}'.format(pad_name[p-1],pad_list[p-1] )) for p in range(i)]
+        uuid_signals = [_uuid('signal-{}_{}'.format(pad_name[p-1],pad_list[p-1])) for p in range(i)]
+
     uuid_cmp = _uuid('cmp')
     uuid_variant = _uuid('variant-default')
     uuid_gate = _uuid('gate-default')
     uuid_symbol = uuid('sym', kind, 'sym')
+    uuid_dev =   uuid('dev', kind, 'dev')
 
 
     # General info
@@ -133,7 +134,7 @@ def generate_cmp(
 
     for p in range(1, num_of_pins + 1):
             component.add_signal(Signal(
-                uuid_signals[p - 1],
+                uuid_signals[p-1 ],
                 Name('{}_{}'.format(pad_name[p-1],pad_list[p-1])),
                 Role.PASSIVE,
                 Required(False),
@@ -157,6 +158,14 @@ def generate_cmp(
                 TextDesignator.SYMBOL_PIN_NAME,
             ))
 
+
+
+    for p in range(1, num_of_pins + 1):
+                print("Map %s  %s %s %s  %s"%( p,  pad_name[p-1],pad_list[p-1], uuid_pins[p-1] ,  _uuid('signal-{}_{}'.format(pad_name[p-1],pad_list[p-1]))     ))
+
+
+
+            
     component.add_variant(Variant(uuid_variant, Norm.EMPTY, Name('default'), Description(''), gate))
 
     component.serialize(dirpath)
