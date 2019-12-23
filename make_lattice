@@ -1,4 +1,3 @@
-rm -r out
 python3.7 generate_fpga_sym.py --design iCE40-HX1K-CB132  --group fpga  --file  ./Lattice/iCE40-HX1K-CB132.csv
 python3.7 generate_fpga_sym.py --design iCE40-HX1K-TQ144  --group fpga --file  ./Lattice/iCE40-HX1K-TQ144.csv
 python3.7 generate_fpga_sym.py --design iCE40-HX1K-VQ100  --group fpga --file  ./Lattice/iCE40-HX1K-VQ100.csv

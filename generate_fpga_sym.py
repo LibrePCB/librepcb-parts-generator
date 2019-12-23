@@ -86,6 +86,8 @@ def generate_sym(
     category      = 'sym'
     top_count     = 12
     bottom_count  = 12
+    left_length   = 0
+    right_length  = 0
     left_count    =  6
     right_count   =  6
     real_width    =  6
@@ -110,8 +112,10 @@ def generate_sym(
     for row in cvs_raw_data[:num_of_pins]: 
       # parsing each column of a row
       pin_type =row[1]
-      if pin_type == "L" :left_count   = left_count   +1
-      if pin_type == "R" :right_count  = right_count  +1
+      if pin_type == "L" :          left_count   = left_count   +1
+      if pin_type == "L" :          left_length = max(round(len(row[0])/5),left_length)
+      if pin_type == "R" :          right_count  = right_count  +1
+      if pin_type == "R" :          right_length = max(round(len(row[0])/5),right_length)
       if pin_type == "T" :top_count    = top_count    +1
       if pin_type == "B" :bottom_count = bottom_count +1
       pad_name.append(row[0])
@@ -121,10 +125,9 @@ def generate_sym(
       
 
 
-    if top_count >= bottom_count : real_width = top_count
-    if left_count >= right_count : real_height = left_count
-    if top_count <= bottom_count : real_width = bottom_count
-    if left_count <= right_count : real_height = right_count
+    real_width = max(top_count,bottom_count) + left_length +  right_length
+    real_height = max(left_count,right_count)
+
 
 
     print("%10s Top   "%top_count)
