@@ -104,27 +104,31 @@ def generate_sym(
                cvs_raw_data.append(row) 
                
                
-          print("Total no. of pins: %d"%(CSVxreader.line_num))
-          num_of_pins = CSVxreader.line_num
+          print("Total no. of rows: %d"%(CSVxreader.line_num))
+          num_of_rows = CSVxreader.line_num
 
     pad_list =[]
     pad_type =[]
     pad_name =[]
     uuid_pins = []
-    for row in cvs_raw_data[:num_of_pins]: 
+    num_of_pins = 0
+    
+    for row in cvs_raw_data[:num_of_rows]: 
       # parsing each column of a row
-      pin_type =row[1]
-      if pin_type == "R" :          left_count   = left_count   +1
-      if pin_type == "R" :          left_length = max(round(len(row[0])/5),left_length)
-      if pin_type == "L" :          right_count  = right_count  +1
-      if pin_type == "L" :          right_length = max(round(len(row[0])/5),right_length)
-      if pin_type == "D" :top_count    = top_count    +1
-      if pin_type == "U" :bottom_count = bottom_count +1
-      pad_name.append(row[0])
-      pad_type.append(row[1])
-      pad_list.append(row[2])
-      uuid_pins.append(uuid('sym',kind,'pin-{}_{}'.format(row[0],row[2])))
-      
+      row_type =row[0]
+      if row_type == "PIN" :
+        pin_type =row[2]
+        if pin_type == "R" :          left_count   = left_count   +1
+        if pin_type == "R" :          left_length = max(round(len(row[1])/5),left_length)
+        if pin_type == "L" :          right_count  = right_count  +1
+        if pin_type == "L" :          right_length = max(round(len(row[1])/5),right_length)
+        if pin_type == "D" :top_count    = top_count    +1
+        if pin_type == "U" :bottom_count = bottom_count +1
+        pad_name.append(row[1])
+        pad_type.append(row[2])
+        pad_list.append(row[3])
+        uuid_pins.append(uuid('sym',kind,'pin-{}_{}'.format(row[1],row[3])))
+        num_of_pins = num_of_pins +1
 
 
     real_width = max(top_count,bottom_count) + left_length +  right_length

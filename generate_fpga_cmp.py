@@ -98,10 +98,10 @@ def generate_cmp(
     uuid_signals =[]
     for row in cvs_raw_data[:num_of_pins]: 
       # parsing each column of a row
-      pad_name.append(row[0])
-      pad_list.append(row[2])
-      uuid_pins.append(uuid('sym', kind,'pin-{}_{}'.format(row[0],row[2])))
-      uuid_signals.append(uuid('cmp', kind,'signal-{}_{}'.format(row[0],row[2])))
+      pad_name.append(row[1])
+      pad_list.append(row[3])
+      uuid_pins.append(uuid('sym', kind,'pin-{}_{}'.format(row[1],row[3])))
+      uuid_signals.append(uuid('cmp', kind,'signal-{}_{}'.format(row[1],row[3])))
 
 
       

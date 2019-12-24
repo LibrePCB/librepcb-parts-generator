@@ -103,11 +103,11 @@ def generate_dev(
 
     for row in cvs_raw_data[:num_of_pins]: 
       # parsing each column of a row
-      pad_name.append(row[0])
-      pad_list.append(row[2])
-      uuid_pads.append(uuid('pkg', package,'pad-{}'.format(row[2]))) 
-      uuid_signals.append(uuid('cmp', kind, 'signal-{}_{}'.format(row[0],row[2])) )
-      print(' {} {} {} {} '.format(row[0],row[2],uuid('cmp', kind, 'signal-{}_{}'.format(row[0],row[2])),uuid('pkg', package,'pad-{}'.format(row[2]))  ))
+      pad_name.append(row[1])
+      pad_list.append(row[3])
+      uuid_pads.append(uuid('pkg', package,'pad-{}'.format(row[3]))) 
+      uuid_signals.append(uuid('cmp', kind, 'signal-{}_{}'.format(row[1],row[3])) )
+      print(' {} {} {} {} '.format(row[1],row[3],uuid('cmp', kind, 'signal-{}_{}'.format(row[1],row[3])),uuid('pkg', package,'pad-{}'.format(row[3]))  ))
 
     for p in range(1, num_of_pins + 1):
        print(' {} {} {}  '.format(p ,uuid_signals[p-1],uuid_pads[p-1]))
