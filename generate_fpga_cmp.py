@@ -8,10 +8,12 @@ parser = argparse.ArgumentParser(description='create a fpga from csv file')
 parser.add_argument("--design")
 parser.add_argument("--group")
 parser.add_argument("--file")
+parser.add_argument("--directory")
 args = parser.parse_args()
 design_name = args.design
 group_name = args.group
 file_name = args.file
+directory_name = args.directory
 
 # initializing 
 
@@ -206,7 +208,7 @@ if __name__ == '__main__':
 
     
     generate_cmp(
-        cvs_file=file_name,
+        cvs_file='{}{}.csv'.format(directory_name,design_name),
         dirpath='out/{}/cmp'.format(group_name),
         author='John E.',
         name=design_name,
