@@ -174,7 +174,7 @@ if __name__ == '__main__':
     
     generate_dev(
         cvs_file=file_name,
-        dirpath='out/fpga/dev',
+        dirpath='out/{}/dev'.format(group_name),
         author='John E.',
         name=design_name,
         kind=design_name,

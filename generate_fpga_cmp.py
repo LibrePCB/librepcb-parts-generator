@@ -207,7 +207,7 @@ if __name__ == '__main__':
     
     generate_cmp(
         cvs_file=file_name,
-        dirpath='out/fpga/cmp',
+        dirpath='out/{}/cmp'.format(group_name),
         author='John E.',
         name=design_name,
         kind=design_name,

@@ -8,10 +8,12 @@ parser = argparse.ArgumentParser(description='create a fpga from csv file')
 parser.add_argument("--design")
 parser.add_argument("--group")
 parser.add_argument("--file")
+parser.add_argument("--directory")
 args = parser.parse_args()
 design_name = args.design
 group_name = args.group
 file_name = args.file
+directory_name = args.directory
 
 # initializing 
 
@@ -112,12 +114,12 @@ def generate_sym(
     for row in cvs_raw_data[:num_of_pins]: 
       # parsing each column of a row
       pin_type =row[1]
-      if pin_type == "L" :          left_count   = left_count   +1
-      if pin_type == "L" :          left_length = max(round(len(row[0])/5),left_length)
-      if pin_type == "R" :          right_count  = right_count  +1
-      if pin_type == "R" :          right_length = max(round(len(row[0])/5),right_length)
-      if pin_type == "T" :top_count    = top_count    +1
-      if pin_type == "B" :bottom_count = bottom_count +1
+      if pin_type == "R" :          left_count   = left_count   +1
+      if pin_type == "R" :          left_length = max(round(len(row[0])/5),left_length)
+      if pin_type == "L" :          right_count  = right_count  +1
+      if pin_type == "L" :          right_length = max(round(len(row[0])/5),right_length)
+      if pin_type == "D" :top_count    = top_count    +1
+      if pin_type == "U" :bottom_count = bottom_count +1
       pad_name.append(row[0])
       pad_type.append(row[1])
       pad_list.append(row[2])
@@ -186,14 +188,14 @@ def generate_sym(
     x_max      =  round(real_width/2+.5) *width  
     left_pin   = y_max -width*2
     right_pin  = y_max -width*2
-    top_pin    = w -width*2
-    bottom_pin = w -width*2
+    top_pin    = w -width*6
+    bottom_pin = w -width*4
 
     for p in range(1, num_of_pins + 1, 1):
       # parsing each column of a row
       pin_type =pad_type[p-1]
       pin_name =pad_name[p-1]
-      if pin_type == "L" :      pin = SymbolPin(
+      if pin_type == "R" :      pin = SymbolPin(
                             uuid_pins[p - 1],
                             Name( pin_name),
                             Position((x_min-width) , left_pin),
@@ -201,7 +203,7 @@ def generate_sym(
                             Length(width)
                             )
 
-      if pin_type == "R" :      pin = SymbolPin(
+      if pin_type == "L" :      pin = SymbolPin(
                             uuid_pins[p - 1],
                             Name( pin_name),
                             Position((x_max+width) , right_pin),
@@ -209,7 +211,7 @@ def generate_sym(
                             Length(width)
                             )
 
-      if pin_type == "T" :      pin = SymbolPin(
+      if pin_type == "D" :      pin = SymbolPin(
                             uuid_pins[p - 1],
                             Name( pin_name),
                             Position((top_pin) , y_max+ width),
@@ -218,7 +220,7 @@ def generate_sym(
                             )
 
 
-      if pin_type == "B" :      pin = SymbolPin(
+      if pin_type == "U" :      pin = SymbolPin(
                             uuid_pins[p - 1],
                             Name( pin_name),
                             Position((bottom_pin) , y_min - width),
@@ -230,13 +232,13 @@ def generate_sym(
 
       
                             
-      if pin_type == "L" :      left_pin =  left_pin -width
+      if pin_type == "R" :      left_pin =  left_pin -width
 
-      if pin_type == "R" :      right_pin =  right_pin -width
+      if pin_type == "L" :      right_pin =  right_pin -width
 
-      if pin_type == "T" :      top_pin =  top_pin -width
+      if pin_type == "D" :      top_pin =  top_pin -width
 
-      if pin_type == "B" :      bottom_pin =  bottom_pin -width            
+      if pin_type == "U" :      bottom_pin =  bottom_pin -width            
                             
       p = p +1
       symbol.add_pin(pin)
@@ -292,8 +294,8 @@ if __name__ == '__main__':
 
 
     generate_sym(
-        cvs_file=file_name,
-        dirpath='out/fpga/sym',
+        cvs_file='{}{}.csv'.format(directory_name,design_name),
+        dirpath='out/{}/sym'.format(group_name),
         author='John E.',
         name=design_name,
         kind=design_name,
