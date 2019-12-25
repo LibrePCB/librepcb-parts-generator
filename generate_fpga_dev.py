@@ -83,7 +83,7 @@ def generate_dev(
     create_date: Optional[str],
 ) -> None:
     category      = 'dev'
-    print("device: %s   %s  %s"%(design_name, file_name, package ))    
+
     with open(cvs_file, 'r') as CSVxfile: 
           # creating a csv reader object 
           CSVxreader = csv.reader(CSVxfile)  
@@ -92,7 +92,7 @@ def generate_dev(
                cvs_raw_data.append(row) 
                
           print("Total no. of pins: %d"%(CSVxreader.line_num))
-          num_of_pins = CSVxreader.line_num
+          num_of_rows = CSVxreader.line_num
 
 
 
@@ -100,15 +100,23 @@ def generate_dev(
     pad_list =[]
     pad_name =[]
     lines = []
+    num_of_pins = 0
 
-    for row in cvs_raw_data[:num_of_pins]: 
+    for row in cvs_raw_data[:num_of_rows]: 
       # parsing each column of a row
-      pad_name.append(row[1])
-      pad_list.append(row[3])
-      uuid_pads.append(uuid('pkg', package,'pad-{}'.format(row[3]))) 
-      uuid_signals.append(uuid('cmp', kind, 'signal-{}_{}'.format(row[1],row[3])) )
-      print(' {} {} {} {} '.format(row[1],row[3],uuid('cmp', kind, 'signal-{}_{}'.format(row[1],row[3])),uuid('pkg', package,'pad-{}'.format(row[3]))  ))
 
+      if row[0] == "FOOT":  package = row[1]
+        
+      if row[0] == "PIN":  
+        pad_name.append(row[1])
+        pad_list.append(row[3])
+        uuid_pads.append(uuid('pkg', package,'pad-{}'.format(row[3]))) 
+        uuid_signals.append(uuid('cmp', kind, 'signal-{}_{}'.format(row[1],row[3])) )
+        print(' {} {} {} {} '.format(row[1],row[3],uuid('cmp', kind, 'signal-{}_{}'.format(row[1],row[3])),uuid('pkg', package,'pad-{}'.format(row[3]))  ))
+        num_of_pins = num_of_pins +1
+        
+    print("device: %s   %s  %s"%(design_name, file_name, package ))    
+        
     for p in range(1, num_of_pins + 1):
        print(' {} {} {}  '.format(p ,uuid_signals[p-1],uuid_pads[p-1]))
 
