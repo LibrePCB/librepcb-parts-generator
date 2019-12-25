@@ -7,12 +7,10 @@ import argparse
 parser = argparse.ArgumentParser(description='create a fpga from csv file')
 parser.add_argument("--design")
 parser.add_argument("--group")
-parser.add_argument("--file")
 parser.add_argument("--directory")
 args = parser.parse_args()
 design_name = args.design
 group_name = args.group
-file_name = args.file
 directory_name = args.directory
 
 # initializing 

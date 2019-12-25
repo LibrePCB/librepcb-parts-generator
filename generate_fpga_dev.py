@@ -7,13 +7,11 @@ import argparse
 parser = argparse.ArgumentParser(description='create a fpga from csv file')
 parser.add_argument("--design")
 parser.add_argument("--group")
-parser.add_argument("--file")
-parser.add_argument("--package")
+parser.add_argument("--directory")
 args = parser.parse_args()
 design_name = args.design
 group_name = args.group
-file_name = args.file
-package = args.package
+directory_name = args.directory
 
 
 # initializing 
@@ -90,8 +88,6 @@ def generate_dev(
           # extracting each data row one by one 
           for row in CSVxreader:
                cvs_raw_data.append(row) 
-               
-          print("Total no. of pins: %d"%(CSVxreader.line_num))
           num_of_rows = CSVxreader.line_num
 
 
@@ -101,7 +97,8 @@ def generate_dev(
     pad_name =[]
     lines = []
     num_of_pins = 0
-
+    package = "none"
+    
     for row in cvs_raw_data[:num_of_rows]: 
       # parsing each column of a row
 
@@ -112,13 +109,11 @@ def generate_dev(
         pad_list.append(row[3])
         uuid_pads.append(uuid('pkg', package,'pad-{}'.format(row[3]))) 
         uuid_signals.append(uuid('cmp', kind, 'signal-{}_{}'.format(row[1],row[3])) )
-        print(' {} {} {} {} '.format(row[1],row[3],uuid('cmp', kind, 'signal-{}_{}'.format(row[1],row[3])),uuid('pkg', package,'pad-{}'.format(row[3]))  ))
         num_of_pins = num_of_pins +1
         
-    print("device: %s   %s  %s"%(design_name, file_name, package ))    
+    print("device: %s Number of pins %s"%(design_name,num_of_pins ))    
         
-    for p in range(1, num_of_pins + 1):
-       print(' {} {} {}  '.format(p ,uuid_signals[p-1],uuid_pads[p-1]))
+
 
       
     uuid_dev = uuid('dev', kind, 'dev')
@@ -148,20 +143,17 @@ def generate_dev(
     lines.extend(sorted(signalmappings))
     lines.append(')')
 
-    for p in range(1, num_of_pins + 1):
-       print(' {} {} {}  '.format(p ,uuid_signals[p-1],uuid_pads[p-1]))
+    if package != "none":    
+      dev_dir_path = path.join(dirpath, uuid_dev)
+      if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
+                 makedirs(dev_dir_path)
+      with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
+                  f.write('0.1\n')
+      with open(path.join(dev_dir_path, 'device.lp'), 'w') as f:
+                 f.write('\n'.join(lines))
+                 f.write('\n')
 
-    
-    dev_dir_path = path.join(dirpath, uuid_dev)
-    if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
-               makedirs(dev_dir_path)
-    with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
-                f.write('0.1\n')
-    with open(path.join(dev_dir_path, 'device.lp'), 'w') as f:
-               f.write('\n'.join(lines))
-               f.write('\n')
-
-    print(' {}'.format(uuid_dev))
+      print(' {}'.format(uuid_dev))
 
 
 
@@ -181,7 +173,7 @@ if __name__ == '__main__':
 
     
     generate_dev(
-        cvs_file=file_name,
+        cvs_file='{}{}.csv'.format(directory_name,design_name),
         dirpath='out/{}/dev'.format(group_name),
         author='John E.',
         name=design_name,
@@ -193,4 +185,4 @@ if __name__ == '__main__':
         create_date='2019-12-17T00:00:00Z',
     )
 
-    save_cache(uuid_cache_file, uuid_cache)
+

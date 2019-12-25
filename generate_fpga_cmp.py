@@ -7,12 +7,10 @@ import argparse
 parser = argparse.ArgumentParser(description='create a fpga from csv file')
 parser.add_argument("--design")
 parser.add_argument("--group")
-parser.add_argument("--file")
 parser.add_argument("--directory")
 args = parser.parse_args()
 design_name = args.design
 group_name = args.group
-file_name = args.file
 directory_name = args.directory
 
 # initializing 
@@ -89,7 +87,7 @@ def generate_cmp(
           for row in CSVxreader:
                cvs_raw_data.append(row) 
                
-          print("Total no. of pins: %d"%(CSVxreader.line_num))
+
           num_of_rows = CSVxreader.line_num
 
     pad_list =[]
@@ -125,9 +123,6 @@ def generate_cmp(
 
 
 
-    for p in range(1, num_of_pins + 1, 1):
-
-         print('Cmp  {} {} {} {} '.format(pad_name[p-1],pad_list[p-1],  uuid_signals[p-1], uuid_pins[p-1] ))
 
 
     
@@ -177,8 +172,7 @@ def generate_cmp(
 
 
 
-    for p in range(1, num_of_pins + 1):
-                print("Map %s  %s %s %s  %s"%( p,  pad_name[p-1],pad_list[p-1], uuid_pins[p-1] ,  _uuid('signal-{}_{}'.format(pad_name[p-1],pad_list[p-1]))     ))
+
 
 
 
