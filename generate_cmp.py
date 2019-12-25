@@ -4,7 +4,7 @@ import csv
 import sys
 import argparse
 
-parser = argparse.ArgumentParser(description='create a fpga from csv file')
+parser = argparse.ArgumentParser(description='create a component from csv file')
 parser.add_argument("--design")
 parser.add_argument("--group")
 parser.add_argument("--directory")
@@ -40,7 +40,7 @@ from entities.component import (
 from entities.symbol import Pin as SymbolPin
 from entities.symbol import Symbol
 
-generator = 'librepcb-parts-generator (generate_fpga_cmp.py)'
+generator = 'librepcb-parts-generator (generate_cmp.py)'
 
 
 
@@ -78,7 +78,6 @@ def generate_cmp(
     dirpath: str,
     author: str,
     name: str,
-    kind: str,
     cmpcat: str,
     default_value: str,
     create_date: Optional[str],
@@ -114,14 +113,14 @@ def generate_cmp(
       if row_type == "PIN":  
           pad_name.append(row[1])
           pad_list.append(row[3])
-          uuid_pins.append(uuid('sym', kind,'pin-{}_{}'.format(row[1],row[3])))
-          uuid_signals.append(uuid('cmp', kind,'signal-{}_{}'.format(row[1],row[3])))
+          uuid_pins.append(uuid('sym', name,'pin-{}_{}'.format(row[1],row[3])))
+          uuid_signals.append(uuid('cmp', name,'signal-{}_{}'.format(row[1],row[3])))
           num_of_pins = num_of_pins + 1
 
       
       
     def _uuid(identifier: str) -> str:
-            return uuid(category, kind, identifier)
+            return uuid(category, name, identifier)
 
 
           
@@ -132,8 +131,8 @@ def generate_cmp(
     uuid_cmp = _uuid('cmp')
     uuid_variant = _uuid('variant-default')
     uuid_gate = _uuid('gate-default')
-    uuid_symbol = uuid('sym', kind, 'sym')
-    uuid_dev =   uuid('dev', kind, 'dev')
+    uuid_symbol = uuid('sym', name, 'sym')
+    uuid_dev =   uuid('dev', name, 'dev')
 
 
 
@@ -222,7 +221,6 @@ if __name__ == '__main__':
         dirpath='out/{}/cmp'.format(group_name),
         author='John E.',
         name=design_name,
-        kind=design_name,
         cmpcat=cmpcat,
         default_value='{{PARTNUMBER or DEVICE or COMPONENT}}',
         create_date='2019-12-17T00:00:00Z',

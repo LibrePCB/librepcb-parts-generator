@@ -4,7 +4,7 @@ import csv
 import sys
 import argparse
 
-parser = argparse.ArgumentParser(description='create a fpga from csv file')
+parser = argparse.ArgumentParser(description='create a symbol from csv file')
 parser.add_argument("--design")
 parser.add_argument("--group")
 parser.add_argument("--directory")
@@ -40,7 +40,7 @@ from entities.component import (
 from entities.symbol import Pin as SymbolPin
 from entities.symbol import Symbol
 
-generator = 'librepcb-parts-generator (generate_fpga_sym.py)'
+generator = 'librepcb-parts-generator (generate_sym.py)'
 
 width = 2.54
 line_width = 0.25
@@ -90,7 +90,6 @@ def generate_sym(
     dirpath: str,
     author: str,
     name: str,
-    kind: str,
     cmpcat: str,
     create_date: Optional[str],
 ) -> None:
@@ -136,16 +135,18 @@ def generate_sym(
 
       if row_type == "PIN" :
         pin_type =row[2]
-        if pin_type == "R" :          left_count   = left_count   +1
-        if pin_type == "R" :          left_length = max(round(len(row[1])/5),left_length)
-        if pin_type == "L" :          right_count  = right_count  +1
-        if pin_type == "L" :          right_length = max(round(len(row[1])/5),right_length)
+        if pin_type == "R" :
+            left_count   = left_count   +1
+            left_length = max(round(len(row[1])/5),left_length)
+        if pin_type == "L" :
+            right_count  = right_count  +1
+            right_length = max(round(len(row[1])/5),right_length)
         if pin_type == "D" :top_count    = top_count    +1
         if pin_type == "U" :bottom_count = bottom_count +1
         pad_name.append(row[1])
         pad_type.append(row[2])
         pad_list.append(row[3])
-        uuid_pins.append(uuid('sym',kind,'pin-{}_{}'.format(row[1],row[3])))
+        uuid_pins.append(uuid('sym',name,'pin-{}_{}'.format(row[1],row[3])))
         num_of_pins = num_of_pins +1
 
 
@@ -165,7 +166,7 @@ def generate_sym(
 
 
     def _uuid(identifier: str) -> str:
-            return uuid(category, kind, identifier)
+            return uuid(category, name, identifier)
 
           
 
@@ -194,14 +195,7 @@ def generate_sym(
             Version(version),
             Created(create_date or now()),
             Category(cmpcat),
-        )
-
-
-        
-
-
-
-    
+        )    
 
     y_max      =  round(real_height/2) * width 
     y_min      = -round(real_height/2) * width
@@ -303,7 +297,7 @@ def generate_sym(
             f.write(str(symbol))
             f.write('\n')
 
-    print(' {}: Wrote symbol {}'.format( kind, uuid_sym))
+    print(' {}: Wrote symbol {}'.format( name, uuid_sym))
 
             
 if __name__ == '__main__':
@@ -320,7 +314,6 @@ if __name__ == '__main__':
         dirpath='out/{}/sym'.format(group_name),
         author='John E.',
         name=design_name,
-        kind=design_name,
         cmpcat=cmpcat,
         create_date='2019-12-17T00:00:00Z',
     )

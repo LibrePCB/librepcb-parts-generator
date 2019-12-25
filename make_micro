@@ -1,8 +1,8 @@
-python3.7 generate_fpga_sym.py --design PIC18F2455  --group micro  --directory  ./Microchip/
-python3.7 generate_fpga_cmp.py --design PIC18F2455  --group micro  --directory   ./Microchip/
+python3.7 generate_sym.py --design PIC18F2455  --group micro  --directory  ./Microchip/
+python3.7 generate_cmp.py --design PIC18F2455  --group micro  --directory   ./Microchip/
 cp  uuid_cache_micro.csv uuid_cache_micro_pkg.csv 
 cat uuid_cache_dip.csv >>  uuid_cache_micro_pkg.csv
-python3.7 generate_fpga_dev.py --design PIC18F2455  --group micro  --directory ./Microchip/ 
+python3.7 generate_dev.py --design PIC18F2455  --group micro  --directory ./Microchip/ 
 
 
 
