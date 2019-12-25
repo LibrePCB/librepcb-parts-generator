@@ -75,12 +75,12 @@ def generate_dev(
     name: str,
     kind: str,
     cmpcat: str,
-    keywords: str,
     default_value: str,
-    version: str,
     create_date: Optional[str],
 ) -> None:
     category      = 'dev'
+    version       = '0.1'
+    keywords      = '   '
 
     with open(cvs_file, 'r') as CSVxfile: 
           # creating a csv reader object 
@@ -101,10 +101,14 @@ def generate_dev(
     
     for row in cvs_raw_data[:num_of_rows]: 
       # parsing each column of a row
+      row_type =row[0]
 
-      if row[0] == "FOOT":  package = row[1]
+      if row_type == "VERSION" :        version =row[1]
+      if row_type == "KEYWORDS" :       keywords =row[1]
+
+      if row_type == "FOOT":  package = row[1]
         
-      if row[0] == "PIN":  
+      if row_type == "PIN":  
         pad_name.append(row[1])
         pad_list.append(row[3])
         uuid_pads.append(uuid('pkg', package,'pad-{}'.format(row[3]))) 
@@ -124,11 +128,11 @@ def generate_dev(
 
     lines.append('(librepcb_device {}'.format(uuid_dev))
     lines.append(' (name "{}")'.format(name))
-    lines.append(' (description "A  '
+    lines.append(' (description "  '
                    'Generated with {}")'.format(generator))
     lines.append(' (keywords "{}")'.format(keywords))
     lines.append(' (author "{}")'.format(author))
-    lines.append(' (version "0.1")')
+    lines.append(' (version "{}")'.format(version))
     lines.append(' (created {})'.format(create_date or now()))
     lines.append(' (deprecated false)')
     lines.append(' (category {})'.format(cmpcat))
@@ -179,9 +183,7 @@ if __name__ == '__main__':
         name=design_name,
         kind=design_name,
         cmpcat='c3dfb625-e6e4-46c1-a1df-d14eeecfc965',
-        keywords='Fpga',
         default_value='{{PARTNUMBER}}',
-        version='0.1',
         create_date='2019-12-17T00:00:00Z',
     )
 

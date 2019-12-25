@@ -73,13 +73,13 @@ def generate_cmp(
     name: str,
     kind: str,
     cmpcat: str,
-    keywords: str,
     default_value: str,
-    version: str,
     create_date: Optional[str],
 ) -> None:
     category      = 'cmp'
-    
+    version       = '0.1'
+    keywords      = '   '
+
     with open(cvs_file, 'r') as CSVxfile: 
           # creating a csv reader object 
           CSVxreader = csv.reader(CSVxfile)  
@@ -97,12 +97,19 @@ def generate_cmp(
     num_of_pins  = 0
     for row in cvs_raw_data[:num_of_rows]: 
       # parsing each column of a row
-      if row[0] == "PIN":  
-        pad_name.append(row[1])
-        pad_list.append(row[3])
-        uuid_pins.append(uuid('sym', kind,'pin-{}_{}'.format(row[1],row[3])))
-        uuid_signals.append(uuid('cmp', kind,'signal-{}_{}'.format(row[1],row[3])))
-        num_of_pins = num_of_pins + 1
+      row_type =row[0]
+
+      if row_type == "VERSION" :        version =row[1]
+      if row_type == "KEYWORDS" :       keywords =row[1]
+
+        
+
+      if row_type == "PIN":  
+          pad_name.append(row[1])
+          pad_list.append(row[3])
+          uuid_pins.append(uuid('sym', kind,'pin-{}_{}'.format(row[1],row[3])))
+          uuid_signals.append(uuid('cmp', kind,'signal-{}_{}'.format(row[1],row[3])))
+          num_of_pins = num_of_pins + 1
 
       
       
@@ -210,9 +217,7 @@ if __name__ == '__main__':
         name=design_name,
         kind=design_name,
         cmpcat='c3dfb625-e6e4-46c1-a1df-d14eeecfc965',
-        keywords='Fpga',
         default_value='{{PARTNUMBER}}',
-        version='0.1',
         create_date='2019-12-17T00:00:00Z',
     )
 
