@@ -42,9 +42,7 @@ from entities.symbol import Symbol
 
 generator = 'librepcb-parts-generator (generate_fpga_cmp.py)'
 
-# Initialize UUID cache
-uuid_cache_file = 'uuid_cache_{}.csv'.format(group_name)
-uuid_cache = init_cache(uuid_cache_file)
+
 
 
 def uuid(category: str, kind: str, identifier: str) -> str:
@@ -65,6 +63,15 @@ def uuid(category: str, kind: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
+uuid_cmpcat_file = 'uuid_cache_cmpcat.csv'
+uuid_cache = init_cache(uuid_cmpcat_file)
+cmpcat = uuid('cmpcat',design_name,"cmpcat")
+save_cache(uuid_cmpcat_file, uuid_cache)
+
+
+# Initialize UUID cache
+uuid_cache_file = 'uuid_cache_{}.csv'.format(group_name)
+uuid_cache = init_cache(uuid_cache_file)
 
 def generate_cmp(
     cvs_file: str, 
@@ -216,8 +223,8 @@ if __name__ == '__main__':
         author='John E.',
         name=design_name,
         kind=design_name,
-        cmpcat='c3dfb625-e6e4-46c1-a1df-d14eeecfc965',
-        default_value='{{PARTNUMBER}}',
+        cmpcat=cmpcat,
+        default_value='{{PARTNUMBER or DEVICE or COMPONENT}}',
         create_date='2019-12-17T00:00:00Z',
     )
 

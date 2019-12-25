@@ -44,9 +44,6 @@ from entities.symbol import Symbol
 
 generator = 'librepcb-parts-generator (generate_fpga_dev.py)'
 
-# Initialize UUID cache
-uuid_cache_file = 'uuid_cache_{}_pkg.csv'.format(group_name)
-uuid_cache = init_cache(uuid_cache_file)
 
 
 def uuid(category: str, kind: str, identifier: str) -> str:
@@ -65,6 +62,18 @@ def uuid(category: str, kind: str, identifier: str) -> str:
     if key not in uuid_cache:
         uuid_cache[key] = str(uuid4())
     return uuid_cache[key]
+
+# Initialize cmpcat UUID 
+uuid_cmpcat_file = 'uuid_cache_cmpcat.csv'
+uuid_cache = init_cache(uuid_cmpcat_file)
+cmpcat = uuid('cmpcat',design_name,"cmpcat")
+save_cache(uuid_cmpcat_file, uuid_cache)
+
+
+# Initialize UUID cache
+uuid_cache_file = 'uuid_cache_{}_pkg.csv'.format(group_name)
+uuid_cache = init_cache(uuid_cache_file)
+
 
 
 
@@ -182,7 +191,7 @@ if __name__ == '__main__':
         author='John E.',
         name=design_name,
         kind=design_name,
-        cmpcat='c3dfb625-e6e4-46c1-a1df-d14eeecfc965',
+        cmpcat=cmpcat,
         default_value='{{PARTNUMBER}}',
         create_date='2019-12-17T00:00:00Z',
     )
