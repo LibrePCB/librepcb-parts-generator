@@ -431,6 +431,7 @@ if __name__ == '__main__':
                 keywords='dfn,dual-flat no-leads',
                 config=config,
                 make_exposed=make_exposed,
+                create_date=config.create_date,
             )
             if name not in generated_packages:
                 generated_packages.append(name)

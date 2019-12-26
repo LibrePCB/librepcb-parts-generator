@@ -46,6 +46,7 @@ class DfnConfig:
                  print_pad: bool = False,    # By default, the pad length is not in the full name
                  lead_width: Optional[float] = None,
                  name: Optional[str] = None,
+                 create_date: Optional[str] = None,
                  pin1_corner_dx_dy: Optional[float] = None,  # Some parts have a triangular pin1 marking
                  ):
         self.length = length
@@ -74,6 +75,7 @@ class DfnConfig:
 
         self.keywords = keywords
         self.name = name
+        self.create_date = create_date
 
 
 JEDEC_CONFIGS = [
@@ -277,6 +279,7 @@ THIRD_CONFIGS = [
         exposed_length=0.70,
         keywords='sensirion,sht,shtcx,shtc1,shtc3',
         name='SENSIRION_SHTCx',
+        create_date='2019-01-24T21:50:44Z',
         no_exp=False,
         pin1_corner_dx_dy=0.2,
     ),
@@ -293,6 +296,7 @@ THIRD_CONFIGS = [
         exposed_length=1.5,
         keywords='sensirion,sht,sht2x,sht20,sht21,sht25',
         name='SENSIRION_SHT2x',
+        create_date='2019-01-24T22:13:46Z',
         no_exp=False,
         pin1_corner_dx_dy=0.2,
     ),
