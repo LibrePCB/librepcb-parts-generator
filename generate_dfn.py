@@ -136,7 +136,7 @@ def generate_pkg(
     else:
         lines.append(' (keywords "dfn{},{}")'.format(config.pin_count, keywords))
     lines.append(' (author "{}")'.format(author))
-    lines.append(' (version "0.1")')
+    lines.append(' (version "0.1.1")')
     lines.append(' (created {})'.format(create_date or now()))
     lines.append(' (deprecated false)')
     lines.append(' (category {})'.format(pkgcat))
@@ -291,6 +291,20 @@ def generate_pkg(
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_min))
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_max))
             lines.append('  )')
+
+        # Create body outline on docu
+        uuid_body_outline = _uuid('body-outline')
+        outline_line_width = 0.2
+        dx = config.width / 2 - outline_line_width / 2
+        dy = config.length / 2 - outline_line_width / 2
+        lines.append('  (polygon {} (layer top_documentation)'.format(uuid_body_outline))
+        lines.append('   (width {}) (fill false) (grab_area false)'.format(outline_line_width))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-dx, dy))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, -dy))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-dx, -dy))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-dx, dy))
+        lines.append('  )')
 
         # As discussed in https://github.com/LibrePCB-Libraries/LibrePCB_Base.lplib/pull/16
         # the silkscreen circle should have size SILKSCREEN_LINE_WIDTH for small packages,
