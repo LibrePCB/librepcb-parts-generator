@@ -315,6 +315,23 @@ THIRD_CONFIGS = [
         no_exp=False,
         pin1_corner_dx_dy=0.2,
     ),
+    DfnConfig(
+        length=2.45,
+        width=2.45,
+        pitch=0.8,
+        pin_count=6,
+        height_nominal=0.9,
+        height_max=0.9,
+        lead_length=0.35,
+        lead_width=0.4,
+        exposed_width=1.7,
+        exposed_length=1.25,
+        keywords='sensirion,sgp,sgp30,sgpc3',
+        name='SENSIRION_SGPxx',
+        no_exp=False,
+        pin1_corner_dx_dy=0.3,
+        extended_doc_fn=draw_circle(diameter=1.1),
+    ),
 
     # Microchip
     DfnConfig(2.0, 3.0, 0.5, 8, 0.90, 1.00, 0.40, 1.75, 1.45, '', no_exp=False),
