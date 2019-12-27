@@ -194,7 +194,7 @@ def generate_pkg(
             lines.append('  )')
 
         # Make exposed pad, if required
-        # TODO: Handle pin1_corner_dx_dy in config
+        # TODO: Handle pin1_corner_dx_dy in config once custom pad shapes are possible
         if make_exposed:
             lines.append('  (pad {} (side top) (shape rect)'.format(uuid_exp))
             lines.append('   (position 0.0 0.0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
