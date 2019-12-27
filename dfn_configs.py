@@ -3,7 +3,9 @@ Configuration file, containing all available DFN configs.
 
 """
 
-from typing import Optional
+from typing import Callable, List, Optional
+
+from common import format_float as ff
 
 # Maximal lead width as a function of pitch, Table 4 in the JEDEC
 # standard MO-229F, available (with registration!) from
@@ -48,6 +50,7 @@ class DfnConfig:
                  name: Optional[str] = None,
                  create_date: Optional[str] = None,
                  pin1_corner_dx_dy: Optional[float] = None,  # Some parts have a triangular pin1 marking
+                 extended_doc_fn: Optional[Callable[['DfnConfig', Callable[[str], str], List[str]], None]] = None,
                  ):
         self.length = length
         self.width = width
@@ -76,6 +79,8 @@ class DfnConfig:
         self.keywords = keywords
         self.name = name
         self.create_date = create_date
+
+        self.extended_doc_fn = extended_doc_fn
 
 
 JEDEC_CONFIGS = [
@@ -262,6 +267,15 @@ JEDEC_CONFIGS = [
     DfnConfig(6.0, 5.0, 0.5, 18, 0.75, 0.80, 0.55, 4.70, 3.40, 'W6050D-2,WLJD-2', no_exp=False),    # no nominal exp_pad
 ]
 
+
+def draw_circle(diameter: float) -> Callable[[DfnConfig, Callable[[str], str], List[str]], None]:
+    def _draw(config: DfnConfig, uuid: Callable[[str], str], lines: List[str]) -> None:
+        lines.append('  (circle {} (layer top_documentation)'.format(uuid('hole-circle-doc')))
+        lines.append('   (width 0.1) (fill false) (grab_area false) (diameter {}) (position 0.0 0.0)'.format(ff(diameter)))
+        lines.append('  )')
+    return _draw
+
+
 THIRD_CONFIGS = [
     # length, width, pitch, pin_count, height_nominal, height_max, lead_length, exposed_width, exposed_length, keywords
 
@@ -282,6 +296,7 @@ THIRD_CONFIGS = [
         create_date='2019-01-24T21:50:44Z',
         no_exp=False,
         pin1_corner_dx_dy=0.2,
+        extended_doc_fn=draw_circle(diameter=0.9),
     ),
     DfnConfig(
         length=3.0,
