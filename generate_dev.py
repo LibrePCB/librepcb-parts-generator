@@ -64,7 +64,7 @@ def uuid(category: str, kind: str, identifier: str) -> str:
     return uuid_cache[key]
 
 # Initialize cmpcat UUID 
-uuid_cmpcat_file = 'uuid_cache_cmpcat.csv'
+uuid_cmpcat_file = 'uuid_cache_{}_cmpcat.csv'.format(group_name)
 uuid_cache = init_cache(uuid_cmpcat_file)
 cmpcat = uuid('cmpcat',design_name,"cmpcat")
 save_cache(uuid_cmpcat_file, uuid_cache)
