@@ -1,3 +1,4 @@
+pkg-dfn50p150x100x75-4-body-outline,ac360f70-211e-4ff1-93a2-426611de67b2
 pkg-dfn50p150x100x75-4-circle-silkscreen-hand-soldering,b150b3e3-14a3-4d2c-aaba-7aec7effe30b
 pkg-dfn50p150x100x75-4-circle-silkscreen-reflow,7eba50ab-b8ed-439f-9b40-54b60b0cfa65
 pkg-dfn50p150x100x75-4-footprint-hand-soldering,22b85fc9-f2fd-4884-a5b2-1c35c859ecbe
@@ -19,6 +20,7 @@ pkg-dfn50p150x100x75-4-text-name-hand-soldering,789103de-1bf1-4a1f-bac4-6b2d6482
 pkg-dfn50p150x100x75-4-text-name-reflow,88c125fb-3529-41ba-bae6-d932c45e2771
 pkg-dfn50p150x100x75-4-text-value-hand-soldering,1b70dec8-45df-4f05-8b4b-e7c556bbf785
 pkg-dfn50p150x100x75-4-text-value-reflow,468584be-b6e3-48e6-a9d2-daa3b7ad5f3f
+pkg-dfn50p150x100x95-4-body-outline,031e1d8f-218d-4619-97e2-e2870696d3d6
 pkg-dfn50p150x100x95-4-circle-silkscreen-hand-soldering,e66b29f6-6193-4dfc-a8d2-3d40f40954ad
 pkg-dfn50p150x100x95-4-circle-silkscreen-reflow,f8926d16-8ec3-432d-bbfd-5b47e4fafd66
 pkg-dfn50p150x100x95-4-footprint-hand-soldering,be95bc31-1e16-4889-b3b6-57301109aafd
@@ -40,6 +42,7 @@ pkg-dfn50p150x100x95-4-text-name-hand-soldering,6b78fd0f-57dd-443b-baa9-0f8746be
 pkg-dfn50p150x100x95-4-text-name-reflow,2d541dd5-e28e-4182-906b-2e5ce49d2551
 pkg-dfn50p150x100x95-4-text-value-hand-soldering,d5bd2481-2652-44df-b8fa-ec6ec1336163
 pkg-dfn50p150x100x95-4-text-value-reflow,20916a23-6190-4306-9d40-15ad878de0d4
+pkg-dfn50p150x150x75-4-body-outline,8730ffe7-ea74-44e1-9882-0914bae250e8
 pkg-dfn50p150x150x75-4-circle-silkscreen-hand-soldering,86396a49-1c2f-45c4-a78a-67a64a9f9bfd
 pkg-dfn50p150x150x75-4-circle-silkscreen-reflow,cd54b0f3-74b6-495b-8e49-90e37cd56c9e
 pkg-dfn50p150x150x75-4-footprint-hand-soldering,5afb3842-5487-4481-9aa4-d9183f70bf97
@@ -61,6 +64,7 @@ pkg-dfn50p150x150x75-4-text-name-hand-soldering,9a30ecdd-82c5-44b5-9d6e-8c0c9d19
 pkg-dfn50p150x150x75-4-text-name-reflow,3f300ac0-12e5-4603-af23-322df5b70cc3
 pkg-dfn50p150x150x75-4-text-value-hand-soldering,f4198f5e-90af-4f85-9cfa-a0325b847d8b
 pkg-dfn50p150x150x75-4-text-value-reflow,a37973f9-e385-4409-8440-a7d6d322f81e
+pkg-dfn50p150x150x75-4t70x10-body-outline,509ca4ae-0077-49fd-8d88-29751d71b550
 pkg-dfn50p150x150x75-4t70x10-circle-silkscreen-hand-soldering,ac923a60-e103-4d6b-98a3-7bd509a03ecf
 pkg-dfn50p150x150x75-4t70x10-circle-silkscreen-reflow,150a293e-f5aa-497d-b9a1-449de6c0c7cc
 pkg-dfn50p150x150x75-4t70x10-exposed,9471c658-3264-4f4e-98bd-2ff03297127e
@@ -84,6 +88,7 @@ pkg-dfn50p150x150x75-4t70x10-text-name-hand-soldering,d17ad713-f7e4-43af-800a-30
 pkg-dfn50p150x150x75-4t70x10-text-name-reflow,7cb6e9ed-b692-44c0-b216-d5d209ed8304
 pkg-dfn50p150x150x75-4t70x10-text-value-hand-soldering,c6845b9b-71b6-4b11-9fe7-2cf841daaed4
 pkg-dfn50p150x150x75-4t70x10-text-value-reflow,c9fe02a0-c0f9-44a8-b966-27ddbba02b7f
+pkg-dfn50p150x150x95-4-body-outline,1ee188f6-1e9c-46d7-9040-f2ad287162f6
 pkg-dfn50p150x150x95-4-circle-silkscreen-hand-soldering,e76fd34e-6ae8-4672-9b47-924156669173
 pkg-dfn50p150x150x95-4-circle-silkscreen-reflow,4de982ab-b706-4649-bf52-c221bdbdcb18
 pkg-dfn50p150x150x95-4-footprint-hand-soldering,708aedf5-9c4e-4686-b08b-fd7f77a3b818
@@ -105,6 +110,7 @@ pkg-dfn50p150x150x95-4-text-name-hand-soldering,74246be4-b314-495a-b81f-0d07f404
 pkg-dfn50p150x150x95-4-text-name-reflow,e1f927b1-1a3e-4b8d-9d77-56d8b5ccbba5
 pkg-dfn50p150x150x95-4-text-value-hand-soldering,eda5e780-6b48-4c91-90d7-7b911426c5df
 pkg-dfn50p150x150x95-4-text-value-reflow,fbf36b82-79a5-4ba8-aeef-2da55fe3ba9f
+pkg-dfn50p150x150x95-4t70x10-body-outline,e0ce4b8c-dd34-41c6-831c-628a9fe5b48d
 pkg-dfn50p150x150x95-4t70x10-circle-silkscreen-hand-soldering,2080c994-0e7b-4fd7-89d4-5b2fad177bb7
 pkg-dfn50p150x150x95-4t70x10-circle-silkscreen-reflow,38e649f9-d10c-42b4-a054-103d24932475
 pkg-dfn50p150x150x95-4t70x10-exposed,5455ef3a-5845-4e02-9630-ad1901bf6eaa
@@ -128,6 +134,7 @@ pkg-dfn50p150x150x95-4t70x10-text-name-hand-soldering,dd1c6a5a-55b6-48f3-8b82-12
 pkg-dfn50p150x150x95-4t70x10-text-name-reflow,ca136ec4-f837-4231-a791-1d9e016c6783
 pkg-dfn50p150x150x95-4t70x10-text-value-hand-soldering,c132155f-b6dc-441c-8697-3cdbf01e526c
 pkg-dfn50p150x150x95-4t70x10-text-value-reflow,331cdfd0-b293-4070-af8a-a9a844d1a36b
+pkg-dfn50p200x100x75-4-body-outline,8862f143-e57e-4604-b910-15fe9e3469e3
 pkg-dfn50p200x100x75-4-circle-silkscreen-hand-soldering,84d8a6ad-de89-45e6-822a-63ef2ba663a1
 pkg-dfn50p200x100x75-4-circle-silkscreen-reflow,a7f79b6a-8672-4a09-911b-ffb7f8d99830
 pkg-dfn50p200x100x75-4-footprint-hand-soldering,1cda70db-d2de-4637-b84f-92cf3ce671d1
@@ -149,6 +156,7 @@ pkg-dfn50p200x100x75-4-text-name-hand-soldering,a9d1cd99-b24a-4541-8e8b-1b4b2705
 pkg-dfn50p200x100x75-4-text-name-reflow,a72bddcb-91ff-47ad-af77-7c64e5a2c46d
 pkg-dfn50p200x100x75-4-text-value-hand-soldering,84781abe-466a-424e-80c4-c83a8349a271
 pkg-dfn50p200x100x75-4-text-value-reflow,d3ae3a88-03b2-404e-b29c-dbfe239f106d
+pkg-dfn50p200x100x75-6-body-outline,ded11317-95c4-4639-aaf5-022b9b4f619e
 pkg-dfn50p200x100x75-6-circle-silkscreen-hand-soldering,c0ebb624-a31f-434a-aa38-4ef4ccb525f4
 pkg-dfn50p200x100x75-6-circle-silkscreen-reflow,67e21bf7-9b20-41c0-a6c9-b328fe6df97a
 pkg-dfn50p200x100x75-6-footprint-hand-soldering,e6b2875d-ce04-47f4-88c0-158a876bd314
@@ -174,6 +182,7 @@ pkg-dfn50p200x100x75-6-text-name-hand-soldering,4fd6211d-61cb-4ff8-ad94-b5331990
 pkg-dfn50p200x100x75-6-text-name-reflow,fef52160-84ea-476f-b661-90f8c49bf96a
 pkg-dfn50p200x100x75-6-text-value-hand-soldering,379e5e96-51dd-4a95-a440-5da9b6f4a071
 pkg-dfn50p200x100x75-6-text-value-reflow,d4a33e03-9c28-431d-9a56-850930faba79
+pkg-dfn50p200x100x95-4-body-outline,56ccf455-0d28-453e-8b9a-dc655fca67fd
 pkg-dfn50p200x100x95-4-circle-silkscreen-hand-soldering,1caf9838-eff0-47a5-af7b-83d63f17b2d7
 pkg-dfn50p200x100x95-4-circle-silkscreen-reflow,5dd47e2f-cee6-403a-9a53-6d172d9e93bc
 pkg-dfn50p200x100x95-4-footprint-hand-soldering,d6c82b07-00f2-41e1-83f1-ff6a5ed0987e
@@ -195,6 +204,7 @@ pkg-dfn50p200x100x95-4-text-name-hand-soldering,e531bbb1-82dc-4b88-b741-5a9c8e7c
 pkg-dfn50p200x100x95-4-text-name-reflow,57a52c97-3572-4acf-81b1-d258927bbba5
 pkg-dfn50p200x100x95-4-text-value-hand-soldering,3b7f284e-adc0-4e7e-9f3b-74ca27316a18
 pkg-dfn50p200x100x95-4-text-value-reflow,7f92a4fc-0cc4-4683-92b6-b5154c7177ff
+pkg-dfn50p200x100x95-6-body-outline,4f9bc67d-3058-412d-a6fb-6f89bc02cde3
 pkg-dfn50p200x100x95-6-circle-silkscreen-hand-soldering,ca22141f-4957-4323-92cc-e47b1db3a75c
 pkg-dfn50p200x100x95-6-circle-silkscreen-reflow,73aadd6b-88f0-488f-9bfa-f658726dacdd
 pkg-dfn50p200x100x95-6-footprint-hand-soldering,7179cf45-0826-42b7-bbec-d9a5fa510ad0
@@ -220,6 +230,7 @@ pkg-dfn50p200x100x95-6-text-name-hand-soldering,f6a812ba-b424-4759-a916-91e84fbc
 pkg-dfn50p200x100x95-6-text-name-reflow,9fff4e25-8535-40c6-b3ad-d6749a85a5df
 pkg-dfn50p200x100x95-6-text-value-hand-soldering,8f104e98-ed11-4469-88d2-b05f16062772
 pkg-dfn50p200x100x95-6-text-value-reflow,0394dee3-2f2a-405a-b33f-c570a957e8f4
+pkg-dfn50p200x150x75-4-body-outline,511f0af5-db66-44af-9d60-5b1b2e92240b
 pkg-dfn50p200x150x75-4-circle-silkscreen-hand-soldering,70ba7a4d-0f6e-4e79-b2ee-7b1d6d3105f7
 pkg-dfn50p200x150x75-4-circle-silkscreen-reflow,b91ae8c5-f6b5-41a5-aabd-5aba1e8991c5
 pkg-dfn50p200x150x75-4-footprint-hand-soldering,8dbb8852-d033-4e8e-90ce-95fda8e96c09
@@ -241,6 +252,7 @@ pkg-dfn50p200x150x75-4-text-name-hand-soldering,548145c2-07e0-4bef-a473-3fba865f
 pkg-dfn50p200x150x75-4-text-name-reflow,93cbfcb1-7208-4d7e-8384-d6dc15a4b002
 pkg-dfn50p200x150x75-4-text-value-hand-soldering,777428d7-89bd-4f21-b9a5-bb3affd57396
 pkg-dfn50p200x150x75-4-text-value-reflow,bda5b965-7508-4ee3-ac91-74422bcef5cf
+pkg-dfn50p200x150x75-4t120x10-body-outline,04d345c1-4606-46ea-82b1-040544a9e25d
 pkg-dfn50p200x150x75-4t120x10-circle-silkscreen-hand-soldering,4e5e3c87-cba1-4d09-87d3-460e170600bd
 pkg-dfn50p200x150x75-4t120x10-circle-silkscreen-reflow,9bb35d9e-96a7-4772-b2ec-1d56cc5e6c84
 pkg-dfn50p200x150x75-4t120x10-exposed,6d4708c9-dc09-440f-b693-8494a7c90884
@@ -264,6 +276,7 @@ pkg-dfn50p200x150x75-4t120x10-text-name-hand-soldering,577bc773-8823-428e-9338-1
 pkg-dfn50p200x150x75-4t120x10-text-name-reflow,2cd6bdb4-0f12-4e0a-9ab9-6dabc558bc40
 pkg-dfn50p200x150x75-4t120x10-text-value-hand-soldering,39ba7d73-05d0-4335-95d6-5a348458c423
 pkg-dfn50p200x150x75-4t120x10-text-value-reflow,58ea367c-ab7f-4537-8409-07931e8d17ba
+pkg-dfn50p200x150x75-6-body-outline,4c345ad8-0332-4464-90ef-c4ff6838d65f
 pkg-dfn50p200x150x75-6-circle-silkscreen-hand-soldering,faad7301-843a-43f3-bda9-ce6ebd86905e
 pkg-dfn50p200x150x75-6-circle-silkscreen-reflow,3b8ec05a-6020-4b0a-9873-c13c5a73dac7
 pkg-dfn50p200x150x75-6-footprint-hand-soldering,b9d487ab-c17a-40b3-b65b-b9072c51d8ab
@@ -289,6 +302,7 @@ pkg-dfn50p200x150x75-6-text-name-hand-soldering,96297c2e-709a-4fca-9601-e78a2198
 pkg-dfn50p200x150x75-6-text-name-reflow,4b36824c-a711-449a-9c02-3f493847ef9e
 pkg-dfn50p200x150x75-6-text-value-hand-soldering,ade8b085-9388-4528-a08d-17d75428afb6
 pkg-dfn50p200x150x75-6-text-value-reflow,a60e5f63-8a91-4bc7-be29-0c46976838c8
+pkg-dfn50p200x150x75-6t120x10-body-outline,b387a65a-47b9-4552-8575-b9594c6bfdb7
 pkg-dfn50p200x150x75-6t120x10-circle-silkscreen-hand-soldering,86d6332e-2c4e-4960-8d59-8c76574a9da1
 pkg-dfn50p200x150x75-6t120x10-circle-silkscreen-reflow,1b2ed3db-298e-4231-916b-942073c5177b
 pkg-dfn50p200x150x75-6t120x10-exposed,201c5cbf-c786-4f83-ba7d-33f7eb2416c2
@@ -316,6 +330,7 @@ pkg-dfn50p200x150x75-6t120x10-text-name-hand-soldering,2a37f166-297d-4f05-994d-3
 pkg-dfn50p200x150x75-6t120x10-text-name-reflow,534e58cb-2f11-41af-9611-b6237d27d463
 pkg-dfn50p200x150x75-6t120x10-text-value-hand-soldering,0bb6b985-3a4c-42aa-8a54-ed32ff96639e
 pkg-dfn50p200x150x75-6t120x10-text-value-reflow,2c09ff8d-6e13-45ab-a3b9-7b8601d5b93c
+pkg-dfn50p200x150x95-4-body-outline,f7f1e3bd-85eb-4387-b139-b03fa9222560
 pkg-dfn50p200x150x95-4-circle-silkscreen-hand-soldering,ca2746ff-b92e-453f-8c02-fc29dfc52cc1
 pkg-dfn50p200x150x95-4-circle-silkscreen-reflow,f7388d51-606b-4f8f-868d-410dc9c03d76
 pkg-dfn50p200x150x95-4-footprint-hand-soldering,8f1d8a98-4721-48b4-b87a-9197bd6447b2
@@ -337,6 +352,7 @@ pkg-dfn50p200x150x95-4-text-name-hand-soldering,c9f5a006-1ade-4e9e-9915-7aae627a
 pkg-dfn50p200x150x95-4-text-name-reflow,9607eb6d-9324-459f-981b-b36de62a7fbf
 pkg-dfn50p200x150x95-4-text-value-hand-soldering,f7f11f5d-247a-4f5c-9e70-315d9cb99e9d
 pkg-dfn50p200x150x95-4-text-value-reflow,aed24ef7-4504-4ae2-867a-3f31b7cd609a
+pkg-dfn50p200x150x95-4t120x10-body-outline,0724fe9d-aa87-4a66-9273-1a9a559ae62c
 pkg-dfn50p200x150x95-4t120x10-circle-silkscreen-hand-soldering,c864902b-4a0a-4041-ae2e-ff1a82bdced0
 pkg-dfn50p200x150x95-4t120x10-circle-silkscreen-reflow,081e825f-6e7f-4f7b-b4c3-2aaa6ea8d81e
 pkg-dfn50p200x150x95-4t120x10-exposed,c955b31b-2da5-44e4-8937-3b5d464976f4
@@ -360,6 +376,7 @@ pkg-dfn50p200x150x95-4t120x10-text-name-hand-soldering,c1c0e024-0919-41ef-a9a3-d
 pkg-dfn50p200x150x95-4t120x10-text-name-reflow,5dfce9c8-928e-4b73-b093-7cfeaac39a3e
 pkg-dfn50p200x150x95-4t120x10-text-value-hand-soldering,76434c27-060d-4ff2-8067-b32512f77e33
 pkg-dfn50p200x150x95-4t120x10-text-value-reflow,d33d82bd-78b4-40cf-8152-80ffd7f6b931
+pkg-dfn50p200x150x95-6-body-outline,6784e012-6677-47a7-96d7-716444cbd645
 pkg-dfn50p200x150x95-6-circle-silkscreen-hand-soldering,e510fc70-3786-4363-915e-01854982abd9
 pkg-dfn50p200x150x95-6-circle-silkscreen-reflow,a1bb1534-0bc9-44f7-8185-120c7abd5c86
 pkg-dfn50p200x150x95-6-footprint-hand-soldering,96682702-f89a-493b-85ae-6a2b69eb8b00
@@ -385,6 +402,7 @@ pkg-dfn50p200x150x95-6-text-name-hand-soldering,1b3f05e8-ac3b-479d-9d0d-fe843731
 pkg-dfn50p200x150x95-6-text-name-reflow,103f7d4e-f827-4ad3-8aa3-1195e94d73f8
 pkg-dfn50p200x150x95-6-text-value-hand-soldering,779453a3-44c6-425b-96e3-e7b4028ca2d4
 pkg-dfn50p200x150x95-6-text-value-reflow,607c687a-84be-4474-9930-a9b323ac7a82
+pkg-dfn50p200x150x95-6t120x10-body-outline,324bc70e-a2c0-4448-bb9a-80102580c264
 pkg-dfn50p200x150x95-6t120x10-circle-silkscreen-hand-soldering,01e62aaf-abac-4960-a780-df906d1c29b3
 pkg-dfn50p200x150x95-6t120x10-circle-silkscreen-reflow,4b3e6212-4a34-4cb3-a6a6-99cc2c6753ab
 pkg-dfn50p200x150x95-6t120x10-exposed,bf218d18-14d7-499b-b7df-22a76fc8355e
@@ -412,6 +430,7 @@ pkg-dfn50p200x150x95-6t120x10-text-name-hand-soldering,08b7621e-3dfd-4fa4-b249-f
 pkg-dfn50p200x150x95-6t120x10-text-name-reflow,98476fd6-b083-459c-860e-05a68cd0821c
 pkg-dfn50p200x150x95-6t120x10-text-value-hand-soldering,d0bf19b0-5a26-4780-8fb9-f78813e26dff
 pkg-dfn50p200x150x95-6t120x10-text-value-reflow,a068c38d-810c-466a-b02d-38ac4b1e5d14
+pkg-dfn50p200x200x75-4-body-outline,b783126e-d775-4078-a71e-574746d77574
 pkg-dfn50p200x200x75-4-circle-silkscreen-hand-soldering,a901e1e7-a20c-4ec0-903d-d8876e7f7f4c
 pkg-dfn50p200x200x75-4-circle-silkscreen-reflow,7dc2b743-d620-42a2-8e6a-ca404f891227
 pkg-dfn50p200x200x75-4-footprint-hand-soldering,c1f26704-d0b6-4d1a-b3de-a5fbd5904e21
@@ -433,6 +452,7 @@ pkg-dfn50p200x200x75-4-text-name-hand-soldering,2927cd29-60ef-40c4-9789-440c694e
 pkg-dfn50p200x200x75-4-text-name-reflow,8a641ae7-d169-4ae5-9779-733249541a1b
 pkg-dfn50p200x200x75-4-text-value-hand-soldering,5ce58548-b18a-49b2-8ed5-1682ecfba9ed
 pkg-dfn50p200x200x75-4-text-value-reflow,3eb7701d-9afd-4359-95d1-81862fdb96f3
+pkg-dfn50p200x200x75-4t120x60-body-outline,822add68-735f-4c6c-ac68-b07bce17378c
 pkg-dfn50p200x200x75-4t120x60-circle-silkscreen-hand-soldering,8d398a21-fc30-4f24-b50b-bc42ecc3e3d6
 pkg-dfn50p200x200x75-4t120x60-circle-silkscreen-reflow,878c356c-41e8-42a9-b29a-d8649154f6c5
 pkg-dfn50p200x200x75-4t120x60-exposed,6aecdd77-6e4c-402d-b9bd-fb170d4e4a9d
@@ -456,6 +476,7 @@ pkg-dfn50p200x200x75-4t120x60-text-name-hand-soldering,2b6916c3-2f99-4b7f-90db-9
 pkg-dfn50p200x200x75-4t120x60-text-name-reflow,3f8ba3bd-8ac8-4a6d-a423-662aa2a0f3ce
 pkg-dfn50p200x200x75-4t120x60-text-value-hand-soldering,32789a6e-fc38-4025-bddd-0763d08ff13b
 pkg-dfn50p200x200x75-4t120x60-text-value-reflow,59a3f87c-3bc6-4d2f-8654-efe0cd0f18e4
+pkg-dfn50p200x200x75-6-body-outline,aab49600-0c32-470e-8a65-02414f9567e8
 pkg-dfn50p200x200x75-6-circle-silkscreen-hand-soldering,5fbefd9a-c453-4d37-a04e-fb45e2e2f48f
 pkg-dfn50p200x200x75-6-circle-silkscreen-reflow,7812818b-36d1-49a3-b4c8-c3aaa54bd554
 pkg-dfn50p200x200x75-6-footprint-hand-soldering,3ed3719d-af6e-479e-9c4a-25fd065a7f87
@@ -481,6 +502,7 @@ pkg-dfn50p200x200x75-6-text-name-hand-soldering,916a4e53-c11e-461c-a147-fe6894b3
 pkg-dfn50p200x200x75-6-text-name-reflow,fcaa9d6e-82ed-475f-a6ca-b08b1b1d7502
 pkg-dfn50p200x200x75-6-text-value-hand-soldering,48634ef0-d9d5-41cd-ade6-6b32c4c9dc66
 pkg-dfn50p200x200x75-6-text-value-reflow,93ae9313-fa61-41a7-8c4c-0c9f846b955d
+pkg-dfn50p200x200x75-6t120x60-body-outline,450d18db-997a-4a3a-af46-68f530d3bd40
 pkg-dfn50p200x200x75-6t120x60-circle-silkscreen-hand-soldering,bef15544-8ddd-4b2c-bc1c-ef99c6635bf5
 pkg-dfn50p200x200x75-6t120x60-circle-silkscreen-reflow,e7220580-acf2-4a82-b03c-dd27a6acd378
 pkg-dfn50p200x200x75-6t120x60-exposed,8269a74e-5fa6-40ff-9cbf-61f74b275e1f
@@ -508,6 +530,7 @@ pkg-dfn50p200x200x75-6t120x60-text-name-hand-soldering,e64ecded-34d0-419e-93e3-6
 pkg-dfn50p200x200x75-6t120x60-text-name-reflow,9d95e2f8-9dd6-484a-b3fe-5b2ee48f00a4
 pkg-dfn50p200x200x75-6t120x60-text-value-hand-soldering,d639081b-4fa2-405c-bebe-4109853926bc
 pkg-dfn50p200x200x75-6t120x60-text-value-reflow,0f30a5ea-e019-4d2b-aa62-bddec1ecfb42
+pkg-dfn50p200x200x75-6t175x80-body-outline,da436521-0fe3-4317-a22b-fd2bf2a8b8a0
 pkg-dfn50p200x200x75-6t175x80-circle-silkscreen-hand-soldering,90759d19-f6ed-4bc6-9cf6-132c9836e956
 pkg-dfn50p200x200x75-6t175x80-circle-silkscreen-reflow,822490e7-ad71-401f-bdaf-17d4d7be3d5c
 pkg-dfn50p200x200x75-6t175x80-exposed,4baa163d-a502-4bae-8d84-bea0cd6395af
@@ -535,6 +558,7 @@ pkg-dfn50p200x200x75-6t175x80-text-name-hand-soldering,e090d5af-3a10-4e9c-b8fc-b
 pkg-dfn50p200x200x75-6t175x80-text-name-reflow,2d5273e9-c116-45e6-9a26-fe4c00453a97
 pkg-dfn50p200x200x75-6t175x80-text-value-hand-soldering,a08bbd9f-be17-4039-af10-f95aee31bd9d
 pkg-dfn50p200x200x75-6t175x80-text-value-reflow,7e5b0f1b-ccdd-4a41-b93b-379566a8da89
+pkg-dfn50p200x200x95-4-body-outline,c72f4f0d-b93c-4136-85c5-cc2b43755e8f
 pkg-dfn50p200x200x95-4-circle-silkscreen-hand-soldering,0798cd9a-898c-4cdd-962e-449b793793ce
 pkg-dfn50p200x200x95-4-circle-silkscreen-reflow,c505d6f1-be4c-423a-af2a-afa51b373ea6
 pkg-dfn50p200x200x95-4-footprint-hand-soldering,87a4b14d-5867-46ed-be1a-e1a43c9115d2
@@ -556,6 +580,7 @@ pkg-dfn50p200x200x95-4-text-name-hand-soldering,49318295-70b6-427c-a683-7c45fb68
 pkg-dfn50p200x200x95-4-text-name-reflow,409e2dba-6350-4b29-b3a7-1bb333e953e5
 pkg-dfn50p200x200x95-4-text-value-hand-soldering,86d209bc-a70d-4b4f-a32d-fa4f989c2823
 pkg-dfn50p200x200x95-4-text-value-reflow,66ea9636-3ec0-4a0f-8318-8cb892680948
+pkg-dfn50p200x200x95-4t120x60-body-outline,2b73543f-ad7a-4715-a591-1f8e5edcdb6f
 pkg-dfn50p200x200x95-4t120x60-circle-silkscreen-hand-soldering,505995ca-847d-4761-8c52-739aca440405
 pkg-dfn50p200x200x95-4t120x60-circle-silkscreen-reflow,841a7048-50cc-411a-af62-251d413b2fd8
 pkg-dfn50p200x200x95-4t120x60-exposed,16b9c9d0-06a1-435a-a420-06e4d1f08c93
@@ -579,6 +604,7 @@ pkg-dfn50p200x200x95-4t120x60-text-name-hand-soldering,4938a7fd-fb07-44e8-ac1d-2
 pkg-dfn50p200x200x95-4t120x60-text-name-reflow,5fc5bcda-f311-43ee-ae10-a53479b72723
 pkg-dfn50p200x200x95-4t120x60-text-value-hand-soldering,c98199cc-253e-4513-8b15-334feb8e2183
 pkg-dfn50p200x200x95-4t120x60-text-value-reflow,35cff652-a091-414c-aec6-9d0357cd4084
+pkg-dfn50p200x200x95-6-body-outline,1f38bd03-8277-4f0c-84bb-2d33c502ce70
 pkg-dfn50p200x200x95-6-circle-silkscreen-hand-soldering,59464768-adf3-4fd4-8b9c-33c3d0e358cc
 pkg-dfn50p200x200x95-6-circle-silkscreen-reflow,caa0a21b-40bb-4d51-9174-a236a56bbdbd
 pkg-dfn50p200x200x95-6-footprint-hand-soldering,970c83ab-b425-46fb-9024-3fb1eec6281f
@@ -604,6 +630,7 @@ pkg-dfn50p200x200x95-6-text-name-hand-soldering,20332300-ff83-41ae-870c-832ca98f
 pkg-dfn50p200x200x95-6-text-name-reflow,6eeb7024-0ab2-4698-8ab2-df8ad3e0f3b4
 pkg-dfn50p200x200x95-6-text-value-hand-soldering,ee39542b-b1d8-4eec-8bde-234cadc4220f
 pkg-dfn50p200x200x95-6-text-value-reflow,2cab1af8-4695-4c1f-8029-749d22a49952
+pkg-dfn50p200x200x95-6t120x60-body-outline,e40bb52d-2824-454b-9056-d5e5cf5fab05
 pkg-dfn50p200x200x95-6t120x60-circle-silkscreen-hand-soldering,b43735be-8e6a-4667-b503-be91b08593ea
 pkg-dfn50p200x200x95-6t120x60-circle-silkscreen-reflow,41a7df06-5972-4f31-9096-b9ad21333e03
 pkg-dfn50p200x200x95-6t120x60-exposed,77255ffe-bf26-4318-9800-5946a9eb8c97
@@ -631,6 +658,7 @@ pkg-dfn50p200x200x95-6t120x60-text-name-hand-soldering,7acf1018-131e-463a-976e-1
 pkg-dfn50p200x200x95-6t120x60-text-name-reflow,3e52b57e-3fc7-48ec-a040-1b964cbb0a07
 pkg-dfn50p200x200x95-6t120x60-text-value-hand-soldering,d931ff2c-2ce8-4c86-af41-06d985732d25
 pkg-dfn50p200x200x95-6t120x60-text-value-reflow,b1ab1ff4-a75d-4ba2-84b2-9369ae777606
+pkg-dfn50p200x200x95-6t175x80-body-outline,0e9bbe9e-23e0-4732-9b8b-c5a4a19e1787
 pkg-dfn50p200x200x95-6t175x80-circle-silkscreen-hand-soldering,075a52ff-bc53-432c-a105-34ea0f4586bd
 pkg-dfn50p200x200x95-6t175x80-circle-silkscreen-reflow,af82cca1-63f1-40f3-b048-0b6c7863d181
 pkg-dfn50p200x200x95-6t175x80-exposed,90e496d6-1726-4433-83ff-35cec8f77b1e
@@ -658,6 +686,7 @@ pkg-dfn50p200x200x95-6t175x80-text-name-hand-soldering,cae09c85-887a-48a7-a175-e
 pkg-dfn50p200x200x95-6t175x80-text-name-reflow,5352e3d8-91ac-471c-aaf9-4f95a6cee2b7
 pkg-dfn50p200x200x95-6t175x80-text-value-hand-soldering,bd5b12d0-c18b-4290-990d-e8facc902263
 pkg-dfn50p200x200x95-6t175x80-text-value-reflow,68c72a4e-d422-48ee-a2b3-1b702f7ee2b4
+pkg-dfn50p200x200x95-8-body-outline,0a6aedda-aa73-4f8b-bffb-af83118f1a9a
 pkg-dfn50p200x200x95-8-circle-silkscreen-hand-soldering,297caff1-39f3-4689-b71b-c1fbcbfadd19
 pkg-dfn50p200x200x95-8-circle-silkscreen-reflow,8a87a11e-d797-4ba3-ad50-611ca1926fdf
 pkg-dfn50p200x200x95-8-footprint-hand-soldering,69a5caea-9886-426c-9f18-ffd41ff375aa
@@ -687,6 +716,7 @@ pkg-dfn50p200x200x95-8-text-name-hand-soldering,1f0c8227-a282-4648-9550-dfc8581a
 pkg-dfn50p200x200x95-8-text-name-reflow,b15acc7b-eeea-4ec8-a7b3-d14b16132858
 pkg-dfn50p200x200x95-8-text-value-hand-soldering,73e558f4-1972-4977-a187-0413e6f3cf14
 pkg-dfn50p200x200x95-8-text-value-reflow,02128305-a4da-4e54-b43b-f1794fbdca40
+pkg-dfn50p200x200x95-8t120x60-body-outline,c8d5b2a7-41f9-4005-a7aa-9d60e8d4de8f
 pkg-dfn50p200x200x95-8t120x60-circle-silkscreen-hand-soldering,409fcb39-6258-4c05-a5b7-7571726c60ee
 pkg-dfn50p200x200x95-8t120x60-circle-silkscreen-reflow,06032c98-42f5-4a78-b2bb-641f93259fc9
 pkg-dfn50p200x200x95-8t120x60-exposed,4dd3256d-cd6d-4fb3-8de2-35bbc411817d
@@ -718,6 +748,7 @@ pkg-dfn50p200x200x95-8t120x60-text-name-hand-soldering,d14c55f4-26e0-4ef2-8e35-9
 pkg-dfn50p200x200x95-8t120x60-text-name-reflow,29d4f7e6-826f-4d6c-8ea7-a5d18dadf8df
 pkg-dfn50p200x200x95-8t120x60-text-value-hand-soldering,3f90e553-009e-4b20-b342-b5729d4ad78d
 pkg-dfn50p200x200x95-8t120x60-text-value-reflow,100d37cf-186d-4056-8e82-2719c4645a52
+pkg-dfn50p200x250x75-6-body-outline,77386358-b881-4965-af61-5c104313db19
 pkg-dfn50p200x250x75-6-circle-silkscreen-hand-soldering,bcc37940-c0c2-4105-a1e8-995430980624
 pkg-dfn50p200x250x75-6-circle-silkscreen-reflow,c5ad3791-14f5-4f46-bc94-c11a7e4999da
 pkg-dfn50p200x250x75-6-footprint-hand-soldering,05a4ff70-ead4-4bc7-964d-d096698b8997
@@ -743,6 +774,7 @@ pkg-dfn50p200x250x75-6-text-name-hand-soldering,d3003893-ed82-4398-8758-1eba7490
 pkg-dfn50p200x250x75-6-text-name-reflow,25e9ed35-c861-4ca4-9ce2-155fe8c34309
 pkg-dfn50p200x250x75-6-text-value-hand-soldering,2ce06254-c4c4-4ab1-8448-5f63bd29961d
 pkg-dfn50p200x250x75-6-text-value-reflow,aae36ccf-e146-40e0-ba6a-84bb966f551c
+pkg-dfn50p200x250x75-6t100x70-body-outline,823838c8-b296-4282-a6c5-8ea2d3f4fd0f
 pkg-dfn50p200x250x75-6t100x70-circle-silkscreen-hand-soldering,1ebbeaeb-12ba-482e-afcc-836bb965f12d
 pkg-dfn50p200x250x75-6t100x70-circle-silkscreen-reflow,a64ff5ac-367d-4705-a5fb-6d7a151801f0
 pkg-dfn50p200x250x75-6t100x70-exposed,2ba3344c-3e4a-4ca7-aef8-bd2ae44d7a7f
@@ -770,6 +802,7 @@ pkg-dfn50p200x250x75-6t100x70-text-name-hand-soldering,6f4e79a3-64d9-4a7a-8998-2
 pkg-dfn50p200x250x75-6t100x70-text-name-reflow,a983ebc2-b9e6-4170-8b7d-4a0a7cd441cf
 pkg-dfn50p200x250x75-6t100x70-text-value-hand-soldering,b32594fb-f0e3-4951-a3d9-066de1fd077a
 pkg-dfn50p200x250x75-6t100x70-text-value-reflow,f2966f8d-87e2-44f9-bd4f-c484b80c7f20
+pkg-dfn50p200x250x75-8-body-outline,d17c388a-cc88-4364-8e7a-d9bb1d91b6c4
 pkg-dfn50p200x250x75-8-circle-silkscreen-hand-soldering,66ac68ef-1f7d-41b3-821c-ba29629e2935
 pkg-dfn50p200x250x75-8-circle-silkscreen-reflow,d241c8f7-3a81-4b2f-a7c9-79ecafa4c80b
 pkg-dfn50p200x250x75-8-footprint-hand-soldering,6dafa091-63b1-410b-9bfb-cfef085892f9
@@ -799,6 +832,7 @@ pkg-dfn50p200x250x75-8-text-name-hand-soldering,771febb0-7aaf-4178-a806-41f3cfd8
 pkg-dfn50p200x250x75-8-text-name-reflow,415db620-8778-4a2b-8b0f-d5eae5255096
 pkg-dfn50p200x250x75-8-text-value-hand-soldering,fbf6cae9-a3b5-402a-b21d-0866aac069bd
 pkg-dfn50p200x250x75-8-text-value-reflow,fc048f08-6c51-4174-addb-1a7c9ae04cca
+pkg-dfn50p200x250x75-8t110x80-body-outline,7a950d33-7810-4b71-8eed-ecb59d4b9274
 pkg-dfn50p200x250x75-8t110x80-circle-silkscreen-hand-soldering,20cafd35-e491-4feb-8eaf-2dc6eb4a8255
 pkg-dfn50p200x250x75-8t110x80-circle-silkscreen-reflow,fa624a43-789b-43a1-a0dc-e5d0f9393eb1
 pkg-dfn50p200x250x75-8t110x80-exposed,50af2a07-6bd8-4f87-aac9-918c958816b7
@@ -830,6 +864,7 @@ pkg-dfn50p200x250x75-8t110x80-text-name-hand-soldering,967b7898-e340-405a-908c-4
 pkg-dfn50p200x250x75-8t110x80-text-name-reflow,1b039928-17eb-4e09-b593-599357ebdead
 pkg-dfn50p200x250x75-8t110x80-text-value-hand-soldering,0af1e98a-c951-45fd-8150-c3f04a6cc8aa
 pkg-dfn50p200x250x75-8t110x80-text-value-reflow,45e45858-21df-4ca1-9e1a-bfebf63d775c
+pkg-dfn50p200x250x95-6-body-outline,9e490bab-703b-43bd-a1be-2889b4ec2a4f
 pkg-dfn50p200x250x95-6-circle-silkscreen-hand-soldering,58b67b5b-57fe-467f-9512-86b961f9305c
 pkg-dfn50p200x250x95-6-circle-silkscreen-reflow,2d7beb5e-f689-4b49-a23f-ef537642a2a2
 pkg-dfn50p200x250x95-6-footprint-hand-soldering,18b785f8-0c63-4855-8b24-af6b8350ff06
@@ -855,6 +890,7 @@ pkg-dfn50p200x250x95-6-text-name-hand-soldering,7e55ad6e-c1f3-494f-9dd0-0bd5f91a
 pkg-dfn50p200x250x95-6-text-name-reflow,b8215ece-88f4-4410-b0b2-2185aed6e835
 pkg-dfn50p200x250x95-6-text-value-hand-soldering,296eede9-a9a6-4a51-af16-04669eeae329
 pkg-dfn50p200x250x95-6-text-value-reflow,bbb03cf2-16e0-4dc0-91e7-88d11f742108
+pkg-dfn50p200x250x95-6t100x70-body-outline,cad24445-93f8-4953-812a-cb37c1078cdf
 pkg-dfn50p200x250x95-6t100x70-circle-silkscreen-hand-soldering,31499c46-a2f4-4c35-85ec-172434d4c0e5
 pkg-dfn50p200x250x95-6t100x70-circle-silkscreen-reflow,9e331004-34ac-4c32-89d6-01435d08cdae
 pkg-dfn50p200x250x95-6t100x70-exposed,99f51a74-64ac-43ea-9d9a-aa373d5c082a
@@ -882,6 +918,7 @@ pkg-dfn50p200x250x95-6t100x70-text-name-hand-soldering,33619647-6c58-4bbb-adb5-b
 pkg-dfn50p200x250x95-6t100x70-text-name-reflow,ab6eb314-2bbf-41fc-bf59-276eb5a21ea9
 pkg-dfn50p200x250x95-6t100x70-text-value-hand-soldering,2107a70e-5ec4-4568-aeb1-183c45ebecfb
 pkg-dfn50p200x250x95-6t100x70-text-value-reflow,57df38ef-a55a-49cf-aba2-e18cea4771fd
+pkg-dfn50p200x250x95-8-body-outline,44f00aef-c6b4-4594-8df1-03b3b460390e
 pkg-dfn50p200x250x95-8-circle-silkscreen-hand-soldering,57bb4ebc-2602-4544-8de8-d484a65669db
 pkg-dfn50p200x250x95-8-circle-silkscreen-reflow,7c7619f2-9c12-4ed3-be15-2b51cecedbf0
 pkg-dfn50p200x250x95-8-footprint-hand-soldering,3d1769ae-c394-45a7-a0f8-720ec67ce479
@@ -911,6 +948,7 @@ pkg-dfn50p200x250x95-8-text-name-hand-soldering,068e3ed7-001b-4994-be63-7baec5a6
 pkg-dfn50p200x250x95-8-text-name-reflow,9a19c8bd-7e24-487b-953f-8bee1c1d58f4
 pkg-dfn50p200x250x95-8-text-value-hand-soldering,57f474d8-30c7-4821-97c4-f14777671de2
 pkg-dfn50p200x250x95-8-text-value-reflow,26da7d29-4843-444e-9457-f80051e5daca
+pkg-dfn50p200x250x95-8t110x80-body-outline,9eabe416-5ff3-4ba2-b2e0-b4c4fb75a6b9
 pkg-dfn50p200x250x95-8t110x80-circle-silkscreen-hand-soldering,2a4724c7-117e-4dcf-b659-c5f514e1b4d2
 pkg-dfn50p200x250x95-8t110x80-circle-silkscreen-reflow,a6dcac2b-f13b-4125-9dd2-4d68d4c6ecab
 pkg-dfn50p200x250x95-8t110x80-exposed,5d2cd575-a2bc-4fa9-9985-a64280dd3129
@@ -942,6 +980,7 @@ pkg-dfn50p200x250x95-8t110x80-text-name-hand-soldering,3aa02101-fe0b-447c-9488-6
 pkg-dfn50p200x250x95-8t110x80-text-name-reflow,30906df0-bbf0-4bdf-8da3-530f367d72a6
 pkg-dfn50p200x250x95-8t110x80-text-value-hand-soldering,9329baf3-db4d-43f2-841f-b8164e7245ae
 pkg-dfn50p200x250x95-8t110x80-text-value-reflow,c69c5d78-13bc-4e39-9498-e3294b0c4beb
+pkg-dfn50p200x300x55-8t160-body-outline,837afeb2-0d51-4f03-9516-96b9c6c5450e
 pkg-dfn50p200x300x55-8t160-circle-silkscreen-hand-soldering,f5925c89-0b04-4bb1-80ce-e2a0ef3135c7
 pkg-dfn50p200x300x55-8t160-circle-silkscreen-reflow,ac2ae1e9-0fdc-4d7c-ac33-abe76b989bc9
 pkg-dfn50p200x300x55-8t160-exposed,8525918d-a7c9-4933-a4bb-9d9fd2490bc2
@@ -973,6 +1012,7 @@ pkg-dfn50p200x300x55-8t160-text-name-hand-soldering,92febd9a-fd84-4a10-8868-6dcf
 pkg-dfn50p200x300x55-8t160-text-name-reflow,a6b2bec3-bbdc-469c-b72d-207f7a0f4fc4
 pkg-dfn50p200x300x55-8t160-text-value-hand-soldering,c7a56cf4-dc5c-4c67-a07b-61f1e8db2c34
 pkg-dfn50p200x300x55-8t160-text-value-reflow,c00a8cd2-62cd-40e2-a3c4-ff9cefcd2748
+pkg-dfn50p200x300x75-6t100x120-body-outline,4975cd28-414a-458e-bb6f-ae853c62fc76
 pkg-dfn50p200x300x75-6t100x120-circle-silkscreen-hand-soldering,5f0d32ab-6985-4d48-80ec-d07be02070df
 pkg-dfn50p200x300x75-6t100x120-circle-silkscreen-reflow,fd0a3c6c-6621-448c-b53c-0fba0fd50703
 pkg-dfn50p200x300x75-6t100x120-exposed,c7929c61-ab20-4059-88fa-b38a0052a092
@@ -1000,6 +1040,7 @@ pkg-dfn50p200x300x75-6t100x120-text-name-hand-soldering,c1aa4842-5e13-4465-8f2f-
 pkg-dfn50p200x300x75-6t100x120-text-name-reflow,3b26503c-0ae7-406a-b4ad-19e72b5415d5
 pkg-dfn50p200x300x75-6t100x120-text-value-hand-soldering,451433a5-1799-4411-aadb-debd752d20ff
 pkg-dfn50p200x300x75-6t100x120-text-value-reflow,b88f66e4-a529-4f1e-b90a-d89dbe8dee97
+pkg-dfn50p200x300x75-8t160-body-outline,6bebd89f-7e37-46b7-a70b-4236e555799d
 pkg-dfn50p200x300x75-8t160-circle-silkscreen-hand-soldering,af669398-2520-49f1-986e-4ea182a7fd0b
 pkg-dfn50p200x300x75-8t160-circle-silkscreen-reflow,9388586f-cbba-4a85-82a9-5b436b3b9292
 pkg-dfn50p200x300x75-8t160-exposed,943c7450-eff3-4428-a9a5-5f024a996f7e
@@ -1031,6 +1072,7 @@ pkg-dfn50p200x300x75-8t160-text-name-hand-soldering,7444b786-0fa1-4884-8d83-bc3c
 pkg-dfn50p200x300x75-8t160-text-name-reflow,cac21ef4-bac9-476c-a010-dad1c91d41c2
 pkg-dfn50p200x300x75-8t160-text-value-hand-soldering,69778de8-d81b-4ba3-a146-315f06f3c279
 pkg-dfn50p200x300x75-8t160-text-value-reflow,b916455d-59b5-4e06-90f2-9d1a08dc972a
+pkg-dfn50p200x300x75-8t175x190-body-outline,a0062b8c-336a-46ce-b588-763aa1c14f99
 pkg-dfn50p200x300x75-8t175x190-circle-silkscreen-hand-soldering,73356b87-bd21-44af-9d30-608cdbeecaad
 pkg-dfn50p200x300x75-8t175x190-circle-silkscreen-reflow,684a2ec6-7e1e-4f37-9316-aaeab022332e
 pkg-dfn50p200x300x75-8t175x190-exposed,a9909127-279f-48a6-9fe4-4acee9e123e6
@@ -1062,6 +1104,7 @@ pkg-dfn50p200x300x75-8t175x190-text-name-hand-soldering,eb0da7ec-ef0c-40c8-bf20-
 pkg-dfn50p200x300x75-8t175x190-text-name-reflow,e3d24504-a3b4-4420-9cd3-e56b68d2ca7e
 pkg-dfn50p200x300x75-8t175x190-text-value-hand-soldering,9a137f7a-24a8-4170-8022-1ff12bc9a220
 pkg-dfn50p200x300x75-8t175x190-text-value-reflow,df13246e-923c-4c8d-967d-8d533093a373
+pkg-dfn50p200x300x90-8t175x145-body-outline,757ecec5-2837-4b07-b59c-746234d53396
 pkg-dfn50p200x300x90-8t175x145-circle-silkscreen-hand-soldering,fb45ed5d-2481-42df-ace8-7994e769c63b
 pkg-dfn50p200x300x90-8t175x145-circle-silkscreen-reflow,11102463-f78e-442b-a322-028c293ccc4c
 pkg-dfn50p200x300x90-8t175x145-exposed,d9a5e83b-870a-4d28-bc08-bb9ac112bc0e
@@ -1093,6 +1136,7 @@ pkg-dfn50p200x300x90-8t175x145-text-name-hand-soldering,9a0af23c-343d-4dfd-ade5-
 pkg-dfn50p200x300x90-8t175x145-text-name-reflow,6a36c848-93b0-405b-b041-85e96c277deb
 pkg-dfn50p200x300x90-8t175x145-text-value-hand-soldering,3e49c39a-82d8-48fd-9f2f-02a2b9d2ef5f
 pkg-dfn50p200x300x90-8t175x145-text-value-reflow,7eb273fa-916f-4f9a-9f6d-d24a03c7b706
+pkg-dfn50p200x300x95-6t100x120-body-outline,edfa38a7-35c8-40d3-8ddc-f5a95fa40cae
 pkg-dfn50p200x300x95-6t100x120-circle-silkscreen-hand-soldering,d703638e-7967-44a0-8619-3ce6bc3fbdbe
 pkg-dfn50p200x300x95-6t100x120-circle-silkscreen-reflow,aca2daf9-2de7-460c-ace4-978fc6eb73d1
 pkg-dfn50p200x300x95-6t100x120-exposed,e31a54b7-09ee-4c83-8fbb-275c46440d10
@@ -1120,6 +1164,7 @@ pkg-dfn50p200x300x95-6t100x120-text-name-hand-soldering,346e0a56-cdb9-4ef1-a708-
 pkg-dfn50p200x300x95-6t100x120-text-name-reflow,4bd088c4-f5b2-4ac7-98d1-81da3cc1c48f
 pkg-dfn50p200x300x95-6t100x120-text-value-hand-soldering,bf56a14d-6358-42ca-85a2-6e5c096f7902
 pkg-dfn50p200x300x95-6t100x120-text-value-reflow,a57353d2-a671-4329-b0f7-3bcc6d581f26
+pkg-dfn50p200x300x95-8t160-body-outline,51243d01-6ebe-4144-adef-ed618388faeb
 pkg-dfn50p200x300x95-8t160-circle-silkscreen-hand-soldering,72e9b79c-2515-469c-ba3b-04e392b47b3c
 pkg-dfn50p200x300x95-8t160-circle-silkscreen-reflow,2f740c74-5a57-4854-8152-829bdfe09fc1
 pkg-dfn50p200x300x95-8t160-exposed,552d4b6f-8b6c-4d73-b087-415b5769b189
@@ -1151,6 +1196,7 @@ pkg-dfn50p200x300x95-8t160-text-name-hand-soldering,6c40ab42-202e-4905-b358-b1e6
 pkg-dfn50p200x300x95-8t160-text-name-reflow,fedf94f7-6ff8-49b3-a2ce-d076e701460a
 pkg-dfn50p200x300x95-8t160-text-value-hand-soldering,51c9e22d-433f-4144-8828-2b50286e2048
 pkg-dfn50p200x300x95-8t160-text-value-reflow,b999d500-31f5-4f90-900e-4c95c30668d2
+pkg-dfn50p200x300x95-8t175x190-body-outline,80742b1c-ca9a-448a-a038-9912f9772d42
 pkg-dfn50p200x300x95-8t175x190-circle-silkscreen-hand-soldering,3f7617a6-b175-4084-8bbd-a114f7cf613a
 pkg-dfn50p200x300x95-8t175x190-circle-silkscreen-reflow,b5b5f42a-c65a-45d7-8648-809dc32fe371
 pkg-dfn50p200x300x95-8t175x190-exposed,bd41d5b4-6d7a-41a3-8c08-cfe57f394ce0
@@ -1182,6 +1228,7 @@ pkg-dfn50p200x300x95-8t175x190-text-name-hand-soldering,1ebffaa8-d8a1-4e02-b270-
 pkg-dfn50p200x300x95-8t175x190-text-name-reflow,30124281-6ce6-4e33-8436-3b90512b8f04
 pkg-dfn50p200x300x95-8t175x190-text-value-hand-soldering,4301f517-ebf9-48f9-a55e-d845c9b8cdb9
 pkg-dfn50p200x300x95-8t175x190-text-value-reflow,f4315abd-133a-4c8f-b9ee-79cf79b419ac
+pkg-dfn50p250x150x75-6-body-outline,c11ce04d-ebe9-4a15-bec7-1f2204b4753b
 pkg-dfn50p250x150x75-6-circle-silkscreen-hand-soldering,461edfa7-3c6e-4a4c-98cd-c9bd4f1672ce
 pkg-dfn50p250x150x75-6-circle-silkscreen-reflow,f5ca2e7e-8428-4faf-bfb6-47332cfe3f5f
 pkg-dfn50p250x150x75-6-footprint-hand-soldering,03426759-9fff-4ab4-939c-656ecbc86f58
@@ -1207,6 +1254,7 @@ pkg-dfn50p250x150x75-6-text-name-hand-soldering,d84c5640-c1d8-499b-94c5-7f108701
 pkg-dfn50p250x150x75-6-text-name-reflow,78a22af6-d6ed-4464-9d25-7d5a0062b4b8
 pkg-dfn50p250x150x75-6-text-value-hand-soldering,1bddda2f-f558-4609-a979-fd45790b15a7
 pkg-dfn50p250x150x75-6-text-value-reflow,7d738b0b-c646-412c-aa42-5b9a78bc481f
+pkg-dfn50p250x150x75-6t170x10-body-outline,3d64bf18-6da1-40cb-8d52-7ffd79ab5630
 pkg-dfn50p250x150x75-6t170x10-circle-silkscreen-hand-soldering,50d9b902-2294-4f02-93f1-e7f53efa0b04
 pkg-dfn50p250x150x75-6t170x10-circle-silkscreen-reflow,e66efb1a-a098-4629-87fc-0635106fde31
 pkg-dfn50p250x150x75-6t170x10-exposed,ca6f9934-24ad-492e-b243-c2839a6f3840
@@ -1234,6 +1282,7 @@ pkg-dfn50p250x150x75-6t170x10-text-name-hand-soldering,402aae13-3d35-458b-9fe4-e
 pkg-dfn50p250x150x75-6t170x10-text-name-reflow,56b2034f-480c-4559-a7d4-84ab62ec2d80
 pkg-dfn50p250x150x75-6t170x10-text-value-hand-soldering,1ec7b1a7-c644-4a40-b70f-e1add0b4c188
 pkg-dfn50p250x150x75-6t170x10-text-value-reflow,baf035c5-8855-4754-b5fd-3b256a9eb65b
+pkg-dfn50p250x150x75-8-body-outline,22c23f62-d840-4511-8a52-5c9e7b750e79
 pkg-dfn50p250x150x75-8-circle-silkscreen-hand-soldering,fbc9a96c-b73f-455b-9707-5a7a1de88903
 pkg-dfn50p250x150x75-8-circle-silkscreen-reflow,46dcc69c-3685-4efc-b56a-f2635467fa34
 pkg-dfn50p250x150x75-8-footprint-hand-soldering,ec8653ef-d5c1-490f-b5cd-b14e77dd1cc6
@@ -1263,6 +1312,7 @@ pkg-dfn50p250x150x75-8-text-name-hand-soldering,4bb905ff-ec84-42c6-97a7-f8e9c1fe
 pkg-dfn50p250x150x75-8-text-name-reflow,5a45e198-3da4-4f8e-ae74-899573d6ee81
 pkg-dfn50p250x150x75-8-text-value-hand-soldering,2053d70e-ae9d-4792-8171-7a0c39fbe89d
 pkg-dfn50p250x150x75-8-text-value-reflow,c24fadb6-46ce-4c9f-bf73-76bd80556940
+pkg-dfn50p250x150x75-8t170x10-body-outline,ff118ae4-7e35-4320-ae71-c61bbd2422ad
 pkg-dfn50p250x150x75-8t170x10-circle-silkscreen-hand-soldering,d3d84466-0af6-4f0e-91e6-890ffe8b7ce9
 pkg-dfn50p250x150x75-8t170x10-circle-silkscreen-reflow,db37fe03-be65-44d0-8e4d-c9dee7fa07e7
 pkg-dfn50p250x150x75-8t170x10-exposed,48fb9192-adec-4f06-820b-9a0137cea8ed
@@ -1294,6 +1344,7 @@ pkg-dfn50p250x150x75-8t170x10-text-name-hand-soldering,dd25b27a-5c11-4626-9441-2
 pkg-dfn50p250x150x75-8t170x10-text-name-reflow,b7949c65-860e-43ae-be20-e58685c18936
 pkg-dfn50p250x150x75-8t170x10-text-value-hand-soldering,55882c37-2eb1-4584-bc2d-a463ac5d2947
 pkg-dfn50p250x150x75-8t170x10-text-value-reflow,6e7729b3-bb9c-4ddf-af92-d9293d7d49ef
+pkg-dfn50p250x150x95-6-body-outline,a3bcb6f4-8715-4bb4-aec0-e8c6332a7f82
 pkg-dfn50p250x150x95-6-circle-silkscreen-hand-soldering,34a81db9-e788-449d-9e1b-786305b57213
 pkg-dfn50p250x150x95-6-circle-silkscreen-reflow,f996e913-9d83-4f0f-a7b6-8a6625bdeded
 pkg-dfn50p250x150x95-6-footprint-hand-soldering,5622ad45-5aea-4c0e-bbab-9450fbfc1d60
@@ -1319,6 +1370,7 @@ pkg-dfn50p250x150x95-6-text-name-hand-soldering,2611d199-dfd5-4ad9-93d2-0f65580c
 pkg-dfn50p250x150x95-6-text-name-reflow,23a4d62c-cefc-434d-aeb5-8d1631d85140
 pkg-dfn50p250x150x95-6-text-value-hand-soldering,dd8ceeb5-2240-42ea-a601-b9efac22f7f4
 pkg-dfn50p250x150x95-6-text-value-reflow,48c1d8d2-df6c-4da3-85b5-eec043420ab2
+pkg-dfn50p250x150x95-6t170x10-body-outline,4d9b04e9-d4d8-4eff-9d38-b3219ef96f68
 pkg-dfn50p250x150x95-6t170x10-circle-silkscreen-hand-soldering,8cc4287c-885e-4306-882c-79b98cd780fa
 pkg-dfn50p250x150x95-6t170x10-circle-silkscreen-reflow,e0050bfc-7ffc-43a7-903e-36c30c3be358
 pkg-dfn50p250x150x95-6t170x10-exposed,cd0b49e4-d4bf-4748-bf29-cd2a65aa2b94
@@ -1346,6 +1398,7 @@ pkg-dfn50p250x150x95-6t170x10-text-name-hand-soldering,d233452c-73fe-4e49-89ac-3
 pkg-dfn50p250x150x95-6t170x10-text-name-reflow,679bbb4f-e393-4843-9fbc-4c817263dd6e
 pkg-dfn50p250x150x95-6t170x10-text-value-hand-soldering,b1cd5f9c-c4bb-459d-a6a6-118116bd7d9d
 pkg-dfn50p250x150x95-6t170x10-text-value-reflow,c8758dc9-4712-4dfd-aa11-c54c5a9f5172
+pkg-dfn50p250x150x95-8-body-outline,dc5b26a7-5126-49b5-8968-fbc336d9c42d
 pkg-dfn50p250x150x95-8-circle-silkscreen-hand-soldering,2a173ddf-f466-4466-8f42-ba2b75ff72f0
 pkg-dfn50p250x150x95-8-circle-silkscreen-reflow,f96e85f2-25ed-4fb4-b525-3c9703843c76
 pkg-dfn50p250x150x95-8-footprint-hand-soldering,430fe58a-fb79-430d-8efd-1c62e1ea6f61
@@ -1375,6 +1428,7 @@ pkg-dfn50p250x150x95-8-text-name-hand-soldering,eb7ad77d-f269-4367-935c-31149297
 pkg-dfn50p250x150x95-8-text-name-reflow,5129ee8e-8662-418b-aff1-c57f31e8633a
 pkg-dfn50p250x150x95-8-text-value-hand-soldering,f7c8984d-bb30-4e01-a8a4-c872db42676a
 pkg-dfn50p250x150x95-8-text-value-reflow,82f69d7a-ba61-453a-85d9-1895f21d69c6
+pkg-dfn50p250x150x95-8t170x10-body-outline,1f41939b-dc8f-4303-815b-9bd78f9c7a95
 pkg-dfn50p250x150x95-8t170x10-circle-silkscreen-hand-soldering,0ffea8eb-1736-40c9-8233-2c8841109148
 pkg-dfn50p250x150x95-8t170x10-circle-silkscreen-reflow,64dcdf36-1d52-45cf-a741-12c850d8904d
 pkg-dfn50p250x150x95-8t170x10-exposed,bae77705-0f27-49ef-897c-2076f2add9f6
@@ -1406,6 +1460,7 @@ pkg-dfn50p250x150x95-8t170x10-text-name-hand-soldering,210bc9af-ba25-4294-b371-b
 pkg-dfn50p250x150x95-8t170x10-text-name-reflow,6db70601-1a24-4af3-9ef4-4f05480b663a
 pkg-dfn50p250x150x95-8t170x10-text-value-hand-soldering,f4a47ca9-fda9-43d7-9fc9-43ad8e925b32
 pkg-dfn50p250x150x95-8t170x10-text-value-reflow,8f2305ea-8d32-45ab-b53e-0f2518b807b7
+pkg-dfn50p250x200x75-4-body-outline,d29dd75c-88c7-4a8e-b2a5-0c59cd1141c4
 pkg-dfn50p250x200x75-4-circle-silkscreen-hand-soldering,ee5d6b71-eb35-474b-828c-173a86c46999
 pkg-dfn50p250x200x75-4-circle-silkscreen-reflow,d3dc7c90-e452-479b-b583-a6af63c1b033
 pkg-dfn50p250x200x75-4-footprint-hand-soldering,7a5e6223-0b33-400d-b4ad-5407dc47b1c6
@@ -1427,6 +1482,7 @@ pkg-dfn50p250x200x75-4-text-name-hand-soldering,68aba95d-ea3a-48a3-9683-fbb62fb6
 pkg-dfn50p250x200x75-4-text-name-reflow,6745d3fb-ebc2-4c58-9928-2221aa29e0d3
 pkg-dfn50p250x200x75-4-text-value-hand-soldering,3a090f29-d4fb-40f2-839e-44bfbc4911eb
 pkg-dfn50p250x200x75-4-text-value-reflow,11d16322-86e6-47cb-9abb-9aa7befe68cd
+pkg-dfn50p250x200x75-4t170x60-body-outline,a1aca3be-054f-4ee1-b901-22c53f211279
 pkg-dfn50p250x200x75-4t170x60-circle-silkscreen-hand-soldering,659dd759-0083-4ea8-b135-3fca0a337355
 pkg-dfn50p250x200x75-4t170x60-circle-silkscreen-reflow,57d87168-946d-47e2-978b-8bb617448eb5
 pkg-dfn50p250x200x75-4t170x60-exposed,bb24187f-28aa-4858-b29a-b06681e4d52d
@@ -1450,6 +1506,7 @@ pkg-dfn50p250x200x75-4t170x60-text-name-hand-soldering,716e9d3b-1c7c-4fab-a33b-6
 pkg-dfn50p250x200x75-4t170x60-text-name-reflow,b82c209a-0ba6-44e1-b86f-d0de82438929
 pkg-dfn50p250x200x75-4t170x60-text-value-hand-soldering,0e8a5632-7473-4b09-8310-2eafede07dcb
 pkg-dfn50p250x200x75-4t170x60-text-value-reflow,a2867490-5ed7-47c6-b47f-344a5f5ad576
+pkg-dfn50p250x200x75-6-body-outline,4c9b3ad7-6479-4201-898e-b560c2b77afa
 pkg-dfn50p250x200x75-6-circle-silkscreen-hand-soldering,603c5653-8653-42c9-a95b-4a8ebdf28362
 pkg-dfn50p250x200x75-6-circle-silkscreen-reflow,27c8d328-75c6-4a52-a395-ee9c331672ec
 pkg-dfn50p250x200x75-6-footprint-hand-soldering,c065fb5e-c53e-4df5-b88a-293248fba719
@@ -1475,6 +1532,7 @@ pkg-dfn50p250x200x75-6-text-name-hand-soldering,3eaeb993-1b2d-4d85-a73b-b16beb00
 pkg-dfn50p250x200x75-6-text-name-reflow,f90cfd1d-e060-45b4-bc5c-fd7fb5e713c5
 pkg-dfn50p250x200x75-6-text-value-hand-soldering,236ad7e7-ee0e-4632-bf22-dc8bb3bef6c5
 pkg-dfn50p250x200x75-6-text-value-reflow,0e6ac5f5-702a-409e-ac7a-0f600816572f
+pkg-dfn50p250x200x75-6t170x60-body-outline,d17f8afb-9a65-4f15-b78b-498585a766cf
 pkg-dfn50p250x200x75-6t170x60-circle-silkscreen-hand-soldering,5c111dd0-4162-4177-922a-dce37c150bf0
 pkg-dfn50p250x200x75-6t170x60-circle-silkscreen-reflow,76a4ddba-c0aa-452f-a1f7-baf75c21bfdd
 pkg-dfn50p250x200x75-6t170x60-exposed,1a292cf6-230c-4f28-957b-ff157a1e10a0
@@ -1502,6 +1560,7 @@ pkg-dfn50p250x200x75-6t170x60-text-name-hand-soldering,da4eaad2-e45a-49dd-91aa-0
 pkg-dfn50p250x200x75-6t170x60-text-name-reflow,fc716853-15cb-44fc-8359-cfc7a5c89818
 pkg-dfn50p250x200x75-6t170x60-text-value-hand-soldering,dbc2d48e-b9fd-42c5-9953-7031cee643a1
 pkg-dfn50p250x200x75-6t170x60-text-value-reflow,04d0841a-5bf3-4395-8498-26b007c53df5
+pkg-dfn50p250x200x75-8-body-outline,b71e888e-7299-4b8f-a7d1-c7c8c0a11d29
 pkg-dfn50p250x200x75-8-circle-silkscreen-hand-soldering,7e05e058-dd90-470d-b7e6-91ec8702c106
 pkg-dfn50p250x200x75-8-circle-silkscreen-reflow,7b0ed211-aa6f-4e2f-abd4-9e4166684f62
 pkg-dfn50p250x200x75-8-footprint-hand-soldering,b1014125-2e72-46c7-a82f-da6606001020
@@ -1531,6 +1590,7 @@ pkg-dfn50p250x200x75-8-text-name-hand-soldering,e066bb7e-233e-43bf-a712-784c026c
 pkg-dfn50p250x200x75-8-text-name-reflow,3d9cbfd5-1d79-4429-9c20-eb9daf10b352
 pkg-dfn50p250x200x75-8-text-value-hand-soldering,2b334b9d-71cb-4753-b86d-7d645e7d3bf6
 pkg-dfn50p250x200x75-8-text-value-reflow,7725a989-c604-44cc-b169-50e7a4b186b7
+pkg-dfn50p250x200x75-8t170x60-body-outline,f8d2369a-81d8-4f15-baa0-450677664b38
 pkg-dfn50p250x200x75-8t170x60-circle-silkscreen-hand-soldering,3b729765-81ba-484b-a149-1eb6e5ffc584
 pkg-dfn50p250x200x75-8t170x60-circle-silkscreen-reflow,21a5f48b-3e8e-425f-9095-77d646c2670e
 pkg-dfn50p250x200x75-8t170x60-exposed,89ec37b6-dfdd-4e7d-a70b-7c4558eddd4f
@@ -1562,6 +1622,7 @@ pkg-dfn50p250x200x75-8t170x60-text-name-hand-soldering,4a70a175-746e-4c0c-9c1c-1
 pkg-dfn50p250x200x75-8t170x60-text-name-reflow,2f4a545e-df87-49d1-9cb1-da99877c89a9
 pkg-dfn50p250x200x75-8t170x60-text-value-hand-soldering,3e9f19df-6673-4a29-bb4c-3a14ceb6a1d2
 pkg-dfn50p250x200x75-8t170x60-text-value-reflow,2a54ca1f-fd85-4ef1-b857-13c6ebe2458a
+pkg-dfn50p250x200x95-4-body-outline,ce3aa508-e1d4-4efe-8a5f-d671472ea285
 pkg-dfn50p250x200x95-4-circle-silkscreen-hand-soldering,0b6e77ee-0d0f-4220-b215-48a68811d8bb
 pkg-dfn50p250x200x95-4-circle-silkscreen-reflow,380b89db-8466-49f6-8dab-5311a3749dc0
 pkg-dfn50p250x200x95-4-footprint-hand-soldering,6f7da538-62df-46e5-bae2-be09080e7fd3
@@ -1583,6 +1644,7 @@ pkg-dfn50p250x200x95-4-text-name-hand-soldering,98376df3-46f7-4c8a-9d30-3f6a1d7b
 pkg-dfn50p250x200x95-4-text-name-reflow,b63aa23f-8c70-43d0-bb3d-9e54d345cb64
 pkg-dfn50p250x200x95-4-text-value-hand-soldering,647c3154-2c83-42ac-811b-b45d700ad21d
 pkg-dfn50p250x200x95-4-text-value-reflow,b974ea48-afb0-4a95-bf53-9432f639d246
+pkg-dfn50p250x200x95-4t170x60-body-outline,3308cb87-602e-4444-9e8d-1343611d0d24
 pkg-dfn50p250x200x95-4t170x60-circle-silkscreen-hand-soldering,5d5f1b79-4ac5-41cc-bad8-2d79070d4c2e
 pkg-dfn50p250x200x95-4t170x60-circle-silkscreen-reflow,2dcc08a0-6256-4f8c-90c1-e54d66eb34c3
 pkg-dfn50p250x200x95-4t170x60-exposed,1294df69-0acf-456e-9891-a2033772e3d4
@@ -1606,6 +1668,7 @@ pkg-dfn50p250x200x95-4t170x60-text-name-hand-soldering,2be811ef-d440-40ad-861a-7
 pkg-dfn50p250x200x95-4t170x60-text-name-reflow,4d21014c-ba92-4f8b-82be-e81e2b76a874
 pkg-dfn50p250x200x95-4t170x60-text-value-hand-soldering,48ab0fe1-8516-4d75-abf1-aa1a26c7245a
 pkg-dfn50p250x200x95-4t170x60-text-value-reflow,9894c940-86fe-43ed-83a1-07e2961b92b8
+pkg-dfn50p250x200x95-6-body-outline,94599097-ebf9-4193-bc7e-083c8d3079b3
 pkg-dfn50p250x200x95-6-circle-silkscreen-hand-soldering,416bd260-6752-4c84-b1a1-ee3ce3d82b38
 pkg-dfn50p250x200x95-6-circle-silkscreen-reflow,c240abd4-2e58-46f0-8814-cef1d7bf3f31
 pkg-dfn50p250x200x95-6-footprint-hand-soldering,ded3d168-7f7a-429b-b77d-de01d72b3a5c
@@ -1631,6 +1694,7 @@ pkg-dfn50p250x200x95-6-text-name-hand-soldering,5b1a23a7-fb6f-4c9f-a4da-4f784b55
 pkg-dfn50p250x200x95-6-text-name-reflow,3be542b9-3e31-42b0-bff8-6461a150c218
 pkg-dfn50p250x200x95-6-text-value-hand-soldering,a4450c7a-4644-4418-bc1d-dfb96a2320e9
 pkg-dfn50p250x200x95-6-text-value-reflow,02df5b3e-c759-4f2c-b4c6-5b57f1af40ea
+pkg-dfn50p250x200x95-6t170x60-body-outline,a3eaa553-995d-4d00-9700-c1b01269f1d3
 pkg-dfn50p250x200x95-6t170x60-circle-silkscreen-hand-soldering,c168333b-3395-4553-a442-457df1cf3dbf
 pkg-dfn50p250x200x95-6t170x60-circle-silkscreen-reflow,d577c3e0-c35b-474a-ba8e-5fc24164ca74
 pkg-dfn50p250x200x95-6t170x60-exposed,9fdf380b-4798-4a5e-8cc2-3205584755a2
@@ -1658,6 +1722,7 @@ pkg-dfn50p250x200x95-6t170x60-text-name-hand-soldering,5448d921-1e19-4ad8-8348-f
 pkg-dfn50p250x200x95-6t170x60-text-name-reflow,6fa1445c-01ef-4d07-9548-9ab7b1407642
 pkg-dfn50p250x200x95-6t170x60-text-value-hand-soldering,cf74b356-5208-44e9-8aab-1b9fa2400924
 pkg-dfn50p250x200x95-6t170x60-text-value-reflow,6d8e5217-6ee8-4104-a525-b6e60a4ae393
+pkg-dfn50p250x200x95-8-body-outline,d00aa30a-2dad-4317-b292-814954adfb2d
 pkg-dfn50p250x200x95-8-circle-silkscreen-hand-soldering,5e98bb86-adfa-4581-9574-76c84814fca9
 pkg-dfn50p250x200x95-8-circle-silkscreen-reflow,1f3b10a9-b60b-4129-9914-1c91bcdba50e
 pkg-dfn50p250x200x95-8-footprint-hand-soldering,5c3fe93e-5885-4fe9-a5e8-b22810c95305
@@ -1687,6 +1752,7 @@ pkg-dfn50p250x200x95-8-text-name-hand-soldering,f47179d8-5934-4c48-b4c4-a739285d
 pkg-dfn50p250x200x95-8-text-name-reflow,0faf4dfb-2f4b-496b-85a0-45e28e130907
 pkg-dfn50p250x200x95-8-text-value-hand-soldering,a536def5-4fc8-44bf-9c94-cecfd8ee926f
 pkg-dfn50p250x200x95-8-text-value-reflow,19c74e81-9e7d-45c3-ba5d-066cd428bf8c
+pkg-dfn50p250x200x95-8t170x60-body-outline,44d5ac27-c0b3-43dc-bdfe-5bced7c876f4
 pkg-dfn50p250x200x95-8t170x60-circle-silkscreen-hand-soldering,1c002cb7-5298-4fb6-86e7-f84e9ebe033d
 pkg-dfn50p250x200x95-8t170x60-circle-silkscreen-reflow,f27fdc63-fedf-4b98-ad4f-8b32759c0e87
 pkg-dfn50p250x200x95-8t170x60-exposed,8c4a83e2-7be1-4c97-9ace-002d7001fbd4
@@ -1718,6 +1784,7 @@ pkg-dfn50p250x200x95-8t170x60-text-name-hand-soldering,2a87f795-f05a-409a-ace5-7
 pkg-dfn50p250x200x95-8t170x60-text-name-reflow,b7090a64-3295-45cf-a691-d10258b3f450
 pkg-dfn50p250x200x95-8t170x60-text-value-hand-soldering,1fe93d1a-2950-4a09-be2f-389296a69315
 pkg-dfn50p250x200x95-8t170x60-text-value-reflow,442f8a5f-9a28-4e15-ab14-a3cd0e8b7a1b
+pkg-dfn50p250x250x75-6-body-outline,aeb97402-b00d-46c4-8c99-074f77d8744f
 pkg-dfn50p250x250x75-6-circle-silkscreen-hand-soldering,6ef5e91d-b23b-4952-a46c-4597feb86f7e
 pkg-dfn50p250x250x75-6-circle-silkscreen-reflow,16f9c162-3c0c-476b-b167-f6d83864c4b0
 pkg-dfn50p250x250x75-6-footprint-hand-soldering,0e623673-862d-4e6a-b888-dd3f727bbc59
@@ -1743,6 +1810,7 @@ pkg-dfn50p250x250x75-6-text-name-hand-soldering,95dc0bf6-a032-4a7c-8c0f-e619dd65
 pkg-dfn50p250x250x75-6-text-name-reflow,a9b1731b-58f8-483d-91a6-892294916c27
 pkg-dfn50p250x250x75-6-text-value-hand-soldering,f5462a58-3128-487d-b18c-1692a9e7ec12
 pkg-dfn50p250x250x75-6-text-value-reflow,41729065-8452-45cd-8393-76c6c309b8a4
+pkg-dfn50p250x250x75-6t170x110-body-outline,a4b8a027-561c-4744-91a6-2dad2b036cf5
 pkg-dfn50p250x250x75-6t170x110-circle-silkscreen-hand-soldering,34ec8e67-bb92-410e-8410-291598ee3225
 pkg-dfn50p250x250x75-6t170x110-circle-silkscreen-reflow,31d1d832-fc19-4414-b617-51381965a8bd
 pkg-dfn50p250x250x75-6t170x110-exposed,391815b4-bd84-4102-a9f5-d831bf0d4aff
@@ -1770,6 +1838,7 @@ pkg-dfn50p250x250x75-6t170x110-text-name-hand-soldering,8e5e1b53-cafe-41f2-9300-
 pkg-dfn50p250x250x75-6t170x110-text-name-reflow,25ad3b0e-45eb-4e12-9844-a3868d990d4d
 pkg-dfn50p250x250x75-6t170x110-text-value-hand-soldering,df46f722-5955-4c2c-8484-5019dc42c7ca
 pkg-dfn50p250x250x75-6t170x110-text-value-reflow,d428fc26-80d3-4c64-9789-de864fafa9fa
+pkg-dfn50p250x250x75-8-body-outline,e3d66172-df55-4053-8922-b466b2f3e6b0
 pkg-dfn50p250x250x75-8-circle-silkscreen-hand-soldering,c16d3249-cefb-4989-876d-065c877b1d84
 pkg-dfn50p250x250x75-8-circle-silkscreen-reflow,f9e2522f-3448-4842-a744-9c27865bdaf5
 pkg-dfn50p250x250x75-8-footprint-hand-soldering,97a5a735-4b09-47eb-bbd4-01b2d119c799
@@ -1799,6 +1868,7 @@ pkg-dfn50p250x250x75-8-text-name-hand-soldering,0e228e3e-404d-4c65-8d85-1780a175
 pkg-dfn50p250x250x75-8-text-name-reflow,3121d8aa-53bc-405d-acfa-6dd2ab589c9a
 pkg-dfn50p250x250x75-8-text-value-hand-soldering,c70c4f4a-8389-4007-b95b-9a5805021f15
 pkg-dfn50p250x250x75-8-text-value-reflow,dc581fb5-36d7-4eff-a7e9-dda6489b830f
+pkg-dfn50p250x250x75-8t170x110-body-outline,35869a66-5cde-49dd-ba83-bb712e7a9568
 pkg-dfn50p250x250x75-8t170x110-circle-silkscreen-hand-soldering,48922eba-bfbf-4e6a-8bf6-f25e8ec32255
 pkg-dfn50p250x250x75-8t170x110-circle-silkscreen-reflow,518aa693-e34d-42dc-802e-c011c922f7ad
 pkg-dfn50p250x250x75-8t170x110-exposed,bef9ca0e-8005-472e-8f5b-f2d5458d0327
@@ -1830,6 +1900,7 @@ pkg-dfn50p250x250x75-8t170x110-text-name-hand-soldering,fd506d7a-c10c-4fb1-9437-
 pkg-dfn50p250x250x75-8t170x110-text-name-reflow,1cdc1253-4a94-477d-99f1-99a279818afb
 pkg-dfn50p250x250x75-8t170x110-text-value-hand-soldering,94ac4b2f-bee2-4db5-81f3-2100619b7ef2
 pkg-dfn50p250x250x75-8t170x110-text-value-reflow,8a4cb223-1655-4f1f-931e-62c2a39fcc8c
+pkg-dfn50p250x250x95-6-body-outline,6f26c85e-773e-46d8-924e-3b1d2086e903
 pkg-dfn50p250x250x95-6-circle-silkscreen-hand-soldering,c2c58a47-918f-4b7f-9e7d-30ae00dd139b
 pkg-dfn50p250x250x95-6-circle-silkscreen-reflow,1592a7ef-2c81-4f10-b882-9f085facd456
 pkg-dfn50p250x250x95-6-footprint-hand-soldering,934143cd-011b-4bb1-ae28-3d535c5b73ba
@@ -1855,6 +1926,7 @@ pkg-dfn50p250x250x95-6-text-name-hand-soldering,a7f1f29a-e0c9-44ea-9234-e430a7df
 pkg-dfn50p250x250x95-6-text-name-reflow,539cf2c9-b706-42f7-896c-928dd6a3cdd6
 pkg-dfn50p250x250x95-6-text-value-hand-soldering,bc0e6563-29fd-4558-adb4-90f8920bf602
 pkg-dfn50p250x250x95-6-text-value-reflow,4de46eb3-9ba5-4423-98a7-6300749eeaec
+pkg-dfn50p250x250x95-6t170x110-body-outline,4a787ae6-a276-48b0-9e1b-782e69d3ea3a
 pkg-dfn50p250x250x95-6t170x110-circle-silkscreen-hand-soldering,5b6e27dc-454b-4763-a67b-91f3507c6fc6
 pkg-dfn50p250x250x95-6t170x110-circle-silkscreen-reflow,c49592d0-7c76-413f-8253-e8a9c1ff546d
 pkg-dfn50p250x250x95-6t170x110-exposed,6e730ea4-a2f8-46b7-9bd6-637dceccc421
@@ -1882,6 +1954,7 @@ pkg-dfn50p250x250x95-6t170x110-text-name-hand-soldering,ab2a0fb6-fe23-4fb2-9134-
 pkg-dfn50p250x250x95-6t170x110-text-name-reflow,a6f7b9cd-c5a2-41d0-91a9-cd1f687fbdbb
 pkg-dfn50p250x250x95-6t170x110-text-value-hand-soldering,e6410d99-2b9b-4cbf-a2ad-79685954d836
 pkg-dfn50p250x250x95-6t170x110-text-value-reflow,3d9d7156-4e7f-4814-84ec-82e4aa324f9e
+pkg-dfn50p250x250x95-8-body-outline,714c25dc-8a97-40a6-81d5-99912556f5b4
 pkg-dfn50p250x250x95-8-circle-silkscreen-hand-soldering,9bca2fa9-c3c8-434f-8733-a6d98c969fa7
 pkg-dfn50p250x250x95-8-circle-silkscreen-reflow,5ce7110d-50c1-41b0-a801-c6257ca31fc4
 pkg-dfn50p250x250x95-8-footprint-hand-soldering,fb2a9d24-d8a4-412b-9425-092c2579dac9
@@ -1911,6 +1984,7 @@ pkg-dfn50p250x250x95-8-text-name-hand-soldering,075fc0be-1f5d-4cfe-b3fa-7675ab7a
 pkg-dfn50p250x250x95-8-text-name-reflow,c021bba6-a048-47b7-be23-50282062502c
 pkg-dfn50p250x250x95-8-text-value-hand-soldering,f8e6ff14-4192-4ce9-8c86-ceffabfcf5af
 pkg-dfn50p250x250x95-8-text-value-reflow,e12bee82-4459-4913-813a-e86bce6625fc
+pkg-dfn50p250x250x95-8t170x110-body-outline,d7ee8adf-0b8e-47d1-b6b9-f82ad215ef88
 pkg-dfn50p250x250x95-8t170x110-circle-silkscreen-hand-soldering,fae8aad7-bd37-44ce-8760-8b7bdeae9742
 pkg-dfn50p250x250x95-8t170x110-circle-silkscreen-reflow,35b331c6-10ae-4b84-bf26-f58ea860d247
 pkg-dfn50p250x250x95-8t170x110-exposed,23ef2d2d-739b-4c11-9436-575d4c2a7437
@@ -1942,6 +2016,7 @@ pkg-dfn50p250x250x95-8t170x110-text-name-hand-soldering,0bed2c76-4338-42cc-b365-
 pkg-dfn50p250x250x95-8t170x110-text-name-reflow,b96dd67e-354d-4aeb-809b-97ff0a9b026a
 pkg-dfn50p250x250x95-8t170x110-text-value-hand-soldering,c40f7c04-effc-4822-a1dc-52784a615fd1
 pkg-dfn50p250x250x95-8t170x110-text-value-reflow,c4514fa0-3b5e-40a8-9e1b-27c1eb609726
+pkg-dfn50p250x300x75-8-body-outline,45b50c6c-7a43-427d-a19a-209113069e55
 pkg-dfn50p250x300x75-8-circle-silkscreen-hand-soldering,ab984729-0576-42b1-bcca-f980f6b134bf
 pkg-dfn50p250x300x75-8-circle-silkscreen-reflow,f278224a-d5f2-49d6-872e-2aa4b3591dfc
 pkg-dfn50p250x300x75-8-footprint-hand-soldering,292472cf-6ebb-41ea-ae77-6376b30cfa27
@@ -1971,6 +2046,7 @@ pkg-dfn50p250x300x75-8-text-name-hand-soldering,544f4451-a71f-4350-bba5-d41d72f0
 pkg-dfn50p250x300x75-8-text-name-reflow,e14af7f7-4978-4825-b2f9-ec16d2bfdbff
 pkg-dfn50p250x300x75-8-text-value-hand-soldering,58d3629f-dc14-4648-bbc2-52d207712260
 pkg-dfn50p250x300x75-8-text-value-reflow,a468baf3-2ce1-45d9-9378-c9c56bc0d1d2
+pkg-dfn50p250x300x75-8t150x120-body-outline,a3c5b93c-a8cc-4e99-a1ef-a6f28b4a8de4
 pkg-dfn50p250x300x75-8t150x120-circle-silkscreen-hand-soldering,05b26398-0a26-4f7e-a976-3cce5da9cb4d
 pkg-dfn50p250x300x75-8t150x120-circle-silkscreen-reflow,77fbc1b6-5922-4308-8416-c2cf45bb2a7c
 pkg-dfn50p250x300x75-8t150x120-exposed,5368da62-45ca-44a9-9339-35a7bf777300
@@ -2002,6 +2078,7 @@ pkg-dfn50p250x300x75-8t150x120-text-name-hand-soldering,ecfcf4bf-0ba8-4482-a223-
 pkg-dfn50p250x300x75-8t150x120-text-name-reflow,779bd812-7e00-4013-bf53-5a0c3b8c044d
 pkg-dfn50p250x300x75-8t150x120-text-value-hand-soldering,a1d45836-3539-401c-9bd8-d0f6ea3e8d92
 pkg-dfn50p250x300x75-8t150x120-text-value-reflow,0a4a446f-e1cf-4486-9edc-43dba7eb216e
+pkg-dfn50p250x300x95-8-body-outline,b40a452b-757a-4747-859c-ae030cb4a8ee
 pkg-dfn50p250x300x95-8-circle-silkscreen-hand-soldering,761a519f-caa8-4b85-9811-54204e4e6c52
 pkg-dfn50p250x300x95-8-circle-silkscreen-reflow,1fffa734-05ca-4b13-b206-ad7ec5977ff1
 pkg-dfn50p250x300x95-8-footprint-hand-soldering,7773ceff-f284-4b8a-a86c-30844f56750e
@@ -2031,6 +2108,7 @@ pkg-dfn50p250x300x95-8-text-name-hand-soldering,841dcd3d-fac4-4a01-a7e0-d29e5b07
 pkg-dfn50p250x300x95-8-text-name-reflow,87f6e60d-9d4f-46cc-a657-db32f2de053b
 pkg-dfn50p250x300x95-8-text-value-hand-soldering,7e9a3825-580a-4f8a-be5d-8fef9019599f
 pkg-dfn50p250x300x95-8-text-value-reflow,d53f4439-f693-4a06-bd30-5b0d24feb333
+pkg-dfn50p250x300x95-8t150x120-body-outline,023a43fd-cd2c-40af-9392-77ac45c72919
 pkg-dfn50p250x300x95-8t150x120-circle-silkscreen-hand-soldering,dec55965-a5df-4cd1-9fcd-811583447df7
 pkg-dfn50p250x300x95-8t150x120-circle-silkscreen-reflow,5802f81a-a7b0-489b-9e88-6c11dbecbad8
 pkg-dfn50p250x300x95-8t150x120-exposed,e8c75742-72f1-4204-93ee-1a34123d02af
@@ -2062,6 +2140,7 @@ pkg-dfn50p250x300x95-8t150x120-text-name-hand-soldering,ce6c1991-9683-45ce-a46c-
 pkg-dfn50p250x300x95-8t150x120-text-name-reflow,5ec94282-427b-4b25-b65b-8d3abe50533f
 pkg-dfn50p250x300x95-8t150x120-text-value-hand-soldering,cfc024c7-6bb2-4db9-a38f-30662842cc0d
 pkg-dfn50p250x300x95-8t150x120-text-value-reflow,f3686ce1-a984-43ef-a5e0-9d59cb882217
+pkg-dfn50p300x150x75-10-body-outline,3946a2d0-5905-44e7-9e5f-b5996cfb82ff
 pkg-dfn50p300x150x75-10-circle-silkscreen-hand-soldering,e6a438a5-02e6-4f7c-9be1-17d821491b65
 pkg-dfn50p300x150x75-10-circle-silkscreen-reflow,6998d72c-3303-4617-9c22-c5f6c17b2be4
 pkg-dfn50p300x150x75-10-footprint-hand-soldering,d8b5b6db-3423-4ca1-8eaf-6637afcec835
@@ -2095,6 +2174,7 @@ pkg-dfn50p300x150x75-10-text-name-hand-soldering,70dad116-e93a-439c-bce3-f731237
 pkg-dfn50p300x150x75-10-text-name-reflow,e827b8a9-9f47-45bb-b124-50a9e77759c1
 pkg-dfn50p300x150x75-10-text-value-hand-soldering,1bd35bc8-64da-40f4-9728-276125d75b5e
 pkg-dfn50p300x150x75-10-text-value-reflow,4d40e290-8a6d-437a-9a7e-8bcf1727e81e
+pkg-dfn50p300x150x75-10t220x10-body-outline,afe91caa-f79b-4eb2-a146-d2f2f3875dab
 pkg-dfn50p300x150x75-10t220x10-circle-silkscreen-hand-soldering,20957cbd-3549-4e62-9253-85222fed97e3
 pkg-dfn50p300x150x75-10t220x10-circle-silkscreen-reflow,99fca2ca-d12f-4af8-9151-36b264d6177f
 pkg-dfn50p300x150x75-10t220x10-exposed,c58d5f03-bb8d-484a-a4a3-fcd1b85ed34a
@@ -2130,6 +2210,7 @@ pkg-dfn50p300x150x75-10t220x10-text-name-hand-soldering,f0b27962-1f63-43b0-952b-
 pkg-dfn50p300x150x75-10t220x10-text-name-reflow,fd3a92aa-cdbb-4369-9b4a-07eadfd74b77
 pkg-dfn50p300x150x75-10t220x10-text-value-hand-soldering,e2f62949-e8ef-4623-8af1-1d544b78979d
 pkg-dfn50p300x150x75-10t220x10-text-value-reflow,ca9f145b-0793-42a7-b8e3-a3f6710f9022
+pkg-dfn50p300x150x75-8-body-outline,a47c16a2-974f-4c48-845a-c2d56ac52e04
 pkg-dfn50p300x150x75-8-circle-silkscreen-hand-soldering,a29db7ff-474a-461c-b90c-8249b403eb57
 pkg-dfn50p300x150x75-8-circle-silkscreen-reflow,e8d753f4-56b0-4218-8a2c-18f1cbe4e3d7
 pkg-dfn50p300x150x75-8-footprint-hand-soldering,e8c3b9cc-aca0-4901-9464-0940ae1e7cb7
@@ -2159,6 +2240,7 @@ pkg-dfn50p300x150x75-8-text-name-hand-soldering,673d34cb-f048-4432-84c5-c6ba1782
 pkg-dfn50p300x150x75-8-text-name-reflow,d0f5c3c8-f754-4081-8e35-8d16e345bf2d
 pkg-dfn50p300x150x75-8-text-value-hand-soldering,abe3c70c-f3b4-44fe-93c1-dd52baf0e84a
 pkg-dfn50p300x150x75-8-text-value-reflow,03082266-1732-4eb7-b435-5965678a0016
+pkg-dfn50p300x150x75-8t220x10-body-outline,1b660eaa-ef61-4669-a72f-ade9953a8b5d
 pkg-dfn50p300x150x75-8t220x10-circle-silkscreen-hand-soldering,fe8fd9c6-b2d8-45f7-933b-9d7e0279d50f
 pkg-dfn50p300x150x75-8t220x10-circle-silkscreen-reflow,3d9f7529-2597-4b23-8575-34c391fb7d34
 pkg-dfn50p300x150x75-8t220x10-exposed,1223fa56-270f-46e3-8508-58ca1b3bde2c
@@ -2190,6 +2272,7 @@ pkg-dfn50p300x150x75-8t220x10-text-name-hand-soldering,ce6ba529-66e9-4a7d-bd1a-5
 pkg-dfn50p300x150x75-8t220x10-text-name-reflow,51a8210b-9c6b-44b3-b0b3-9fcdc52f262b
 pkg-dfn50p300x150x75-8t220x10-text-value-hand-soldering,638ff694-846e-422d-8734-e98d658c0895
 pkg-dfn50p300x150x75-8t220x10-text-value-reflow,625855d1-1e59-46b5-9d72-06cc665a559b
+pkg-dfn50p300x150x95-10-body-outline,d1a03ee9-25f0-42d2-a55a-20609d7617f9
 pkg-dfn50p300x150x95-10-circle-silkscreen-hand-soldering,853323f2-9e6e-4b44-ba18-a51ae2d4360b
 pkg-dfn50p300x150x95-10-circle-silkscreen-reflow,2f62b55c-9826-46d7-9052-4e7ecd756e7f
 pkg-dfn50p300x150x95-10-footprint-hand-soldering,3f8b49ee-1b89-47c4-a860-56041bf4ff69
@@ -2223,6 +2306,7 @@ pkg-dfn50p300x150x95-10-text-name-hand-soldering,e0499eec-5982-4aa6-9e21-6229960
 pkg-dfn50p300x150x95-10-text-name-reflow,9e7e5d7a-7b97-44b9-bc17-169e40c907af
 pkg-dfn50p300x150x95-10-text-value-hand-soldering,831fa56c-3464-413c-82c7-4cd2cd898483
 pkg-dfn50p300x150x95-10-text-value-reflow,9ab95133-8e51-4bf7-b493-c2a90c72c960
+pkg-dfn50p300x150x95-10t220x10-body-outline,97e46acd-2dfb-496d-8d12-fc068295b2ae
 pkg-dfn50p300x150x95-10t220x10-circle-silkscreen-hand-soldering,a5109237-56b3-4d53-8937-a32c99137f5f
 pkg-dfn50p300x150x95-10t220x10-circle-silkscreen-reflow,fbd5eb92-b646-4e72-b721-f3653a714c8c
 pkg-dfn50p300x150x95-10t220x10-exposed,2f9bfd3c-f85d-437f-bb3f-47f5cb338804
@@ -2258,6 +2342,7 @@ pkg-dfn50p300x150x95-10t220x10-text-name-hand-soldering,2f332372-0978-4a2a-8095-
 pkg-dfn50p300x150x95-10t220x10-text-name-reflow,cb7a0bf1-dee4-48e4-b10d-df4bccea44ae
 pkg-dfn50p300x150x95-10t220x10-text-value-hand-soldering,87c83bb7-50e0-48b8-af70-8642aed0e359
 pkg-dfn50p300x150x95-10t220x10-text-value-reflow,628b5892-b1b5-4de4-997b-26d0ff7a718a
+pkg-dfn50p300x150x95-8-body-outline,fffedbda-73fb-420c-86e9-4b7eca4d3b98
 pkg-dfn50p300x150x95-8-circle-silkscreen-hand-soldering,027b9c32-663d-4f09-9aa5-c1c676256b60
 pkg-dfn50p300x150x95-8-circle-silkscreen-reflow,d3d8bbcf-739c-4040-9316-ca300c48e25c
 pkg-dfn50p300x150x95-8-footprint-hand-soldering,932281a3-3b77-403e-a35a-71233aa66b00
@@ -2287,6 +2372,7 @@ pkg-dfn50p300x150x95-8-text-name-hand-soldering,afe5a50a-3838-4667-8154-8f0be328
 pkg-dfn50p300x150x95-8-text-name-reflow,4fcd284b-3442-4c77-995c-812428ddf478
 pkg-dfn50p300x150x95-8-text-value-hand-soldering,867eeccf-adbc-4f5a-938b-68039e134fbf
 pkg-dfn50p300x150x95-8-text-value-reflow,e57c6ebe-5600-44b5-a02c-107fab57061f
+pkg-dfn50p300x150x95-8t220x10-body-outline,937e5e2e-b55f-4a84-a907-d95460d6f536
 pkg-dfn50p300x150x95-8t220x10-circle-silkscreen-hand-soldering,33e4d47a-ccf2-41a6-be5d-b54eae43d4b9
 pkg-dfn50p300x150x95-8t220x10-circle-silkscreen-reflow,41473a10-1cfd-4191-95d7-bc3acbaaf7e6
 pkg-dfn50p300x150x95-8t220x10-exposed,2a4c5ecf-e59a-43c6-913b-b029437728c1
@@ -2318,6 +2404,7 @@ pkg-dfn50p300x150x95-8t220x10-text-name-hand-soldering,e5749ce0-3466-4edb-9c77-c
 pkg-dfn50p300x150x95-8t220x10-text-name-reflow,61af1799-a8a3-4363-bc86-a460499a4583
 pkg-dfn50p300x150x95-8t220x10-text-value-hand-soldering,c7dfc5f9-9e79-400d-8ae7-e48e38af5ef1
 pkg-dfn50p300x150x95-8t220x10-text-value-reflow,07378822-922d-4a26-9346-478eb3bce2c2
+pkg-dfn50p300x200x75-10-body-outline,bdd31f50-faec-4576-87bf-9332a20afe09
 pkg-dfn50p300x200x75-10-circle-silkscreen-hand-soldering,8b09cf9f-fb30-4bb9-b601-97c7699bfa44
 pkg-dfn50p300x200x75-10-circle-silkscreen-reflow,ff4621d6-28e9-42f8-ba85-6e5d994ebb87
 pkg-dfn50p300x200x75-10-footprint-hand-soldering,8f67ce64-b9c4-4c39-9165-95938f6c1966
@@ -2351,6 +2438,7 @@ pkg-dfn50p300x200x75-10-text-name-hand-soldering,bbf1bd14-9de5-478a-8510-5b1a91f
 pkg-dfn50p300x200x75-10-text-name-reflow,a09aa186-ec80-4100-a4cb-6c902e513119
 pkg-dfn50p300x200x75-10-text-value-hand-soldering,6b60c83d-e29f-466c-af4b-fc95aa0f48db
 pkg-dfn50p300x200x75-10-text-value-reflow,b5e27146-fc39-48ad-b5aa-22d0cbe1a303
+pkg-dfn50p300x200x75-10t220x60-body-outline,36d76e7c-c9d8-4c23-bd42-572cb88763e9
 pkg-dfn50p300x200x75-10t220x60-circle-silkscreen-hand-soldering,855074ff-e368-4a8b-9950-a3c053bc089d
 pkg-dfn50p300x200x75-10t220x60-circle-silkscreen-reflow,6d3938df-f9e1-4af0-9d86-e92f862fce25
 pkg-dfn50p300x200x75-10t220x60-exposed,75847c7f-0926-461c-aa5f-e417e2afa951
@@ -2386,6 +2474,7 @@ pkg-dfn50p300x200x75-10t220x60-text-name-hand-soldering,9abd342c-5b08-4e79-ac3b-
 pkg-dfn50p300x200x75-10t220x60-text-name-reflow,9b22962e-d38c-48b7-b839-88b319b59f5d
 pkg-dfn50p300x200x75-10t220x60-text-value-hand-soldering,dbd4c6f6-ce45-45d1-9299-68a4ce082cc8
 pkg-dfn50p300x200x75-10t220x60-text-value-reflow,409fd305-1fe1-40b2-94e5-cecfdae2b718
+pkg-dfn50p300x200x75-8-body-outline,e1db8913-aee3-48f3-8fb4-0763a9259a59
 pkg-dfn50p300x200x75-8-circle-silkscreen-hand-soldering,444f1f8d-5a13-4306-896a-035d7b19a52e
 pkg-dfn50p300x200x75-8-circle-silkscreen-reflow,66b0d26e-a59b-4b4b-96fb-f1da046f6061
 pkg-dfn50p300x200x75-8-footprint-hand-soldering,84b00d8c-c8a7-4586-ade5-bae3e9a8a938
@@ -2415,6 +2504,7 @@ pkg-dfn50p300x200x75-8-text-name-hand-soldering,585c1912-afbf-42b6-bd78-44f2cf64
 pkg-dfn50p300x200x75-8-text-name-reflow,c3e236b6-7de7-4951-b9d1-70fce6051e60
 pkg-dfn50p300x200x75-8-text-value-hand-soldering,ec0af2f5-1ec8-4dc5-b4a6-ff6548178f98
 pkg-dfn50p300x200x75-8-text-value-reflow,57a9ee5e-e26c-4796-b940-82652ae2fd36
+pkg-dfn50p300x200x75-8t220x60-body-outline,d2f2af98-1f6f-41fd-8838-19128cc169b4
 pkg-dfn50p300x200x75-8t220x60-circle-silkscreen-hand-soldering,ed025e41-ff8c-48c1-8424-0433e2a8281f
 pkg-dfn50p300x200x75-8t220x60-circle-silkscreen-reflow,829b0c3a-9579-4db7-a192-1cf1eb4a3f14
 pkg-dfn50p300x200x75-8t220x60-exposed,a6611bef-bdc8-4034-8273-55a944f04a27
@@ -2446,6 +2536,7 @@ pkg-dfn50p300x200x75-8t220x60-text-name-hand-soldering,f45a4f22-1e31-49b4-8708-9
 pkg-dfn50p300x200x75-8t220x60-text-name-reflow,a463722f-1f29-464f-be96-780831d8c45d
 pkg-dfn50p300x200x75-8t220x60-text-value-hand-soldering,ef6e1bac-cc6c-43e8-91b0-ab0de8c41dfe
 pkg-dfn50p300x200x75-8t220x60-text-value-reflow,fb87e6e7-2d33-4295-86a7-1dcefe917f84
+pkg-dfn50p300x200x95-10p30-body-outline,28197fc6-daad-411c-a037-586c33915620
 pkg-dfn50p300x200x95-10p30-circle-silkscreen-hand-soldering,4bfb25d9-965d-41fc-afc9-63a1e6efe487
 pkg-dfn50p300x200x95-10p30-circle-silkscreen-reflow,128ca12c-5f91-4b3a-a4eb-a3321430a803
 pkg-dfn50p300x200x95-10p30-footprint-hand-soldering,0887a746-bc0d-4833-96f9-be0330a3fd6f
@@ -2479,6 +2570,7 @@ pkg-dfn50p300x200x95-10p30-text-name-hand-soldering,c87abc45-be50-4b2d-9ae1-870b
 pkg-dfn50p300x200x95-10p30-text-name-reflow,e3c98f78-e93a-4bd4-aff0-9a9fb7ace0a4
 pkg-dfn50p300x200x95-10p30-text-value-hand-soldering,f7434c5c-040b-47e5-a924-7a27c6121909
 pkg-dfn50p300x200x95-10p30-text-value-reflow,7200daa4-9345-435d-842b-4db817b9d3e4
+pkg-dfn50p300x200x95-10p30t220x60-body-outline,60e64f95-577e-4317-a229-33da5eb19c5d
 pkg-dfn50p300x200x95-10p30t220x60-circle-silkscreen-hand-soldering,c54c44f5-689f-456c-a594-f4f1121b8e99
 pkg-dfn50p300x200x95-10p30t220x60-circle-silkscreen-reflow,385ca209-dd25-4d36-be32-c2ffb77d7512
 pkg-dfn50p300x200x95-10p30t220x60-exposed,3434cbbf-027a-4e3f-a8fa-49c69d1342a2
@@ -2514,6 +2606,7 @@ pkg-dfn50p300x200x95-10p30t220x60-text-name-hand-soldering,c260e27f-ad8d-4836-a2
 pkg-dfn50p300x200x95-10p30t220x60-text-name-reflow,27923d34-64d7-42c1-9d90-b8069ac08b12
 pkg-dfn50p300x200x95-10p30t220x60-text-value-hand-soldering,1e3cc1d4-2dd4-4ce6-b277-a2f8e44c59e4
 pkg-dfn50p300x200x95-10p30t220x60-text-value-reflow,8873a3d1-936a-4f22-81e3-78759436aaec
+pkg-dfn50p300x200x95-10p55-body-outline,8885c3ec-3cb6-4409-8985-807292d4851c
 pkg-dfn50p300x200x95-10p55-circle-silkscreen-hand-soldering,f7113221-efe4-4886-abfb-6db3b2e38fd3
 pkg-dfn50p300x200x95-10p55-circle-silkscreen-reflow,0d55ad16-7ba1-4b79-bab3-88e2de1e827c
 pkg-dfn50p300x200x95-10p55-footprint-hand-soldering,691ef61a-8bf5-4061-8127-0b05e560c131
@@ -2547,6 +2640,7 @@ pkg-dfn50p300x200x95-10p55-text-name-hand-soldering,69a8879e-1dc6-4c75-9bff-82e2
 pkg-dfn50p300x200x95-10p55-text-name-reflow,859bcb45-3d03-46d9-ba1d-1cf9ac8bef5b
 pkg-dfn50p300x200x95-10p55-text-value-hand-soldering,bebb1998-5d0c-4ac9-88a9-c92531a98441
 pkg-dfn50p300x200x95-10p55-text-value-reflow,9bb9066f-cc14-48ec-b017-74fc06ecbdaa
+pkg-dfn50p300x200x95-10p55t220x60-body-outline,2f02b4c0-d09c-4715-b738-f338315b092b
 pkg-dfn50p300x200x95-10p55t220x60-circle-silkscreen-hand-soldering,9aca0021-e7ff-414c-b3c6-929cb09cdf04
 pkg-dfn50p300x200x95-10p55t220x60-circle-silkscreen-reflow,3efd222a-b960-4c36-bf76-e5bf405d3528
 pkg-dfn50p300x200x95-10p55t220x60-exposed,cf6dc9d0-fcb7-41df-b704-46946dd90b3a
@@ -2582,6 +2676,7 @@ pkg-dfn50p300x200x95-10p55t220x60-text-name-hand-soldering,efc36e23-5bdd-483b-97
 pkg-dfn50p300x200x95-10p55t220x60-text-name-reflow,f6e28b65-2230-4e1a-9f67-84e1c4941aaa
 pkg-dfn50p300x200x95-10p55t220x60-text-value-hand-soldering,656dab61-5de0-40d5-bb6e-e99a99cd3901
 pkg-dfn50p300x200x95-10p55t220x60-text-value-reflow,55d6061b-1d25-459d-9dde-4d133e3af926
+pkg-dfn50p300x200x95-8-body-outline,2da68024-6ff4-4c96-8240-89c5b62b5236
 pkg-dfn50p300x200x95-8-circle-silkscreen-hand-soldering,24604229-dc07-4f4f-bda0-f041cdae859c
 pkg-dfn50p300x200x95-8-circle-silkscreen-reflow,ace5cbbf-c97c-473d-8fcc-2d499e1bca46
 pkg-dfn50p300x200x95-8-footprint-hand-soldering,15da9dc3-102b-4968-8488-d86cea507b26
@@ -2611,6 +2706,7 @@ pkg-dfn50p300x200x95-8-text-name-hand-soldering,32b70372-950e-4695-b9e8-ada5fd4e
 pkg-dfn50p300x200x95-8-text-name-reflow,daee9fa7-8acc-42f5-944a-6c84d243bc10
 pkg-dfn50p300x200x95-8-text-value-hand-soldering,cb84d7b6-d3ac-40ff-93d5-f3ef8d1fc5bd
 pkg-dfn50p300x200x95-8-text-value-reflow,149f4adb-1308-45fc-9cfd-43f17e2a3c8a
+pkg-dfn50p300x200x95-8t220x60-body-outline,5a635f04-da91-41ca-a690-d513a2d44261
 pkg-dfn50p300x200x95-8t220x60-circle-silkscreen-hand-soldering,1e4730eb-9c7b-4f9b-aaef-431738ceedda
 pkg-dfn50p300x200x95-8t220x60-circle-silkscreen-reflow,5249c126-22aa-4caf-89b1-c90be8aa773e
 pkg-dfn50p300x200x95-8t220x60-exposed,729300db-458f-4006-b5ae-0bdf3ff0d237
@@ -2642,6 +2738,7 @@ pkg-dfn50p300x200x95-8t220x60-text-name-hand-soldering,c717fbea-ba76-4f19-88c6-8
 pkg-dfn50p300x200x95-8t220x60-text-name-reflow,437c6082-f5eb-4b72-a2dd-5bd509da0c04
 pkg-dfn50p300x200x95-8t220x60-text-value-hand-soldering,1968aee7-be78-4205-b9ac-5b04ef235d0b
 pkg-dfn50p300x200x95-8t220x60-text-value-reflow,3b1c313b-f319-46f3-8f8b-5477f43c3c2d
+pkg-dfn50p300x250x75-10-body-outline,fb575250-707f-42d5-b126-4d8f6871d8df
 pkg-dfn50p300x250x75-10-circle-silkscreen-hand-soldering,aab45886-19a0-40e8-94da-01959a103384
 pkg-dfn50p300x250x75-10-circle-silkscreen-reflow,56bf2faa-ecd9-4ad3-aef8-08832bbed95c
 pkg-dfn50p300x250x75-10-footprint-hand-soldering,2dfa9359-ab43-4823-a3a5-3612759f8341
@@ -2675,6 +2772,7 @@ pkg-dfn50p300x250x75-10-text-name-hand-soldering,64c81225-f65a-42b2-b103-bf0d1e9
 pkg-dfn50p300x250x75-10-text-name-reflow,36439297-bb10-4f19-a263-d4fd7346b7b6
 pkg-dfn50p300x250x75-10-text-value-hand-soldering,8e98befa-8f7d-47dc-8da4-2732e4ac8911
 pkg-dfn50p300x250x75-10-text-value-reflow,a69b7e46-5c22-42a1-801c-9b7fd3dcf5b9
+pkg-dfn50p300x250x75-10t220x110-body-outline,1865e2c7-cdc9-40b0-9350-0045c7010dcf
 pkg-dfn50p300x250x75-10t220x110-circle-silkscreen-hand-soldering,a9a81160-a34b-42fe-9ff3-fd409fd5da01
 pkg-dfn50p300x250x75-10t220x110-circle-silkscreen-reflow,66964fe5-275a-4215-919c-a70f723ba4ab
 pkg-dfn50p300x250x75-10t220x110-exposed,804185f0-498c-4fe1-a3cb-3814a8022a43
@@ -2710,6 +2808,7 @@ pkg-dfn50p300x250x75-10t220x110-text-name-hand-soldering,31f42b16-64ad-4993-8d8e
 pkg-dfn50p300x250x75-10t220x110-text-name-reflow,59228e21-8070-4fb6-bfde-8da6e24e5921
 pkg-dfn50p300x250x75-10t220x110-text-value-hand-soldering,2d52a80f-cdc2-4200-b9f7-e8ccda0b8fe4
 pkg-dfn50p300x250x75-10t220x110-text-value-reflow,1e5d2229-a5bf-4aad-b207-4e29d661b1ae
+pkg-dfn50p300x250x75-8-body-outline,f2f642e8-5d7f-4122-ba36-4e2ca11333e3
 pkg-dfn50p300x250x75-8-circle-silkscreen-hand-soldering,466a54bc-793d-40ca-a9a1-0b1f6bcea198
 pkg-dfn50p300x250x75-8-circle-silkscreen-reflow,f8482d11-8ec5-4b29-b681-97868d4c38be
 pkg-dfn50p300x250x75-8-footprint-hand-soldering,81cccc9e-b4de-45d5-88df-3d08041aa4ef
@@ -2739,6 +2838,7 @@ pkg-dfn50p300x250x75-8-text-name-hand-soldering,3acf3b71-5c8b-42c5-a83b-fc7f7260
 pkg-dfn50p300x250x75-8-text-name-reflow,6e1057b5-5efc-4924-a8b6-746086bc4232
 pkg-dfn50p300x250x75-8-text-value-hand-soldering,e34fd6fd-5cb4-48f5-aeb5-071c2d37a927
 pkg-dfn50p300x250x75-8-text-value-reflow,9a24eca5-ffb9-4d9b-96cd-c70089d21503
+pkg-dfn50p300x250x75-8t220x110-body-outline,fbddc00c-e485-411d-8fee-c62119d9bfa2
 pkg-dfn50p300x250x75-8t220x110-circle-silkscreen-hand-soldering,df5ebe0f-2985-4863-81d1-c1478af3c3f9
 pkg-dfn50p300x250x75-8t220x110-circle-silkscreen-reflow,451d44ca-8f52-4a2c-a345-a465f2bc8456
 pkg-dfn50p300x250x75-8t220x110-exposed,2f8b7d04-61c9-46ac-823c-753d8e0362de
@@ -2770,6 +2870,7 @@ pkg-dfn50p300x250x75-8t220x110-text-name-hand-soldering,c0b6fc84-72ba-43f0-bb93-
 pkg-dfn50p300x250x75-8t220x110-text-name-reflow,c6c44894-f4e9-4126-8c49-88f6a12f8634
 pkg-dfn50p300x250x75-8t220x110-text-value-hand-soldering,6c49f7ec-e44b-4edb-8981-c2251923e2e5
 pkg-dfn50p300x250x75-8t220x110-text-value-reflow,b51dcef6-7052-4972-8a2a-e7ea5d9026f7
+pkg-dfn50p300x250x95-10-body-outline,e1ca1110-9741-4a71-bbd5-5d16ebab205b
 pkg-dfn50p300x250x95-10-circle-silkscreen-hand-soldering,5e86a3d9-b0cc-4731-88f5-d71048f51f0b
 pkg-dfn50p300x250x95-10-circle-silkscreen-reflow,676dbd90-c1f8-47b5-9e56-ec9982414032
 pkg-dfn50p300x250x95-10-footprint-hand-soldering,bb7c8105-7c49-4970-8a3d-eecbcb15ac73
@@ -2803,6 +2904,7 @@ pkg-dfn50p300x250x95-10-text-name-hand-soldering,c1258657-77da-4b46-a6bf-e9232e2
 pkg-dfn50p300x250x95-10-text-name-reflow,88b8592f-3a8b-4e86-8cb8-661bf2c93cdd
 pkg-dfn50p300x250x95-10-text-value-hand-soldering,99b13944-0c32-45af-a0b5-031ed9bcc69c
 pkg-dfn50p300x250x95-10-text-value-reflow,dc5c693d-0bf0-4efc-b549-6e2e4620e2dd
+pkg-dfn50p300x250x95-10t220x110-body-outline,66babcbc-2fc1-4310-aeb8-3097249e9173
 pkg-dfn50p300x250x95-10t220x110-circle-silkscreen-hand-soldering,7b544097-8582-4a46-ae83-25fcea39c9b2
 pkg-dfn50p300x250x95-10t220x110-circle-silkscreen-reflow,ea375d87-098a-4ef3-a858-62750d6512e6
 pkg-dfn50p300x250x95-10t220x110-exposed,de4488bf-52a1-4607-bed9-8fd9237a86fe
@@ -2838,6 +2940,7 @@ pkg-dfn50p300x250x95-10t220x110-text-name-hand-soldering,7bf7d0a6-b562-4726-851e
 pkg-dfn50p300x250x95-10t220x110-text-name-reflow,78d9695e-8311-4221-a4ef-1c71f2b776f2
 pkg-dfn50p300x250x95-10t220x110-text-value-hand-soldering,9ed89e81-7a72-4c2b-9167-3b103f5b0de0
 pkg-dfn50p300x250x95-10t220x110-text-value-reflow,04068114-8063-4a94-8934-86bc8634c079
+pkg-dfn50p300x250x95-8-body-outline,2ebfc7ca-0bc7-4b52-bef5-2068ebe60ae6
 pkg-dfn50p300x250x95-8-circle-silkscreen-hand-soldering,da58d35f-78c2-48fe-a4e9-e292b3b954be
 pkg-dfn50p300x250x95-8-circle-silkscreen-reflow,2fc063d9-f242-4e27-a9e1-f69c0c294a43
 pkg-dfn50p300x250x95-8-footprint-hand-soldering,6e365273-9258-43c3-b180-391b423be51c
@@ -2867,6 +2970,7 @@ pkg-dfn50p300x250x95-8-text-name-hand-soldering,a569e43b-9fd0-4737-9b91-e0a82a5c
 pkg-dfn50p300x250x95-8-text-name-reflow,8010a4a9-3986-466d-9f5e-afcf1e25652f
 pkg-dfn50p300x250x95-8-text-value-hand-soldering,1b023fc6-13e3-477b-91c2-846d3263ce28
 pkg-dfn50p300x250x95-8-text-value-reflow,cbf1afac-5b75-4917-a1d2-46c39894b40f
+pkg-dfn50p300x250x95-8t220x110-body-outline,61802224-7925-498f-a2f7-604b78019d15
 pkg-dfn50p300x250x95-8t220x110-circle-silkscreen-hand-soldering,d45d9516-8718-4814-8549-582a0679fcc3
 pkg-dfn50p300x250x95-8t220x110-circle-silkscreen-reflow,04d8d362-72f3-4c4d-bc2c-d836b3f1ae4f
 pkg-dfn50p300x250x95-8t220x110-exposed,04890c93-89b9-4c0b-a644-790c588db439
@@ -2898,6 +3002,7 @@ pkg-dfn50p300x250x95-8t220x110-text-name-hand-soldering,0c2c7273-1672-443f-b5f7-
 pkg-dfn50p300x250x95-8t220x110-text-name-reflow,3fca6a18-84fe-44ac-b530-4eba3e152ee5
 pkg-dfn50p300x250x95-8t220x110-text-value-hand-soldering,fb051df3-d90e-4b12-a0df-266055ef38cd
 pkg-dfn50p300x250x95-8t220x110-text-value-reflow,e02e585f-3cff-4124-be75-fc536475a778
+pkg-dfn50p300x300x75-10-body-outline,420c7461-6cf9-42d9-8fc7-953e64cddefb
 pkg-dfn50p300x300x75-10-circle-silkscreen-hand-soldering,ce34904f-5073-4b7a-96ae-2a25103da7a8
 pkg-dfn50p300x300x75-10-circle-silkscreen-reflow,2d3a1340-d7a5-4789-ac5a-dca5b71b0f75
 pkg-dfn50p300x300x75-10-footprint-hand-soldering,6f3fac4e-1e6a-4553-ba72-0cb8f75c421e
@@ -2931,6 +3036,7 @@ pkg-dfn50p300x300x75-10-text-name-hand-soldering,6d47fa00-8b0f-4abc-a4ad-5a50082
 pkg-dfn50p300x300x75-10-text-name-reflow,296193c1-3a14-47a6-a0f6-74b208361140
 pkg-dfn50p300x300x75-10-text-value-hand-soldering,b9a8b096-3ff4-4d47-aee5-4ee76a9bdd12
 pkg-dfn50p300x300x75-10-text-value-reflow,60b1fc4b-1e7c-4193-a973-9613478d3b48
+pkg-dfn50p300x300x75-10t200x120-body-outline,02d54719-cbb6-4caa-aa31-23cb8027c10d
 pkg-dfn50p300x300x75-10t200x120-circle-silkscreen-hand-soldering,7695d1f4-027c-451e-82a2-62b531be841d
 pkg-dfn50p300x300x75-10t200x120-circle-silkscreen-reflow,2e224939-80dd-40f7-80a2-85a64e5228af
 pkg-dfn50p300x300x75-10t200x120-exposed,3685f3d0-7abf-4e6d-bd39-113c0efb9ae7
@@ -2966,6 +3072,7 @@ pkg-dfn50p300x300x75-10t200x120-text-name-hand-soldering,3931da98-5f73-4503-994f
 pkg-dfn50p300x300x75-10t200x120-text-name-reflow,659b6a7c-8ed2-42ab-bba6-85a0391d78cd
 pkg-dfn50p300x300x75-10t200x120-text-value-hand-soldering,d8eaa4d7-69e1-4741-9144-bcc3ee3e543a
 pkg-dfn50p300x300x75-10t200x120-text-value-reflow,d7bc9efd-b0e3-427d-96c8-9446eaaa71f3
+pkg-dfn50p300x300x75-10t270x175-body-outline,23f8fa2a-e60b-47e6-a0ea-40ac242065c1
 pkg-dfn50p300x300x75-10t270x175-circle-silkscreen-hand-soldering,2bc47acb-555f-43a0-9f19-51565faac590
 pkg-dfn50p300x300x75-10t270x175-circle-silkscreen-reflow,b09deebb-5fcf-44f4-81c4-3ed90cf557c4
 pkg-dfn50p300x300x75-10t270x175-exposed,fc2f8a13-8504-4cc5-b128-1a555764eb83
@@ -3001,6 +3108,7 @@ pkg-dfn50p300x300x75-10t270x175-text-name-hand-soldering,e96c4b0e-2293-4467-a5c9
 pkg-dfn50p300x300x75-10t270x175-text-name-reflow,ce310e09-4686-4568-989e-1cd69d03800a
 pkg-dfn50p300x300x75-10t270x175-text-value-hand-soldering,d8200ff4-c908-4f5e-9e68-a437bcc575db
 pkg-dfn50p300x300x75-10t270x175-text-value-reflow,605abc38-e3ac-4836-9abd-04a808f7a68f
+pkg-dfn50p300x300x75-8-body-outline,142b317e-6345-43c8-8071-89883ace9cbb
 pkg-dfn50p300x300x75-8-circle-silkscreen-hand-soldering,47696aef-96db-4ba2-a427-803271b1c6b1
 pkg-dfn50p300x300x75-8-circle-silkscreen-reflow,f7d935ea-aa85-45b9-9c22-d92c46765de5
 pkg-dfn50p300x300x75-8-footprint-hand-soldering,33c1a49a-2deb-4f93-8716-f823fd3733d0
@@ -3030,6 +3138,7 @@ pkg-dfn50p300x300x75-8-text-name-hand-soldering,4a4e4ad8-238f-46d3-bd23-20d1c212
 pkg-dfn50p300x300x75-8-text-name-reflow,e73dc007-38a9-4a14-9a9a-f5096b52a2c5
 pkg-dfn50p300x300x75-8-text-value-hand-soldering,5b344291-e89d-4a06-879a-8b120afdc7cb
 pkg-dfn50p300x300x75-8-text-value-reflow,f5f85ca0-3596-4e7e-9af7-3481443fba95
+pkg-dfn50p300x300x75-8t160-body-outline,020fb55d-ca4f-48c5-984e-bf6cc1e021f0
 pkg-dfn50p300x300x75-8t160-circle-silkscreen-hand-soldering,ab838ff0-5df4-4f8a-b00c-3be59cb39a91
 pkg-dfn50p300x300x75-8t160-circle-silkscreen-reflow,22f4455e-a4d3-40e0-98d0-89edb66f06c8
 pkg-dfn50p300x300x75-8t160-exposed,9334e9e9-f520-4dcb-abb6-bb072711059c
@@ -3061,6 +3170,7 @@ pkg-dfn50p300x300x75-8t160-text-name-hand-soldering,7c41bcdd-0da0-41b0-8eaa-d375
 pkg-dfn50p300x300x75-8t160-text-name-reflow,e2044080-c698-448f-a082-84d32137a21c
 pkg-dfn50p300x300x75-8t160-text-value-hand-soldering,aff75001-a02f-4aa3-a950-4be535d9740e
 pkg-dfn50p300x300x75-8t160-text-value-reflow,33c583f3-f940-460a-bc3d-283c12e7fd69
+pkg-dfn50p300x300x75-8t200x120-body-outline,e58c18f6-1108-4360-baa3-0bf7155bdee7
 pkg-dfn50p300x300x75-8t200x120-circle-silkscreen-hand-soldering,e7dc81c2-bd7a-467d-98ac-76d96a524eb3
 pkg-dfn50p300x300x75-8t200x120-circle-silkscreen-reflow,91ec769a-5c6e-4d26-b55c-5f15d7745841
 pkg-dfn50p300x300x75-8t200x120-exposed,ddd09941-ec49-4ed3-a47d-82d4c5858cdc
@@ -3092,6 +3202,7 @@ pkg-dfn50p300x300x75-8t200x120-text-name-hand-soldering,d2cce3f4-dde9-4a54-8a0b-
 pkg-dfn50p300x300x75-8t200x120-text-name-reflow,77d7124e-c4f0-425b-b42e-f43174043c12
 pkg-dfn50p300x300x75-8t200x120-text-value-hand-soldering,8f1a9cf6-f7ff-4db5-be83-a9ec0ad1a26a
 pkg-dfn50p300x300x75-8t200x120-text-value-reflow,65eca5f8-dc5c-4c54-acbd-e9d63404f213
+pkg-dfn50p300x300x75-8t250x150-body-outline,73a71373-6e90-4f2a-b16f-dbb09b80f14a
 pkg-dfn50p300x300x75-8t250x150-circle-silkscreen-hand-soldering,d76763b1-b71e-491f-873d-647452ec7a86
 pkg-dfn50p300x300x75-8t250x150-circle-silkscreen-reflow,26f265d7-f771-41b4-9fcd-7f9d2db73d43
 pkg-dfn50p300x300x75-8t250x150-exposed,d225fdf9-e055-4aa9-8cf9-14514e135a9c
@@ -3123,6 +3234,7 @@ pkg-dfn50p300x300x75-8t250x150-text-name-hand-soldering,e2825853-01cc-43df-bd69-
 pkg-dfn50p300x300x75-8t250x150-text-name-reflow,c47befd0-cdf2-4d61-b55a-413f6a5a76ea
 pkg-dfn50p300x300x75-8t250x150-text-value-hand-soldering,9b689af4-a564-4a7e-a33b-d54fa69ec413
 pkg-dfn50p300x300x75-8t250x150-text-value-reflow,ab917b0e-4e5a-40ed-95e6-f13298db1590
+pkg-dfn50p300x300x75-8t270x175-body-outline,86ea7a99-a9dc-4787-9bdb-32e8f4af74b6
 pkg-dfn50p300x300x75-8t270x175-circle-silkscreen-hand-soldering,3baa8cd2-3f77-42c4-85ba-e5ee18704daa
 pkg-dfn50p300x300x75-8t270x175-circle-silkscreen-reflow,24d5f04f-3b77-4d3a-b1bd-99e0d08b6db5
 pkg-dfn50p300x300x75-8t270x175-exposed,0e0b3c0d-433c-4544-9e47-070e95d7b009
@@ -3154,6 +3266,7 @@ pkg-dfn50p300x300x75-8t270x175-text-name-hand-soldering,73d870a5-afd8-43f5-8e21-
 pkg-dfn50p300x300x75-8t270x175-text-name-reflow,c680b490-d2ec-4cee-a9a9-f27d36b14644
 pkg-dfn50p300x300x75-8t270x175-text-value-hand-soldering,b3130a20-2623-49b8-92c1-e0d682f08761
 pkg-dfn50p300x300x75-8t270x175-text-value-reflow,1089a731-5bad-4d67-a420-0cf4eecb9e34
+pkg-dfn50p300x300x95-10p30-body-outline,091069c9-c680-40e8-8d5c-53f77b1a1426
 pkg-dfn50p300x300x95-10p30-circle-silkscreen-hand-soldering,036f645b-d650-4e5c-889e-3d8b2a12fa1a
 pkg-dfn50p300x300x95-10p30-circle-silkscreen-reflow,1a6985e4-213e-4abe-ae57-215ce201eea3
 pkg-dfn50p300x300x95-10p30-footprint-hand-soldering,d0242980-4b79-4e41-b77a-69d64deeed65
@@ -3187,6 +3300,7 @@ pkg-dfn50p300x300x95-10p30-text-name-hand-soldering,1b077102-3340-47f2-ac24-61f6
 pkg-dfn50p300x300x95-10p30-text-name-reflow,b2382444-6c4e-46bf-80ff-38162b71a3eb
 pkg-dfn50p300x300x95-10p30-text-value-hand-soldering,7ec0d249-0636-4f3e-bb5c-20af493bcb4c
 pkg-dfn50p300x300x95-10p30-text-value-reflow,b45ca5ec-7501-40bf-94a3-2d88029256c1
+pkg-dfn50p300x300x95-10p30t220x160-body-outline,b7d0c1f4-891a-450a-bc1c-670ae702a53b
 pkg-dfn50p300x300x95-10p30t220x160-circle-silkscreen-hand-soldering,a7462b85-1b7b-475d-8e19-67358aaf0794
 pkg-dfn50p300x300x95-10p30t220x160-circle-silkscreen-reflow,fff0b994-7ecf-47a2-9e9b-cae567fe8e8b
 pkg-dfn50p300x300x95-10p30t220x160-exposed,e8077f84-1bae-4b7c-bfca-c881259ba7a3
@@ -3222,6 +3336,7 @@ pkg-dfn50p300x300x95-10p30t220x160-text-name-hand-soldering,a9e4c18f-c497-453d-b
 pkg-dfn50p300x300x95-10p30t220x160-text-name-reflow,1103376f-d55d-4ee0-b5be-5a5baa3fbb29
 pkg-dfn50p300x300x95-10p30t220x160-text-value-hand-soldering,b385984c-dbcf-49c4-8827-b66e1feef775
 pkg-dfn50p300x300x95-10p30t220x160-text-value-reflow,42863fad-8a2d-41bd-8dc7-03475f0667c3
+pkg-dfn50p300x300x95-10p55-body-outline,a7765621-c127-490d-831a-d81eb1ec5f87
 pkg-dfn50p300x300x95-10p55-circle-silkscreen-hand-soldering,9d8f7285-5ddb-4b3e-b639-57b87a3f1789
 pkg-dfn50p300x300x95-10p55-circle-silkscreen-reflow,761b23e9-a6bd-47e7-bda8-4fc29fc29a41
 pkg-dfn50p300x300x95-10p55-footprint-hand-soldering,680d78a4-2cfd-4942-8af5-a9e9bfc9376f
@@ -3255,6 +3370,7 @@ pkg-dfn50p300x300x95-10p55-text-name-hand-soldering,5d8a3938-5005-4b70-ba2a-e5a7
 pkg-dfn50p300x300x95-10p55-text-name-reflow,170b72f4-cd91-4285-92ff-5544de17edb6
 pkg-dfn50p300x300x95-10p55-text-value-hand-soldering,2b8a7c5c-81a9-4950-9652-9ee77a357797
 pkg-dfn50p300x300x95-10p55-text-value-reflow,35d520f4-3b24-474c-ad03-033c45b2a270
+pkg-dfn50p300x300x95-10p55t220x160-body-outline,cb6039d6-48e3-4a4c-8364-22ba1157d6c6
 pkg-dfn50p300x300x95-10p55t220x160-circle-silkscreen-hand-soldering,07b7031b-7fc1-4361-a84b-af76f70a5b5b
 pkg-dfn50p300x300x95-10p55t220x160-circle-silkscreen-reflow,231d800d-9700-4ff2-8d74-23cf2545b5e5
 pkg-dfn50p300x300x95-10p55t220x160-exposed,15c971a5-9772-4ce6-9f32-0cf09eb33f9d
@@ -3290,6 +3406,7 @@ pkg-dfn50p300x300x95-10p55t220x160-text-name-hand-soldering,9ebf4475-0181-4b17-b
 pkg-dfn50p300x300x95-10p55t220x160-text-name-reflow,4184c99b-caba-4dfb-b3bd-77c1a2bdf5d7
 pkg-dfn50p300x300x95-10p55t220x160-text-value-hand-soldering,4bd80a8a-f0d8-445d-825e-0a619668d585
 pkg-dfn50p300x300x95-10p55t220x160-text-value-reflow,91004b24-d1ea-495d-9349-51d38ff545ad
+pkg-dfn50p300x300x95-10t270x175-body-outline,c35ba9a7-f79c-4382-98a5-b81e4f183220
 pkg-dfn50p300x300x95-10t270x175-circle-silkscreen-hand-soldering,d7431dee-c0c8-4e74-a6fc-68f8f6070136
 pkg-dfn50p300x300x95-10t270x175-circle-silkscreen-reflow,676452cd-d4ef-4a62-ae85-3a68476a430b
 pkg-dfn50p300x300x95-10t270x175-exposed,473afb94-0f96-4ec2-b080-d0bf3339a493
@@ -3325,6 +3442,7 @@ pkg-dfn50p300x300x95-10t270x175-text-name-hand-soldering,cc2d725f-69a5-4417-b7e5
 pkg-dfn50p300x300x95-10t270x175-text-name-reflow,09cc5c88-41d1-4a6b-9528-8822097d7d40
 pkg-dfn50p300x300x95-10t270x175-text-value-hand-soldering,6ceaceaa-44ec-4c4b-9590-7cf6e30816cc
 pkg-dfn50p300x300x95-10t270x175-text-value-reflow,bc3f85aa-c1de-4b03-b25c-257c1d974ee3
+pkg-dfn50p300x300x95-8-body-outline,30ca52dc-220d-414a-bdf0-307b53b9e96b
 pkg-dfn50p300x300x95-8-circle-silkscreen-hand-soldering,8f0fd6c0-d070-41a0-b912-458fb3e3a109
 pkg-dfn50p300x300x95-8-circle-silkscreen-reflow,b832c84d-5b47-4823-8e4b-b6865a801fe4
 pkg-dfn50p300x300x95-8-footprint-hand-soldering,6856d3b5-86bc-4d17-a5b9-c2599e80c325
@@ -3354,6 +3472,7 @@ pkg-dfn50p300x300x95-8-text-name-hand-soldering,2dbd3b02-8ef7-4359-9750-e7145efd
 pkg-dfn50p300x300x95-8-text-name-reflow,fab5e265-dfda-49bc-89a9-325ac068abd7
 pkg-dfn50p300x300x95-8-text-value-hand-soldering,9688ed68-9955-45bb-8950-90a9e649c464
 pkg-dfn50p300x300x95-8-text-value-reflow,f8fb82ba-081d-4f5f-b387-631e7c2ee542
+pkg-dfn50p300x300x95-8t160-body-outline,3780b55f-33c7-48df-bd7d-68d9f1a59570
 pkg-dfn50p300x300x95-8t160-circle-silkscreen-hand-soldering,592da0d9-f44a-442e-8380-151f7ad4a203
 pkg-dfn50p300x300x95-8t160-circle-silkscreen-reflow,260a0b96-30b5-4f5f-812a-356751058e53
 pkg-dfn50p300x300x95-8t160-exposed,f5b27d7e-1054-42b0-a05a-774c5c622424
@@ -3385,6 +3504,7 @@ pkg-dfn50p300x300x95-8t160-text-name-hand-soldering,f6c2b8d1-9c15-4ec6-b1c4-5ee1
 pkg-dfn50p300x300x95-8t160-text-name-reflow,6645e30c-7478-46ac-837c-e3f941de446e
 pkg-dfn50p300x300x95-8t160-text-value-hand-soldering,966ec42d-58b5-4846-bc5a-de394dcffdcc
 pkg-dfn50p300x300x95-8t160-text-value-reflow,5e2c3f6d-cdf3-4a95-b827-71a97cc99fe1
+pkg-dfn50p300x300x95-8t220x160-body-outline,f8540caf-c582-4a04-945a-69128bcd2382
 pkg-dfn50p300x300x95-8t220x160-circle-silkscreen-hand-soldering,bbcf19cf-a839-4b5b-92d3-a65f9053e3d9
 pkg-dfn50p300x300x95-8t220x160-circle-silkscreen-reflow,0c7c67a6-9148-4c89-8be0-187fddd749c4
 pkg-dfn50p300x300x95-8t220x160-exposed,639c3d12-dcf6-4f41-85a6-83bf069ac5bc
@@ -3416,6 +3536,7 @@ pkg-dfn50p300x300x95-8t220x160-text-name-hand-soldering,0f757642-641d-41b7-9662-
 pkg-dfn50p300x300x95-8t220x160-text-name-reflow,1172d43b-df50-42d2-ba7c-9c3f52b50eef
 pkg-dfn50p300x300x95-8t220x160-text-value-hand-soldering,3ebbdce1-4de9-4593-a360-2b7bcd381401
 pkg-dfn50p300x300x95-8t220x160-text-value-reflow,89a268d6-965a-4dd6-afaf-5180b122d069
+pkg-dfn50p300x300x95-8t250x150-body-outline,3605aa16-63ad-436d-a425-3f222119b3e5
 pkg-dfn50p300x300x95-8t250x150-circle-silkscreen-hand-soldering,921ace17-44bd-4aff-b09d-c962b285ba4b
 pkg-dfn50p300x300x95-8t250x150-circle-silkscreen-reflow,4ac93c9d-20bd-485d-8cd1-e83d4877853e
 pkg-dfn50p300x300x95-8t250x150-exposed,ee35a705-f1b9-4e99-ae79-ea149e1b5f8a
@@ -3447,6 +3568,7 @@ pkg-dfn50p300x300x95-8t250x150-text-name-hand-soldering,43d285d4-2150-404a-be52-
 pkg-dfn50p300x300x95-8t250x150-text-name-reflow,9857403f-d59f-4e97-a94b-bc25bdf966e6
 pkg-dfn50p300x300x95-8t250x150-text-value-hand-soldering,4842d236-e616-4156-b1f8-78935446269d
 pkg-dfn50p300x300x95-8t250x150-text-value-reflow,444907b0-bfcc-4cc1-8121-3edc3a332158
+pkg-dfn50p300x300x95-8t270x175-body-outline,128b6267-d29d-48e7-a26b-3d7abdcc9b43
 pkg-dfn50p300x300x95-8t270x175-circle-silkscreen-hand-soldering,d1ae78f8-29cc-4d06-8b54-31820f0ea842
 pkg-dfn50p300x300x95-8t270x175-circle-silkscreen-reflow,abcda0ce-f58a-4ef7-8b94-38018ed4e1e0
 pkg-dfn50p300x300x95-8t270x175-exposed,1d64bfe4-7adf-4bcc-b35a-738857dd6c32
@@ -3478,6 +3600,7 @@ pkg-dfn50p300x300x95-8t270x175-text-name-hand-soldering,1794d0bd-250f-423c-9fe4-
 pkg-dfn50p300x300x95-8t270x175-text-name-reflow,79f3d29b-1e06-4204-83a2-7786d5eea943
 pkg-dfn50p300x300x95-8t270x175-text-value-hand-soldering,309e508f-0f03-4006-8d12-82ae90cb239c
 pkg-dfn50p300x300x95-8t270x175-text-value-reflow,27e990dd-2bb7-4a68-a92f-9a95792ef1c6
+pkg-dfn50p300x400x75-10-body-outline,af925082-e7a6-4e54-83d0-c61f83236cab
 pkg-dfn50p300x400x75-10-circle-silkscreen-hand-soldering,f9b44afd-cc12-4697-8dfe-e63cb0792899
 pkg-dfn50p300x400x75-10-circle-silkscreen-reflow,46f6c457-c229-4ba5-b9cd-75d97cf40f3d
 pkg-dfn50p300x400x75-10-footprint-hand-soldering,ce3c1562-4873-46e4-8091-1acc8d23e7ae
@@ -3511,6 +3634,7 @@ pkg-dfn50p300x400x75-10-text-name-hand-soldering,064416ca-d1ff-4377-bab2-c9c1e0a
 pkg-dfn50p300x400x75-10-text-name-reflow,885c26df-1c86-46d6-a215-a2eb069bac3b
 pkg-dfn50p300x400x75-10-text-value-hand-soldering,2332570c-5226-4125-a432-c774b526b816
 pkg-dfn50p300x400x75-10-text-value-reflow,c37d7340-812a-4a74-87c3-32f90cfe3a93
+pkg-dfn50p300x400x75-10t200x220-body-outline,e9df935a-a76f-49fa-b655-c6a47c1bb55e
 pkg-dfn50p300x400x75-10t200x220-circle-silkscreen-hand-soldering,20e226c1-541f-43ff-9dde-8eb6d8e5a040
 pkg-dfn50p300x400x75-10t200x220-circle-silkscreen-reflow,52d26623-8817-4dae-9874-f55fec006463
 pkg-dfn50p300x400x75-10t200x220-exposed,5048e189-cca1-4255-b4da-690ba2a0a9df
@@ -3546,6 +3670,7 @@ pkg-dfn50p300x400x75-10t200x220-text-name-hand-soldering,9dd50a3f-18ba-4d0a-92c3
 pkg-dfn50p300x400x75-10t200x220-text-name-reflow,29db1d6a-689b-4768-92ab-806a10000e57
 pkg-dfn50p300x400x75-10t200x220-text-value-hand-soldering,337d51db-92ed-4da5-a3ce-f3403c806001
 pkg-dfn50p300x400x75-10t200x220-text-value-reflow,0011760e-1c99-4d06-8a09-f949a0380c4e
+pkg-dfn50p300x400x95-10-body-outline,6473c8ae-4d15-41bc-b536-8c3e9fe2a7ff
 pkg-dfn50p300x400x95-10-circle-silkscreen-hand-soldering,f652b246-41fd-40de-9f74-3c972d146ccd
 pkg-dfn50p300x400x95-10-circle-silkscreen-reflow,15e80138-0efe-4f2d-a7f2-8ad8d2986d54
 pkg-dfn50p300x400x95-10-footprint-hand-soldering,1842cffd-8e12-479a-beb0-9f7b3b5c9fd6
@@ -3579,6 +3704,7 @@ pkg-dfn50p300x400x95-10-text-name-hand-soldering,1c0557cf-f398-456b-b75a-f468967
 pkg-dfn50p300x400x95-10-text-name-reflow,2b9f9e1d-f38e-490a-b363-a46dd364758c
 pkg-dfn50p300x400x95-10-text-value-hand-soldering,c64bf511-2b8b-4938-984b-8e3afe6fd12a
 pkg-dfn50p300x400x95-10-text-value-reflow,ea58797a-5afa-479a-96f0-a7aea7ea2def
+pkg-dfn50p300x400x95-10t200x220-body-outline,a6de914f-44cc-417e-8b5f-29eb4d36c444
 pkg-dfn50p300x400x95-10t200x220-circle-silkscreen-hand-soldering,48be89ab-7019-49ba-8caf-7a0affde1416
 pkg-dfn50p300x400x95-10t200x220-circle-silkscreen-reflow,f52e25ac-848f-41d3-8d04-66cfb3a61178
 pkg-dfn50p300x400x95-10t200x220-exposed,c52be6fd-0bc8-4da2-a219-23f876b9d632
@@ -3614,6 +3740,7 @@ pkg-dfn50p300x400x95-10t200x220-text-name-hand-soldering,1bf0c015-468c-467f-8485
 pkg-dfn50p300x400x95-10t200x220-text-name-reflow,a3da05a0-6993-4807-8d13-d5ad7f11a179
 pkg-dfn50p300x400x95-10t200x220-text-value-hand-soldering,cba66e31-fb4f-41a3-887e-50b677e312ec
 pkg-dfn50p300x400x95-10t200x220-text-value-reflow,c6696edf-a769-4413-a67a-883507d2b37f
+pkg-dfn50p350x250x75-10-body-outline,6ada7628-faf5-4bec-ba68-d85440549fcd
 pkg-dfn50p350x250x75-10-circle-silkscreen-hand-soldering,8db624e4-4e61-4e3d-8065-196ce42529be
 pkg-dfn50p350x250x75-10-circle-silkscreen-reflow,3407c36a-943e-46a1-a097-8129d88d8a06
 pkg-dfn50p350x250x75-10-footprint-hand-soldering,7e05fb78-9b60-4271-ba72-7090bb0427ba
@@ -3647,6 +3774,7 @@ pkg-dfn50p350x250x75-10-text-name-hand-soldering,0a1cce89-e539-4009-84f3-1fa55e2
 pkg-dfn50p350x250x75-10-text-name-reflow,5b5f37cf-5b31-4a34-bb9b-957c0d6a3fdf
 pkg-dfn50p350x250x75-10-text-value-hand-soldering,ed269c80-028f-4f45-abde-1df02b12ed93
 pkg-dfn50p350x250x75-10-text-value-reflow,3c5b570b-65ba-4892-b9c4-c6e1340f42a3
+pkg-dfn50p350x250x75-10t270x110-body-outline,8933c5b3-17ab-402e-ae47-e983d286cf3e
 pkg-dfn50p350x250x75-10t270x110-circle-silkscreen-hand-soldering,2dc56450-21ae-41e1-a24e-94507d3ac11c
 pkg-dfn50p350x250x75-10t270x110-circle-silkscreen-reflow,4dcc1c25-0a40-43f0-ace6-590cb71e34a4
 pkg-dfn50p350x250x75-10t270x110-exposed,6ce2889b-07b2-4398-b541-be98dc4e4a1f
@@ -3682,6 +3810,7 @@ pkg-dfn50p350x250x75-10t270x110-text-name-hand-soldering,b456ed5b-2ea0-47e5-9347
 pkg-dfn50p350x250x75-10t270x110-text-name-reflow,faea24a8-1536-405f-b5d6-e90715f39b1d
 pkg-dfn50p350x250x75-10t270x110-text-value-hand-soldering,69d279ca-6025-43d5-8147-879f1dc2a601
 pkg-dfn50p350x250x75-10t270x110-text-value-reflow,913ebbb6-59a9-451c-8b2f-f369cd686b5f
+pkg-dfn50p350x250x75-12-body-outline,1b48bda0-d97f-441b-924d-0c52c89fe0ff
 pkg-dfn50p350x250x75-12-circle-silkscreen-hand-soldering,fc05ae43-3b37-411d-b055-e491d10d20d3
 pkg-dfn50p350x250x75-12-circle-silkscreen-reflow,f9b3c6a2-b266-4014-8122-a44fd7deadd4
 pkg-dfn50p350x250x75-12-footprint-hand-soldering,1d4cf62c-3dee-4c58-8b7d-17cbb12bc0fc
@@ -3719,6 +3848,7 @@ pkg-dfn50p350x250x75-12-text-name-hand-soldering,a1913d19-285c-4f0d-8381-718bd23
 pkg-dfn50p350x250x75-12-text-name-reflow,0ee5d8b2-5811-4e21-867e-fef8efdf5162
 pkg-dfn50p350x250x75-12-text-value-hand-soldering,d779a176-c75d-4c17-b4bc-0a60b46c84e6
 pkg-dfn50p350x250x75-12-text-value-reflow,1fc49b16-d312-40f4-9446-98bf01b7e2b4
+pkg-dfn50p350x250x75-12t270x110-body-outline,752c27af-9b48-490e-95e0-860e5c537929
 pkg-dfn50p350x250x75-12t270x110-circle-silkscreen-hand-soldering,aedf5259-1b60-4db9-8e24-1577779c6553
 pkg-dfn50p350x250x75-12t270x110-circle-silkscreen-reflow,eaed8bde-f9ed-42a5-ad12-02e9c92242e1
 pkg-dfn50p350x250x75-12t270x110-exposed,e6031f06-2da8-4b88-9c80-4978c59a1269
@@ -3758,6 +3888,7 @@ pkg-dfn50p350x250x75-12t270x110-text-name-hand-soldering,c5d89c7b-2e26-4d94-adf5
 pkg-dfn50p350x250x75-12t270x110-text-name-reflow,c49bdf79-45ed-4fce-b064-ccc0762d789e
 pkg-dfn50p350x250x75-12t270x110-text-value-hand-soldering,089a8a48-6138-47dc-a5c4-41abbed9c94f
 pkg-dfn50p350x250x75-12t270x110-text-value-reflow,a3a72dba-3d7f-4f7e-981d-7553713c1cbb
+pkg-dfn50p350x250x95-10-body-outline,d825e833-71bc-4569-ad17-a76a08d6db13
 pkg-dfn50p350x250x95-10-circle-silkscreen-hand-soldering,de504323-8047-471a-8fb9-0d919adced4c
 pkg-dfn50p350x250x95-10-circle-silkscreen-reflow,00d0c3dd-fd88-4ea7-a0af-70db964f02b9
 pkg-dfn50p350x250x95-10-footprint-hand-soldering,26f46231-d00a-416b-80be-503487c886ab
@@ -3791,6 +3922,7 @@ pkg-dfn50p350x250x95-10-text-name-hand-soldering,94963615-ccbd-4694-89d1-2da0f21
 pkg-dfn50p350x250x95-10-text-name-reflow,4af39ca5-16b3-4442-b060-f6ce457c5e28
 pkg-dfn50p350x250x95-10-text-value-hand-soldering,e978cdbd-14a7-4483-908e-63f106d699c3
 pkg-dfn50p350x250x95-10-text-value-reflow,0154a2be-55df-4738-bd74-8deef3c5678d
+pkg-dfn50p350x250x95-10t270x110-body-outline,8cda6338-9c5c-4023-b5e2-83e9f4950e93
 pkg-dfn50p350x250x95-10t270x110-circle-silkscreen-hand-soldering,341d8ab8-5fdf-4c6a-9e44-c77f4ba1bd80
 pkg-dfn50p350x250x95-10t270x110-circle-silkscreen-reflow,a91b54f2-d5b9-41d9-8e13-77dd12b13858
 pkg-dfn50p350x250x95-10t270x110-exposed,1e2a3c9d-5dae-4344-a04d-cb7969cebc92
@@ -3826,6 +3958,7 @@ pkg-dfn50p350x250x95-10t270x110-text-name-hand-soldering,85691868-5232-4912-a247
 pkg-dfn50p350x250x95-10t270x110-text-name-reflow,77f66395-0de2-4567-943f-7ac878ac12d9
 pkg-dfn50p350x250x95-10t270x110-text-value-hand-soldering,2d360a0b-9d1d-46e2-b937-536437cc1333
 pkg-dfn50p350x250x95-10t270x110-text-value-reflow,38241aad-cc2d-4af1-b536-8f4ef07f11a8
+pkg-dfn50p350x250x95-12-body-outline,e44d9567-0096-4346-8932-e64000f79470
 pkg-dfn50p350x250x95-12-circle-silkscreen-hand-soldering,e5f14c04-1a84-42de-8408-88d8188c27dc
 pkg-dfn50p350x250x95-12-circle-silkscreen-reflow,078faa0c-6345-46b9-b088-acba460ac46c
 pkg-dfn50p350x250x95-12-footprint-hand-soldering,f9cfbdc9-e14f-4e43-877a-3e349eff3415
@@ -3863,6 +3996,7 @@ pkg-dfn50p350x250x95-12-text-name-hand-soldering,69173412-1161-4c43-8ccf-47dd6ee
 pkg-dfn50p350x250x95-12-text-name-reflow,f57700cf-6d34-4f7c-b725-17047e5ed033
 pkg-dfn50p350x250x95-12-text-value-hand-soldering,24e6d723-1cdf-4484-9ea7-6c37521267fd
 pkg-dfn50p350x250x95-12-text-value-reflow,a8e9190e-b21b-4d72-a947-766e7abfd95c
+pkg-dfn50p350x250x95-12t270x110-body-outline,41be3dfb-7f46-4164-83a7-c45c10705c36
 pkg-dfn50p350x250x95-12t270x110-circle-silkscreen-hand-soldering,e04da9f7-9921-4c6f-a254-ffcfe1588c0d
 pkg-dfn50p350x250x95-12t270x110-circle-silkscreen-reflow,6bf8f833-10c9-431c-b689-e17adfc589ab
 pkg-dfn50p350x250x95-12t270x110-exposed,16a3be3a-5b35-4385-b675-523d5729bc17
@@ -3902,6 +4036,7 @@ pkg-dfn50p350x250x95-12t270x110-text-name-hand-soldering,130e9c8d-d9c0-44e0-9b24
 pkg-dfn50p350x250x95-12t270x110-text-name-reflow,e0408095-6b76-46aa-a300-17b8b42a9a25
 pkg-dfn50p350x250x95-12t270x110-text-value-hand-soldering,8ea4734f-3bbf-40d6-b3a2-fc6b4373d949
 pkg-dfn50p350x250x95-12t270x110-text-value-reflow,e7db0f3f-8473-4806-b34f-1aacc103a12a
+pkg-dfn50p350x300x75-10-body-outline,e0fef059-f852-4e66-b9da-55c1bc7e1f91
 pkg-dfn50p350x300x75-10-circle-silkscreen-hand-soldering,18586cc1-006d-4955-b908-24441483d17c
 pkg-dfn50p350x300x75-10-circle-silkscreen-reflow,7ba4b84c-afd5-4bda-b656-c8afdb89ff57
 pkg-dfn50p350x300x75-10-footprint-hand-soldering,4fdde5b8-85f6-42fa-b3b3-453579995d1b
@@ -3935,6 +4070,7 @@ pkg-dfn50p350x300x75-10-text-name-hand-soldering,6f6fc34b-fd9b-40b4-bea1-19812e0
 pkg-dfn50p350x300x75-10-text-name-reflow,a986335c-b2f6-4f25-9afe-ffd5182568c4
 pkg-dfn50p350x300x75-10-text-value-hand-soldering,3e239eb5-3438-466b-961a-a2e721f6a57a
 pkg-dfn50p350x300x75-10-text-value-reflow,4039f853-585f-49d9-84ec-821f1b84943f
+pkg-dfn50p350x300x75-10t270x160-body-outline,b64d64c8-2f91-4711-8605-7203fb04e406
 pkg-dfn50p350x300x75-10t270x160-circle-silkscreen-hand-soldering,98c136d6-459a-4308-86a7-558e9cfdca24
 pkg-dfn50p350x300x75-10t270x160-circle-silkscreen-reflow,ee205ed1-cd08-4469-ba0a-c53cc5c74fc1
 pkg-dfn50p350x300x75-10t270x160-exposed,a4b4ddeb-344b-46b0-bb03-971120885ba5
@@ -3970,6 +4106,7 @@ pkg-dfn50p350x300x75-10t270x160-text-name-hand-soldering,fd37f2bb-8875-4ea5-9544
 pkg-dfn50p350x300x75-10t270x160-text-name-reflow,a98ad867-635c-446c-abe7-ac69ef8d9a17
 pkg-dfn50p350x300x75-10t270x160-text-value-hand-soldering,d6a44400-8870-4084-864e-dbe415a6fd0d
 pkg-dfn50p350x300x75-10t270x160-text-value-reflow,d6982aee-2ec4-4b51-a4a4-c180d6effe89
+pkg-dfn50p350x300x75-12-body-outline,741a9bec-9f00-4be7-8efd-2280e762267c
 pkg-dfn50p350x300x75-12-circle-silkscreen-hand-soldering,19ea1d0b-0a06-423c-abe4-0a2c77f32c42
 pkg-dfn50p350x300x75-12-circle-silkscreen-reflow,b2dd7fdc-f2cb-466d-b0c8-a8e09f2f791a
 pkg-dfn50p350x300x75-12-footprint-hand-soldering,043bff91-329c-4437-8ba3-222ab24745d7
@@ -4007,6 +4144,7 @@ pkg-dfn50p350x300x75-12-text-name-hand-soldering,db558435-c5f8-428e-9796-d0b0e70
 pkg-dfn50p350x300x75-12-text-name-reflow,2c315660-9016-47c4-8374-bcd1fa5d52b8
 pkg-dfn50p350x300x75-12-text-value-hand-soldering,96cbaa22-9e66-4cf5-980b-cd83b7923590
 pkg-dfn50p350x300x75-12-text-value-reflow,8d9df3ea-8730-4f42-985f-be8823092d8f
+pkg-dfn50p350x300x75-12t270x160-body-outline,2b72a90f-2f12-46f5-b9c4-744c0f775766
 pkg-dfn50p350x300x75-12t270x160-circle-silkscreen-hand-soldering,6d83008e-d89d-458d-a02b-d846e3bf1ca3
 pkg-dfn50p350x300x75-12t270x160-circle-silkscreen-reflow,ddba160e-1624-46ac-9e28-badd0a58c74d
 pkg-dfn50p350x300x75-12t270x160-exposed,f370f35f-ef11-45c3-8d21-df7ea88fc393
@@ -4046,6 +4184,7 @@ pkg-dfn50p350x300x75-12t270x160-text-name-hand-soldering,80605a74-369c-4ea6-8dfb
 pkg-dfn50p350x300x75-12t270x160-text-name-reflow,3a4b1ee4-a06a-4858-8f55-bca68c7aaf24
 pkg-dfn50p350x300x75-12t270x160-text-value-hand-soldering,32cb2a12-8d16-4bf5-a3f7-60aba26cddf3
 pkg-dfn50p350x300x75-12t270x160-text-value-reflow,69f60991-63c3-404a-a423-28e279fd7754
+pkg-dfn50p350x300x95-10-body-outline,17e1f2dd-95ee-4ef1-8136-f851dd5fa490
 pkg-dfn50p350x300x95-10-circle-silkscreen-hand-soldering,5d68a4ee-cbd8-4ed8-83a2-0eba4311a9ef
 pkg-dfn50p350x300x95-10-circle-silkscreen-reflow,0b58d974-2464-4458-b91a-dbfa9c6929c2
 pkg-dfn50p350x300x95-10-footprint-hand-soldering,48fd2741-4736-400c-b7c9-682432fd32c9
@@ -4079,6 +4218,7 @@ pkg-dfn50p350x300x95-10-text-name-hand-soldering,d8e35110-c39a-496e-b8e9-225dea0
 pkg-dfn50p350x300x95-10-text-name-reflow,06153f32-7650-4357-a9d9-d2e745969882
 pkg-dfn50p350x300x95-10-text-value-hand-soldering,7584836a-7ca2-426c-81b6-dfb9e5a36eb0
 pkg-dfn50p350x300x95-10-text-value-reflow,2e7927f6-614c-4915-8ac9-2e69bcebfeae
+pkg-dfn50p350x300x95-10t270x160-body-outline,9f9f1860-31ce-44a0-8913-004edf211707
 pkg-dfn50p350x300x95-10t270x160-circle-silkscreen-hand-soldering,f44c55af-ee18-42f9-afa9-d6c01e862203
 pkg-dfn50p350x300x95-10t270x160-circle-silkscreen-reflow,dd80ca2d-b89d-4c1e-ba2e-4e322aeef519
 pkg-dfn50p350x300x95-10t270x160-exposed,546ba8dd-2437-4c9e-b497-591abdffa1ba
@@ -4114,6 +4254,7 @@ pkg-dfn50p350x300x95-10t270x160-text-name-hand-soldering,0b6214c2-0dce-40be-bab2
 pkg-dfn50p350x300x95-10t270x160-text-name-reflow,3fd7538e-578c-423d-836b-06aedaedc611
 pkg-dfn50p350x300x95-10t270x160-text-value-hand-soldering,164b0dca-af92-4657-8684-5d32dc5f09c1
 pkg-dfn50p350x300x95-10t270x160-text-value-reflow,320e9a1a-f680-4f60-a566-51c961abe11c
+pkg-dfn50p350x300x95-12-body-outline,885bd3de-665f-4258-89a4-5fb7ea9086e1
 pkg-dfn50p350x300x95-12-circle-silkscreen-hand-soldering,1e7da9db-360c-4fa6-b20c-d410bddeccb2
 pkg-dfn50p350x300x95-12-circle-silkscreen-reflow,d32b76a2-3faf-4b3a-943d-2cf7fb8f30f8
 pkg-dfn50p350x300x95-12-footprint-hand-soldering,d4aed963-a51c-4529-a47e-874dc9ffec39
@@ -4151,6 +4292,7 @@ pkg-dfn50p350x300x95-12-text-name-hand-soldering,702f1b46-d7e0-4b0e-bae3-c92fa9a
 pkg-dfn50p350x300x95-12-text-name-reflow,35ac17ce-549c-48a1-8b1a-89f4ecebfd09
 pkg-dfn50p350x300x95-12-text-value-hand-soldering,90c1ff94-e73c-4580-a8b2-cb045bddd6d3
 pkg-dfn50p350x300x95-12-text-value-reflow,58c0806d-8497-499e-a06b-c9ef3464ead6
+pkg-dfn50p350x300x95-12t270x160-body-outline,dbc99564-de5b-4e8d-aa90-51945e30b768
 pkg-dfn50p350x300x95-12t270x160-circle-silkscreen-hand-soldering,a81bc467-6b9c-41fd-882e-0948c142b656
 pkg-dfn50p350x300x95-12t270x160-circle-silkscreen-reflow,5c695361-85f6-44a3-8895-5f57980117ab
 pkg-dfn50p350x300x95-12t270x160-exposed,841be0c5-9e8b-445f-8be1-d10d0fa88ad5
@@ -4190,6 +4332,7 @@ pkg-dfn50p350x300x95-12t270x160-text-name-hand-soldering,5a2295ce-1127-457d-8720
 pkg-dfn50p350x300x95-12t270x160-text-name-reflow,48751432-aa2c-49a2-9f7a-beb8b02824a7
 pkg-dfn50p350x300x95-12t270x160-text-value-hand-soldering,80bbcbc2-3735-4f0d-96ab-857a5f3856ed
 pkg-dfn50p350x300x95-12t270x160-text-value-reflow,52b7d467-c9ec-4d82-8406-8944ea065eeb
+pkg-dfn50p350x350x75-10-body-outline,28a35417-7b26-469f-97ae-b6a940f5a645
 pkg-dfn50p350x350x75-10-circle-silkscreen-hand-soldering,207820c7-1260-40a9-997f-40b64817f7c0
 pkg-dfn50p350x350x75-10-circle-silkscreen-reflow,bba8e195-d1bb-43d3-b7de-3910b26d8a10
 pkg-dfn50p350x350x75-10-footprint-hand-soldering,0d855327-310e-4a83-a8b6-806777f1ac10
@@ -4223,6 +4366,7 @@ pkg-dfn50p350x350x75-10-text-name-hand-soldering,48ac939e-13f1-48be-b4fd-394f4d1
 pkg-dfn50p350x350x75-10-text-name-reflow,91534551-6e2e-4121-986f-520ef3f6f625
 pkg-dfn50p350x350x75-10-text-value-hand-soldering,d8fe2d0c-8fb3-4d9d-a303-6da97db0faa8
 pkg-dfn50p350x350x75-10-text-value-reflow,5983a980-5cec-4c81-b75c-f54117913001
+pkg-dfn50p350x350x75-10t270x210-body-outline,9de7babf-c1ea-4332-a9e4-b3ece26d454b
 pkg-dfn50p350x350x75-10t270x210-circle-silkscreen-hand-soldering,10e59ed0-5af0-42d0-b5a1-82f58fe3072b
 pkg-dfn50p350x350x75-10t270x210-circle-silkscreen-reflow,7f8fcbeb-a8a4-43be-8be5-ac52ccd21ed8
 pkg-dfn50p350x350x75-10t270x210-exposed,5140551e-6bf3-41e1-8668-40f8f2d96415
@@ -4258,6 +4402,7 @@ pkg-dfn50p350x350x75-10t270x210-text-name-hand-soldering,3df9ab25-d7f1-4560-bce1
 pkg-dfn50p350x350x75-10t270x210-text-name-reflow,6bdc52e2-4e35-4880-8b6f-bdeb821493db
 pkg-dfn50p350x350x75-10t270x210-text-value-hand-soldering,d7f2e35f-3f87-4bb9-9090-dfed6b5e5e78
 pkg-dfn50p350x350x75-10t270x210-text-value-reflow,44a77950-d8b1-4b5f-b495-1cdb921771cd
+pkg-dfn50p350x350x75-12-body-outline,998fb134-3fef-4ff6-bc4c-9172b8ed6610
 pkg-dfn50p350x350x75-12-circle-silkscreen-hand-soldering,a91c8061-4321-4771-b1be-0bc5eb8730bd
 pkg-dfn50p350x350x75-12-circle-silkscreen-reflow,2fc79992-8092-421e-b4ae-1c4a5438d68a
 pkg-dfn50p350x350x75-12-footprint-hand-soldering,bed09244-3aef-4fe8-9c1a-d534b8f61bf2
@@ -4295,6 +4440,7 @@ pkg-dfn50p350x350x75-12-text-name-hand-soldering,fc9f2ebc-eeb7-424c-b17a-3c8fff8
 pkg-dfn50p350x350x75-12-text-name-reflow,648251b1-c1c5-4c9f-b267-b9662e81acdb
 pkg-dfn50p350x350x75-12-text-value-hand-soldering,31a9b0a5-c3eb-40d8-8ed5-7c356a8aedf6
 pkg-dfn50p350x350x75-12-text-value-reflow,ac30f427-9731-46fe-8a83-794056a02566
+pkg-dfn50p350x350x75-12t270x210-body-outline,d3e8c3be-6209-4adb-9fea-cdf2154f5985
 pkg-dfn50p350x350x75-12t270x210-circle-silkscreen-hand-soldering,fce0b935-67c0-45fc-b43d-0e8ee5dd412a
 pkg-dfn50p350x350x75-12t270x210-circle-silkscreen-reflow,60787aee-3998-4117-9dd7-96a62385b7a8
 pkg-dfn50p350x350x75-12t270x210-exposed,6b213f65-3ebf-4adf-82a1-b74a1ebafec4
@@ -4334,6 +4480,7 @@ pkg-dfn50p350x350x75-12t270x210-text-name-hand-soldering,d759b70b-fdc6-4899-a442
 pkg-dfn50p350x350x75-12t270x210-text-name-reflow,b2211726-a1ef-4b6a-80e9-b66513961426
 pkg-dfn50p350x350x75-12t270x210-text-value-hand-soldering,20dd100a-e299-410d-b394-7cab83de4fcb
 pkg-dfn50p350x350x75-12t270x210-text-value-reflow,460b4007-eca3-407c-af2b-cd6370d075e6
+pkg-dfn50p350x350x95-10-body-outline,d4a146e4-7d34-4888-b95e-97a949785239
 pkg-dfn50p350x350x95-10-circle-silkscreen-hand-soldering,62516d96-e7e0-42f3-8508-660cb0a39b73
 pkg-dfn50p350x350x95-10-circle-silkscreen-reflow,bb9139ba-a1de-4e2b-948a-b450d6c244a4
 pkg-dfn50p350x350x95-10-footprint-hand-soldering,8c9f7c86-8b77-436c-9e35-b7f0c18295aa
@@ -4367,6 +4514,7 @@ pkg-dfn50p350x350x95-10-text-name-hand-soldering,aa6f8e56-b8bd-4b43-ac7f-b05a96c
 pkg-dfn50p350x350x95-10-text-name-reflow,ae778241-0216-4787-9b03-57be2dc3507e
 pkg-dfn50p350x350x95-10-text-value-hand-soldering,eaef4556-ad4b-428c-99e5-9059f5be35d7
 pkg-dfn50p350x350x95-10-text-value-reflow,9638580f-a59d-435c-9228-b0c4dfc26b46
+pkg-dfn50p350x350x95-10t270x210-body-outline,6116638d-e863-409b-8690-f218ce0aecc2
 pkg-dfn50p350x350x95-10t270x210-circle-silkscreen-hand-soldering,f46dc86e-a546-4242-a941-ca6b0d4a5472
 pkg-dfn50p350x350x95-10t270x210-circle-silkscreen-reflow,f8aa59d3-10ff-4def-9ebf-10996caa32db
 pkg-dfn50p350x350x95-10t270x210-exposed,af4a78d7-a9fa-4f45-97e6-08d994c20682
@@ -4402,6 +4550,7 @@ pkg-dfn50p350x350x95-10t270x210-text-name-hand-soldering,9f930dfb-fb69-40a9-910a
 pkg-dfn50p350x350x95-10t270x210-text-name-reflow,0d4784aa-2680-42db-93b3-bfe44ae4e618
 pkg-dfn50p350x350x95-10t270x210-text-value-hand-soldering,ba419895-d657-4839-b7cc-92ccd6d5287d
 pkg-dfn50p350x350x95-10t270x210-text-value-reflow,c62532b8-896f-4e38-81c3-3fef3c7b48fb
+pkg-dfn50p350x350x95-12-body-outline,d37331df-e7c4-4921-9560-efde31103b03
 pkg-dfn50p350x350x95-12-circle-silkscreen-hand-soldering,c09049fd-293a-449a-a954-5d76d1463831
 pkg-dfn50p350x350x95-12-circle-silkscreen-reflow,65aeca4a-2703-41b0-91df-a5f7101dc9c1
 pkg-dfn50p350x350x95-12-footprint-hand-soldering,d694d66f-0907-4399-a4c0-06aafc8b2130
@@ -4439,6 +4588,7 @@ pkg-dfn50p350x350x95-12-text-name-hand-soldering,7799209d-dd38-47f4-8e12-0c6882c
 pkg-dfn50p350x350x95-12-text-name-reflow,554aa7b0-fa97-42b4-ac01-1223904c673c
 pkg-dfn50p350x350x95-12-text-value-hand-soldering,cca5b68d-b256-4c69-9ea5-541ecfd16c0a
 pkg-dfn50p350x350x95-12-text-value-reflow,3f358986-82d0-4977-9c2b-c7021b8a9f53
+pkg-dfn50p350x350x95-12t270x210-body-outline,5d2c788a-ac08-4838-a7bc-87aa442b1f96
 pkg-dfn50p350x350x95-12t270x210-circle-silkscreen-hand-soldering,bf44f6bf-7481-4e21-b4e1-ce850c133422
 pkg-dfn50p350x350x95-12t270x210-circle-silkscreen-reflow,32574f81-7f3c-453a-9667-76814c2cbc0a
 pkg-dfn50p350x350x95-12t270x210-exposed,4e6396e3-175f-4410-aad2-d92006f9fff9
@@ -4478,6 +4628,7 @@ pkg-dfn50p350x350x95-12t270x210-text-name-hand-soldering,eb822267-b129-4941-ab1d
 pkg-dfn50p350x350x95-12t270x210-text-name-reflow,1a4c914f-bfcd-4d5f-956e-6e2a683280ab
 pkg-dfn50p350x350x95-12t270x210-text-value-hand-soldering,20b0e760-9719-4fc9-8bf4-347e56c79e74
 pkg-dfn50p350x350x95-12t270x210-text-value-reflow,0bc8212a-f08b-4c47-9e0a-b95ae07c276f
+pkg-dfn50p400x300x75-10-body-outline,cda6b981-29f5-4c18-8d9d-94ecdb1b67e4
 pkg-dfn50p400x300x75-10-circle-silkscreen-hand-soldering,20354d81-52c7-497a-bd5b-08e70a367301
 pkg-dfn50p400x300x75-10-circle-silkscreen-reflow,b4313a47-7646-4671-ba63-332442260c12
 pkg-dfn50p400x300x75-10-footprint-hand-soldering,ecbd2214-9826-4712-a3d1-0cb04c1a6cd0
@@ -4511,6 +4662,7 @@ pkg-dfn50p400x300x75-10-text-name-hand-soldering,2b833603-a74c-4c11-918f-a527701
 pkg-dfn50p400x300x75-10-text-name-reflow,ebc3ae99-cac2-44f9-9d78-3798d22085e7
 pkg-dfn50p400x300x75-10-text-value-hand-soldering,e0a37b7c-cd74-4250-95ca-fa9c72e71a5e
 pkg-dfn50p400x300x75-10-text-value-reflow,d6535fde-659c-45e1-b408-2bb1678dff34
+pkg-dfn50p400x300x75-10t320x160-body-outline,578967ea-c732-439d-b87a-d630f95cda70
 pkg-dfn50p400x300x75-10t320x160-circle-silkscreen-hand-soldering,67023400-dfa1-4416-800c-56bbdb80e745
 pkg-dfn50p400x300x75-10t320x160-circle-silkscreen-reflow,afbffc76-d1f4-46ad-bf86-457db5fe693e
 pkg-dfn50p400x300x75-10t320x160-exposed,083d9897-37b1-4d6a-94df-de9e4192744a
@@ -4546,6 +4698,7 @@ pkg-dfn50p400x300x75-10t320x160-text-name-hand-soldering,2defaf5b-4aa5-428c-b81c
 pkg-dfn50p400x300x75-10t320x160-text-name-reflow,c308198d-434e-4601-9213-461d632c2d1c
 pkg-dfn50p400x300x75-10t320x160-text-value-hand-soldering,a64a767c-3e4b-429d-85ca-98da34e1e200
 pkg-dfn50p400x300x75-10t320x160-text-value-reflow,e13518cc-5f09-4f3e-83b4-42ae48e0016b
+pkg-dfn50p400x300x75-12-body-outline,2567b58a-03ff-4539-913e-346846a9b506
 pkg-dfn50p400x300x75-12-circle-silkscreen-hand-soldering,1c2dc7a4-8f51-467a-a5d5-fa482ba60bff
 pkg-dfn50p400x300x75-12-circle-silkscreen-reflow,e4976018-0a1d-4521-9e55-8a3fef9d57be
 pkg-dfn50p400x300x75-12-footprint-hand-soldering,f701bc4b-d6e3-4a95-9075-0639a677503a
@@ -4583,6 +4736,7 @@ pkg-dfn50p400x300x75-12-text-name-hand-soldering,a8fb9657-9a98-4d0a-929b-11b9d64
 pkg-dfn50p400x300x75-12-text-name-reflow,1fc7d243-ab7f-4a4c-a81a-c358a2761d90
 pkg-dfn50p400x300x75-12-text-value-hand-soldering,60b1fa81-7e8d-45ac-a587-c00230927b1c
 pkg-dfn50p400x300x75-12-text-value-reflow,3741c22f-da07-43d5-9504-167b909c20df
+pkg-dfn50p400x300x75-12t320x160-body-outline,305f7509-2d78-4408-8002-b0908dcb1e14
 pkg-dfn50p400x300x75-12t320x160-circle-silkscreen-hand-soldering,981fc68c-1c62-434e-b755-2a6ba91d3fb6
 pkg-dfn50p400x300x75-12t320x160-circle-silkscreen-reflow,728ba9bf-1f8e-41cb-a63b-1203cbf011c8
 pkg-dfn50p400x300x75-12t320x160-exposed,7e4ec58e-6957-4c04-8043-971f61c58340
@@ -4622,6 +4776,7 @@ pkg-dfn50p400x300x75-12t320x160-text-name-hand-soldering,f2a8c90a-9f32-488a-a55c
 pkg-dfn50p400x300x75-12t320x160-text-name-reflow,256b25a5-db7d-4036-82ba-b203e4603609
 pkg-dfn50p400x300x75-12t320x160-text-value-hand-soldering,73510e55-bee6-4462-895a-1b791e1a6711
 pkg-dfn50p400x300x75-12t320x160-text-value-reflow,c92956c9-ced7-44d9-8c4b-0cb2dc407c2e
+pkg-dfn50p400x300x75-12t370x180-body-outline,7766f6f9-b13b-443d-a44e-a14c175a0a05
 pkg-dfn50p400x300x75-12t370x180-circle-silkscreen-hand-soldering,1bb835ea-783b-43b8-b473-9000646c0210
 pkg-dfn50p400x300x75-12t370x180-circle-silkscreen-reflow,8c831f3d-90de-41f4-bf7d-d1086fa2a9f1
 pkg-dfn50p400x300x75-12t370x180-exposed,e5676936-c185-454a-9ad6-7fb59cba144d
@@ -4661,6 +4816,7 @@ pkg-dfn50p400x300x75-12t370x180-text-name-hand-soldering,218d36bb-9cee-4c3a-9a1c
 pkg-dfn50p400x300x75-12t370x180-text-name-reflow,a490c540-9faf-4d29-bbd2-8fd9790152b1
 pkg-dfn50p400x300x75-12t370x180-text-value-hand-soldering,5acbf5fd-1aaf-4630-8510-3f27aaefc69d
 pkg-dfn50p400x300x75-12t370x180-text-value-reflow,cecce779-134f-43ed-82be-7fb61cda3e05
+pkg-dfn50p400x300x75-14-body-outline,d29e2de5-733c-470e-b99c-8e4449a95400
 pkg-dfn50p400x300x75-14-circle-silkscreen-hand-soldering,2826e3a1-cb9f-4532-8740-525de4ea3a4d
 pkg-dfn50p400x300x75-14-circle-silkscreen-reflow,cd6cbc19-fd0c-4264-85c9-6bf7a0be5555
 pkg-dfn50p400x300x75-14-footprint-hand-soldering,a64de9ff-8e6d-4569-9f82-6d16f677e4c7
@@ -4702,6 +4858,7 @@ pkg-dfn50p400x300x75-14-text-name-hand-soldering,c3a11da6-9be0-4279-a394-997c038
 pkg-dfn50p400x300x75-14-text-name-reflow,c5bf5785-648c-48e1-a9f2-7e051d318170
 pkg-dfn50p400x300x75-14-text-value-hand-soldering,c1c1238c-bfc6-4798-a91b-20ce07008ea6
 pkg-dfn50p400x300x75-14-text-value-reflow,4301af7b-d209-4314-a5bc-0617e07dffc3
+pkg-dfn50p400x300x75-14t320x160-body-outline,78f96213-0451-4df8-9c78-8dd131cfa60e
 pkg-dfn50p400x300x75-14t320x160-circle-silkscreen-hand-soldering,e80f2519-fadf-4c3e-b50b-1486dba00012
 pkg-dfn50p400x300x75-14t320x160-circle-silkscreen-reflow,08d92e2d-560b-4b10-a7cc-b918fc408d4f
 pkg-dfn50p400x300x75-14t320x160-exposed,851c0f75-141a-4cd0-bd8a-b999ca765c24
@@ -4745,6 +4902,7 @@ pkg-dfn50p400x300x75-14t320x160-text-name-hand-soldering,c7cc7da0-85bf-480b-85db
 pkg-dfn50p400x300x75-14t320x160-text-name-reflow,7a644f62-7e57-4113-ab1b-33af4be26370
 pkg-dfn50p400x300x75-14t320x160-text-value-hand-soldering,16f53676-5baf-4729-a27b-3f453f358fb8
 pkg-dfn50p400x300x75-14t320x160-text-value-reflow,7641ffd0-b735-416a-8437-208180c27384
+pkg-dfn50p400x300x95-10-body-outline,272121c3-29b2-4234-a2c4-0d1b1ec3554c
 pkg-dfn50p400x300x95-10-circle-silkscreen-hand-soldering,ba95feb4-69bf-45fd-a1cf-e7bd8407d49f
 pkg-dfn50p400x300x95-10-circle-silkscreen-reflow,8a522f07-9462-48a1-ba46-5eb9c2aa7564
 pkg-dfn50p400x300x95-10-footprint-hand-soldering,11425887-0feb-4d2f-998f-b5de69b0a120
@@ -4778,6 +4936,7 @@ pkg-dfn50p400x300x95-10-text-name-hand-soldering,9c3963ae-1bc0-4202-9f13-0b11a27
 pkg-dfn50p400x300x95-10-text-name-reflow,73a8f2e3-b360-45f7-a02d-d3a8644558ac
 pkg-dfn50p400x300x95-10-text-value-hand-soldering,6b28bac4-d6ac-4a47-934c-b2b4c1b0971f
 pkg-dfn50p400x300x95-10-text-value-reflow,b6799d9c-a274-483a-9787-3f08f26f8679
+pkg-dfn50p400x300x95-10t320x160-body-outline,391ba5e4-f519-4734-8d77-05f9f6c2c352
 pkg-dfn50p400x300x95-10t320x160-circle-silkscreen-hand-soldering,908a3c6b-e2be-4e61-a19f-07bdc5b7a5c7
 pkg-dfn50p400x300x95-10t320x160-circle-silkscreen-reflow,8908efff-2c79-4bbe-83d4-eade9a23463c
 pkg-dfn50p400x300x95-10t320x160-exposed,2a700608-d89e-4181-a8e6-99e1bc8cf9f4
@@ -4813,6 +4972,7 @@ pkg-dfn50p400x300x95-10t320x160-text-name-hand-soldering,dca8c0ba-c531-4e59-a953
 pkg-dfn50p400x300x95-10t320x160-text-name-reflow,5da0da71-d44a-4055-a7af-c576a9a0f25c
 pkg-dfn50p400x300x95-10t320x160-text-value-hand-soldering,d1457355-372c-499b-ab51-2019c6587724
 pkg-dfn50p400x300x95-10t320x160-text-value-reflow,a46266ce-d4ee-40a3-ba40-2bfc543e8a3e
+pkg-dfn50p400x300x95-12-body-outline,10d68058-ef85-4f9d-b376-79bd0a19ba1f
 pkg-dfn50p400x300x95-12-circle-silkscreen-hand-soldering,c1e5cb2f-7b3f-4ce0-b1e6-7489389e52dd
 pkg-dfn50p400x300x95-12-circle-silkscreen-reflow,953dab8a-5d09-40c5-9399-d953b07cb944
 pkg-dfn50p400x300x95-12-footprint-hand-soldering,f2081305-8cc7-4004-ad24-cea9714c3678
@@ -4850,6 +5010,7 @@ pkg-dfn50p400x300x95-12-text-name-hand-soldering,717f2f9c-a767-4cef-a32d-14993c5
 pkg-dfn50p400x300x95-12-text-name-reflow,ec4c3d12-5887-40e4-87bf-201e7f739f99
 pkg-dfn50p400x300x95-12-text-value-hand-soldering,f9d13276-484d-4f0d-981b-b57ca5cc3fab
 pkg-dfn50p400x300x95-12-text-value-reflow,bd36e1ba-bca6-4004-9570-f0540ac18edc
+pkg-dfn50p400x300x95-12t320x160-body-outline,eea8b96f-ed14-4792-a016-739cb6faa5ac
 pkg-dfn50p400x300x95-12t320x160-circle-silkscreen-hand-soldering,de3f2e4f-06ce-4dee-8d1d-6976be62d494
 pkg-dfn50p400x300x95-12t320x160-circle-silkscreen-reflow,5496f691-ff34-4dec-b344-2b9d14764260
 pkg-dfn50p400x300x95-12t320x160-exposed,9d45ba19-c964-49d2-b596-e87cda0c78e9
@@ -4889,6 +5050,7 @@ pkg-dfn50p400x300x95-12t320x160-text-name-hand-soldering,0b0930f8-cfe7-4328-81af
 pkg-dfn50p400x300x95-12t320x160-text-name-reflow,c85d1158-b96e-4fb2-b04e-a3da03e725b5
 pkg-dfn50p400x300x95-12t320x160-text-value-hand-soldering,9b6cc9ee-36b5-40f6-a3eb-16192758212e
 pkg-dfn50p400x300x95-12t320x160-text-value-reflow,5ed8ce59-3004-4810-b2b4-608557c59aa4
+pkg-dfn50p400x300x95-12t370x180-body-outline,7f0556e7-8f35-4b2d-9532-219e1549b618
 pkg-dfn50p400x300x95-12t370x180-circle-silkscreen-hand-soldering,c1447b39-b12c-413c-a6cf-05419b73e2d9
 pkg-dfn50p400x300x95-12t370x180-circle-silkscreen-reflow,b02c17e8-bd89-4002-a281-5dc3e4d74061
 pkg-dfn50p400x300x95-12t370x180-exposed,71eb61ae-bd42-427a-88f2-19ac8573ae00
@@ -4928,6 +5090,7 @@ pkg-dfn50p400x300x95-12t370x180-text-name-hand-soldering,b68bf71d-9108-4b4b-ac49
 pkg-dfn50p400x300x95-12t370x180-text-name-reflow,737626c0-40ec-419f-bb25-60164477504d
 pkg-dfn50p400x300x95-12t370x180-text-value-hand-soldering,1b33ec9f-fbef-4ad6-863c-9dc185afa6a2
 pkg-dfn50p400x300x95-12t370x180-text-value-reflow,aa1a27ae-e522-4645-8759-c08b0ec2d014
+pkg-dfn50p400x300x95-14-body-outline,55bf298d-446c-4fb1-8612-e33d33c171cf
 pkg-dfn50p400x300x95-14-circle-silkscreen-hand-soldering,57f51680-259e-4bc4-842d-628e7d5622de
 pkg-dfn50p400x300x95-14-circle-silkscreen-reflow,7766c52b-75b9-4c8c-a028-8bef1a92e957
 pkg-dfn50p400x300x95-14-footprint-hand-soldering,e27fccff-53ab-41a1-970b-9885425a68ff
@@ -4969,6 +5132,7 @@ pkg-dfn50p400x300x95-14-text-name-hand-soldering,fd09f6cc-7add-4904-80de-d366749
 pkg-dfn50p400x300x95-14-text-name-reflow,3f12dd6c-08c2-4f9d-8abc-62e6c0b336da
 pkg-dfn50p400x300x95-14-text-value-hand-soldering,d856e99b-d356-4423-a0dc-685812d2cbb7
 pkg-dfn50p400x300x95-14-text-value-reflow,1dc39775-e46a-4c84-ab6a-aa9f3c4df465
+pkg-dfn50p400x300x95-14t320x160-body-outline,1a8648c1-e875-42cc-8082-bd7f1e0b62f1
 pkg-dfn50p400x300x95-14t320x160-circle-silkscreen-hand-soldering,86fb2dda-adee-4936-bc5d-f5d79575e273
 pkg-dfn50p400x300x95-14t320x160-circle-silkscreen-reflow,068d266e-be08-48fe-8626-c92aa024e7e0
 pkg-dfn50p400x300x95-14t320x160-exposed,39d1427e-9345-46ee-82c7-18134c893931
@@ -5012,6 +5176,7 @@ pkg-dfn50p400x300x95-14t320x160-text-name-hand-soldering,c8d9cdba-c7fe-482f-9d10
 pkg-dfn50p400x300x95-14t320x160-text-name-reflow,cb69b9bf-1187-40d1-a1c9-2e6e631c774f
 pkg-dfn50p400x300x95-14t320x160-text-value-hand-soldering,f5605edd-bbbe-4e9e-a608-8052203159a4
 pkg-dfn50p400x300x95-14t320x160-text-value-reflow,90538a6f-66c9-45a5-90e7-800a17d9ff1a
+pkg-dfn50p400x400x75-10-body-outline,e7335bce-4720-42fb-ab60-fdf7b9ee2129
 pkg-dfn50p400x400x75-10-circle-silkscreen-hand-soldering,7a846b9c-04e4-4b98-add6-b2a618e90417
 pkg-dfn50p400x400x75-10-circle-silkscreen-reflow,0e7dbe72-3c0c-424b-a8aa-2b3de94ed8ff
 pkg-dfn50p400x400x75-10-footprint-hand-soldering,a51bd465-9131-4c59-9c7d-b39bb84b4603
@@ -5045,6 +5210,7 @@ pkg-dfn50p400x400x75-10-text-name-hand-soldering,326222ea-c954-4e91-abc4-89412cf
 pkg-dfn50p400x400x75-10-text-name-reflow,67de3d8d-52ad-407e-88dc-a5a707457aca
 pkg-dfn50p400x400x75-10-text-value-hand-soldering,a95538cc-17a2-47ad-884a-b27de3d9bc95
 pkg-dfn50p400x400x75-10-text-value-reflow,dd6395e0-fd65-4526-b8b6-7bf0262e10c8
+pkg-dfn50p400x400x75-10t300x220-body-outline,44f329d9-4e79-42f9-a735-a6e3c869316b
 pkg-dfn50p400x400x75-10t300x220-circle-silkscreen-hand-soldering,5b5a93d6-08ef-4bfc-947d-5e9ba925f011
 pkg-dfn50p400x400x75-10t300x220-circle-silkscreen-reflow,33f015dd-b595-47b1-8f52-c390c97ed215
 pkg-dfn50p400x400x75-10t300x220-exposed,a0c3d30f-56db-4f94-b912-269bc27bab64
@@ -5080,6 +5246,7 @@ pkg-dfn50p400x400x75-10t300x220-text-name-hand-soldering,a0d2505a-efa7-476f-9154
 pkg-dfn50p400x400x75-10t300x220-text-name-reflow,ccd9934b-3128-4efa-adf6-395490a68731
 pkg-dfn50p400x400x75-10t300x220-text-value-hand-soldering,d953674c-051f-4d3a-88b7-e05a40a2cc90
 pkg-dfn50p400x400x75-10t300x220-text-value-reflow,9fb7f2d8-f42e-4b73-9e65-2f058346409c
+pkg-dfn50p400x400x75-12-body-outline,9daf991b-3f84-4cc7-9746-57a22ac620e3
 pkg-dfn50p400x400x75-12-circle-silkscreen-hand-soldering,a8cc14d6-e4f0-4505-9d5a-a070f4e61795
 pkg-dfn50p400x400x75-12-circle-silkscreen-reflow,0864bad6-1dfd-431b-a0e2-7993304d626b
 pkg-dfn50p400x400x75-12-footprint-hand-soldering,3a80200a-c3b9-4590-948d-fe60d64c274c
@@ -5117,6 +5284,7 @@ pkg-dfn50p400x400x75-12-text-name-hand-soldering,63d3f12a-1720-4010-811d-3619352
 pkg-dfn50p400x400x75-12-text-name-reflow,f1669b70-a957-48f7-9e1b-420efebaf7c8
 pkg-dfn50p400x400x75-12-text-value-hand-soldering,43e1bd54-1525-427e-a769-bdd2b3fd077e
 pkg-dfn50p400x400x75-12-text-value-reflow,ea1553e6-fef7-4cdc-91c0-bde6cf8deb28
+pkg-dfn50p400x400x75-12t300x220-body-outline,439a802d-374e-42ad-aa17-4e583487d144
 pkg-dfn50p400x400x75-12t300x220-circle-silkscreen-hand-soldering,37d3c7e3-eba9-4f64-9751-2d98409c6aea
 pkg-dfn50p400x400x75-12t300x220-circle-silkscreen-reflow,bc08c154-c2c1-4b5c-b2dc-ae7bc93081dd
 pkg-dfn50p400x400x75-12t300x220-exposed,10a451a4-a79a-4af5-a99f-7574a66dc38c
@@ -5156,6 +5324,7 @@ pkg-dfn50p400x400x75-12t300x220-text-name-hand-soldering,4529aa15-43df-4a36-b6b4
 pkg-dfn50p400x400x75-12t300x220-text-name-reflow,007c0294-2403-4ac1-8e8c-0446cfaab7c2
 pkg-dfn50p400x400x75-12t300x220-text-value-hand-soldering,74e9cde6-d7d4-41f0-8de0-893543d19a94
 pkg-dfn50p400x400x75-12t300x220-text-value-reflow,282448e3-f21e-4141-b5d1-31b797ca3a82
+pkg-dfn50p400x400x75-14-body-outline,9242795a-c9cd-4a97-9b44-342389a08ef0
 pkg-dfn50p400x400x75-14-circle-silkscreen-hand-soldering,1e63b189-5f43-4c7e-9e00-f62e3b44ab8c
 pkg-dfn50p400x400x75-14-circle-silkscreen-reflow,5d6c1234-648e-4713-b807-c02fe4013e38
 pkg-dfn50p400x400x75-14-footprint-hand-soldering,69c7f49a-05fb-4a0b-b120-59cfb49233aa
@@ -5197,6 +5366,7 @@ pkg-dfn50p400x400x75-14-text-name-hand-soldering,20405782-4ca7-44a5-9089-2187bfd
 pkg-dfn50p400x400x75-14-text-name-reflow,ef715887-d420-413a-87b1-b53449d372be
 pkg-dfn50p400x400x75-14-text-value-hand-soldering,45807c9d-f2f8-4f77-abad-d7481d5e733c
 pkg-dfn50p400x400x75-14-text-value-reflow,2e453a52-e79b-4151-95d6-42bbed3c54f0
+pkg-dfn50p400x400x75-14t300x220-body-outline,8ee3fff9-4103-4c91-806f-85c497979201
 pkg-dfn50p400x400x75-14t300x220-circle-silkscreen-hand-soldering,c1f907cb-869a-461d-a2d6-04e943717df7
 pkg-dfn50p400x400x75-14t300x220-circle-silkscreen-reflow,b5cba7cc-18ed-4ac6-92e3-c9de0c0510b9
 pkg-dfn50p400x400x75-14t300x220-exposed,1bd2caa9-b04b-4b6a-a7ba-c5158a47f2d2
@@ -5240,6 +5410,7 @@ pkg-dfn50p400x400x75-14t300x220-text-name-hand-soldering,50f1a8b8-8c84-4390-8f61
 pkg-dfn50p400x400x75-14t300x220-text-name-reflow,7faaff8e-f289-4a68-8d39-85b2aa5230d1
 pkg-dfn50p400x400x75-14t300x220-text-value-hand-soldering,1a9f1bc3-f662-4997-a6ba-39ff8066ff39
 pkg-dfn50p400x400x75-14t300x220-text-value-reflow,2a94a7c5-c288-4071-91c2-aafbb6d9f0a2
+pkg-dfn50p400x400x95-10-body-outline,abca72e4-e7aa-4e4c-8eaf-c171e45e8512
 pkg-dfn50p400x400x95-10-circle-silkscreen-hand-soldering,4846b058-c955-46f8-8f1f-3ac4e8e547e9
 pkg-dfn50p400x400x95-10-circle-silkscreen-reflow,6ccc5326-f027-4494-a7b6-ab0767a8a779
 pkg-dfn50p400x400x95-10-footprint-hand-soldering,f46347dc-6037-4613-bc0e-198b6b97c16d
@@ -5273,6 +5444,7 @@ pkg-dfn50p400x400x95-10-text-name-hand-soldering,708430a4-a766-45d8-bab3-baa265b
 pkg-dfn50p400x400x95-10-text-name-reflow,6a31b0a8-8800-48c3-a978-76bd6c15db33
 pkg-dfn50p400x400x95-10-text-value-hand-soldering,ccfd3c3f-7cdd-45dc-a2c9-9f4fe7473ef5
 pkg-dfn50p400x400x95-10-text-value-reflow,bec035ef-7818-489d-9d7a-c02e928bdec9
+pkg-dfn50p400x400x95-10t320x260-body-outline,289c6cc3-732b-42b9-87c6-789022e2ab91
 pkg-dfn50p400x400x95-10t320x260-circle-silkscreen-hand-soldering,c8d262e3-5e23-463a-aade-a03f69a77a69
 pkg-dfn50p400x400x95-10t320x260-circle-silkscreen-reflow,94fd29b7-94d1-47f4-a461-b12d83f08355
 pkg-dfn50p400x400x95-10t320x260-exposed,4b6b1349-42ab-4c53-8be7-d057fbcfd337
@@ -5308,6 +5480,7 @@ pkg-dfn50p400x400x95-10t320x260-text-name-hand-soldering,b4a87126-a41c-4dee-9302
 pkg-dfn50p400x400x95-10t320x260-text-name-reflow,b98c43e5-a3a4-406f-8005-a73334c2f6e4
 pkg-dfn50p400x400x95-10t320x260-text-value-hand-soldering,7bd5d462-28f6-44d2-b056-e79fd36fc880
 pkg-dfn50p400x400x95-10t320x260-text-value-reflow,0c3f110c-a83d-4cc0-9ccc-f94d092f15c2
+pkg-dfn50p400x400x95-12-body-outline,9fc3cca9-d12a-4429-abbd-f17ce5774102
 pkg-dfn50p400x400x95-12-circle-silkscreen-hand-soldering,f841a749-8b0c-4146-b97a-273d12998751
 pkg-dfn50p400x400x95-12-circle-silkscreen-reflow,5e6a5383-b236-408f-b5fa-0d1b8d0970db
 pkg-dfn50p400x400x95-12-footprint-hand-soldering,bdc3a137-1724-4d86-bf65-2dfb6600c7f3
@@ -5345,6 +5518,7 @@ pkg-dfn50p400x400x95-12-text-name-hand-soldering,c43d510c-f5cf-4023-a054-24f2382
 pkg-dfn50p400x400x95-12-text-name-reflow,41cab994-b3f6-4228-9997-84a57cb9909a
 pkg-dfn50p400x400x95-12-text-value-hand-soldering,5169cae1-3de5-41f6-9c5d-5dc8d465e168
 pkg-dfn50p400x400x95-12-text-value-reflow,00a065eb-57de-4ddd-8dc8-dd028c724cbc
+pkg-dfn50p400x400x95-12t320x260-body-outline,964bb1e4-1fb4-4fde-a635-7589c393faa9
 pkg-dfn50p400x400x95-12t320x260-circle-silkscreen-hand-soldering,d8ea92b4-a4f0-47b6-810e-83bc18e9618e
 pkg-dfn50p400x400x95-12t320x260-circle-silkscreen-reflow,d378e1a6-f435-4049-8514-09b5eb644267
 pkg-dfn50p400x400x95-12t320x260-exposed,4efac85e-680d-4ecf-a4d2-cbc1d3e4c20b
@@ -5384,6 +5558,7 @@ pkg-dfn50p400x400x95-12t320x260-text-name-hand-soldering,389d80a7-20be-4e76-b55c
 pkg-dfn50p400x400x95-12t320x260-text-name-reflow,54ac6c6e-a854-4c7a-8543-446ef513c5ef
 pkg-dfn50p400x400x95-12t320x260-text-value-hand-soldering,076d6a60-86fa-479d-bc32-1b14b31b959b
 pkg-dfn50p400x400x95-12t320x260-text-value-reflow,d7cac888-b8f3-4a2b-bc7a-67cfb9643f73
+pkg-dfn50p400x400x95-14-body-outline,d3aa7491-c1d2-42b3-a3ca-0fdf5e622830
 pkg-dfn50p400x400x95-14-circle-silkscreen-hand-soldering,490c7c7f-485d-4561-bf2f-dc390d97ec65
 pkg-dfn50p400x400x95-14-circle-silkscreen-reflow,a040ed52-b5b2-4901-8130-84fd0392ab4d
 pkg-dfn50p400x400x95-14-footprint-hand-soldering,40904cdf-b57e-4e7f-a3c3-ee1d7fd22fe8
@@ -5425,6 +5600,7 @@ pkg-dfn50p400x400x95-14-text-name-hand-soldering,cb2a129f-9930-4b90-8f04-60dd807
 pkg-dfn50p400x400x95-14-text-name-reflow,e7c2adb1-d8cb-4225-bcfa-ff06c47a2447
 pkg-dfn50p400x400x95-14-text-value-hand-soldering,034b9fed-d8cf-4fc2-828e-e4c54320fead
 pkg-dfn50p400x400x95-14-text-value-reflow,c4e404f9-5532-4c9e-890b-a87531bb373f
+pkg-dfn50p400x400x95-14t320x260-body-outline,92a36786-7245-49f6-aff9-222204eabef3
 pkg-dfn50p400x400x95-14t320x260-circle-silkscreen-hand-soldering,d3ea53d0-ec96-4c95-b055-6c96f5823a71
 pkg-dfn50p400x400x95-14t320x260-circle-silkscreen-reflow,b8745e59-1379-40b4-b43e-dd299b4fbd86
 pkg-dfn50p400x400x95-14t320x260-exposed,d4003536-9f15-4a98-ac21-0bb868fd5f11
@@ -5468,6 +5644,7 @@ pkg-dfn50p400x400x95-14t320x260-text-name-hand-soldering,b9013f1d-5461-4d71-bee5
 pkg-dfn50p400x400x95-14t320x260-text-name-reflow,27647d31-e42d-41bf-b332-ea1740c90659
 pkg-dfn50p400x400x95-14t320x260-text-value-hand-soldering,20219f78-aeaa-4934-a5d0-6fd70c63ba9e
 pkg-dfn50p400x400x95-14t320x260-text-value-reflow,5cd524f4-0d58-4cdf-8bda-6cd3db741b7f
+pkg-dfn50p400x500x75-14-body-outline,50163ff6-dd94-4f3f-8936-961439712d31
 pkg-dfn50p400x500x75-14-circle-silkscreen-hand-soldering,70f28f97-0f59-423a-895b-5a06ef472cc0
 pkg-dfn50p400x500x75-14-circle-silkscreen-reflow,8e381e72-d2a2-42e5-b065-7bcdad73eae8
 pkg-dfn50p400x500x75-14-footprint-hand-soldering,4b02d3fb-50ec-49c6-9c0c-8e997e416f50
@@ -5509,6 +5686,7 @@ pkg-dfn50p400x500x75-14-text-name-hand-soldering,c62ecd7f-b631-4c19-ba4a-d13a76c
 pkg-dfn50p400x500x75-14-text-name-reflow,6fbad70d-6a1a-45fc-af7f-e7c49e314531
 pkg-dfn50p400x500x75-14-text-value-hand-soldering,b2954b29-1d1d-4fbf-9203-13dd4281aae9
 pkg-dfn50p400x500x75-14-text-value-reflow,14435b63-8030-4c23-ad87-c0ef96c43b91
+pkg-dfn50p400x500x75-14t300x320-body-outline,44348454-91e0-4f94-9a13-7a7d024ec8bc
 pkg-dfn50p400x500x75-14t300x320-circle-silkscreen-hand-soldering,f3be75b0-f2bb-4e61-af9d-ebf5e5bd44ad
 pkg-dfn50p400x500x75-14t300x320-circle-silkscreen-reflow,3c29e721-bd74-4713-aa84-dd6104953b03
 pkg-dfn50p400x500x75-14t300x320-exposed,d88917c7-c6b3-447d-b033-845a629ae9f0
@@ -5552,6 +5730,7 @@ pkg-dfn50p400x500x75-14t300x320-text-name-hand-soldering,3af7c753-6e6d-44a7-8b90
 pkg-dfn50p400x500x75-14t300x320-text-name-reflow,89629d18-ee89-419a-a1f4-4681b45ffef3
 pkg-dfn50p400x500x75-14t300x320-text-value-hand-soldering,34461d26-f80d-4d32-a5f6-14d374a7052d
 pkg-dfn50p400x500x75-14t300x320-text-value-reflow,166d8e9d-264c-4c71-a5f6-1d6095f49630
+pkg-dfn50p400x500x95-14-body-outline,4b182fdf-3211-41ad-8e16-1a5eafa31ddd
 pkg-dfn50p400x500x95-14-circle-silkscreen-hand-soldering,e2fbe7ba-3727-4e8b-8c8b-ac9c3680433e
 pkg-dfn50p400x500x95-14-circle-silkscreen-reflow,86f021cd-0b56-4304-92bd-6b73f3c37c9e
 pkg-dfn50p400x500x95-14-footprint-hand-soldering,2c4ae1dd-7e24-425e-8ea0-af010ce904ea
@@ -5593,6 +5772,7 @@ pkg-dfn50p400x500x95-14-text-name-hand-soldering,d23d556d-6fe3-4f06-a29d-9e34931
 pkg-dfn50p400x500x95-14-text-name-reflow,ffe1607e-b7db-45ef-bd30-920195af2741
 pkg-dfn50p400x500x95-14-text-value-hand-soldering,16003544-1961-48ba-88a3-58077a0747ba
 pkg-dfn50p400x500x95-14-text-value-reflow,5c1bb29b-4d16-41df-9136-87ad42210bc5
+pkg-dfn50p400x500x95-14t300x320-body-outline,54051ab1-e125-4514-b4ba-2f9f867eaed7
 pkg-dfn50p400x500x95-14t300x320-circle-silkscreen-hand-soldering,f2e9ff32-8cd3-4ace-a9d0-b048006bd3a5
 pkg-dfn50p400x500x95-14t300x320-circle-silkscreen-reflow,980b2cce-9d9d-42eb-a446-5d8615f26a22
 pkg-dfn50p400x500x95-14t300x320-exposed,a01546c0-b12c-4eaa-875c-650b11c75fde
@@ -5636,6 +5816,7 @@ pkg-dfn50p400x500x95-14t300x320-text-name-hand-soldering,310e48c4-5ceb-4735-a2b0
 pkg-dfn50p400x500x95-14t300x320-text-name-reflow,e5ed04a4-5fd1-41b4-95e7-75f97b16a007
 pkg-dfn50p400x500x95-14t300x320-text-value-hand-soldering,ff4ec1b9-7432-4b01-a3a1-19843ad10289
 pkg-dfn50p400x500x95-14t300x320-text-value-reflow,a162e9bc-7f5e-4c9f-a612-9c8b71fab0cd
+pkg-dfn50p500x300x75-16-body-outline,30f06c8b-d845-4a3a-b71e-5a90dd58da52
 pkg-dfn50p500x300x75-16-circle-silkscreen-hand-soldering,a2ebaeaf-5b53-4cac-aa4b-f24956bbb530
 pkg-dfn50p500x300x75-16-circle-silkscreen-reflow,1b9703b3-54a0-47c0-b128-01c44348286d
 pkg-dfn50p500x300x75-16-footprint-hand-soldering,0c803259-b078-41f6-89b3-a56180a43390
@@ -5681,6 +5862,7 @@ pkg-dfn50p500x300x75-16-text-name-hand-soldering,921980b5-306b-429e-a06d-1b1e4fd
 pkg-dfn50p500x300x75-16-text-name-reflow,66cbdfb6-ec6c-4b9e-a6fd-82cc694b7d05
 pkg-dfn50p500x300x75-16-text-value-hand-soldering,0c341a7e-aac2-4b5c-a9de-8c1f9491d56c
 pkg-dfn50p500x300x75-16-text-value-reflow,3af6631f-0830-4f8d-b958-623d7364f2ae
+pkg-dfn50p500x300x75-16t420x160-body-outline,09959e82-f347-4b00-986c-fe60dc0e2f8f
 pkg-dfn50p500x300x75-16t420x160-circle-silkscreen-hand-soldering,8e5c1410-52b8-4f97-8d86-2f7633018e39
 pkg-dfn50p500x300x75-16t420x160-circle-silkscreen-reflow,52c1149c-e893-4429-bcc4-3fe6aecf86f1
 pkg-dfn50p500x300x75-16t420x160-exposed,3e9900c0-2a37-46bb-9eb4-5ecdd1217aa2
@@ -5728,6 +5910,7 @@ pkg-dfn50p500x300x75-16t420x160-text-name-hand-soldering,ed961a66-0378-48ff-998f
 pkg-dfn50p500x300x75-16t420x160-text-name-reflow,373afaf9-8ba4-4c1a-8429-abd206c77acf
 pkg-dfn50p500x300x75-16t420x160-text-value-hand-soldering,befa5f48-fb6d-449c-b53a-4a3a691e4285
 pkg-dfn50p500x300x75-16t420x160-text-value-reflow,bbbf0033-4829-4110-96c3-e2a6609a7599
+pkg-dfn50p500x300x75-18-body-outline,52535212-7d45-4356-9a6b-14c17bfdb3d2
 pkg-dfn50p500x300x75-18-circle-silkscreen-hand-soldering,a23d0679-17c1-4021-a486-a478f0d222d7
 pkg-dfn50p500x300x75-18-circle-silkscreen-reflow,7cf7f517-524f-4dfd-9040-43d9ef97bf88
 pkg-dfn50p500x300x75-18-footprint-hand-soldering,bdbf1b39-1e3f-40c5-ab82-2bdc08c2e144
@@ -5777,6 +5960,7 @@ pkg-dfn50p500x300x75-18-text-name-hand-soldering,90be9c26-5d44-4c6e-83fe-4194618
 pkg-dfn50p500x300x75-18-text-name-reflow,90ab719a-cc93-497f-9a6b-8f2b3ec19f44
 pkg-dfn50p500x300x75-18-text-value-hand-soldering,42caef4c-e2dd-461b-b8c0-b980f0948e7c
 pkg-dfn50p500x300x75-18-text-value-reflow,24f15fb5-a6cd-4841-b466-582866dcf17e
+pkg-dfn50p500x300x75-18t420x160-body-outline,7c8dddfd-26a7-412f-b4ec-6b352283f2fc
 pkg-dfn50p500x300x75-18t420x160-circle-silkscreen-hand-soldering,2a2a60c4-8edb-4cea-857c-74ab28f60033
 pkg-dfn50p500x300x75-18t420x160-circle-silkscreen-reflow,1a33d679-9f02-4be5-bac1-cfa3125a291c
 pkg-dfn50p500x300x75-18t420x160-exposed,bf46c772-c6b4-4bf2-a99d-947657152359
@@ -5828,6 +6012,7 @@ pkg-dfn50p500x300x75-18t420x160-text-name-hand-soldering,1f84773e-047d-4d6f-8720
 pkg-dfn50p500x300x75-18t420x160-text-name-reflow,3eadd4b9-a46b-4af4-8e03-30ed5b83a2ac
 pkg-dfn50p500x300x75-18t420x160-text-value-hand-soldering,60ea58d4-eed4-425d-9ea2-bd704530ed4d
 pkg-dfn50p500x300x75-18t420x160-text-value-reflow,de72b088-7ec3-46a8-b8ad-a25de7dbcc11
+pkg-dfn50p500x300x95-16-body-outline,50996d79-e9b8-4e47-82e9-16e50b6cf492
 pkg-dfn50p500x300x95-16-circle-silkscreen-hand-soldering,ec03d79d-1e53-497b-bcd8-acb7fd5752c8
 pkg-dfn50p500x300x95-16-circle-silkscreen-reflow,ca3f1799-5a2c-4632-98df-0e179595437b
 pkg-dfn50p500x300x95-16-footprint-hand-soldering,e869377e-6e9d-4927-a6aa-515f999a2664
@@ -5873,6 +6058,7 @@ pkg-dfn50p500x300x95-16-text-name-hand-soldering,78e98b9c-d637-4871-88db-9071627
 pkg-dfn50p500x300x95-16-text-name-reflow,a8e49ebe-bede-498b-b871-d5343a64a2ad
 pkg-dfn50p500x300x95-16-text-value-hand-soldering,6bb1bbad-703e-4655-b934-90d02f331f95
 pkg-dfn50p500x300x95-16-text-value-reflow,59a95291-1dcf-4bc7-806b-f2fcf250187d
+pkg-dfn50p500x300x95-16t420x160-body-outline,4df09198-a079-4733-98f9-d134f429f240
 pkg-dfn50p500x300x95-16t420x160-circle-silkscreen-hand-soldering,c72b41ff-cbd2-4c28-b710-f5f5793c4f44
 pkg-dfn50p500x300x95-16t420x160-circle-silkscreen-reflow,604d9ed2-6efc-4f4e-9b51-b7ef4a85b188
 pkg-dfn50p500x300x95-16t420x160-exposed,1f037e4c-f96a-4cfb-a2ba-dbdb0f433ebc
@@ -5920,6 +6106,7 @@ pkg-dfn50p500x300x95-16t420x160-text-name-hand-soldering,92db9180-bc2b-4369-a615
 pkg-dfn50p500x300x95-16t420x160-text-name-reflow,b6aeaee7-f214-44c1-8a20-247a215a8be6
 pkg-dfn50p500x300x95-16t420x160-text-value-hand-soldering,6cb0fc71-a70c-4b78-8cec-a2d036e86ea0
 pkg-dfn50p500x300x95-16t420x160-text-value-reflow,1c2c2c4b-92e1-443d-9aa4-a000b19cda49
+pkg-dfn50p500x300x95-18-body-outline,078153e0-e9c6-4a73-b81d-8b7d698f22b9
 pkg-dfn50p500x300x95-18-circle-silkscreen-hand-soldering,0df5b520-b288-46ec-9d51-e0e5e0b00e01
 pkg-dfn50p500x300x95-18-circle-silkscreen-reflow,80ea485e-5ee8-4347-9469-2cc353f0de98
 pkg-dfn50p500x300x95-18-footprint-hand-soldering,3701e811-8141-4d11-9362-7e42d934f865
@@ -5969,6 +6156,7 @@ pkg-dfn50p500x300x95-18-text-name-hand-soldering,1e813ca9-e9ac-4c93-93fa-23bb18a
 pkg-dfn50p500x300x95-18-text-name-reflow,0f770bdd-c0ac-4056-864a-78f35d1deb4a
 pkg-dfn50p500x300x95-18-text-value-hand-soldering,ccfcae03-c180-4aa2-b638-bbf6b0355604
 pkg-dfn50p500x300x95-18-text-value-reflow,6acccf36-f998-47ed-b32b-413846e68c02
+pkg-dfn50p500x300x95-18t420x160-body-outline,28de263f-f834-494d-8819-9ab3b3e7f61a
 pkg-dfn50p500x300x95-18t420x160-circle-silkscreen-hand-soldering,b722d766-d27c-494e-af87-324f9cb8215d
 pkg-dfn50p500x300x95-18t420x160-circle-silkscreen-reflow,a68191d5-1840-4a7a-b909-a7edc311f192
 pkg-dfn50p500x300x95-18t420x160-exposed,9de2b960-3cb5-458a-b5d8-dbae052a95c0
@@ -6020,6 +6208,7 @@ pkg-dfn50p500x300x95-18t420x160-text-name-hand-soldering,47837439-bc6c-4b42-958d
 pkg-dfn50p500x300x95-18t420x160-text-name-reflow,713a6f24-b5e3-4841-9807-59d8e67a7d10
 pkg-dfn50p500x300x95-18t420x160-text-value-hand-soldering,66aaa089-9d45-4e56-b06b-6244b820d85d
 pkg-dfn50p500x300x95-18t420x160-text-value-reflow,dacd9832-4783-454e-879e-3bb73bda1052
+pkg-dfn50p500x400x75-14-body-outline,d37dbddd-d9c5-4e27-bb1b-1c01a22b7d67
 pkg-dfn50p500x400x75-14-circle-silkscreen-hand-soldering,aa7c5539-b432-4f31-8cf5-9922b7e71be0
 pkg-dfn50p500x400x75-14-circle-silkscreen-reflow,65099413-6c1e-45ea-a69b-7c5524314896
 pkg-dfn50p500x400x75-14-footprint-hand-soldering,c7bb11b3-c1c5-4af8-aa09-c3a9087c5964
@@ -6061,6 +6250,7 @@ pkg-dfn50p500x400x75-14-text-name-hand-soldering,8f31d634-52b4-4f6b-84ab-8fc8756
 pkg-dfn50p500x400x75-14-text-name-reflow,bffa772c-8a52-4c12-8890-59b0cb57380b
 pkg-dfn50p500x400x75-14-text-value-hand-soldering,fccc4c41-fc5e-4a04-b602-b0d0f2613b8f
 pkg-dfn50p500x400x75-14-text-value-reflow,befd3d61-c975-4ed2-9428-001bc072676f
+pkg-dfn50p500x400x75-14t420x260-body-outline,eb49e673-f7e2-497b-80c2-8a329538407c
 pkg-dfn50p500x400x75-14t420x260-circle-silkscreen-hand-soldering,c23f56d0-bc23-4be7-8320-20fbb5f3ca4b
 pkg-dfn50p500x400x75-14t420x260-circle-silkscreen-reflow,c64445ce-257b-4a65-b1e2-4f83ecfb008b
 pkg-dfn50p500x400x75-14t420x260-exposed,2c28c31b-4b29-4cf0-8561-4871c5475648
@@ -6104,6 +6294,7 @@ pkg-dfn50p500x400x75-14t420x260-text-name-hand-soldering,8980da43-59fe-4915-982a
 pkg-dfn50p500x400x75-14t420x260-text-name-reflow,cae2386b-480a-4b5b-91bd-0564e3565105
 pkg-dfn50p500x400x75-14t420x260-text-value-hand-soldering,b5a043d5-3651-4391-aca8-9589022b16bd
 pkg-dfn50p500x400x75-14t420x260-text-value-reflow,55e4c20f-564a-42db-af6b-7e7c6b9c8083
+pkg-dfn50p500x400x75-16-body-outline,03821cba-3522-441b-97b5-356573ddfcf3
 pkg-dfn50p500x400x75-16-circle-silkscreen-hand-soldering,f4d2b45b-f143-4d6a-85bd-01e10bc3313d
 pkg-dfn50p500x400x75-16-circle-silkscreen-reflow,3d30e981-9379-439c-bb1a-5d9dd4b0b255
 pkg-dfn50p500x400x75-16-footprint-hand-soldering,54da318f-969f-4b7c-936f-ce659b66bc71
@@ -6149,6 +6340,7 @@ pkg-dfn50p500x400x75-16-text-name-hand-soldering,7e0770c5-5c18-4154-bfe8-3142967
 pkg-dfn50p500x400x75-16-text-name-reflow,3af324bc-75ae-4a85-aaeb-cbccacea51b7
 pkg-dfn50p500x400x75-16-text-value-hand-soldering,aa1b51d1-17d0-4333-b6c0-11e674ff9a5a
 pkg-dfn50p500x400x75-16-text-value-reflow,e4da2d23-98a5-4ae0-ad7f-3cc0a0d26f5b
+pkg-dfn50p500x400x75-16t420x260-body-outline,fbc2639f-8e83-4c5e-842a-2fb933c12326
 pkg-dfn50p500x400x75-16t420x260-circle-silkscreen-hand-soldering,46df44ce-9393-4dcc-883c-c5ec464b7416
 pkg-dfn50p500x400x75-16t420x260-circle-silkscreen-reflow,57c72f20-9f40-4c0a-aaff-a28c370aa31c
 pkg-dfn50p500x400x75-16t420x260-exposed,e3adb1b6-0e17-4b4b-ae04-9152e523dcbe
@@ -6196,6 +6388,7 @@ pkg-dfn50p500x400x75-16t420x260-text-name-hand-soldering,89c0ea54-9049-49ee-a456
 pkg-dfn50p500x400x75-16t420x260-text-name-reflow,13a3c950-a21f-49c9-9bac-f418d27589dc
 pkg-dfn50p500x400x75-16t420x260-text-value-hand-soldering,2f3fd8da-956f-4a4a-beca-68a1b77753c0
 pkg-dfn50p500x400x75-16t420x260-text-value-reflow,b727a871-e3bf-45d9-a376-372a47f7a116
+pkg-dfn50p500x400x75-18-body-outline,8f42aa73-6ffa-412e-8455-5cd1aaff2d76
 pkg-dfn50p500x400x75-18-circle-silkscreen-hand-soldering,37f073ea-f5e4-4628-b7c4-146f0233023d
 pkg-dfn50p500x400x75-18-circle-silkscreen-reflow,24381d3f-a731-4a90-a0ce-63c1176f64af
 pkg-dfn50p500x400x75-18-footprint-hand-soldering,1ba6d3bd-d908-434e-9d0d-85a3924e1c8d
@@ -6245,6 +6438,7 @@ pkg-dfn50p500x400x75-18-text-name-hand-soldering,286c7900-c219-43e3-9b5c-1ca27a3
 pkg-dfn50p500x400x75-18-text-name-reflow,ec443c1c-7d0e-43a2-ada0-0157a445bd84
 pkg-dfn50p500x400x75-18-text-value-hand-soldering,54ec46c1-2a7b-49fd-bbc7-d4573c4d0976
 pkg-dfn50p500x400x75-18-text-value-reflow,c0715ac3-467a-46d6-afb7-decb31395e9e
+pkg-dfn50p500x400x75-18t420x260-body-outline,f2d5bc2f-e2d7-4ba9-8072-5d3df2a8c4fd
 pkg-dfn50p500x400x75-18t420x260-circle-silkscreen-hand-soldering,e9937480-5bfe-4cb3-b1c5-e0fee4ebe20b
 pkg-dfn50p500x400x75-18t420x260-circle-silkscreen-reflow,401f7dba-9eec-43cd-97a7-6d5d6ac999fc
 pkg-dfn50p500x400x75-18t420x260-exposed,1c99bb7b-d809-4341-afdd-606e33eb97d3
@@ -6296,6 +6490,7 @@ pkg-dfn50p500x400x75-18t420x260-text-name-hand-soldering,47c854c2-0625-4267-a282
 pkg-dfn50p500x400x75-18t420x260-text-name-reflow,17a7ccf8-ab3a-4b70-bcc7-b5d0a1eebcd5
 pkg-dfn50p500x400x75-18t420x260-text-value-hand-soldering,a56203c3-5293-4960-aa40-c7aa4336920a
 pkg-dfn50p500x400x75-18t420x260-text-value-reflow,e88b3255-0501-4dda-93d5-e601db0a09e9
+pkg-dfn50p500x400x95-14-body-outline,bff97c57-e087-490c-8b49-9d0a1095c53d
 pkg-dfn50p500x400x95-14-circle-silkscreen-hand-soldering,1bda0747-cf82-4c5f-a23d-85732382c43b
 pkg-dfn50p500x400x95-14-circle-silkscreen-reflow,7f27b84d-2106-4c37-ab36-6bc8b0a9295c
 pkg-dfn50p500x400x95-14-footprint-hand-soldering,de9506e9-9e99-45c8-b25e-cb3ab87aa102
@@ -6337,6 +6532,7 @@ pkg-dfn50p500x400x95-14-text-name-hand-soldering,67019bd9-acaa-4d92-ba6d-b34d776
 pkg-dfn50p500x400x95-14-text-name-reflow,aef55daf-3ada-4893-9a0e-566b66e1e7c3
 pkg-dfn50p500x400x95-14-text-value-hand-soldering,d5464d1a-ed94-42a0-b73c-cb884e17b1ca
 pkg-dfn50p500x400x95-14-text-value-reflow,40be460f-cf58-4da9-b93e-7aa1ac78feee
+pkg-dfn50p500x400x95-14t420x260-body-outline,45f2d250-7b04-446a-bda8-cb7fabc1edac
 pkg-dfn50p500x400x95-14t420x260-circle-silkscreen-hand-soldering,609d9248-393b-4fed-8a00-a167461efa07
 pkg-dfn50p500x400x95-14t420x260-circle-silkscreen-reflow,67d776ed-118f-49b3-9ea9-e6aaa2f3c4a4
 pkg-dfn50p500x400x95-14t420x260-exposed,ebb61be9-e268-427e-ab38-48704bb682df
@@ -6380,6 +6576,7 @@ pkg-dfn50p500x400x95-14t420x260-text-name-hand-soldering,9cac005c-3095-4d4b-8374
 pkg-dfn50p500x400x95-14t420x260-text-name-reflow,cf8d38da-fff8-428e-994a-0a548494cc98
 pkg-dfn50p500x400x95-14t420x260-text-value-hand-soldering,ecced63b-10ed-4817-8af3-771b811d0144
 pkg-dfn50p500x400x95-14t420x260-text-value-reflow,a1a787df-0f26-4b35-a406-2659c674d411
+pkg-dfn50p500x400x95-16-body-outline,7c6e493b-d949-4cd3-bda2-8cd5c0db14f2
 pkg-dfn50p500x400x95-16-circle-silkscreen-hand-soldering,a9acf912-6fde-4b6e-89c0-f14185fc1d0d
 pkg-dfn50p500x400x95-16-circle-silkscreen-reflow,7ebabedc-c751-40bf-885e-0351a8cf6b08
 pkg-dfn50p500x400x95-16-footprint-hand-soldering,60f41e5c-ad2d-46d7-8fa4-cec98b8a8716
@@ -6425,6 +6622,7 @@ pkg-dfn50p500x400x95-16-text-name-hand-soldering,2d905a2d-afc6-4dc5-b38c-5aabf62
 pkg-dfn50p500x400x95-16-text-name-reflow,d311cc68-8593-4221-af2d-d24a97274dd2
 pkg-dfn50p500x400x95-16-text-value-hand-soldering,fbec7d00-e3cb-42bb-94e3-f7dbae569798
 pkg-dfn50p500x400x95-16-text-value-reflow,7418506b-5c33-4040-ae8f-71f40161b16d
+pkg-dfn50p500x400x95-16t420x260-body-outline,b435e253-f0a1-407d-826b-6dae64a9f71c
 pkg-dfn50p500x400x95-16t420x260-circle-silkscreen-hand-soldering,82015ebc-7b47-484e-8225-b75af0256fa0
 pkg-dfn50p500x400x95-16t420x260-circle-silkscreen-reflow,1511857a-6d3d-44ff-8adf-e705154b1176
 pkg-dfn50p500x400x95-16t420x260-exposed,2c9bbc02-5a5a-482b-949a-e78b37474fc8
@@ -6472,6 +6670,7 @@ pkg-dfn50p500x400x95-16t420x260-text-name-hand-soldering,e09f8219-4f22-42c0-8151
 pkg-dfn50p500x400x95-16t420x260-text-name-reflow,a2b20f8c-7d33-41fb-8e21-6205f6cdbbca
 pkg-dfn50p500x400x95-16t420x260-text-value-hand-soldering,ae39c33a-c9cd-404f-8247-5c4f207d3ce4
 pkg-dfn50p500x400x95-16t420x260-text-value-reflow,39fed058-186e-4e51-8a49-bb2e54ccbcae
+pkg-dfn50p500x400x95-18-body-outline,0b63eb19-8fb0-47cb-a313-568c1edaa9c1
 pkg-dfn50p500x400x95-18-circle-silkscreen-hand-soldering,ef114ae2-9af2-4d60-802c-e854ce651ea5
 pkg-dfn50p500x400x95-18-circle-silkscreen-reflow,f7be5827-65ff-4928-9284-f32d49a933f7
 pkg-dfn50p500x400x95-18-footprint-hand-soldering,f25e10af-853a-48d8-98a7-4aaff212e96f
@@ -6521,6 +6720,7 @@ pkg-dfn50p500x400x95-18-text-name-hand-soldering,6597f788-7ee4-4080-9872-deb154f
 pkg-dfn50p500x400x95-18-text-name-reflow,7645dbb0-fc6f-4506-bfd4-15e3cc0cdde2
 pkg-dfn50p500x400x95-18-text-value-hand-soldering,dad6d66c-1eb1-45b4-a515-dfe0a4dc5bae
 pkg-dfn50p500x400x95-18-text-value-reflow,c380367d-9e32-4722-93a6-9293057b3f3a
+pkg-dfn50p500x400x95-18t420x260-body-outline,916bd536-2f2a-4ed9-8d1c-7441d9656268
 pkg-dfn50p500x400x95-18t420x260-circle-silkscreen-hand-soldering,e442c976-f6e9-4786-89ab-8ad073a60fd6
 pkg-dfn50p500x400x95-18t420x260-circle-silkscreen-reflow,35a0329c-9c74-4469-b964-f0156e3bb42e
 pkg-dfn50p500x400x95-18t420x260-exposed,1431fb7b-1e86-46c2-a43f-238e4d226213
@@ -6572,6 +6772,7 @@ pkg-dfn50p500x400x95-18t420x260-text-name-hand-soldering,6d9af013-269e-428f-84eb
 pkg-dfn50p500x400x95-18t420x260-text-name-reflow,951adb39-a1af-4b0d-9e44-704eee19ae5c
 pkg-dfn50p500x400x95-18t420x260-text-value-hand-soldering,48b109c2-9ada-48b8-b5c9-9d5c8903e838
 pkg-dfn50p500x400x95-18t420x260-text-value-reflow,f5e4eef4-203b-47bd-a9c8-964685e45ecc
+pkg-dfn50p500x500x75-16-body-outline,c126d654-319e-487e-95e0-b7830ea5c1ae
 pkg-dfn50p500x500x75-16-circle-silkscreen-hand-soldering,e3d4be37-2353-450e-9854-8befffad13a2
 pkg-dfn50p500x500x75-16-circle-silkscreen-reflow,d534c18a-944b-491a-af50-9e40dee31a36
 pkg-dfn50p500x500x75-16-footprint-hand-soldering,0f63f5ee-e4eb-4918-8355-52c283d7eeed
@@ -6617,6 +6818,7 @@ pkg-dfn50p500x500x75-16-text-name-hand-soldering,06b78fd9-2f0f-43e0-a144-02a934a
 pkg-dfn50p500x500x75-16-text-name-reflow,95fb6283-551b-45c1-9861-cf6f6d61e028
 pkg-dfn50p500x500x75-16-text-value-hand-soldering,01fc1790-9027-4da4-acf6-0ec1741c58ce
 pkg-dfn50p500x500x75-16-text-value-reflow,76404ad7-c98e-4aaa-90f2-e41c90322117
+pkg-dfn50p500x500x75-16t400x320-body-outline,a2736e2c-62c0-43d7-9f23-c815363c5ff3
 pkg-dfn50p500x500x75-16t400x320-circle-silkscreen-hand-soldering,b764792d-44d6-42a0-8c34-4de51a248f62
 pkg-dfn50p500x500x75-16t400x320-circle-silkscreen-reflow,3163fa55-c990-42d7-aa1d-0de629c6a132
 pkg-dfn50p500x500x75-16t400x320-exposed,5337e07f-2d4d-4056-aed9-c8e0d3c832f7
@@ -6664,6 +6866,7 @@ pkg-dfn50p500x500x75-16t400x320-text-name-hand-soldering,62eb0621-9af6-4498-bbe9
 pkg-dfn50p500x500x75-16t400x320-text-name-reflow,5e00b25b-a97e-4965-9b6c-ae901b5f4d05
 pkg-dfn50p500x500x75-16t400x320-text-value-hand-soldering,24a2b45c-0ab4-4d1c-bda1-50044f4b8d8b
 pkg-dfn50p500x500x75-16t400x320-text-value-reflow,8c06c64f-d3f2-4ce9-93f4-cce1971870bd
+pkg-dfn50p500x500x75-18-body-outline,c825327b-1b1a-46c4-800b-d44ac4cdfd26
 pkg-dfn50p500x500x75-18-circle-silkscreen-hand-soldering,02c740aa-5c2b-4b3f-b05b-d91113bb32d7
 pkg-dfn50p500x500x75-18-circle-silkscreen-reflow,181dd0e9-0268-4494-857b-3d7a35ce09ef
 pkg-dfn50p500x500x75-18-footprint-hand-soldering,11a8e10c-f97a-4be2-baf6-f830012edc8d
@@ -6713,6 +6916,7 @@ pkg-dfn50p500x500x75-18-text-name-hand-soldering,09def6f8-4f81-4fc2-985e-2141ee6
 pkg-dfn50p500x500x75-18-text-name-reflow,1a44c7dc-fd47-425c-ab07-83c851545c3d
 pkg-dfn50p500x500x75-18-text-value-hand-soldering,eef3d8bf-baac-4914-a752-39194ff3117a
 pkg-dfn50p500x500x75-18-text-value-reflow,6f902e7a-bd71-4811-b799-6eb6f7c383a2
+pkg-dfn50p500x500x75-18t400x320-body-outline,514b2862-d0f4-4aec-a6ee-23ecaaead120
 pkg-dfn50p500x500x75-18t400x320-circle-silkscreen-hand-soldering,75f22195-df5f-4268-ae88-c62727103475
 pkg-dfn50p500x500x75-18t400x320-circle-silkscreen-reflow,45b378a3-d7f8-4c10-ab22-566f4eb242c7
 pkg-dfn50p500x500x75-18t400x320-exposed,e51e952f-a6ff-4f58-8f0b-579bb3733b80
@@ -6764,6 +6968,7 @@ pkg-dfn50p500x500x75-18t400x320-text-name-hand-soldering,1ab3464c-a36a-4418-bebb
 pkg-dfn50p500x500x75-18t400x320-text-name-reflow,f74529b1-4ecc-4358-90fb-3126d299287b
 pkg-dfn50p500x500x75-18t400x320-text-value-hand-soldering,3f0d3efc-43ef-435e-960b-ee7b44fc1a2e
 pkg-dfn50p500x500x75-18t400x320-text-value-reflow,e600606a-26d2-46b1-9f0c-2835e234fe55
+pkg-dfn50p500x500x95-16-body-outline,e99fd8bd-ed56-47f6-8287-1c3cc6769cc3
 pkg-dfn50p500x500x95-16-circle-silkscreen-hand-soldering,c52e322b-e67a-46b3-bff0-bdf7ae280f2d
 pkg-dfn50p500x500x95-16-circle-silkscreen-reflow,d9b37d5c-208a-49c9-be78-85fee2076076
 pkg-dfn50p500x500x95-16-footprint-hand-soldering,ac0fe1f2-86f7-4909-abf0-d6e04e25290d
@@ -6809,6 +7014,7 @@ pkg-dfn50p500x500x95-16-text-name-hand-soldering,d4e3e9cc-2536-40db-884c-20d4318
 pkg-dfn50p500x500x95-16-text-name-reflow,c17ec4aa-a37d-42c0-be00-c71e73b2d09d
 pkg-dfn50p500x500x95-16-text-value-hand-soldering,4d4c9bbd-c465-43b7-9d60-e0ebc590be83
 pkg-dfn50p500x500x95-16-text-value-reflow,15ce47a5-2f84-4482-8258-b478cf87f7bd
+pkg-dfn50p500x500x95-16t420x360-body-outline,97363509-8cee-42bc-ac2b-8bcf8d926c74
 pkg-dfn50p500x500x95-16t420x360-circle-silkscreen-hand-soldering,f0d69078-cc1d-4dba-9de9-c9f5680ce623
 pkg-dfn50p500x500x95-16t420x360-circle-silkscreen-reflow,0f282826-fb30-4a36-b0fc-95f6dbf6b291
 pkg-dfn50p500x500x95-16t420x360-exposed,fe2884cb-61b1-4614-9d60-1e49b429b1e9
@@ -6856,6 +7062,7 @@ pkg-dfn50p500x500x95-16t420x360-text-name-hand-soldering,d4cf51db-2453-489d-bab2
 pkg-dfn50p500x500x95-16t420x360-text-name-reflow,9bafde6b-57ce-4ee9-acc8-e04db901c0e1
 pkg-dfn50p500x500x95-16t420x360-text-value-hand-soldering,6fbacbe1-c120-4ebe-8929-1105ea8f422b
 pkg-dfn50p500x500x95-16t420x360-text-value-reflow,1d1e2a5c-624e-4419-9557-3efda8007ccf
+pkg-dfn50p500x500x95-18-body-outline,9f7da274-83df-4f0e-b510-dbd55678fd78
 pkg-dfn50p500x500x95-18-circle-silkscreen-hand-soldering,d7fe90fa-b0b6-4e21-afe7-219b292b8ec8
 pkg-dfn50p500x500x95-18-circle-silkscreen-reflow,a88fe1dc-a3d9-456b-b22b-9da2d2be9f24
 pkg-dfn50p500x500x95-18-footprint-hand-soldering,baf226eb-9f0a-4d3f-ae10-0177c855961a
@@ -6905,6 +7112,7 @@ pkg-dfn50p500x500x95-18-text-name-hand-soldering,befe1c0d-c83c-47ed-9f55-6915930
 pkg-dfn50p500x500x95-18-text-name-reflow,491e7f81-a9de-4709-a9f5-54332d62d580
 pkg-dfn50p500x500x95-18-text-value-hand-soldering,14b54dac-d1ce-4721-ad41-7acd0f92ddae
 pkg-dfn50p500x500x95-18-text-value-reflow,9752be5e-817c-4653-b530-06803797156e
+pkg-dfn50p500x500x95-18t420x360-body-outline,0a6be10f-5008-4a77-80f4-833a3ac50ba9
 pkg-dfn50p500x500x95-18t420x360-circle-silkscreen-hand-soldering,a8476b3f-615b-4fd3-b076-302f320b66cb
 pkg-dfn50p500x500x95-18t420x360-circle-silkscreen-reflow,8264bc9c-5dd3-4000-8d40-0cd3ca9fdcad
 pkg-dfn50p500x500x95-18t420x360-exposed,f98f9285-05a7-4847-a430-2ae9c93ff1aa
@@ -6956,6 +7164,7 @@ pkg-dfn50p500x500x95-18t420x360-text-name-hand-soldering,27b0c6da-7000-4831-ab38
 pkg-dfn50p500x500x95-18t420x360-text-name-reflow,563c3c73-1f4d-4099-90b3-2f40538bcd28
 pkg-dfn50p500x500x95-18t420x360-text-value-hand-soldering,3f4d7914-1277-424b-83e3-84df0482e376
 pkg-dfn50p500x500x95-18t420x360-text-value-reflow,96169e20-8818-4718-b082-b39f95c8a11d
+pkg-dfn50p600x500x75-16t470x340-body-outline,eef9cf1b-5197-4226-b5b5-1fc50d0725de
 pkg-dfn50p600x500x75-16t470x340-circle-silkscreen-hand-soldering,46fe0375-b515-4ec0-91c2-9cd2ff4a876b
 pkg-dfn50p600x500x75-16t470x340-circle-silkscreen-reflow,5b352020-5d14-4acf-a254-87c757557329
 pkg-dfn50p600x500x75-16t470x340-exposed,2a20d361-cde7-431d-8377-c689e3ef5380
@@ -7003,6 +7212,7 @@ pkg-dfn50p600x500x75-16t470x340-text-name-hand-soldering,dcc861eb-aa5b-4da2-88d3
 pkg-dfn50p600x500x75-16t470x340-text-name-reflow,31620294-73b5-4cdc-bd40-ecacbfb1f6f9
 pkg-dfn50p600x500x75-16t470x340-text-value-hand-soldering,7d53d7c6-3a99-44ec-9874-4939182de6bc
 pkg-dfn50p600x500x75-16t470x340-text-value-reflow,1ff0eaeb-a671-474d-801d-3f9b7a191a72
+pkg-dfn50p600x500x75-18t470x340-body-outline,f5db81a8-e263-44ad-9569-7a0b7642ccb0
 pkg-dfn50p600x500x75-18t470x340-circle-silkscreen-hand-soldering,17c6109e-b9ec-4505-91f9-0d124e55fdc6
 pkg-dfn50p600x500x75-18t470x340-circle-silkscreen-reflow,c323073f-0007-4aff-8eb6-d4b0e103aba5
 pkg-dfn50p600x500x75-18t470x340-exposed,fa4688eb-e27a-4ba0-acec-81537ad41a1e
@@ -7054,6 +7264,7 @@ pkg-dfn50p600x500x75-18t470x340-text-name-hand-soldering,d4a445bf-1c38-484d-ba38
 pkg-dfn50p600x500x75-18t470x340-text-name-reflow,4b2d762b-2e53-4931-922f-0b99e049d4a2
 pkg-dfn50p600x500x75-18t470x340-text-value-hand-soldering,41556f24-9fa9-4422-934e-04eec15a51ca
 pkg-dfn50p600x500x75-18t470x340-text-value-reflow,928c034d-8c89-49d8-82b4-aa91fb84e611
+pkg-dfn50p600x500x95-16t470x340-body-outline,f368c8ef-2ebb-43df-9422-b8ce43ef1485
 pkg-dfn50p600x500x95-16t470x340-circle-silkscreen-hand-soldering,3a4d9980-564a-4c17-bfa9-462b19ba4ba9
 pkg-dfn50p600x500x95-16t470x340-circle-silkscreen-reflow,7eac21e9-1630-4b17-a8f8-e1aefffc536a
 pkg-dfn50p600x500x95-16t470x340-exposed,f7e1da4a-095e-41fa-a1ef-9a5ebfbe5531
@@ -7101,6 +7312,7 @@ pkg-dfn50p600x500x95-16t470x340-text-name-hand-soldering,2ba6bafc-fee4-43c8-a5c2
 pkg-dfn50p600x500x95-16t470x340-text-name-reflow,b5b01753-e3a5-4241-baf3-25fb7d043fef
 pkg-dfn50p600x500x95-16t470x340-text-value-hand-soldering,5e8598c4-390a-4204-bf06-b13ca21b699f
 pkg-dfn50p600x500x95-16t470x340-text-value-reflow,12698187-e870-412a-b0c0-12c175e948ab
+pkg-dfn50p600x500x95-18t470x340-body-outline,a11e2cf8-c890-4675-ad25-e8ede85238f4
 pkg-dfn50p600x500x95-18t470x340-circle-silkscreen-hand-soldering,a97c5a34-ffc0-4558-9f4e-01b22db0c1b0
 pkg-dfn50p600x500x95-18t470x340-circle-silkscreen-reflow,213696d3-6d8c-492c-8c67-1ac18f589df7
 pkg-dfn50p600x500x95-18t470x340-exposed,d9c731ca-ed3d-4b94-a29d-6cf798b40a59
@@ -7152,6 +7364,7 @@ pkg-dfn50p600x500x95-18t470x340-text-name-hand-soldering,f44ce319-7220-433a-bf2d
 pkg-dfn50p600x500x95-18t470x340-text-name-reflow,cf17e599-524f-41b0-82ac-68497b403f68
 pkg-dfn50p600x500x95-18t470x340-text-value-hand-soldering,8bbab69f-33ec-40ba-925b-551f38088170
 pkg-dfn50p600x500x95-18t470x340-text-value-reflow,068c8743-4775-4e79-ad0b-f93ae648c141
+pkg-dfn65p200x200x95-6-body-outline,d99ea0e8-3b68-4a5b-ac72-b045b621a3f6
 pkg-dfn65p200x200x95-6-circle-silkscreen-hand-soldering,8e5d733e-9fee-49ee-be28-f53c0cf46719
 pkg-dfn65p200x200x95-6-circle-silkscreen-reflow,a384cbab-f732-4c1b-8c81-32af1677758d
 pkg-dfn65p200x200x95-6-footprint-hand-soldering,d5d6855f-c3b2-4e44-a108-8c5240068c9d
@@ -7177,6 +7390,7 @@ pkg-dfn65p200x200x95-6-text-name-hand-soldering,3fa99dbf-8b68-48fc-a883-b70aeb1e
 pkg-dfn65p200x200x95-6-text-name-reflow,eb1ee2b6-a933-461f-8e6c-f1565506d6c9
 pkg-dfn65p200x200x95-6-text-value-hand-soldering,e1e1d95b-be6d-44a3-8322-96e14e8e6549
 pkg-dfn65p200x200x95-6-text-value-reflow,9e0b8467-11f6-4786-8362-60496ec0b852
+pkg-dfn65p200x200x95-6t158x65-body-outline,053cfeef-bf63-4685-ae17-4b06bc375b2a
 pkg-dfn65p200x200x95-6t158x65-circle-silkscreen-hand-soldering,05a6e792-0e99-45f9-bbda-e8de6a084437
 pkg-dfn65p200x200x95-6t158x65-circle-silkscreen-reflow,ac75663a-cc49-4561-bdd8-1eac24df0789
 pkg-dfn65p200x200x95-6t158x65-exposed,9a89d410-eb20-4877-9d05-0249e2687e17
@@ -7204,6 +7418,7 @@ pkg-dfn65p200x200x95-6t158x65-text-name-hand-soldering,87e1773e-ca91-4545-80e9-f
 pkg-dfn65p200x200x95-6t158x65-text-name-reflow,df63c455-6cad-4490-bab0-8bcadbbd3803
 pkg-dfn65p200x200x95-6t158x65-text-value-hand-soldering,9af66798-57ac-41b7-ab4e-835fbdc13507
 pkg-dfn65p200x200x95-6t158x65-text-value-reflow,98647a7a-07d2-45d5-9471-7b1993abef77
+pkg-dfn65p300x200x95-8-body-outline,2b08a74c-79e9-4126-83b4-11dd4dca9cbf
 pkg-dfn65p300x200x95-8-circle-silkscreen-hand-soldering,7b57b4f1-dad6-4552-8193-d1489aae8391
 pkg-dfn65p300x200x95-8-circle-silkscreen-reflow,97b79a17-123f-45e8-852a-1f48bc1b8b31
 pkg-dfn65p300x200x95-8-footprint-hand-soldering,cc1c01d5-5ea7-4fa9-8224-747095656542
@@ -7233,6 +7448,7 @@ pkg-dfn65p300x200x95-8-text-name-hand-soldering,7baa757f-195c-4b3e-9490-988b8421
 pkg-dfn65p300x200x95-8-text-name-reflow,d2e17870-cb87-4783-9f41-7c633fbbf604
 pkg-dfn65p300x200x95-8-text-value-hand-soldering,2215ee14-18e1-40af-ae0f-84370fc0d6be
 pkg-dfn65p300x200x95-8-text-value-reflow,b8cef2e4-fd93-4aa4-9fc1-cff836cb5483
+pkg-dfn65p300x200x95-8t220x60-body-outline,8ca8e55f-cefa-455d-9414-1f51e3898062
 pkg-dfn65p300x200x95-8t220x60-circle-silkscreen-hand-soldering,f56c9e50-8861-4ad2-85d7-7105fbd34d7d
 pkg-dfn65p300x200x95-8t220x60-circle-silkscreen-reflow,72185525-9300-4fde-9a4a-5428b973395b
 pkg-dfn65p300x200x95-8t220x60-exposed,52cd62a3-de96-4ad2-933d-bce05fa56744
@@ -7264,6 +7480,7 @@ pkg-dfn65p300x200x95-8t220x60-text-name-hand-soldering,8f54b523-ee93-4113-98d3-2
 pkg-dfn65p300x200x95-8t220x60-text-name-reflow,971b47cb-26a7-4367-8805-cd96ceb13409
 pkg-dfn65p300x200x95-8t220x60-text-value-hand-soldering,1ebc2865-e080-4af9-a91e-249dfde29f71
 pkg-dfn65p300x200x95-8t220x60-text-value-reflow,a04560c5-c9c6-40e5-89a7-ab4f1eb6e711
+pkg-dfn65p300x300x75-8t250x175-body-outline,6fca2c63-9788-4725-b55d-8034c91da31a
 pkg-dfn65p300x300x75-8t250x175-circle-silkscreen-hand-soldering,66df05ba-230c-4218-8feb-bf803d0c8016
 pkg-dfn65p300x300x75-8t250x175-circle-silkscreen-reflow,e17fcaff-d444-4939-b3be-3b2b4bb1517b
 pkg-dfn65p300x300x75-8t250x175-exposed,9ba174b3-25f2-4b19-826c-d644376cb1f5
@@ -7295,6 +7512,7 @@ pkg-dfn65p300x300x75-8t250x175-text-name-hand-soldering,e7e43a4c-740d-4dc7-818d-
 pkg-dfn65p300x300x75-8t250x175-text-name-reflow,6bfa32c1-b7b3-4c1e-a484-73461cde7999
 pkg-dfn65p300x300x75-8t250x175-text-value-hand-soldering,2dd208d2-383f-468c-aef7-0ab519386552
 pkg-dfn65p300x300x75-8t250x175-text-value-reflow,0f66d300-07a2-4e58-be82-50c49d1b1a73
+pkg-dfn65p300x300x95-8-body-outline,87e6a444-4f61-4fc7-a420-842b1675a6af
 pkg-dfn65p300x300x95-8-circle-silkscreen-hand-soldering,06f9db6b-8843-4c84-be31-97ed71f046cc
 pkg-dfn65p300x300x95-8-circle-silkscreen-reflow,ec34f5ff-5ff8-4028-90a9-637ea1cf78a0
 pkg-dfn65p300x300x95-8-footprint-hand-soldering,286dacfa-ae25-4fd6-a156-137a13a02c4f
@@ -7324,6 +7542,7 @@ pkg-dfn65p300x300x95-8-text-name-hand-soldering,3b5efc76-8f17-4590-a55c-b3ed4bdc
 pkg-dfn65p300x300x95-8-text-name-reflow,646fa378-607f-4eab-a441-b6d637145832
 pkg-dfn65p300x300x95-8-text-value-hand-soldering,5a7a84c5-c818-40ab-ad44-0cacbf2e734b
 pkg-dfn65p300x300x95-8-text-value-reflow,fe640866-589d-4f63-bc48-02606bd638c4
+pkg-dfn65p300x300x95-8t225x130-body-outline,6ad4de45-65db-4a53-beda-9d6603602537
 pkg-dfn65p300x300x95-8t225x130-circle-silkscreen-hand-soldering,0006f4c3-1c37-445f-9682-70f00bb37e2d
 pkg-dfn65p300x300x95-8t225x130-circle-silkscreen-reflow,c70a158f-d4f8-4073-8865-d8b81d9af592
 pkg-dfn65p300x300x95-8t225x130-exposed,ea9a7fbc-6bf7-4096-a4f3-cc2c5a7f9501
@@ -7355,6 +7574,7 @@ pkg-dfn65p300x300x95-8t225x130-text-name-hand-soldering,8d5607b4-02a8-41b3-8dba-
 pkg-dfn65p300x300x95-8t225x130-text-name-reflow,13a7c8ab-53dd-4a2a-add8-74556761328e
 pkg-dfn65p300x300x95-8t225x130-text-value-hand-soldering,77a98152-a65b-4f41-83ad-4b3062710fc8
 pkg-dfn65p300x300x95-8t225x130-text-value-reflow,aeddfe1c-213a-45b0-b97f-055ecc99ca3e
+pkg-dfn65p300x300x95-8t250x175-body-outline,d6927701-acb2-43cf-aa16-6e9b69523edf
 pkg-dfn65p300x300x95-8t250x175-circle-silkscreen-hand-soldering,9658897e-e245-47d0-bf9d-58db735a7bb7
 pkg-dfn65p300x300x95-8t250x175-circle-silkscreen-reflow,5c672c64-ddbc-4d30-9753-3fedda0b0f91
 pkg-dfn65p300x300x95-8t250x175-exposed,f21f23e2-affc-44bf-860c-c3ccc4c01d49
@@ -7386,6 +7606,7 @@ pkg-dfn65p300x300x95-8t250x175-text-name-hand-soldering,726cf329-4def-494c-9154-
 pkg-dfn65p300x300x95-8t250x175-text-name-reflow,4dd62cc8-30af-4bbc-acf2-8b771e6aba78
 pkg-dfn65p300x300x95-8t250x175-text-value-hand-soldering,3862faef-e687-4e40-b5db-29bbece6527c
 pkg-dfn65p300x300x95-8t250x175-text-value-reflow,de94f30b-107f-4a65-8557-d3d760491cd1
+pkg-dfn65p400x400x75-10t350x280-body-outline,2d70aa91-79ca-4ac1-85ab-a56bb328cf7b
 pkg-dfn65p400x400x75-10t350x280-circle-silkscreen-hand-soldering,01df3194-b843-48d9-9dfe-d63dae5a0ebb
 pkg-dfn65p400x400x75-10t350x280-circle-silkscreen-reflow,2181d6b2-72d2-45eb-bac2-2857940a66ce
 pkg-dfn65p400x400x75-10t350x280-exposed,d1167506-68c7-4dc7-9ef0-1cae061dd873
@@ -7421,6 +7642,7 @@ pkg-dfn65p400x400x75-10t350x280-text-name-hand-soldering,17f56ceb-1791-4b31-96c4
 pkg-dfn65p400x400x75-10t350x280-text-name-reflow,952970f1-0fb2-40ad-b905-b8b19c848020
 pkg-dfn65p400x400x75-10t350x280-text-value-hand-soldering,66de7e64-f678-4109-b9dd-91985a18b55c
 pkg-dfn65p400x400x75-10t350x280-text-value-reflow,f243c1b6-e912-4fd1-9215-9eb3df34d81a
+pkg-dfn65p400x400x95-10t350x280-body-outline,83dc72d0-6919-45ed-a540-4c6dc5812603
 pkg-dfn65p400x400x95-10t350x280-circle-silkscreen-hand-soldering,74766307-db81-47a7-ac42-5d643defbe27
 pkg-dfn65p400x400x95-10t350x280-circle-silkscreen-reflow,62761bd1-3492-492a-8e3f-2dc74cc805d7
 pkg-dfn65p400x400x95-10t350x280-exposed,8584bd54-d908-4dfc-b370-95baa30c7027
@@ -7456,6 +7678,7 @@ pkg-dfn65p400x400x95-10t350x280-text-name-hand-soldering,18ab32c4-70f4-4b01-b398
 pkg-dfn65p400x400x95-10t350x280-text-name-reflow,9a9eb84f-40e7-45eb-a7a9-d8d9392703dc
 pkg-dfn65p400x400x95-10t350x280-text-value-hand-soldering,ad2a0246-9ea4-488e-9601-fb79ec3268df
 pkg-dfn65p400x400x95-10t350x280-text-value-reflow,3eb1e7dc-3fe6-499b-bf08-5fb07007a85c
+pkg-dfn80p200x250x75-4-body-outline,b9fc0f51-c1b1-464f-8151-9d8b40c82f7f
 pkg-dfn80p200x250x75-4-circle-silkscreen-hand-soldering,69ca812a-feb3-428b-b1a2-5072aa21cb48
 pkg-dfn80p200x250x75-4-circle-silkscreen-reflow,347f0072-2e8f-4ac0-8c98-3d8f255a7384
 pkg-dfn80p200x250x75-4-footprint-hand-soldering,4ca85b49-6694-4d45-9aa6-290e623a65cd
@@ -7477,6 +7700,7 @@ pkg-dfn80p200x250x75-4-text-name-hand-soldering,ef0de264-5cef-43d0-a8c8-e7a266e7
 pkg-dfn80p200x250x75-4-text-name-reflow,0456b8bd-2965-45c3-8cf1-dc0d5321b77e
 pkg-dfn80p200x250x75-4-text-value-hand-soldering,695e3304-076f-4f4b-a134-54d62ebff036
 pkg-dfn80p200x250x75-4-text-value-reflow,b5de0008-6052-48b5-80c8-6546ec8a07a4
+pkg-dfn80p200x250x75-4t100x70-body-outline,8b5d7cee-5b8e-492f-977f-5bb1409c0567
 pkg-dfn80p200x250x75-4t100x70-circle-silkscreen-hand-soldering,3769de5c-77d2-4adf-94a5-7d610f3bf3f1
 pkg-dfn80p200x250x75-4t100x70-circle-silkscreen-reflow,f22675c8-5437-46d2-acd1-61a102a53686
 pkg-dfn80p200x250x75-4t100x70-exposed,b6bd72f5-988b-46af-be43-2435064a795c
@@ -7500,6 +7724,7 @@ pkg-dfn80p200x250x75-4t100x70-text-name-hand-soldering,177ed2cc-a3b2-4f64-9db3-f
 pkg-dfn80p200x250x75-4t100x70-text-name-reflow,93c27e3a-1fb4-4f91-9362-fc8234bff5eb
 pkg-dfn80p200x250x75-4t100x70-text-value-hand-soldering,67e35f00-d02e-460a-8ad1-ad6fad1bd446
 pkg-dfn80p200x250x75-4t100x70-text-value-reflow,6f4cdd8b-1b48-4884-87b0-52fd61b05780
+pkg-dfn80p200x250x95-4-body-outline,a3ecbd58-d955-4680-a16e-051c0237a7c5
 pkg-dfn80p200x250x95-4-circle-silkscreen-hand-soldering,5b167100-0748-4934-9d8c-d507f6e2761f
 pkg-dfn80p200x250x95-4-circle-silkscreen-reflow,2323c9f1-3349-40d4-983f-0cd81247a586
 pkg-dfn80p200x250x95-4-footprint-hand-soldering,6aec924e-85a4-4477-a4d6-efe8956a9c23
@@ -7521,6 +7746,7 @@ pkg-dfn80p200x250x95-4-text-name-hand-soldering,557cf48a-c4d9-4cb3-b214-8371e984
 pkg-dfn80p200x250x95-4-text-name-reflow,1fe98eb0-a4d3-47ed-a2c0-596848eb9f42
 pkg-dfn80p200x250x95-4-text-value-hand-soldering,da534eaa-22fc-4c69-a71b-6eecc344bad8
 pkg-dfn80p200x250x95-4-text-value-reflow,314c1f6c-3ef6-4a50-9d34-386a4a44a69e
+pkg-dfn80p200x250x95-4t100x70-body-outline,260ed74d-3957-4ef5-8a8b-cbc52756b214
 pkg-dfn80p200x250x95-4t100x70-circle-silkscreen-hand-soldering,b8f1dc70-dba1-4c1e-9fa5-bc4d8d6c62c5
 pkg-dfn80p200x250x95-4t100x70-circle-silkscreen-reflow,4e7cb01c-9914-4e31-86e5-23ed2e87d970
 pkg-dfn80p200x250x95-4t100x70-exposed,de5d544b-038e-424c-ab81-f393e9de30b7
@@ -7544,6 +7770,7 @@ pkg-dfn80p200x250x95-4t100x70-text-name-hand-soldering,b214708a-8a06-4470-a608-2
 pkg-dfn80p200x250x95-4t100x70-text-name-reflow,7e90be44-1402-469e-856e-af6d716a2a85
 pkg-dfn80p200x250x95-4t100x70-text-value-hand-soldering,cc4e2f65-3a09-4a84-8d94-cc78364e8025
 pkg-dfn80p200x250x95-4t100x70-text-value-reflow,106b0f13-419f-4093-ac3e-e656177b690b
+pkg-dfn80p250x250x75-6-body-outline,d52b3116-6081-4348-ab7e-00073ff2b6be
 pkg-dfn80p250x250x75-6-circle-silkscreen-hand-soldering,a2f0b3f6-1f29-4d91-871f-12edac6c91cb
 pkg-dfn80p250x250x75-6-circle-silkscreen-reflow,c8616c4d-ca98-4a21-ba44-9659cd1e6fa7
 pkg-dfn80p250x250x75-6-footprint-hand-soldering,0053c93b-1485-413b-b6b2-59e1f4ec9bfc
@@ -7569,6 +7796,7 @@ pkg-dfn80p250x250x75-6-text-name-hand-soldering,a726f52d-ec02-4692-ad47-a9a52967
 pkg-dfn80p250x250x75-6-text-name-reflow,1353bb38-924d-43dd-9c6a-c8534b754cfd
 pkg-dfn80p250x250x75-6-text-value-hand-soldering,d6aba962-8eea-44c2-bcf1-a2ed6151a7a0
 pkg-dfn80p250x250x75-6-text-value-reflow,ef6c3274-e3ba-4ef0-96ad-193798662373
+pkg-dfn80p250x250x75-6t150x70-body-outline,811f65bd-69c5-43fa-b15b-74b9d07c8dca
 pkg-dfn80p250x250x75-6t150x70-circle-silkscreen-hand-soldering,5c76c1d4-d95f-47a5-a448-d0fdb1d6f5c3
 pkg-dfn80p250x250x75-6t150x70-circle-silkscreen-reflow,63b1170f-cee9-47fd-adc3-85b751be8fae
 pkg-dfn80p250x250x75-6t150x70-exposed,9ec8d654-7c87-4bdc-8284-c3c03fa28d7e
@@ -7596,6 +7824,7 @@ pkg-dfn80p250x250x75-6t150x70-text-name-hand-soldering,1f182b52-d669-474b-a037-c
 pkg-dfn80p250x250x75-6t150x70-text-name-reflow,dfcc6db6-4d7e-4680-9eb2-774246f8920d
 pkg-dfn80p250x250x75-6t150x70-text-value-hand-soldering,c534ce0d-7504-4211-9461-cc8b62c4c9cf
 pkg-dfn80p250x250x75-6t150x70-text-value-reflow,53a2d671-6184-4e5b-8f3a-8d0d49de6a63
+pkg-dfn80p250x250x95-6-body-outline,bc9f8ddb-a4d6-4766-a6da-1398aba799e3
 pkg-dfn80p250x250x95-6-circle-silkscreen-hand-soldering,84962243-a2ff-4edd-a5b4-c294fbb97e30
 pkg-dfn80p250x250x95-6-circle-silkscreen-reflow,0dc140f2-b738-456f-abba-61948a15da78
 pkg-dfn80p250x250x95-6-footprint-hand-soldering,7cb9779b-65bd-40e7-80ab-017067529176
@@ -7621,6 +7850,7 @@ pkg-dfn80p250x250x95-6-text-name-hand-soldering,3d82e7a5-51e8-40ee-8c13-a5a9a4c3
 pkg-dfn80p250x250x95-6-text-name-reflow,3f6b58c0-c667-4648-91d7-80209a554029
 pkg-dfn80p250x250x95-6-text-value-hand-soldering,2f31209e-7d71-46e2-b3d4-5c40dd1be128
 pkg-dfn80p250x250x95-6-text-value-reflow,e796bf96-fdf4-42c9-867a-bd3a8ea5b8e5
+pkg-dfn80p250x250x95-6t150x70-body-outline,5faf5015-ada3-43dc-9124-c3989a28f67c
 pkg-dfn80p250x250x95-6t150x70-circle-silkscreen-hand-soldering,70869ffc-414d-4e7c-b598-e6e71a0f3604
 pkg-dfn80p250x250x95-6t150x70-circle-silkscreen-reflow,a73142a5-a0e1-46bd-8601-985a4ba09f2d
 pkg-dfn80p250x250x95-6t150x70-exposed,35d0de71-bbd5-4b3b-89eb-01a20debe93e
@@ -7648,6 +7878,7 @@ pkg-dfn80p250x250x95-6t150x70-text-name-hand-soldering,060dcfdb-56c2-4359-9eaa-7
 pkg-dfn80p250x250x95-6t150x70-text-name-reflow,0780e24a-3ad7-488a-9f54-93688ba79ae3
 pkg-dfn80p250x250x95-6t150x70-text-value-hand-soldering,66cdce25-1de0-4766-b5fb-21d213968c1c
 pkg-dfn80p250x250x95-6t150x70-text-value-reflow,d7e7d1e9-93d7-4689-b3aa-04830a5dda7a
+pkg-dfn80p250x300x75-6-body-outline,1c65f58d-cc40-4361-ae7f-51b57ad1039c
 pkg-dfn80p250x300x75-6-circle-silkscreen-hand-soldering,462243cc-7be6-4531-a3fb-a634df506279
 pkg-dfn80p250x300x75-6-circle-silkscreen-reflow,34c4448e-a485-40bf-a7be-087c0efc6d9a
 pkg-dfn80p250x300x75-6-footprint-hand-soldering,32151730-1cfe-4d2e-a5d5-65d39ba0d9c6
@@ -7673,6 +7904,7 @@ pkg-dfn80p250x300x75-6-text-name-hand-soldering,cb6a32db-1d73-4db8-ada7-504e8b11
 pkg-dfn80p250x300x75-6-text-name-reflow,37e9597b-0b15-4e99-b33c-6f2e66a0d9f3
 pkg-dfn80p250x300x75-6-text-value-hand-soldering,54255c41-f0cd-40ee-aa23-2f711b68254a
 pkg-dfn80p250x300x75-6-text-value-reflow,c18e4615-4d0c-4031-b716-e626193df4c2
+pkg-dfn80p250x300x75-6t150x120-body-outline,e65cdb45-0586-4259-b870-6d29bfd6443e
 pkg-dfn80p250x300x75-6t150x120-circle-silkscreen-hand-soldering,4bfb2fc5-4e95-4387-8f05-94aa6ba8a062
 pkg-dfn80p250x300x75-6t150x120-circle-silkscreen-reflow,5444a8f2-a2b7-46d7-848e-cf8ea7d8db46
 pkg-dfn80p250x300x75-6t150x120-exposed,8a1c9723-6d87-411e-8da5-dca92eb80bed
@@ -7700,6 +7932,7 @@ pkg-dfn80p250x300x75-6t150x120-text-name-hand-soldering,9d9ea199-9ace-4b10-81ff-
 pkg-dfn80p250x300x75-6t150x120-text-name-reflow,dcb79194-b864-472c-bbbf-2c47af802fc6
 pkg-dfn80p250x300x75-6t150x120-text-value-hand-soldering,61e99b5b-1621-4cfd-a5c2-fcdb7ac67591
 pkg-dfn80p250x300x75-6t150x120-text-value-reflow,78b5d0a5-3986-42d0-94cb-efe6c94b02cd
+pkg-dfn80p250x300x95-6-body-outline,fc8b6781-ea88-4761-be4f-b004f10d94c9
 pkg-dfn80p250x300x95-6-circle-silkscreen-hand-soldering,486a5e39-cc3b-43ef-814b-817cf4be5b5a
 pkg-dfn80p250x300x95-6-circle-silkscreen-reflow,6bf8c497-8af8-425d-81bb-37c1e8a66488
 pkg-dfn80p250x300x95-6-footprint-hand-soldering,3dfd74b6-0c7f-4fe4-b2a1-f99eaab63ef9
@@ -7725,6 +7958,7 @@ pkg-dfn80p250x300x95-6-text-name-hand-soldering,78fe4141-6225-43d3-8e27-64e14f32
 pkg-dfn80p250x300x95-6-text-name-reflow,4b2fbd75-51ac-44be-9883-1ec24e5fd6c3
 pkg-dfn80p250x300x95-6-text-value-hand-soldering,3a46b4b9-d583-4fda-ab9e-02a24255aab4
 pkg-dfn80p250x300x95-6-text-value-reflow,38d87c51-b107-432e-8360-7439987b8c98
+pkg-dfn80p250x300x95-6t150x120-body-outline,8e20bb42-f7c5-442c-9c8e-c7457c76dd9c
 pkg-dfn80p250x300x95-6t150x120-circle-silkscreen-hand-soldering,62cc374d-f6fb-4b24-a4be-d6575b7df988
 pkg-dfn80p250x300x95-6t150x120-circle-silkscreen-reflow,c96b4c2c-9ffb-4f42-9c0f-8076b27b68db
 pkg-dfn80p250x300x95-6t150x120-exposed,3c32716b-1189-4b77-b38d-ffeeccf19191
@@ -7752,6 +7986,7 @@ pkg-dfn80p250x300x95-6t150x120-text-name-hand-soldering,5b561524-fe0d-4531-ac84-
 pkg-dfn80p250x300x95-6t150x120-text-name-reflow,fec768ac-4411-4b90-85f2-5bcecbba440c
 pkg-dfn80p250x300x95-6t150x120-text-value-hand-soldering,3f3ef54f-3d73-429a-8a39-e9987a94b2fa
 pkg-dfn80p250x300x95-6t150x120-text-value-reflow,bb273e85-54d5-4537-8c33-edb1ea3fb013
+pkg-dfn80p300x300x75-6-body-outline,54589527-a2eb-45c7-9944-368f407a7f29
 pkg-dfn80p300x300x75-6-circle-silkscreen-hand-soldering,6633f74b-9afb-4053-a6f0-67f4f1985394
 pkg-dfn80p300x300x75-6-circle-silkscreen-reflow,3b264f78-4e7c-42ac-864f-379a4879bf52
 pkg-dfn80p300x300x75-6-footprint-hand-soldering,82918f08-9796-42ca-9fdd-39bdef02bba1
@@ -7777,6 +8012,7 @@ pkg-dfn80p300x300x75-6-text-name-hand-soldering,c1a7a6ec-10a5-411a-9c94-b0b6585c
 pkg-dfn80p300x300x75-6-text-name-reflow,6d56c6df-3a0f-4aa2-b9c3-23a28428f7fb
 pkg-dfn80p300x300x75-6-text-value-hand-soldering,859b46bf-f2b8-4fa3-8925-0d37383d5b33
 pkg-dfn80p300x300x75-6-text-value-reflow,b824726e-9d91-451a-9c6a-4984e2817752
+pkg-dfn80p300x300x75-6t220x130-body-outline,ce149daa-5ada-4a8f-a751-27efbac95447
 pkg-dfn80p300x300x75-6t220x130-circle-silkscreen-hand-soldering,d782b2aa-60fe-4942-8068-96e547df686d
 pkg-dfn80p300x300x75-6t220x130-circle-silkscreen-reflow,129853d2-e966-46ee-bc03-c72ea3d1d61d
 pkg-dfn80p300x300x75-6t220x130-exposed,093a19ae-7e13-4e04-89db-4c73bf52a098
@@ -7804,6 +8040,7 @@ pkg-dfn80p300x300x75-6t220x130-text-name-hand-soldering,0f536e06-052b-4bf9-9df5-
 pkg-dfn80p300x300x75-6t220x130-text-name-reflow,838f2301-7662-4285-a9fe-437cb0007634
 pkg-dfn80p300x300x75-6t220x130-text-value-hand-soldering,9eac7f82-c832-46f5-b746-1a3825ddeebb
 pkg-dfn80p300x300x75-6t220x130-text-value-reflow,2878f0d4-11f5-4bbc-89c0-aaf7ad80828a
+pkg-dfn80p300x300x95-6-body-outline,bd9e833e-f4bc-46fb-82e6-e529d92f9f55
 pkg-dfn80p300x300x95-6-circle-silkscreen-hand-soldering,f7ad8aef-6ece-439c-8d0f-3343226f8fd8
 pkg-dfn80p300x300x95-6-circle-silkscreen-reflow,ed99f614-f412-409e-92de-bab55dbfadb1
 pkg-dfn80p300x300x95-6-footprint-hand-soldering,3e382e96-df8c-430b-9e57-99fce88b95c0
@@ -7829,6 +8066,7 @@ pkg-dfn80p300x300x95-6-text-name-hand-soldering,c5cfcd60-d4e6-4cbd-98c7-07847b9c
 pkg-dfn80p300x300x95-6-text-name-reflow,9c60b771-6aae-4503-af2c-ac028c477250
 pkg-dfn80p300x300x95-6-text-value-hand-soldering,65a15518-20d7-4085-b732-cb3ee110b7fd
 pkg-dfn80p300x300x95-6-text-value-reflow,76f2868a-4ef9-46fc-8e95-c015afb6ae18
+pkg-dfn80p300x300x95-6t220x130-body-outline,518c5674-5009-4015-9d4b-f67cf50a2d8b
 pkg-dfn80p300x300x95-6t220x130-circle-silkscreen-hand-soldering,dc202a0a-4b83-4b83-8e99-e5efdc3e83cf
 pkg-dfn80p300x300x95-6t220x130-circle-silkscreen-reflow,4d61f98e-f80e-412c-8a6a-0e7dffd60140
 pkg-dfn80p300x300x95-6t220x130-exposed,46e9a49f-fccc-44d4-ae21-dddcd66bdd2e
@@ -7856,6 +8094,7 @@ pkg-dfn80p300x300x95-6t220x130-text-name-hand-soldering,2543cb38-5623-4b04-8de4-
 pkg-dfn80p300x300x95-6t220x130-text-name-reflow,1bb4a45e-a353-41fb-b77c-1083c149b83c
 pkg-dfn80p300x300x95-6t220x130-text-value-hand-soldering,b8a96d58-81fb-4e76-b66a-ac632db84be8
 pkg-dfn80p300x300x95-6t220x130-text-value-reflow,2c517685-a52f-48ae-a902-17d255275f55
+pkg-dfn80p300x400x75-6-body-outline,1f79db12-52ac-45c2-ba8a-311010ed5923
 pkg-dfn80p300x400x75-6-circle-silkscreen-hand-soldering,dee8ad13-2562-433c-8b54-0b6e8dc371f9
 pkg-dfn80p300x400x75-6-circle-silkscreen-reflow,05c0b9c1-8fdd-46ed-a2bc-2b801073bf99
 pkg-dfn80p300x400x75-6-footprint-hand-soldering,81347f78-bb18-49f6-9860-6ff86806acd8
@@ -7881,6 +8120,7 @@ pkg-dfn80p300x400x75-6-text-name-hand-soldering,f65b514a-0287-4393-aa3b-17dcd792
 pkg-dfn80p300x400x75-6-text-name-reflow,283233cf-ba62-4d91-abd3-301783282734
 pkg-dfn80p300x400x75-6-text-value-hand-soldering,c39e7467-4956-4614-876d-c5bbf87165d3
 pkg-dfn80p300x400x75-6-text-value-reflow,f8fa436a-3c4a-499a-909a-46383dc35734
+pkg-dfn80p300x400x75-6t200x220-body-outline,2d1b4aed-b285-4797-9afd-52e456d76738
 pkg-dfn80p300x400x75-6t200x220-circle-silkscreen-hand-soldering,37699150-a527-4111-962f-725508244e7a
 pkg-dfn80p300x400x75-6t200x220-circle-silkscreen-reflow,8b7de06f-ea4f-42b2-a497-334bc942588f
 pkg-dfn80p300x400x75-6t200x220-exposed,8322883d-e5d0-4568-adc2-08c998e4d18d
@@ -7908,6 +8148,7 @@ pkg-dfn80p300x400x75-6t200x220-text-name-hand-soldering,c086d652-184e-4d98-9344-
 pkg-dfn80p300x400x75-6t200x220-text-name-reflow,1fa15bf6-4c4b-427d-a0c0-32676aa4bbd9
 pkg-dfn80p300x400x75-6t200x220-text-value-hand-soldering,dc090c4e-2950-42af-bf09-f958b8e5b0fc
 pkg-dfn80p300x400x75-6t200x220-text-value-reflow,8674b1e1-16ee-44fe-abc8-12cc6e2331b8
+pkg-dfn80p300x400x95-6-body-outline,fd31b159-21a4-4dbc-8061-388533e4cde7
 pkg-dfn80p300x400x95-6-circle-silkscreen-hand-soldering,daeac14f-d85a-42b8-ade8-236c693ab1b6
 pkg-dfn80p300x400x95-6-circle-silkscreen-reflow,e7386912-be18-42f4-a40a-c4aa5312e10c
 pkg-dfn80p300x400x95-6-footprint-hand-soldering,3f0d5cc4-9e8a-4553-9c8d-a19d07681523
@@ -7933,6 +8174,7 @@ pkg-dfn80p300x400x95-6-text-name-hand-soldering,f0b3c98b-ec8f-4972-a01e-4353c800
 pkg-dfn80p300x400x95-6-text-name-reflow,80a6f6d3-1df0-4896-9bd1-7f53470f4ba8
 pkg-dfn80p300x400x95-6-text-value-hand-soldering,57bde430-f4d8-44a9-8fcf-b3ae3f05f71f
 pkg-dfn80p300x400x95-6-text-value-reflow,6823817a-c92c-4d48-bf53-c20ac35aaa69
+pkg-dfn80p300x400x95-6t200x220-body-outline,3d83caad-1181-4b2c-932d-9fe7a301482f
 pkg-dfn80p300x400x95-6t200x220-circle-silkscreen-hand-soldering,f7857dbc-c3f8-490e-a4cb-4dc377fc6e5c
 pkg-dfn80p300x400x95-6t200x220-circle-silkscreen-reflow,c7966ff1-a88c-449b-8607-c6c244cd90f4
 pkg-dfn80p300x400x95-6t200x220-exposed,e5da1b65-2372-4d8e-8e68-0179c996fbe1
@@ -7960,6 +8202,7 @@ pkg-dfn80p300x400x95-6t200x220-text-name-hand-soldering,d590e049-3e36-4fbf-86d0-
 pkg-dfn80p300x400x95-6t200x220-text-name-reflow,c7a2edb3-308a-4a53-98ee-ca8e295c9e37
 pkg-dfn80p300x400x95-6t200x220-text-value-hand-soldering,bcc3cbd5-16c1-4e8b-9990-3b7e36bfe695
 pkg-dfn80p300x400x95-6t200x220-text-value-reflow,b0483438-5177-4a38-a40a-e1c5839e0a58
+pkg-dfn80p400x400x75-8-body-outline,b5addbf1-8d11-4e94-aeed-26b427fd3c1b
 pkg-dfn80p400x400x75-8-circle-silkscreen-hand-soldering,8ae25303-93c9-456b-880c-3a0322bd0acf
 pkg-dfn80p400x400x75-8-circle-silkscreen-reflow,684810a8-b000-47e1-a2be-7f299db7ebb0
 pkg-dfn80p400x400x75-8-footprint-hand-soldering,c7a6594d-b133-43d0-9900-b69c6a013ad8
@@ -7989,6 +8232,7 @@ pkg-dfn80p400x400x75-8-text-name-hand-soldering,1c9bb3c2-739d-4dc5-b2ed-0b218f07
 pkg-dfn80p400x400x75-8-text-name-reflow,70bb006e-e9c1-487e-97b4-819a3e845475
 pkg-dfn80p400x400x75-8-text-value-hand-soldering,19763044-9e9b-41b9-b31c-6b71c8225fc6
 pkg-dfn80p400x400x75-8-text-value-reflow,2ef059eb-eaa6-4f43-8035-b78d5c3a2472
+pkg-dfn80p400x400x75-8t300x220-body-outline,3aa156bb-03d4-495d-a735-d9f1bf20084d
 pkg-dfn80p400x400x75-8t300x220-circle-silkscreen-hand-soldering,7f0405eb-977f-4f7e-8b43-81481a2fdb2b
 pkg-dfn80p400x400x75-8t300x220-circle-silkscreen-reflow,93041d73-e3ca-4df8-8f71-a6c3bae34c1b
 pkg-dfn80p400x400x75-8t300x220-exposed,80e889bc-0af4-4952-968d-d02dc8ae0465
@@ -8020,6 +8264,7 @@ pkg-dfn80p400x400x75-8t300x220-text-name-hand-soldering,2a53d257-ba49-4e03-8a0d-
 pkg-dfn80p400x400x75-8t300x220-text-name-reflow,8be1cbb5-2b18-46f1-bb5a-6bc14fffbc5d
 pkg-dfn80p400x400x75-8t300x220-text-value-hand-soldering,dc84ac98-f462-4698-907b-2d413d0a6b12
 pkg-dfn80p400x400x75-8t300x220-text-value-reflow,cdde8bf7-6402-424d-9a22-e54451a5295f
+pkg-dfn80p400x400x95-8-body-outline,b8011f4f-cb2c-4b11-a1dc-132521ede171
 pkg-dfn80p400x400x95-8-circle-silkscreen-hand-soldering,b24dd2f8-acd5-43e2-b09d-3721ff76d3f3
 pkg-dfn80p400x400x95-8-circle-silkscreen-reflow,fac9c807-f788-41c7-90a7-7fbcea022f91
 pkg-dfn80p400x400x95-8-footprint-hand-soldering,23beb32f-6a54-4641-abf1-39a298948d89
@@ -8049,6 +8294,7 @@ pkg-dfn80p400x400x95-8-text-name-hand-soldering,c592998d-696e-4542-a1f4-710987e2
 pkg-dfn80p400x400x95-8-text-name-reflow,46b6df0f-3094-4355-bb20-d889af910033
 pkg-dfn80p400x400x95-8-text-value-hand-soldering,86f13bb8-9395-41a0-a008-cde4dbafd8bd
 pkg-dfn80p400x400x95-8-text-value-reflow,e9582953-b16a-46e2-bdac-0e0e75f2a5fb
+pkg-dfn80p400x400x95-8t300x220-body-outline,119f3568-f262-40d2-b988-c3b69088ce22
 pkg-dfn80p400x400x95-8t300x220-circle-silkscreen-hand-soldering,1edb10fc-e5f7-47cc-b719-1bc1c662fdc6
 pkg-dfn80p400x400x95-8t300x220-circle-silkscreen-reflow,bbaf9565-d45d-439c-942f-f50f7db37b35
 pkg-dfn80p400x400x95-8t300x220-exposed,6e9812b8-9f5b-4301-bd8e-85233931bdc7
@@ -8080,6 +8326,7 @@ pkg-dfn80p400x400x95-8t300x220-text-name-hand-soldering,19b42eb5-ebb9-492f-9849-
 pkg-dfn80p400x400x95-8t300x220-text-name-reflow,609f828e-3c46-45a5-9455-ebb112731503
 pkg-dfn80p400x400x95-8t300x220-text-value-hand-soldering,ef0b8f7a-8ae8-4ae4-af99-f72cce718469
 pkg-dfn80p400x400x95-8t300x220-text-value-reflow,a9b743c7-214c-4405-b83c-f2e07c1b359b
+pkg-dfn80p400x500x75-10-body-outline,38f4a825-40bb-48ca-b6ee-f63234e90ff4
 pkg-dfn80p400x500x75-10-circle-silkscreen-hand-soldering,6001293f-17a3-472f-a716-b308c2edab82
 pkg-dfn80p400x500x75-10-circle-silkscreen-reflow,8493b62e-5d64-45af-b931-484d171650dc
 pkg-dfn80p400x500x75-10-footprint-hand-soldering,8df05ee9-f301-4da7-9333-947676f6f30c
@@ -8113,6 +8360,7 @@ pkg-dfn80p400x500x75-10-text-name-hand-soldering,03d4e6fc-5156-4548-aa66-d570c5e
 pkg-dfn80p400x500x75-10-text-name-reflow,0f14d8c9-6408-4cc8-a74c-fd9d69f8d02e
 pkg-dfn80p400x500x75-10-text-value-hand-soldering,05b1802d-a883-4194-bc8b-e14da42e0083
 pkg-dfn80p400x500x75-10-text-value-reflow,472f4d64-c166-46c3-9273-b42a6c627bb5
+pkg-dfn80p400x500x75-10t300x320-body-outline,fe031127-5d77-429c-92b8-44b6e5d3a3ad
 pkg-dfn80p400x500x75-10t300x320-circle-silkscreen-hand-soldering,a4e5bda2-7a9c-4ea7-9c9e-67ae17debc03
 pkg-dfn80p400x500x75-10t300x320-circle-silkscreen-reflow,fab7f7b0-98ba-4eb4-ab48-c9222f7d5157
 pkg-dfn80p400x500x75-10t300x320-exposed,c20a9fcf-4882-4732-91a6-864018636a58
@@ -8148,6 +8396,7 @@ pkg-dfn80p400x500x75-10t300x320-text-name-hand-soldering,66beea23-3ae8-4508-a5b8
 pkg-dfn80p400x500x75-10t300x320-text-name-reflow,239dece6-215e-4a42-8b99-174d8c5a06c8
 pkg-dfn80p400x500x75-10t300x320-text-value-hand-soldering,e609bbe8-b8db-4805-b496-f4965d11799c
 pkg-dfn80p400x500x75-10t300x320-text-value-reflow,ebc66eec-8112-4aa6-b578-f5a1b4172f3d
+pkg-dfn80p400x500x95-10-body-outline,5b793700-f201-4915-991e-69514e39abd6
 pkg-dfn80p400x500x95-10-circle-silkscreen-hand-soldering,ed9c6c4e-d994-4ff6-9970-9825412c2a44
 pkg-dfn80p400x500x95-10-circle-silkscreen-reflow,c5a258af-3798-4c21-a376-c5c356a5697e
 pkg-dfn80p400x500x95-10-footprint-hand-soldering,b72221c3-0ae8-4a9a-ae29-cbc727386932
@@ -8181,6 +8430,7 @@ pkg-dfn80p400x500x95-10-text-name-hand-soldering,284a5989-a018-4c5a-a67c-e9c83eb
 pkg-dfn80p400x500x95-10-text-name-reflow,47f3e0c2-1750-49bc-9a5a-660f00e0cdec
 pkg-dfn80p400x500x95-10-text-value-hand-soldering,3f4f77c2-05cb-4b2e-b8c8-ad3330e19ffd
 pkg-dfn80p400x500x95-10-text-value-reflow,aee1d9cd-2b3e-4207-94d6-348dd0b3b1d5
+pkg-dfn80p400x500x95-10t300x320-body-outline,1c6d2f4a-c1e5-448b-888b-19cdf0a6f0be
 pkg-dfn80p400x500x95-10t300x320-circle-silkscreen-hand-soldering,11f35dfd-4989-48ce-ad9d-d3e1fc396eb6
 pkg-dfn80p400x500x95-10t300x320-circle-silkscreen-reflow,2ac76b05-327a-459c-8d4d-06f11234e12e
 pkg-dfn80p400x500x95-10t300x320-exposed,077d472e-6b8d-40c3-9980-3465f6298ea2
@@ -8216,6 +8466,7 @@ pkg-dfn80p400x500x95-10t300x320-text-name-hand-soldering,1b32bae0-a252-4924-ad73
 pkg-dfn80p400x500x95-10t300x320-text-name-reflow,abaa3e7d-edac-4129-8290-9af90d1ed3df
 pkg-dfn80p400x500x95-10t300x320-text-value-hand-soldering,11a1a59d-a352-4ea8-ace0-f5dae252e964
 pkg-dfn80p400x500x95-10t300x320-text-value-reflow,c8cfd388-0be6-419f-8490-cc261749a33a
+pkg-dfn80p500x500x75-8-body-outline,3e85207c-3051-4d0c-a4aa-52771bcee093
 pkg-dfn80p500x500x75-8-circle-silkscreen-hand-soldering,1adce267-f450-471c-ab3a-afd78d4b7921
 pkg-dfn80p500x500x75-8-circle-silkscreen-reflow,29e5ec71-4645-4ce3-99be-76e0d36da69e
 pkg-dfn80p500x500x75-8-footprint-hand-soldering,d4dc3554-93e8-4620-8215-4dfab4fe6c3b
@@ -8245,6 +8496,7 @@ pkg-dfn80p500x500x75-8-text-name-hand-soldering,6857b27f-7cba-491d-afae-b8981228
 pkg-dfn80p500x500x75-8-text-name-reflow,46ffe7e6-532f-4eb1-8fe8-3ab7dc5aa5fd
 pkg-dfn80p500x500x75-8-text-value-hand-soldering,2619d2e5-1d4d-4495-9836-a8a7bed93a81
 pkg-dfn80p500x500x75-8-text-value-reflow,b679c915-9892-4845-9df0-0bd1f5aba129
+pkg-dfn80p500x500x75-8t400x320-body-outline,a4ed6faf-aef6-4d10-8180-0b5c1aa6f260
 pkg-dfn80p500x500x75-8t400x320-circle-silkscreen-hand-soldering,8180e9df-cbd0-4bd6-84da-e82f205e2aa6
 pkg-dfn80p500x500x75-8t400x320-circle-silkscreen-reflow,60a5ee37-616c-4c57-afd6-a372e6ac1227
 pkg-dfn80p500x500x75-8t400x320-exposed,e12d36ac-68e3-4e33-a91e-5aa2ea15c987
@@ -8276,6 +8528,7 @@ pkg-dfn80p500x500x75-8t400x320-text-name-hand-soldering,45dd7032-1fd5-4b2e-9e1f-
 pkg-dfn80p500x500x75-8t400x320-text-name-reflow,30c520da-ec7c-4a4f-bcf0-c656376135d5
 pkg-dfn80p500x500x75-8t400x320-text-value-hand-soldering,d20023db-fe71-4078-81a1-d2a17105a347
 pkg-dfn80p500x500x75-8t400x320-text-value-reflow,8ea5613b-639d-414c-b0ff-ce9e1f51a0e2
+pkg-dfn80p500x500x95-8-body-outline,73aa0f52-6bc8-46c8-b234-a07dcd01a3c8
 pkg-dfn80p500x500x95-8-circle-silkscreen-hand-soldering,39875f45-fe2c-4bb9-9f7c-afac1b00fa92
 pkg-dfn80p500x500x95-8-circle-silkscreen-reflow,dccd8795-025d-479e-b408-e8884feb2b55
 pkg-dfn80p500x500x95-8-footprint-hand-soldering,11c2b034-566e-41a4-b127-3f47f2bcde16
@@ -8305,6 +8558,7 @@ pkg-dfn80p500x500x95-8-text-name-hand-soldering,875f0077-4ab4-4026-9f6a-8c745b0e
 pkg-dfn80p500x500x95-8-text-name-reflow,7781504e-ef9f-436e-ae11-c9092b85801d
 pkg-dfn80p500x500x95-8-text-value-hand-soldering,d791666d-0779-4faf-bb85-9f67be7d69de
 pkg-dfn80p500x500x95-8-text-value-reflow,38a585f9-67ab-4421-9a8f-e6000dbcc713
+pkg-dfn80p500x500x95-8t400x320-body-outline,ad204c2d-892e-4485-a3ee-60186e4d5080
 pkg-dfn80p500x500x95-8t400x320-circle-silkscreen-hand-soldering,74ea3205-f905-4675-a3b3-48a8218e784e
 pkg-dfn80p500x500x95-8t400x320-circle-silkscreen-reflow,6fc912f5-2c3f-48e9-8752-8d63a766688b
 pkg-dfn80p500x500x95-8t400x320-exposed,d7ea5fdc-836e-4aa7-80b4-f5e4996b78d4
@@ -8336,6 +8590,7 @@ pkg-dfn80p500x500x95-8t400x320-text-name-hand-soldering,98afb6bf-1738-4185-a691-
 pkg-dfn80p500x500x95-8t400x320-text-name-reflow,df1f7819-a78e-4692-a3b6-58fdcf5d7d0b
 pkg-dfn80p500x500x95-8t400x320-text-value-hand-soldering,a24da039-1332-4bcd-90c7-04ae44c649a4
 pkg-dfn80p500x500x95-8t400x320-text-value-reflow,14214eda-20cf-4e82-a822-840b7332419f
+pkg-dfn95p300x200x95-6-body-outline,c8e75d4a-a59b-4f6a-b69a-d32cc9c6649f
 pkg-dfn95p300x200x95-6-circle-silkscreen-hand-soldering,e99a57d3-7c2c-4070-9057-c8062c1a366f
 pkg-dfn95p300x200x95-6-circle-silkscreen-reflow,a756f2a3-ecf8-4ee8-ab06-39415568c2cf
 pkg-dfn95p300x200x95-6-footprint-hand-soldering,1e86c0dc-532b-4e6c-a78f-36cf18c1a8ce
@@ -8361,6 +8616,7 @@ pkg-dfn95p300x200x95-6-text-name-hand-soldering,61f4e400-e4f7-43de-ba8d-624d2923
 pkg-dfn95p300x200x95-6-text-name-reflow,cd9de133-b539-40f8-b38b-77c845e4de96
 pkg-dfn95p300x200x95-6-text-value-hand-soldering,beb5eef7-f341-4fb7-9434-0d2530e35086
 pkg-dfn95p300x200x95-6-text-value-reflow,bcb16580-7bbe-404e-9494-d88bcd122a7b
+pkg-dfn95p300x200x95-6t220x60-body-outline,58ed44cd-c0f9-4466-9a72-4068c1601e48
 pkg-dfn95p300x200x95-6t220x60-circle-silkscreen-hand-soldering,86781347-c06f-4773-a4e2-5a84360b49b7
 pkg-dfn95p300x200x95-6t220x60-circle-silkscreen-reflow,883305f1-6e7b-49ca-91f0-f623a75640d4
 pkg-dfn95p300x200x95-6t220x60-exposed,e99f6a49-e778-4b74-a0e6-5ad4850a352a
@@ -8388,6 +8644,7 @@ pkg-dfn95p300x200x95-6t220x60-text-name-hand-soldering,f3bda3d1-0b21-40f5-b0be-d
 pkg-dfn95p300x200x95-6t220x60-text-name-reflow,39e39f9a-a867-4794-8d04-851a9c6dc05c
 pkg-dfn95p300x200x95-6t220x60-text-value-hand-soldering,91c7b158-1040-4a05-8c81-6ff79fec2fab
 pkg-dfn95p300x200x95-6t220x60-text-value-reflow,055030b1-2c7a-4bfb-8936-1561016081d2
+pkg-dfn95p300x300x75-6-body-outline,d060669e-39ff-43cc-a5c0-63108f5c616e
 pkg-dfn95p300x300x75-6-circle-silkscreen-hand-soldering,61e5d11e-08e8-40b1-bc65-f406118c9f54
 pkg-dfn95p300x300x75-6-circle-silkscreen-reflow,c8865218-af93-4295-a5ee-aa1d6ab39b66
 pkg-dfn95p300x300x75-6-footprint-hand-soldering,e2eab823-65ad-43d0-95a8-d089e62ba99c
@@ -8413,6 +8670,7 @@ pkg-dfn95p300x300x75-6-text-name-hand-soldering,ade45c84-7061-48f9-844d-adf59b88
 pkg-dfn95p300x300x75-6-text-name-reflow,5ce968c3-9eec-4428-a194-66ae61ee1b3a
 pkg-dfn95p300x300x75-6-text-value-hand-soldering,183cb98f-81b9-4e2d-b364-3d50238a6f1e
 pkg-dfn95p300x300x75-6-text-value-reflow,bc129645-dc65-4c45-96aa-8765dca3aeeb
+pkg-dfn95p300x300x75-6t150x120-body-outline,543ce847-eece-4e59-9561-6c7cb3ec12ee
 pkg-dfn95p300x300x75-6t150x120-circle-silkscreen-hand-soldering,aa316a16-bcca-441e-bb18-f0f88dfcca01
 pkg-dfn95p300x300x75-6t150x120-circle-silkscreen-reflow,74d3c81e-9fd1-437a-af05-afa991456082
 pkg-dfn95p300x300x75-6t150x120-exposed,d2001b0d-da60-456c-9641-2191baf465e5
@@ -8440,6 +8698,7 @@ pkg-dfn95p300x300x75-6t150x120-text-name-hand-soldering,3bde7f8e-c0e0-40f5-8095-
 pkg-dfn95p300x300x75-6t150x120-text-name-reflow,77c860aa-f8ea-48c2-aced-bcf3720efc0f
 pkg-dfn95p300x300x75-6t150x120-text-value-hand-soldering,8a0b1d8c-c4ed-41df-b726-466993de4e4a
 pkg-dfn95p300x300x75-6t150x120-text-value-reflow,c72bb48b-7ccc-4478-a3ce-1e88c7e3069c
+pkg-dfn95p300x300x95-6-body-outline,991933ae-fa0a-4202-837e-9ea062135a74
 pkg-dfn95p300x300x95-6-circle-silkscreen-hand-soldering,0953d7e4-ae9f-49ef-b9dd-ba5fd139f2bb
 pkg-dfn95p300x300x95-6-circle-silkscreen-reflow,6829a221-3162-4492-bdf6-07c906b99c5e
 pkg-dfn95p300x300x95-6-footprint-hand-soldering,42bfdb18-c257-48ce-9b4f-ced24f14ce75
@@ -8465,6 +8724,7 @@ pkg-dfn95p300x300x95-6-text-name-hand-soldering,f4d1bdb7-7505-4ca7-97de-37329021
 pkg-dfn95p300x300x95-6-text-name-reflow,0c34f847-d0c0-490d-a05c-c014a58cdf82
 pkg-dfn95p300x300x95-6-text-value-hand-soldering,8b40e67e-eb10-4d69-88f3-52258805f19b
 pkg-dfn95p300x300x95-6-text-value-reflow,e60c05d7-250d-42c1-a6ce-df07038b6f8d
+pkg-dfn95p300x300x95-6t150x120-body-outline,94ce414e-38a9-4c62-877f-0e1df6193193
 pkg-dfn95p300x300x95-6t150x120-circle-silkscreen-hand-soldering,873c9787-20c1-42ee-8448-bd71a529cc50
 pkg-dfn95p300x300x95-6t150x120-circle-silkscreen-reflow,c24b8877-529e-471e-8092-7b33b60e0976
 pkg-dfn95p300x300x95-6t150x120-exposed,2b65308e-ef49-40f1-a154-9b2e875e5eaa
@@ -8492,6 +8752,7 @@ pkg-dfn95p300x300x95-6t150x120-text-name-hand-soldering,ad798021-3031-4b30-b4be-
 pkg-dfn95p300x300x95-6t150x120-text-name-reflow,4e21605a-7b54-4aff-9ee6-40cceb958e39
 pkg-dfn95p300x300x95-6t150x120-text-value-hand-soldering,1ee874bd-09f2-4e01-8e37-46baf4475001
 pkg-dfn95p300x300x95-6t150x120-text-value-reflow,85b18ef4-abb4-4de1-a23d-5e6d55b8b281
+pkg-dfn95p300x300x95-6t150x70-body-outline,8c5aad7e-e9a2-43d3-9673-51e08351e4e4
 pkg-dfn95p300x300x95-6t150x70-circle-silkscreen-hand-soldering,c6c6955d-ba31-432f-b2d6-75b10e055b4c
 pkg-dfn95p300x300x95-6t150x70-circle-silkscreen-reflow,0a0b55cd-680d-4590-9aba-107d19452738
 pkg-dfn95p300x300x95-6t150x70-exposed,1c50c3df-a909-41be-b9d1-0499410294e3
@@ -8519,74 +8780,55 @@ pkg-dfn95p300x300x95-6t150x70-text-name-hand-soldering,6e353b4a-b115-42a7-8771-8
 pkg-dfn95p300x300x95-6t150x70-text-name-reflow,7fd022f3-4ac3-48b8-87be-92ce41df0bbb
 pkg-dfn95p300x300x95-6t150x70-text-value-hand-soldering,94df9d88-7385-4825-9b51-f0df54c9596d
 pkg-dfn95p300x300x95-6t150x70-text-value-reflow,69d511b7-3ccd-4ad5-ad00-4686294e7aff
-pkg-sensirion~dfn100p200x200x75-4-circle-silkscreen-hand-soldering,f8d56b67-fd69-4cbd-9d98-6f5b5a4ab714
-pkg-sensirion~dfn100p200x200x75-4-circle-silkscreen-reflow,afb7c785-a184-4919-97fa-cae663da8cc3
-pkg-sensirion~dfn100p200x200x75-4-footprint-hand-soldering,92e09cbd-e894-4526-905c-baaf7fcd9a4e
-pkg-sensirion~dfn100p200x200x75-4-footprint-reflow,26bd188a-9262-4c0e-a28a-87fdbfe7b55d
-pkg-sensirion~dfn100p200x200x75-4-lead-1,466968d7-ce1a-4e2a-a8f9-fe23090774bb
-pkg-sensirion~dfn100p200x200x75-4-lead-2,f765a4fb-4e64-4080-8fce-c85d90f472cb
-pkg-sensirion~dfn100p200x200x75-4-lead-3,ba64f433-c160-41b6-a8da-2fb0ea3c1d4a
-pkg-sensirion~dfn100p200x200x75-4-lead-4,c3dca2c5-d7a2-4cef-982f-f4a7387b0bc5
-pkg-sensirion~dfn100p200x200x75-4-pad-1,cc3b467e-e6a8-479b-a3b4-ea2b6fdf6db0
-pkg-sensirion~dfn100p200x200x75-4-pad-2,f2f1e00b-1f8b-4625-b860-80721725178c
-pkg-sensirion~dfn100p200x200x75-4-pad-3,a2f36b6a-7bf8-4b20-97de-2d1ee7872502
-pkg-sensirion~dfn100p200x200x75-4-pad-4,de6d59bf-5d2c-4ef6-a46a-ec50d64c664f
-pkg-sensirion~dfn100p200x200x75-4-pkg,313b3d40-9624-4451-a4fb-4c4adf231b17
-pkg-sensirion~dfn100p200x200x75-4-polygon-silkscreen-hand-soldering-0,dac6c6da-712c-4a38-ba60-8a67c9e2b82e
-pkg-sensirion~dfn100p200x200x75-4-polygon-silkscreen-hand-soldering-1,9e889c8f-d7a0-47d5-aeb3-76fcffee1521
-pkg-sensirion~dfn100p200x200x75-4-polygon-silkscreen-reflow-0,08496773-c447-45c8-994a-cc82d111e91c
-pkg-sensirion~dfn100p200x200x75-4-polygon-silkscreen-reflow-1,ec8dbddd-d908-4516-ac13-a65b3d032488
-pkg-sensirion~dfn100p200x200x75-4-text-name-hand-soldering,d8980182-0df9-4572-a870-1abbcea184d9
-pkg-sensirion~dfn100p200x200x75-4-text-name-reflow,0b4822b8-ec84-4630-8ceb-967e61df9cf3
-pkg-sensirion~dfn100p200x200x75-4-text-value-hand-soldering,b85081e7-39cd-4446-a451-c3f51ccb217c
-pkg-sensirion~dfn100p200x200x75-4-text-value-reflow,989d910f-dc48-4d9a-bacf-f8bb4eea5a00
-pkg-sensirion~dfn100p200x200x75-4t160x70-circle-silkscreen-hand-soldering,ad0618ba-b18f-4862-9a39-baa2f213bb7a
-pkg-sensirion~dfn100p200x200x75-4t160x70-circle-silkscreen-reflow,8ddde6e6-1a44-4763-b294-acff9af37516
-pkg-sensirion~dfn100p200x200x75-4t160x70-exposed,66d250d4-62ee-41e5-b8ef-901bfa2ac00d
-pkg-sensirion~dfn100p200x200x75-4t160x70-footprint-hand-soldering,deaa3302-894a-494a-b4c4-e3223be6e721
-pkg-sensirion~dfn100p200x200x75-4t160x70-footprint-reflow,022e4e22-6a97-4ca1-836b-fa4d423db568
-pkg-sensirion~dfn100p200x200x75-4t160x70-lead-1,7cfbf512-2c22-460a-bd66-ed8df65fe11c
-pkg-sensirion~dfn100p200x200x75-4t160x70-lead-2,14d03173-a4fe-4c7d-8e5e-39538adf2500
-pkg-sensirion~dfn100p200x200x75-4t160x70-lead-3,3491f826-382f-4188-ae24-09d3a20fc6dd
-pkg-sensirion~dfn100p200x200x75-4t160x70-lead-4,4d2e2a01-7ce1-4f7d-ba43-c6e0100b14ec
-pkg-sensirion~dfn100p200x200x75-4t160x70-lead-exposed,cc5274c6-6b88-4e37-99f5-e94add837b8c
-pkg-sensirion~dfn100p200x200x75-4t160x70-pad-1,b9e1663f-1fc2-4245-83b2-f15cf1fdd932
-pkg-sensirion~dfn100p200x200x75-4t160x70-pad-2,70985899-d7e3-465c-a032-3429690a63ee
-pkg-sensirion~dfn100p200x200x75-4t160x70-pad-3,aa53901f-92b0-4829-a2fa-02d7f234b0c5
-pkg-sensirion~dfn100p200x200x75-4t160x70-pad-4,e47c42a6-1894-4016-93e4-d99aa8e22fb0
-pkg-sensirion~dfn100p200x200x75-4t160x70-pkg,9f8c0ddc-fef5-4b8e-984c-dffcb29c6ede
-pkg-sensirion~dfn100p200x200x75-4t160x70-polygon-silkscreen-hand-soldering-0,81c8f6da-df52-4074-b5f6-6e5a99c68ce4
-pkg-sensirion~dfn100p200x200x75-4t160x70-polygon-silkscreen-hand-soldering-1,8650eddd-e101-4043-b98f-4911ab675a8b
-pkg-sensirion~dfn100p200x200x75-4t160x70-polygon-silkscreen-reflow-0,0eb2ca53-1bb2-4905-a7b4-7ee56f6ebe20
-pkg-sensirion~dfn100p200x200x75-4t160x70-polygon-silkscreen-reflow-1,ece02fcc-bdd5-4e96-86f0-07979a9a089b
-pkg-sensirion~dfn100p200x200x75-4t160x70-text-name-hand-soldering,1ec6bbdf-0ef4-4d7c-bd27-367d97df11cc
-pkg-sensirion~dfn100p200x200x75-4t160x70-text-name-reflow,82affe42-d2dc-4e68-9a5f-cb01bc11785e
-pkg-sensirion~dfn100p200x200x75-4t160x70-text-value-hand-soldering,9ad64aff-1401-43d0-8b97-2810de2b1372
-pkg-sensirion~dfn100p200x200x75-4t160x70-text-value-reflow,7afb4dc5-972f-4f5e-9313-042209665ee7
-pkg-sensirion~dfn100p300x300x110-6t240x150-circle-silkscreen-hand-soldering,e04bdf4b-02c1-408e-b91a-f71a92dcb08f
-pkg-sensirion~dfn100p300x300x110-6t240x150-circle-silkscreen-reflow,43cc877d-700b-4849-a591-8fd56562e839
-pkg-sensirion~dfn100p300x300x110-6t240x150-exposed,57a25240-5688-4966-858b-c896110b189f
-pkg-sensirion~dfn100p300x300x110-6t240x150-footprint-hand-soldering,aa717618-140a-459e-89d0-8d6becef577e
-pkg-sensirion~dfn100p300x300x110-6t240x150-footprint-reflow,7b05587f-2094-4ae4-8bc4-d2f082fd7591
-pkg-sensirion~dfn100p300x300x110-6t240x150-lead-1,7fb3407e-aa0c-4896-8ca3-69e94302bd29
-pkg-sensirion~dfn100p300x300x110-6t240x150-lead-2,2d65cdfa-c0bf-4013-a74f-4ddfc89ee233
-pkg-sensirion~dfn100p300x300x110-6t240x150-lead-3,9629ad51-f9a7-4424-bae5-a754fcf2f34c
-pkg-sensirion~dfn100p300x300x110-6t240x150-lead-4,e36ee0c0-5099-4c27-89d4-0da074767816
-pkg-sensirion~dfn100p300x300x110-6t240x150-lead-5,a73c8671-1476-48d4-825d-0582d50888e0
-pkg-sensirion~dfn100p300x300x110-6t240x150-lead-6,4a9f1aaf-b8cc-4640-9e33-a57ca69be439
-pkg-sensirion~dfn100p300x300x110-6t240x150-lead-exposed,176b0474-bd2c-4957-9c6e-5b35402c1224
-pkg-sensirion~dfn100p300x300x110-6t240x150-pad-1,6793c6bb-ce13-4d42-8474-a95401bae993
-pkg-sensirion~dfn100p300x300x110-6t240x150-pad-2,97f9a73b-5200-4383-bc32-9a47f47cc6b9
-pkg-sensirion~dfn100p300x300x110-6t240x150-pad-3,ff06e731-002b-4968-9711-21b1b17e7790
-pkg-sensirion~dfn100p300x300x110-6t240x150-pad-4,c9fb544a-e913-4b62-997c-bdf27f54f503
-pkg-sensirion~dfn100p300x300x110-6t240x150-pad-5,1742d1ea-ecce-4454-bbdd-1ec9076653c7
-pkg-sensirion~dfn100p300x300x110-6t240x150-pad-6,69798c30-e27c-4ca0-8602-17702a8c4553
-pkg-sensirion~dfn100p300x300x110-6t240x150-pkg,f0a217e7-9f79-4483-bbfc-5800220e0cc9
-pkg-sensirion~dfn100p300x300x110-6t240x150-polygon-silkscreen-hand-soldering-0,c00f69c5-8b91-459c-a507-f5031b249f7a
-pkg-sensirion~dfn100p300x300x110-6t240x150-polygon-silkscreen-hand-soldering-1,f70770fc-119f-4e24-99c6-cc1ba9baef2f
-pkg-sensirion~dfn100p300x300x110-6t240x150-polygon-silkscreen-reflow-0,0c229476-0b6d-4c76-ad47-4e291c4a48c9
-pkg-sensirion~dfn100p300x300x110-6t240x150-polygon-silkscreen-reflow-1,f6ced209-a231-4c5f-8166-dfa6faa4786d
-pkg-sensirion~dfn100p300x300x110-6t240x150-text-name-hand-soldering,6b1568f7-c7b4-43ba-a534-8466a90fff95
-pkg-sensirion~dfn100p300x300x110-6t240x150-text-name-reflow,85227436-9687-4f6a-952d-56b0ce75f49c
-pkg-sensirion~dfn100p300x300x110-6t240x150-text-value-hand-soldering,5a5d9244-f257-4a19-9c8a-783e5e52a689
-pkg-sensirion~dfn100p300x300x110-6t240x150-text-value-reflow,27cb997d-98d0-4ca5-8213-245e2c3ff32b
+pkg-sensirion_sht2x-body-outline,1c38d907-d553-4e0d-80e1-65a66a589dc6
+pkg-sensirion_sht2x-circle-silkscreen-hand-soldering,e04bdf4b-02c1-408e-b91a-f71a92dcb08f
+pkg-sensirion_sht2x-circle-silkscreen-reflow,43cc877d-700b-4849-a591-8fd56562e839
+pkg-sensirion_sht2x-exposed,57a25240-5688-4966-858b-c896110b189f
+pkg-sensirion_sht2x-footprint-hand-soldering,aa717618-140a-459e-89d0-8d6becef577e
+pkg-sensirion_sht2x-footprint-reflow,7b05587f-2094-4ae4-8bc4-d2f082fd7591
+pkg-sensirion_sht2x-lead-1,7fb3407e-aa0c-4896-8ca3-69e94302bd29
+pkg-sensirion_sht2x-lead-2,2d65cdfa-c0bf-4013-a74f-4ddfc89ee233
+pkg-sensirion_sht2x-lead-3,9629ad51-f9a7-4424-bae5-a754fcf2f34c
+pkg-sensirion_sht2x-lead-4,e36ee0c0-5099-4c27-89d4-0da074767816
+pkg-sensirion_sht2x-lead-5,a73c8671-1476-48d4-825d-0582d50888e0
+pkg-sensirion_sht2x-lead-6,4a9f1aaf-b8cc-4640-9e33-a57ca69be439
+pkg-sensirion_sht2x-lead-exposed,176b0474-bd2c-4957-9c6e-5b35402c1224
+pkg-sensirion_sht2x-pad-1,6793c6bb-ce13-4d42-8474-a95401bae993
+pkg-sensirion_sht2x-pad-2,97f9a73b-5200-4383-bc32-9a47f47cc6b9
+pkg-sensirion_sht2x-pad-3,ff06e731-002b-4968-9711-21b1b17e7790
+pkg-sensirion_sht2x-pad-4,c9fb544a-e913-4b62-997c-bdf27f54f503
+pkg-sensirion_sht2x-pad-5,1742d1ea-ecce-4454-bbdd-1ec9076653c7
+pkg-sensirion_sht2x-pad-6,69798c30-e27c-4ca0-8602-17702a8c4553
+pkg-sensirion_sht2x-pkg,f0a217e7-9f79-4483-bbfc-5800220e0cc9
+pkg-sensirion_sht2x-polygon-silkscreen-hand-soldering-0,c00f69c5-8b91-459c-a507-f5031b249f7a
+pkg-sensirion_sht2x-polygon-silkscreen-hand-soldering-1,f70770fc-119f-4e24-99c6-cc1ba9baef2f
+pkg-sensirion_sht2x-polygon-silkscreen-reflow-0,0c229476-0b6d-4c76-ad47-4e291c4a48c9
+pkg-sensirion_sht2x-polygon-silkscreen-reflow-1,f6ced209-a231-4c5f-8166-dfa6faa4786d
+pkg-sensirion_sht2x-text-name-hand-soldering,6b1568f7-c7b4-43ba-a534-8466a90fff95
+pkg-sensirion_sht2x-text-name-reflow,85227436-9687-4f6a-952d-56b0ce75f49c
+pkg-sensirion_sht2x-text-value-hand-soldering,5a5d9244-f257-4a19-9c8a-783e5e52a689
+pkg-sensirion_sht2x-text-value-reflow,27cb997d-98d0-4ca5-8213-245e2c3ff32b
+pkg-sensirion_shtcx-body-outline,5a8d9f88-223d-425f-b520-055c32a32fd9
+pkg-sensirion_shtcx-circle-silkscreen-hand-soldering,ad0618ba-b18f-4862-9a39-baa2f213bb7a
+pkg-sensirion_shtcx-circle-silkscreen-reflow,8ddde6e6-1a44-4763-b294-acff9af37516
+pkg-sensirion_shtcx-exposed,66d250d4-62ee-41e5-b8ef-901bfa2ac00d
+pkg-sensirion_shtcx-footprint-hand-soldering,deaa3302-894a-494a-b4c4-e3223be6e721
+pkg-sensirion_shtcx-footprint-reflow,022e4e22-6a97-4ca1-836b-fa4d423db568
+pkg-sensirion_shtcx-lead-1,7cfbf512-2c22-460a-bd66-ed8df65fe11c
+pkg-sensirion_shtcx-lead-2,14d03173-a4fe-4c7d-8e5e-39538adf2500
+pkg-sensirion_shtcx-lead-3,3491f826-382f-4188-ae24-09d3a20fc6dd
+pkg-sensirion_shtcx-lead-4,4d2e2a01-7ce1-4f7d-ba43-c6e0100b14ec
+pkg-sensirion_shtcx-lead-exposed,cc5274c6-6b88-4e37-99f5-e94add837b8c
+pkg-sensirion_shtcx-pad-1,b9e1663f-1fc2-4245-83b2-f15cf1fdd932
+pkg-sensirion_shtcx-pad-2,70985899-d7e3-465c-a032-3429690a63ee
+pkg-sensirion_shtcx-pad-3,aa53901f-92b0-4829-a2fa-02d7f234b0c5
+pkg-sensirion_shtcx-pad-4,e47c42a6-1894-4016-93e4-d99aa8e22fb0
+pkg-sensirion_shtcx-pkg,9f8c0ddc-fef5-4b8e-984c-dffcb29c6ede
+pkg-sensirion_shtcx-polygon-silkscreen-hand-soldering-0,81c8f6da-df52-4074-b5f6-6e5a99c68ce4
+pkg-sensirion_shtcx-polygon-silkscreen-hand-soldering-1,8650eddd-e101-4043-b98f-4911ab675a8b
+pkg-sensirion_shtcx-polygon-silkscreen-reflow-0,0eb2ca53-1bb2-4905-a7b4-7ee56f6ebe20
+pkg-sensirion_shtcx-polygon-silkscreen-reflow-1,ece02fcc-bdd5-4e96-86f0-07979a9a089b
+pkg-sensirion_shtcx-text-name-hand-soldering,1ec6bbdf-0ef4-4d7c-bd27-367d97df11cc
+pkg-sensirion_shtcx-text-name-reflow,82affe42-d2dc-4e68-9a5f-cb01bc11785e
+pkg-sensirion_shtcx-text-value-hand-soldering,9ad64aff-1401-43d0-8b97-2810de2b1372
+pkg-sensirion_shtcx-text-value-reflow,7afb4dc5-972f-4f5e-9313-042209665ee7

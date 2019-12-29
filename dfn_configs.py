@@ -45,7 +45,8 @@ class DfnConfig:
                  no_exp: bool = True,    # By default we create variants w/o exp
                  print_pad: bool = False,    # By default, the pad length is not in the full name
                  lead_width: Optional[float] = None,
-                 name_prefix: Optional[str] = None,
+                 name: Optional[str] = None,
+                 create_date: Optional[str] = None,
                  pin1_corner_dx_dy: Optional[float] = None,  # Some parts have a triangular pin1 marking
                  ):
         self.length = length
@@ -73,7 +74,8 @@ class DfnConfig:
             raise NotImplementedError("No toe/heel length for pitch {:s}".format(pitch))
 
         self.keywords = keywords
-        self.name_prefix = name_prefix
+        self.name = name
+        self.create_date = create_date
 
 
 JEDEC_CONFIGS = [
@@ -264,10 +266,40 @@ THIRD_CONFIGS = [
     # length, width, pitch, pin_count, height_nominal, height_max, lead_length, exposed_width, exposed_length, keywords
 
     # Sensirion
-    DfnConfig(2.0, 2.0, 1.0, 4, 0.75, 0.80, 0.35, 1.60, 0.70, 'sensirion,sht,shtcx,shtc1,shtc3',
-              name_prefix='Sensirion ', lead_width=0.35, no_exp=False, pin1_corner_dx_dy=0.2),
-    DfnConfig(3.0, 3.0, 1.0, 6, 1.1, 1.20, 0.4, 2.4, 1.5, 'sensirion,sht,sht2x,sht20,sht21,sht25',
-              name_prefix='Sensirion ', lead_width=0.4, no_exp=False, pin1_corner_dx_dy=0.2),
+    DfnConfig(
+        length=2.0,
+        width=2.0,
+        pitch=1.0,
+        pin_count=4,
+        height_nominal=0.75,
+        height_max=0.80,
+        lead_length=0.35,
+        lead_width=0.35,
+        exposed_width=1.60,
+        exposed_length=0.70,
+        keywords='sensirion,sht,shtcx,shtc1,shtc3',
+        name='SENSIRION_SHTCx',
+        create_date='2019-01-24T21:50:44Z',
+        no_exp=False,
+        pin1_corner_dx_dy=0.2,
+    ),
+    DfnConfig(
+        length=3.0,
+        width=3.0,
+        pitch=1.0,
+        pin_count=6,
+        height_nominal=1.1,
+        height_max=1.20,
+        lead_length=0.4,
+        lead_width=0.4,
+        exposed_width=2.4,
+        exposed_length=1.5,
+        keywords='sensirion,sht,sht2x,sht20,sht21,sht25',
+        name='SENSIRION_SHT2x',
+        create_date='2019-01-24T22:13:46Z',
+        no_exp=False,
+        pin1_corner_dx_dy=0.2,
+    ),
 
     # Microchip
     DfnConfig(2.0, 3.0, 0.5, 8, 0.90, 1.00, 0.40, 1.75, 1.45, '', no_exp=False),

@@ -86,10 +86,6 @@ def generate_pkg(
                             pin_count=config.pin_count,
                             pitch=fd(config.pitch))
 
-    # Add prefix if required
-    if config.name_prefix:
-        full_name = config.name_prefix + full_name
-
     # Add pad length for otherwise identical names/packages
     if config.print_pad:
         full_name += "P{:s}".format(fd(config.lead_length))
@@ -102,6 +98,10 @@ def generate_pkg(
             full_name += "T{}".format(exp_width)
         else:
             full_name += "T{}X{}".format(exp_width, exp_length)
+
+    # Override name if specified
+    if config.name:
+        full_name = config.name
 
     full_description = description.format(height=config.height_nominal,
                                           pin_count=config.pin_count,
@@ -136,7 +136,7 @@ def generate_pkg(
     else:
         lines.append(' (keywords "dfn{},{}")'.format(config.pin_count, keywords))
     lines.append(' (author "{}")'.format(author))
-    lines.append(' (version "0.1")')
+    lines.append(' (version "0.1.1")')
     lines.append(' (created {})'.format(create_date or now()))
     lines.append(' (deprecated false)')
     lines.append(' (category {})'.format(pkgcat))
@@ -194,7 +194,7 @@ def generate_pkg(
             lines.append('  )')
 
         # Make exposed pad, if required
-        # TODO: Handle pin1_corner_dx_dy in config
+        # TODO: Handle pin1_corner_dx_dy in config once custom pad shapes are possible
         if make_exposed:
             lines.append('  (pad {} (side top) (shape rect)'.format(uuid_exp))
             lines.append('   (position 0.0 0.0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
@@ -291,6 +291,20 @@ def generate_pkg(
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_min))
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_max))
             lines.append('  )')
+
+        # Create body outline on docu
+        uuid_body_outline = _uuid('body-outline')
+        outline_line_width = 0.2
+        dx = config.width / 2 - outline_line_width / 2
+        dy = config.length / 2 - outline_line_width / 2
+        lines.append('  (polygon {} (layer top_documentation)'.format(uuid_body_outline))
+        lines.append('   (width {}) (fill false) (grab_area false)'.format(outline_line_width))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-dx, dy))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, -dy))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-dx, -dy))
+        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-dx, dy))
+        lines.append('  )')
 
         # As discussed in https://github.com/LibrePCB-Libraries/LibrePCB_Base.lplib/pull/16
         # the silkscreen circle should have size SILKSCREEN_LINE_WIDTH for small packages,
@@ -431,6 +445,7 @@ if __name__ == '__main__':
                 keywords='dfn,dual-flat no-leads',
                 config=config,
                 make_exposed=make_exposed,
+                create_date=config.create_date,
             )
             if name not in generated_packages:
                 generated_packages.append(name)
