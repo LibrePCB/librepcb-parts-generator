@@ -191,6 +191,30 @@ class Polygon():
         return ret
 
 
+class Diameter(FloatValue):
+    def __init__(self, diameter: float):
+        super().__init__('diameter', diameter)
+
+
+class Circle():
+    def __init__(self, uuid: str, layer: Layer, width: Width, fill: Fill,
+                 grab_area: GrabArea, diameter: Diameter, position: Position):
+        self.uuid = uuid
+        self.layer = layer
+        self.width = width
+        self.fill = fill
+        self.grab_area = grab_area
+        self.diameter = diameter
+        self.position = position
+
+    def __str__(self) -> str:
+        ret = '(circle {} {}\n'.format(self.uuid, self.layer)
+        ret += ' {} {} {} {} {}\n'.format(self.width, self.fill, self.grab_area,
+                                          self.diameter, self.position)
+        ret += ')'
+        return ret
+
+
 class Value(StringValue):
     def __init__(self, value: str):
         super().__init__('value', value)
