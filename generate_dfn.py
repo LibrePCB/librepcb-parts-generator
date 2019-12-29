@@ -306,6 +306,9 @@ def generate_pkg(
         lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-dx, dy))
         lines.append('  )')
 
+        if config.extended_doc_fn:
+            config.extended_doc_fn(config, _uuid, lines)
+
         # As discussed in https://github.com/LibrePCB-Libraries/LibrePCB_Base.lplib/pull/16
         # the silkscreen circle should have size SILKSCREEN_LINE_WIDTH for small packages,
         # and twice the size for larger packages. We define small to be either W or L <3.0mm
