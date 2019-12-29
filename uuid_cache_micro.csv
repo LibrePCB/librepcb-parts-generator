@@ -66,6 +66,6 @@ sym-pic18f2455-pin-vss_8,3af0a4e6-5efe-4b83-8990-0c3cb985b961
 sym-pic18f2455-pin-vusb_14,18d1e807-08ed-44c6-8a52-c327bb3d3161
 sym-pic18f2455-polygon-contour,a5e7f055-3df1-44c2-8932-eca7b6722871
 sym-pic18f2455-polygon-decoration,f1eddd61-7b64-4b44-a6ea-80e8b6643397
-sym-pic18f2455-sym,849fb43d-75c6-4327-9f62-d01d47c1642f
 sym-pic18f2455-text-name,b0c43962-1bac-4c94-be71-16103759a0b7
 sym-pic18f2455-text-value,8f408ffd-ea6a-4440-942b-e399f6094ff2
+sym-pic18f2455_default-sym,849fb43d-75c6-4327-9f62-d01d47c1642f

@@ -6,10 +6,12 @@ import argparse
 
 parser = argparse.ArgumentParser(description='create a symbol from csv file')
 parser.add_argument("--design")
+parser.add_argument("--variant")
 parser.add_argument("--group")
 parser.add_argument("--directory")
 args = parser.parse_args()
 design_name = args.design
+variant_name = args.variant
 group_name = args.group
 directory_name = args.directory
 
@@ -17,7 +19,7 @@ directory_name = args.directory
 
 cvs_raw_data = [] 
 
-
+if variant_name == "none" : variant_name = "default"
 
 """
 
@@ -90,6 +92,7 @@ def generate_sym(
     dirpath: str,
     author: str,
     name: str,
+    variant: str,
     cmpcat: str,
     create_date: Optional[str],
 ) -> None:
@@ -172,7 +175,7 @@ def generate_sym(
 
 
 
-    uuid_sym = _uuid('sym')
+    uuid_sym = uuid('sym', '{}_{}'.format(name, variant),'sym')
     uuid_polygon = _uuid('polygon-contour')
     uuid_decoration = _uuid('polygon-decoration')
     uuid_text_name = _uuid('text-name')
@@ -314,6 +317,7 @@ if __name__ == '__main__':
         dirpath='out/{}/sym'.format(group_name),
         author='John E.',
         name=design_name,
+        variant=variant_name,
         cmpcat=cmpcat,
         create_date='2019-12-17T00:00:00Z',
     )

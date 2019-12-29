@@ -125,13 +125,13 @@ def generate_cmp(
 
           
 
-
+    variant = 'default'
 
 
     uuid_cmp = _uuid('cmp')
     uuid_variant = _uuid('variant-default')
     uuid_gate = _uuid('gate-default')
-    uuid_symbol = uuid('sym', name, 'sym')
+    uuid_symbol = uuid('sym', '{}_{}'.format(name,variant), 'sym')
     uuid_dev =   uuid('dev', name, 'dev')
 
 
