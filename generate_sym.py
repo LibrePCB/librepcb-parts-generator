@@ -19,7 +19,7 @@ directory_name = args.directory
 
 cvs_raw_data = [] 
 
-if variant_name == "none" : variant_name = "default"
+
 
 """
 
@@ -120,12 +120,23 @@ def generate_sym(
           print("Total no. of rows: %d"%(CSVxreader.line_num))
           num_of_rows = CSVxreader.line_num
 
-    pad_list =[]
-    pad_type =[]
-    pad_name =[]
+    pad_list  = []
+    pad_type  = []
+    pad_name  = []
+    pad_posx  = []
+    pad_posy  = []
+    PAD_posx  = []
+    PAD_posy  = []
+    pad_length  = []
+    pad_orientation  = []
     uuid_pins = []
     num_of_pins = 0
-    
+    low_x  = 0
+    low_y  = 0
+    high_x  = 0
+    high_y  = 0
+
+
     for row in cvs_raw_data[:num_of_rows]: 
       # parsing each column of a row
       row_type =row[0]
@@ -134,21 +145,50 @@ def generate_sym(
       if row_type == "VERSION" :        version =row[1]
       if row_type == "KEYWORDS" :       keywords =row[1]
 
-      
+      if row_type == "RECT" :
+           low_x  =float(row[1])
+           low_y  =float(row[2])
+           high_x =float(row[3])
+           high_y =float(row[4])
+
+
+
+           
 
       if row_type == "PIN" :
         pin_type =row[2]
         if pin_type == "R" :
             left_count   = left_count   +1
             left_length = max(round(len(row[1])/5),left_length)
+            pad_orientation.append(0.0)
+            
         if pin_type == "L" :
             right_count  = right_count  +1
             right_length = max(round(len(row[1])/5),right_length)
-        if pin_type == "D" :top_count    = top_count    +1
-        if pin_type == "U" :bottom_count = bottom_count +1
+            pad_orientation.append(180.0)
+        if pin_type == "D" :
+            top_count    = top_count    +1
+            pad_orientation.append(270.0)
+            
+        if pin_type == "U" :
+            bottom_count = bottom_count +1
+            pad_orientation.append(90.0)
+            
         pad_name.append(row[1])
         pad_type.append(row[2])
         pad_list.append(row[3])
+        if variant != "default" :   
+          pad_posx.append(float(row[4])/39.3701)
+          pad_posy.append(float(row[5])/39.3701)
+
+        if variant == "default" :   
+          pad_posx.append(0)
+          pad_posy.append(0)
+
+
+        pad_length.append(width)
+
+
         uuid_pins.append(uuid('sym',name,'pin-{}_{}'.format(row[1],row[3])))
         num_of_pins = num_of_pins +1
 
@@ -181,24 +221,7 @@ def generate_sym(
     uuid_text_name = _uuid('text-name')
     uuid_text_value = _uuid('text-value')
 
-    for p in range(1, num_of_pins + 1, 1):
 
-         print('Sym   {} {} {}  '.format(pad_name[p-1],pad_list[p-1],  uuid_pins[p-1] ))
-
-
-    
-    # General info
-    symbol = Symbol(
-            uuid_sym,
-            Name('{}'.format(name)),
-            Description('created from file---  {}.\\n'
-                        'Generated with {}'.format(cvs_file, generator)),
-            Keywords('{}'.format( keywords)),
-            Author(author),
-            Version(version),
-            Created(create_date or now()),
-            Category(cmpcat),
-        )    
 
     y_max      =  round(real_height/2) * width 
     y_min      = -round(real_height/2) * width
@@ -210,78 +233,124 @@ def generate_sym(
     top_pin    = w -width*6
     bottom_pin = w -width*4
 
+
+    
+    for p in range(1, num_of_pins + 1, 1):
+
+      print('Sym   {} {} {} {} '.format(pad_name[p-1],pad_list[p-1],  pad_posx[p-1],pad_posy[p-1] ))
+
+      if variant == "default" :   
+      
+        # parsing each column of a row
+        pin_type =pad_type[p-1]
+        if pin_type == "R" :
+                            pad_posx[p-1] =  x_min-width
+                            pad_posy[p-1] =  left_pin
+                            left_pin      =  left_pin -width
+
+        if pin_type == "L" :
+                            pad_posx[p-1] =  x_max+width
+                            pad_posy[p-1] =  right_pin
+                            right_pin =  right_pin -width
+
+        if pin_type == "D" :
+                            pad_posx[p-1] =  top_pin
+                            pad_posy[p-1] =  y_max+ width
+                            top_pin =  top_pin -width
+
+
+        if pin_type == "U" :
+                            pad_posx[p-1] =  bottom_pin
+                            pad_posy[p-1] =  y_min - width
+                            bottom_pin =  bottom_pin -width            
+
+
+
+
+         
+    # General info
+    symbol = Symbol(
+            uuid_sym,
+            Name('{}'.format(name)),
+            Description('created from file---  {}.\\nVariant-{}\\n'
+                        'Generated with {}'.format(cvs_file,variant, generator)),
+            Keywords('{}'.format( keywords)),
+            Author(author),
+            Version(version),
+            Created(create_date or now()),
+            Category(cmpcat),
+        )    
+
+
+
     for p in range(1, num_of_pins + 1, 1):
       # parsing each column of a row
-      pin_type =pad_type[p-1]
-      pin_name =pad_name[p-1]
-      if pin_type == "R" :      pin = SymbolPin(
-                            uuid_pins[p - 1],
-                            Name( pin_name),
-                            Position((x_min-width) , left_pin),
-                            Rotation(0.0),
-                            Length(width)
-                            )
-
-      if pin_type == "L" :      pin = SymbolPin(
-                            uuid_pins[p - 1],
-                            Name( pin_name),
-                            Position((x_max+width) , right_pin),
-                            Rotation(180.0),
-                            Length(width)
-                            )
-
-      if pin_type == "D" :      pin = SymbolPin(
-                            uuid_pins[p - 1],
-                            Name( pin_name),
-                            Position((top_pin) , y_max+ width),
-                            Rotation(270.0),
-                            Length(width)
-                            )
-
-
-      if pin_type == "U" :      pin = SymbolPin(
-                            uuid_pins[p - 1],
-                            Name( pin_name),
-                            Position((bottom_pin) , y_min - width),
-                            Rotation(90.0),
-                            Length(width)
-                            )
-
+      pin_type   = pad_type[p-1]
+      pin_name   = pad_name[p-1]
+      pin_posx   = pad_posx[p-1]
+      pin_posy   = pad_posy[p-1]
+      pin_length = pad_length[p-1]
+      pin_orient = pad_orientation[p-1]
       
 
-      
-                            
-      if pin_type == "R" :      left_pin =  left_pin -width
+      pin = SymbolPin(
+                     uuid_pins[p - 1],
+                     Name( pin_name),
+                     Position(pin_posx , pin_posy),
+                     Rotation(pin_orient),
+                     Length(pin_length)
+                     )
 
-      if pin_type == "L" :      right_pin =  right_pin -width
 
-      if pin_type == "D" :      top_pin =  top_pin -width
-
-      if pin_type == "U" :      bottom_pin =  bottom_pin -width            
-                            
-      p = p +1
       symbol.add_pin(pin)
 
 
             
     # Polygons
+    if variant == "default" :   
+
+        print("Polygon  %d  %d   "%(y_max,w))
+        polygon = Polygon(
+             uuid_polygon,
+             Layer('sym_outlines'),
+             Width(line_width),
+             Fill(False),
+             GrabArea(True)
+            )
+        polygon.add_vertex(Vertex(Position(-w, y_max), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(w, y_max), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(w, y_min), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-w, y_min), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-w, y_max), Angle(0.0)))
+        symbol.add_polygon(polygon)
 
 
-    print("Polygon  %d  %d   "%(y_max,w))
-    polygon = Polygon(
-            uuid_polygon,
-            Layer('sym_outlines'),
-            Width(line_width),
-            Fill(False),
-            GrabArea(True)
-        )
-    polygon.add_vertex(Vertex(Position(-w, y_max), Angle(0.0)))
-    polygon.add_vertex(Vertex(Position(w, y_max), Angle(0.0)))
-    polygon.add_vertex(Vertex(Position(w, y_min), Angle(0.0)))
-    polygon.add_vertex(Vertex(Position(-w, y_min), Angle(0.0)))
-    polygon.add_vertex(Vertex(Position(-w, y_max), Angle(0.0)))
-    symbol.add_polygon(polygon)
 
+
+    if variant != "default" :   
+
+
+        polygon = Polygon(
+             uuid_polygon,
+             Layer('sym_outlines'),
+             Width(line_width),
+             Fill(False),
+             GrabArea(True)
+            )
+        polygon.add_vertex(Vertex(Position(low_x, high_y), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(high_x, high_y), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(high_x, low_y), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(low_x, low_y), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(low_x, high_y), Angle(0.0)))
+        symbol.add_polygon(polygon)
+
+
+
+
+        
+
+
+        
 
     # Text
 
