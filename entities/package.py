@@ -3,8 +3,8 @@ from typing import List
 from common import format_float
 
 from .common import (
-    Align, Author, BoolValue, Category, Created, Deprecated, Description, EnumValue, FloatValue, Height, Keywords,
-    Layer, Name, Polygon, Position, Rotation, Value, Version
+    Align, Author, BoolValue, Category, Circle, Created, Deprecated, Description, EnumValue, FloatValue, Height,
+    Keywords, Layer, Name, Polygon, Position, Rotation, Value, Version
 )
 from .helper import indent_entities
 
@@ -130,6 +130,7 @@ class Footprint():
         self.description = description
         self.pads = []  # type: List[FootprintPad]
         self.polygons = []  # type: List[Polygon]
+        self.circles = []  # type: List[Circle]
         self.texts = []  # type: List[StrokeText]
 
     def add_pad(self, pad: FootprintPad) -> None:
@@ -137,6 +138,9 @@ class Footprint():
 
     def add_polygon(self, polygon: Polygon) -> None:
         self.polygons.append(polygon)
+
+    def add_circle(self, circle: Circle) -> None:
+        self.circles.append(circle)
 
     def add_text(self, text: StrokeText) -> None:
         self.texts.append(text)
@@ -147,6 +151,7 @@ class Footprint():
             ' {}\n'.format(self.description)
         ret += indent_entities(self.pads)
         ret += indent_entities(self.polygons)
+        ret += indent_entities(self.circles)
         ret += indent_entities(self.texts)
         ret += ')'
         return ret
