@@ -7,10 +7,12 @@ import argparse
 parser = argparse.ArgumentParser(description='create a component from csv file')
 parser.add_argument("--design")
 parser.add_argument("--group")
+parser.add_argument("--variant")
 parser.add_argument("--directory")
 args = parser.parse_args()
 design_name = args.design
 group_name = args.group
+variant_name = args.variant
 directory_name = args.directory
 
 # initializing 
@@ -125,13 +127,26 @@ def generate_cmp(
 
           
 
-    variant = 'default'
+
 
 
     uuid_cmp = _uuid('cmp')
-    uuid_variant = _uuid('variant-default')
-    uuid_gate = _uuid('gate-default')
-    uuid_symbol = uuid('sym', '{}_{}'.format(name,variant), 'sym')
+
+
+    uuid_variant_default = _uuid('variant-default')
+    uuid_gate_default = _uuid('gate-default')
+    uuid_symbol_default = uuid('sym', '{}_default'.format(name), 'sym')
+
+
+
+    uuid_variant_variant = _uuid('variant-{}'.format(variant_name))
+    uuid_gate_variant = _uuid('gate-{}'.format(variant_name))
+    uuid_symbol_variant = uuid('sym', '{}_{}'.format(name,variant_name), 'sym')
+    
+
+
+
+
     uuid_dev =   uuid('dev', name, 'dev')
 
 
@@ -169,13 +184,14 @@ def generate_cmp(
             ))
 
     gate = Gate(
-            uuid_gate,
-            SymbolUUID(uuid_symbol),
+            uuid_gate_default,
+            SymbolUUID(uuid_symbol_default),
             Position(0.0, 0.0),
             Rotation(0.0),
             Required(True),
             Suffix(''),
         )
+    
     for p in range(1, num_of_pins+ 1):
             gate.add_pin_signal_map(PinSignalMap(
                 uuid_pins[p - 1],
@@ -184,13 +200,38 @@ def generate_cmp(
             ))
 
 
+    component.add_variant(Variant(uuid_variant_default, Norm.EMPTY, Name('default'), Description(''), gate))
+
+
+
+    if uuid_symbol_default != uuid_symbol_variant :
+
+
+      gate = Gate(
+            uuid_gate_variant,
+            SymbolUUID(uuid_symbol_variant),
+            Position(0.0, 0.0),
+            Rotation(0.0),
+            Required(True),
+            Suffix(''),
+          )
+    
+      for p in range(1, num_of_pins+ 1):
+            gate.add_pin_signal_map(PinSignalMap(
+                uuid_pins[p - 1],
+                SignalUUID(uuid_signals[p - 1]),
+                TextDesignator.SYMBOL_PIN_NAME,
+            ))
+
+
+      component.add_variant(Variant(uuid_variant_variant, Norm.EMPTY, Name(variant_name), Description(''), gate))
 
 
 
 
+    
 
-            
-    component.add_variant(Variant(uuid_variant, Norm.EMPTY, Name('default'), Description(''), gate))
+
 
     component.serialize(dirpath)
       

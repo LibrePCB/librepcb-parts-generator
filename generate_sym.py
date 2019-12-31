@@ -180,13 +180,14 @@ def generate_sym(
         if variant != "default" :   
           pad_posx.append(float(row[4])/39.3701)
           pad_posy.append(float(row[5])/39.3701)
-
+          pad_length.append(float(row[6])/39.3701)
+          
         if variant == "default" :   
           pad_posx.append(0)
           pad_posy.append(0)
+          pad_length.append(width)
 
 
-        pad_length.append(width)
 
 
         uuid_pins.append(uuid('sym',name,'pin-{}_{}'.format(row[1],row[3])))
