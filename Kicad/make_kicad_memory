@@ -1,0 +1,13 @@
+rm kicad_memory_script
+rm -r kicad_memory
+rm -r out/kicad_memory
+../split_kicad_lib  -group kicad_memory ./Kicad_symbols/Memory_Controller.lib   >> kicad_memory_script
+../split_kicad_lib  -group kicad_memory ./Kicad_symbols/Memory_EEPROM.lib   >> kicad_memory_script
+../split_kicad_lib  -group kicad_memory ./Kicad_symbols/Memory_EPROM.lib   >> kicad_memory_script
+../split_kicad_lib  -group kicad_memory ./Kicad_symbols/Memory_Flash.lib   >> kicad_memory_script
+../split_kicad_lib  -group kicad_memory ./Kicad_symbols/Memory_NVRAM.lib   >> kicad_memory_script
+../split_kicad_lib  -group kicad_memory ./Kicad_symbols/Memory_RAM.lib   >> kicad_memory_script
+../split_kicad_lib  -group kicad_memory ./Kicad_symbols/Memory_ROM.lib   >> kicad_memory_script
+../split_kicad_lib  -group kicad_memory ./Kicad_symbols/Memory_UniqueID.lib   >> kicad_memory_script
+chmod 755 kicad_memory_script
+./kicad_memory_script

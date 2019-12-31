@@ -1,0 +1,17 @@
+rm kicad_stm_script
+rm -r kicad_stm
+rm -r out/kicad_stm
+../split_kicad_lib  -group kicad_stm ./Kicad_symbols/MCU_ST_STM32F0.lib   >> kicad_stm_script
+../split_kicad_lib  -group kicad_stm ./Kicad_symbols/MCU_ST_STM32F1.lib   >> kicad_stm_script
+../split_kicad_lib  -group kicad_stm ./Kicad_symbols/MCU_ST_STM32F2.lib   >> kicad_stm_script
+../split_kicad_lib  -group kicad_stm ./Kicad_symbols/MCU_ST_STM32F3.lib   >> kicad_stm_script
+../split_kicad_lib  -group kicad_stm ./Kicad_symbols/MCU_ST_STM32F4.lib   >> kicad_stm_script
+../split_kicad_lib  -group kicad_stm ./Kicad_symbols/MCU_ST_STM32F7.lib   >> kicad_stm_script
+../split_kicad_lib  -group kicad_stm ./Kicad_symbols/MCU_ST_STM32H7.lib   >> kicad_stm_script
+../split_kicad_lib  -group kicad_stm ./Kicad_symbols/MCU_ST_STM32L0.lib   >> kicad_stm_script
+../split_kicad_lib  -group kicad_stm ./Kicad_symbols/MCU_ST_STM32L1.lib   >> kicad_stm_script
+../split_kicad_lib  -group kicad_stm ./Kicad_symbols/MCU_ST_STM32L4.lib   >> kicad_stm_script
+../split_kicad_lib  -group kicad_stm ./Kicad_symbols/MCU_ST_STM32L4+.lib  >> kicad_stm_script
+../split_kicad_lib  -group kicad_stm ./Kicad_symbols/MCU_ST_STM8.lib      >> kicad_stm_script
+chmod 755 kicad_stm_script
+./kicad_stm_script

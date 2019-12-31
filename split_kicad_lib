@@ -99,8 +99,6 @@ $_ =   $input_file;
   #printf (" %s\n", $2);
   }
 
-
-
   $_ =   $prog_name;
     my @words = split /-/,$prog_name;
     my $line;
@@ -126,13 +124,10 @@ foreach $line (@library_file)
 
       while ($unit_count >0)
              {
-             printf ("./sym2csv -group %s -Part %s   %s  \n",$group,$unit_count ,$output_file);
+             printf ("../sym2csv -group %s -Part %s   %s  \n",$group,$unit_count ,$output_file);
 	     printf ("python3.7 ../generate_sym.py --group %s --variant default  --directory  ./%s/    --design  %s \n",$group, $group,$name);
 	     printf ("python3.7 ../generate_sym.py --group %s --variant kicad    --directory  ./%s/    --design  %s \n",$group, $group,$name);
 	     printf ("python3.7 ../generate_cmp.py --group %s --variant kicad    --directory  ./%s/    --design  %s \n",$group, $group,$name);
-	     printf ("python3.7 ../generate_dev.py --group %s                    --directory  ./%s/    --design  %s \n",$group, $group,$name);
-
-
              $unit_count = $unit_count -1;
              }
 
