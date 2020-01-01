@@ -436,17 +436,6 @@ foreach $line (@intel_hex)
         my $convert     = ($7);
 	my $thickness   = ($8/39.37);
 
-       $ver_a = $a;
-       $ver_b = $b;
-       $ver_c = $c;
-       $ver_d = $d;
-
-
-
-
-
-
-
 
 
   if(($unit == 0)||(($Part == $unit)&&($convert < 2))) 
@@ -456,7 +445,10 @@ foreach $line (@intel_hex)
             if($low_x > $c){ $low_x = $c;};
             if($hi_y < $d) { $hi_y = $d;};
 
-
+       $ver_a = $a;
+       $ver_b = $b;
+       $ver_c = $c;
+       $ver_d = $d;
 
 
         printf VERILOG (" (polygon %s (layer sym_outlines)\n",$pin_uuid);

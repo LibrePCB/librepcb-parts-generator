@@ -103,12 +103,14 @@ def generate_cmp(
     uuid_pins =[]
     uuid_signals =[]
     num_of_pins  = 0
+    units        = 0
     for row in cvs_raw_data[:num_of_rows]: 
       # parsing each column of a row
       row_type =row[0]
 
-      if row_type == "VERSION" :        version =row[1]
+      if row_type == "VERSION" :        version  =row[1]
       if row_type == "KEYWORDS" :       keywords =row[1]
+      if row_type == "UNITS" :          units    =row[1]
 
         
 
@@ -139,11 +141,9 @@ def generate_cmp(
 
 
 
-    uuid_variant_variant = _uuid('variant-{}'.format(variant_name))
-    uuid_gate_variant = _uuid('gate-{}'.format(variant_name))
-    uuid_symbol_variant = uuid('sym', '{}_{}'.format(name,variant_name), 'sym')
-    
 
+      
+    uuid_variant_variant = _uuid('variant-{}'.format(variant_name))
 
 
 
@@ -203,11 +203,41 @@ def generate_cmp(
     component.add_variant(Variant(uuid_variant_default, Norm.EMPTY, Name('default'), Description(''), gate))
 
 
+    if units != 0 :
+        uuid_symbol_variant = uuid('sym', '{}_{}_{}'.format(name,units,variant_name), 'sym')
+        uuid_gate_variant = _uuid('gate-{}_{}'.format(units,variant_name))
+
+    else:
+        uuid_symbol_variant = uuid('sym', '{}_{}'.format(name,variant_name), 'sym')
+        uuid_gate_variant = _uuid('gate-{}'.format(variant_name))
 
     if uuid_symbol_default != uuid_symbol_variant :
 
+      if units != 0 :
+        gate = Gate(
+            uuid_gate_variant,
+            SymbolUUID(uuid_symbol_variant),
+            Position(0.0, 0.0),
+            Rotation(0.0),
+            Required(True),
+            Suffix(''),
+          )
 
-      gate = Gate(
+
+        for p in range(1, num_of_pins+ 1):
+            gate.add_pin_signal_map(PinSignalMap(
+                uuid_pins[p - 1],
+                SignalUUID(uuid_signals[p - 1]),
+                TextDesignator.SYMBOL_PIN_NAME,
+            ))
+        
+        component.add_variant(Variant(uuid_variant_variant, Norm.EMPTY, Name(variant_name), Description(''), gate))
+
+
+
+      else:
+
+        gate = Gate(
             uuid_gate_variant,
             SymbolUUID(uuid_symbol_variant),
             Position(0.0, 0.0),
@@ -216,19 +246,25 @@ def generate_cmp(
             Suffix(''),
           )
     
-      for p in range(1, num_of_pins+ 1):
-            gate.add_pin_signal_map(PinSignalMap(
-                uuid_pins[p - 1],
-                SignalUUID(uuid_signals[p - 1]),
-                TextDesignator.SYMBOL_PIN_NAME,
-            ))
 
 
-      component.add_variant(Variant(uuid_variant_variant, Norm.EMPTY, Name(variant_name), Description(''), gate))
+        component.add_variant(Variant(uuid_variant_variant, Norm.EMPTY, Name(variant_name), Description(''), gate))
 
 
 
 
+
+
+
+
+
+
+      
+
+
+
+
+      
     
 
 

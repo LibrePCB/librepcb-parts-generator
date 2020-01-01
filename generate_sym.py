@@ -47,19 +47,6 @@ from entities.symbol import Symbol
 
 generator = 'librepcb-parts-generator (generate_sym.py)'
 
-width = 2.54
-line_width = 0.25
-pkg_text_height = 1.0
-sym_text_height = 2.54
-
-
-part = float(part_name)
-
-if part >= 1 :
-   design_name = '{}_{}'.format(design_name,part_name)
-
-
-
 def uuid(category: str, kind: str, identifier: str) -> str:
     """
     Return a uuid for the specified pin.
@@ -78,6 +65,16 @@ def uuid(category: str, kind: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
+
+
+width = 2.54
+line_width = 0.25
+pkg_text_height = 1.0
+sym_text_height = 2.54
+
+
+   
+
 uuid_cmpcat_file = 'uuid_cache_{}_cmpcat.csv'.format(group_name)
 uuid_cache = init_cache(uuid_cmpcat_file)
 cmpcat = uuid('cmpcat',design_name,"cmpcat")
@@ -90,6 +87,14 @@ uuid_cache_file = 'uuid_cache_{}.csv'.format(group_name)
 uuid_cache = init_cache(uuid_cache_file)
 
 
+part = float(part_name)
+
+if part >= 1 :
+   cvs_file='{}{}_{}.csv'.format(directory_name,design_name,part_name)
+   uuid_sym = uuid('sym', '{}_{}_{}'.format(design_name,part_name, variant_name),'sym')
+else:
+   cvs_file='{}{}.csv'.format(directory_name,design_name)
+   uuid_sym = uuid('sym', '{}_{}'.format(design_name, variant_name),'sym')
 
 
 
@@ -99,6 +104,7 @@ def generate_sym(
     dirpath: str,
     author: str,
     name: str,
+    part: str,
     variant: str,
     cmpcat: str,
     create_date: Optional[str],
@@ -223,7 +229,7 @@ def generate_sym(
 
 
 
-    uuid_sym = uuid('sym', '{}_{}'.format(name, variant),'sym')
+
     uuid_polygon = _uuid('polygon-contour')
     uuid_decoration = _uuid('polygon-decoration')
     uuid_text_name = _uuid('text-name')
@@ -275,11 +281,22 @@ def generate_sym(
 
 
 
+
+
+
+    if part >= 1 :
+      sym_name='{}_{}'.format(name,part_name)
+    else:
+      sym_name='{}'.format(name)
+
+
+                            
+
          
     # General info
     symbol = Symbol(
             uuid_sym,
-            Name('{}'.format(name)),
+            Name('{}'.format(sym_name)),
             Description('created from file---  {}.\\nVariant-{}\\n'
                         'Generated with {}'.format(cvs_file,variant, generator)),
             Keywords('{}'.format( keywords)),
@@ -390,10 +407,11 @@ if __name__ == '__main__':
 
 
     generate_sym(
-        cvs_file='{}{}.csv'.format(directory_name,design_name),
+        cvs_file=cvs_file,
         dirpath='out/{}/sym'.format(group_name),
         author='John E.',
         name=design_name,
+        part=part,
         variant=variant_name,
         cmpcat=cmpcat,
         create_date='2019-12-17T00:00:00Z',
