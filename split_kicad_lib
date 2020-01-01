@@ -122,14 +122,19 @@ foreach $line (@library_file)
       $output_file  = "${path}/${name}.sym";
       open  LIBREPCB_SYM , ">  $output_file";
 
+
+      printf ("../sym2cmp -group %s   %s  \n",$group,$output_file);
+      printf ("python3.7 ../generate_sym.py --part 0 --group %s --variant default  --directory  ./%s/    --design  %s \n",$group, $group,$name);
+      printf ("python3.7 ../generate_sym.py --part 0 --group %s --variant kicad    --directory  ./%s/    --design  %s \n",$group, $group,$name);
       while ($unit_count >0)
              {
              printf ("../sym2csv -group %s -Part %s   %s  \n",$group,$unit_count ,$output_file);
-	     printf ("python3.7 ../generate_sym.py --group %s --variant default  --directory  ./%s/    --design  %s \n",$group, $group,$name);
-	     printf ("python3.7 ../generate_sym.py --group %s --variant kicad    --directory  ./%s/    --design  %s \n",$group, $group,$name);
-	     printf ("python3.7 ../generate_cmp.py --group %s --variant kicad    --directory  ./%s/    --design  %s \n",$group, $group,$name);
+	     printf ("python3.7 ../generate_sym.py  --part %s --group %s --variant default  --directory  ./%s/    --design  %s \n",$unit_count ,$group, $group,$name);
+	     printf ("python3.7 ../generate_sym.py  --part %s --group %s --variant kicad    --directory  ./%s/    --design  %s \n",$unit_count ,$group, $group,$name);
              $unit_count = $unit_count -1;
              }
+      printf ("python3.7 ../generate_cmp.py --group %s --variant kicad    --directory  ./%s/    --design  %s \n",$group, $group,$name);
+
 
       }
 

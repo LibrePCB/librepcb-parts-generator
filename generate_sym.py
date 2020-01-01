@@ -9,11 +9,14 @@ parser.add_argument("--design")
 parser.add_argument("--variant")
 parser.add_argument("--group")
 parser.add_argument("--directory")
+parser.add_argument("--part")
+
 args = parser.parse_args()
 design_name = args.design
 variant_name = args.variant
 group_name = args.group
 directory_name = args.directory
+part_name = args.part
 
 # initializing 
 
@@ -50,6 +53,10 @@ pkg_text_height = 1.0
 sym_text_height = 2.54
 
 
+part = float(part_name)
+
+if part >= 1 :
+   design_name = '{}_{}'.format(design_name,part_name)
 
 
 
