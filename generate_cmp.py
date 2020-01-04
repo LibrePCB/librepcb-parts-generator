@@ -139,21 +139,7 @@ def generate_cmp(
     uuid_variant_default = _uuid('variant-default')
     uuid_gate_default = _uuid('gate-default')
     uuid_symbol_default = uuid('sym', '{}_default'.format(name), 'sym')
-
-
-
-
-      
-
-
-
-
     uuid_dev =   uuid('dev', name, 'dev')
-
-
-
-
-
     
     # General info
     component = Component(
@@ -201,29 +187,49 @@ def generate_cmp(
             ))
 
 
-    component.add_variant(Variant(uuid_variant_default, Norm.EMPTY, Name('default'), Description(''), gate))
+    variant = Variant(  uuid_variant_default,
+                              Norm.EMPTY,
+                              Name('default'),
+                              Description('')
+                              )
+
+
+    variant.add_gate(gate)
+
+    component.add_variant(variant)
+
+
+
 
     uuid_symbol_variant = uuid('sym', '{}_{}'.format(name,variant_name), 'sym')
-
+    uuid_variant_variant = _uuid('variant-{}'.format(variant_name))
     
     if uuid_symbol_default != uuid_symbol_variant :
 
         iunits = int(units)
+        variant = Variant(  uuid_variant_variant,
+                              Norm.EMPTY,
+                              Name('{}'.format(variant_name)),
+                              Description('')
+                              )
+
+        position =0.0
         for u in range(1, iunits+1):
     
           uuid_symbol_variant = uuid('sym', '{}_{}_{}'.format(name,u,variant_name), 'sym')
           uuid_gate_variant = _uuid('gate-{}_{}'.format(u,variant_name))
-          uuid_variant_variant = _uuid('variant-{}_{}'.format(variant_name,u))
+
           gate = Gate(
             uuid_gate_variant,
             SymbolUUID(uuid_symbol_variant),
-            Position(0.0, 0.0),
+            Position(0.0, position),
             Rotation(0.0),
             Required(True),
             Suffix(''),
           )
-
-
+   
+          position = position + 100.0
+          
           for p in range(1, num_of_pins+ 1):
 
               if u == int(pad_unit[p-1]) :
@@ -234,16 +240,9 @@ def generate_cmp(
                        TextDesignator.SYMBOL_PIN_NAME,
                        ))
 
-          variant = Variant(  uuid_variant_variant,
-                              Norm.EMPTY,
-                              Name('{}_{}'.format(variant_name,u)),
-                              Description('{}'.format(u)),
-                              gate)
+          variant.add_gate(gate)
 
-
-
-
-          component.add_variant(variant)
+        component.add_variant(variant)
 
 
 
