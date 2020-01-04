@@ -130,7 +130,7 @@ def generate_sym(
                cvs_raw_data.append(row) 
                
                
-          print("Total no. of rows: %d"%(CSVxreader.line_num))
+          print("                                            Total no. of rows: %d"%(CSVxreader.line_num))
           num_of_rows = CSVxreader.line_num
 
     pad_list  = []
@@ -212,12 +212,6 @@ def generate_sym(
 
 
 
-    print("%10s Top   "%top_count)
-    print("%10s Bottom"%bottom_count)
-    print("%10s Left  "%left_count)
-    print("%10s Right "%right_count)        
-    print("Width    : %d"%real_width)
-    print("Height   : %d"%real_height)
     
 
 
@@ -251,7 +245,7 @@ def generate_sym(
     
     for p in range(1, num_of_pins + 1, 1):
 
-      print('Sym   {} {} {} {} '.format(pad_name[p-1],pad_list[p-1],  pad_posx[p-1],pad_posy[p-1] ))
+
 
       if variant == "default" :   
       
@@ -334,7 +328,7 @@ def generate_sym(
     # Polygons
     if variant == "default" :   
 
-        print("Polygon  %d  %d   "%(y_max,w))
+
         polygon = Polygon(
              uuid_polygon,
              Layer('sym_outlines'),
@@ -394,7 +388,7 @@ def generate_sym(
             f.write(str(symbol))
             f.write('\n')
 
-    print(' {}: Wrote symbol {}'.format( name, uuid_sym))
+    print('                                            {}: Wrote symbol {}'.format( name, uuid_sym))
 
             
 if __name__ == '__main__':

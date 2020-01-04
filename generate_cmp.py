@@ -100,6 +100,7 @@ def generate_cmp(
 
     pad_list =[]
     pad_name =[]
+    pad_unit =[]
     uuid_pins =[]
     uuid_signals =[]
     num_of_pins  = 0
@@ -120,8 +121,8 @@ def generate_cmp(
           uuid_pins.append(uuid('sym', name,'pin-{}_{}'.format(row[1],row[3])))
           uuid_signals.append(uuid('cmp', name,'signal-{}_{}'.format(row[1],row[3])))
           num_of_pins = num_of_pins + 1
-
-      
+          if units  != 0:  
+              pad_unit.append(row[10])
       
     def _uuid(identifier: str) -> str:
             return uuid(category, name, identifier)
@@ -143,7 +144,7 @@ def generate_cmp(
 
 
       
-    uuid_variant_variant = _uuid('variant-{}'.format(variant_name))
+
 
 
 
@@ -202,56 +203,47 @@ def generate_cmp(
 
     component.add_variant(Variant(uuid_variant_default, Norm.EMPTY, Name('default'), Description(''), gate))
 
+    uuid_symbol_variant = uuid('sym', '{}_{}'.format(name,variant_name), 'sym')
 
-    if units != 0 :
-        uuid_symbol_variant = uuid('sym', '{}_{}_{}'.format(name,units,variant_name), 'sym')
-        uuid_gate_variant = _uuid('gate-{}_{}'.format(units,variant_name))
-
-    else:
-        uuid_symbol_variant = uuid('sym', '{}_{}'.format(name,variant_name), 'sym')
-        uuid_gate_variant = _uuid('gate-{}'.format(variant_name))
-
+    
     if uuid_symbol_default != uuid_symbol_variant :
 
-      if units != 0 :
-        gate = Gate(
-            uuid_gate_variant,
-            SymbolUUID(uuid_symbol_variant),
-            Position(0.0, 0.0),
-            Rotation(0.0),
-            Required(True),
-            Suffix(''),
-          )
-
-
-        for p in range(1, num_of_pins+ 1):
-            gate.add_pin_signal_map(PinSignalMap(
-                uuid_pins[p - 1],
-                SignalUUID(uuid_signals[p - 1]),
-                TextDesignator.SYMBOL_PIN_NAME,
-            ))
-        
-        component.add_variant(Variant(uuid_variant_variant, Norm.EMPTY, Name(variant_name), Description(''), gate))
-
-
-
-      else:
-
-        gate = Gate(
-            uuid_gate_variant,
-            SymbolUUID(uuid_symbol_variant),
-            Position(0.0, 0.0),
-            Rotation(0.0),
-            Required(True),
-            Suffix(''),
-          )
+        iunits = int(units)
+        for u in range(1, iunits+1):
     
+          uuid_symbol_variant = uuid('sym', '{}_{}_{}'.format(name,u,variant_name), 'sym')
+          uuid_gate_variant = _uuid('gate-{}_{}'.format(u,variant_name))
+          uuid_variant_variant = _uuid('variant-{}_{}'.format(variant_name,u))
+          gate = Gate(
+            uuid_gate_variant,
+            SymbolUUID(uuid_symbol_variant),
+            Position(0.0, 0.0),
+            Rotation(0.0),
+            Required(True),
+            Suffix(''),
+          )
 
 
-        component.add_variant(Variant(uuid_variant_variant, Norm.EMPTY, Name(variant_name), Description(''), gate))
+          for p in range(1, num_of_pins+ 1):
+
+              if u == int(pad_unit[p-1]) :
+
+                    gate.add_pin_signal_map(
+                       PinSignalMap(uuid_pins[p - 1],
+                       SignalUUID(uuid_signals[p - 1]),
+                       TextDesignator.SYMBOL_PIN_NAME,
+                       ))
+
+          variant = Variant(  uuid_variant_variant,
+                              Norm.EMPTY,
+                              Name('{}_{}'.format(variant_name,u)),
+                              Description('{}'.format(u)),
+                              gate)
 
 
 
+
+          component.add_variant(variant)
 
 
 
@@ -280,7 +272,7 @@ def generate_cmp(
             f.write(str(component))
             f.write('\n')
 
-    print(': Wrote component {}'.format( uuid_cmp))
+    print('                          :Wrote component {} {}'.format(design_name, uuid_cmp))
 
             
 if __name__ == '__main__':

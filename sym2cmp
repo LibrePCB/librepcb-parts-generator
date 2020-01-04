@@ -142,8 +142,8 @@ unless($Part){ $Part = 1;}
 
 
 
-  print "Reading kicad     File  $input_file\n";  
-#  print "Writing librePCB  File  $output_file\n";  
+  print "                          Reading kicad     File  $input_file\n";  
+
 
 
 
@@ -195,7 +195,7 @@ foreach $line (@intel_hex)
        }
 
 
-printf("processing %s\n",$cmp_name);
+printf("                          processing %s\n",$cmp_name);
 #unless ($cmp_name){printf("Warning Will Robinson\n");}
 
 printf VERILOG (" (name \"%s\")\n",$cmp_name);
@@ -351,8 +351,8 @@ if(1)
 	 $pin_side    = $8;
 	 $pin_Snum    = $9;
 	 $pin_Snom    = $10;
-	 $pin_unit    = 11;
-	 $pin_convert = 12;
+	 $pin_unit    = $11;
+	 $pin_convert = $12;
 
          printf COMPONENT ("PIN,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",$pin_name,$pin_side,$pin_number,$pin_posx,$pin_posy,$pin_length,$pin_side,$pin_Snum,$pin_Snom,$pin_unit,$pin_convert);
 

@@ -122,7 +122,7 @@ def generate_dev(
         uuid_signals.append(uuid('cmp', name, 'signal-{}_{}'.format(row[1],row[3])) )
         num_of_pins = num_of_pins +1
         
-    print("device: %s Number of pins %s"%(design_name,num_of_pins ))    
+    print("                          device: %s Number of pins %s"%(design_name,num_of_pins ))    
         
 
 
@@ -164,7 +164,7 @@ def generate_dev(
                  f.write('\n'.join(lines))
                  f.write('\n')
 
-      print(' {}'.format(uuid_dev))
+      print('                           {}'.format(uuid_dev))
 
 
 

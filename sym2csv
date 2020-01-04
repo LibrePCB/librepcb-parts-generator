@@ -142,8 +142,8 @@ unless($Part){ $Part = 1;}
 
 
 
-  print "Reading kicad     File  $input_file\n";  
-#  print "Writing librePCB  File  $output_file\n";  
+  print "                          Reading   kicad     File  $input_file\n";  
+
 
 
 
@@ -195,7 +195,7 @@ foreach $line (@intel_hex)
        }
 
 
-printf("processing %s\n",$cmp_name);
+printf("                          processing %s\n",$cmp_name);
 #unless ($cmp_name){printf("Warning Will Robinson\n");}
 
 printf VERILOG (" (name \"%s\")\n",$cmp_name);
