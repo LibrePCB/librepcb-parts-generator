@@ -1,0 +1,10 @@
+rm kicad_trans_script
+rm -r kicad_trans
+rm -r out/kicad_trans
+../split_kicad_lib  -group kicad_trans ./Kicad_symbols/Transistor_Array.lib   >> kicad_trans_script
+../split_kicad_lib  -group kicad_trans ./Kicad_symbols/Transistor_BJT.lib   >> kicad_trans_script
+../split_kicad_lib  -group kicad_trans ./Kicad_symbols/Transistor_FET.lib   >> kicad_trans_script
+../split_kicad_lib  -group kicad_trans ./Kicad_symbols/Transistor_IGBT.lib   >> kicad_trans_script
+../split_kicad_lib  -group kicad_trans ./Kicad_symbols/Triac_Thyristor.lib   >> kicad_trans_script
+chmod 755 kicad_trans_script
+./kicad_trans_script

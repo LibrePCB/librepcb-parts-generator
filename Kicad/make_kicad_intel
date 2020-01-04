@@ -1,0 +1,6 @@
+rm kicad_intel_script
+rm -r kicad_intel
+rm -r out/kicad_intel
+../split_kicad_lib  -group kicad_intel ./Kicad_symbols/MCU_Intel.lib    >> kicad_intel_script
+chmod 755 kicad_intel_script
+./kicad_intel_script

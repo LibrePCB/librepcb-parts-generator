@@ -1,0 +1,12 @@
+rm kicad_amplifier_script
+rm -r kicad_amplifier
+rm -r out/kicad_amplifier
+../split_kicad_lib  -group kicad_amplifier ./Kicad_symbols/Amplifier_Audio.lib   >> kicad_amplifier_script
+../split_kicad_lib  -group kicad_amplifier ./Kicad_symbols/Amplifier_Buffer.lib   >> kicad_amplifier_script
+../split_kicad_lib  -group kicad_amplifier ./Kicad_symbols/Amplifier_Current.lib   >> kicad_amplifier_script
+../split_kicad_lib  -group kicad_amplifier ./Kicad_symbols/Amplifier_Difference.lib   >> kicad_amplifier_script
+../split_kicad_lib  -group kicad_amplifier ./Kicad_symbols/Amplifier_Instrumentation.lib   >> kicad_amplifier_script
+../split_kicad_lib  -group kicad_amplifier ./Kicad_symbols/Amplifier_Operational.lib   >> kicad_amplifier_script
+../split_kicad_lib  -group kicad_amplifier ./Kicad_symbols/Amplifier_Video.lib   >> kicad_amplifier_script
+chmod 755 kicad_amplifier_script
+./kicad_amplifier_script

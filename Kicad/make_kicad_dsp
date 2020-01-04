@@ -1,0 +1,10 @@
+rm kicad_dsp_script
+rm -r kicad_dsp
+rm -r out/kicad_dsp
+../split_kicad_lib  -group kicad_dsp ./Kicad_symbols/DSP_AnalogDevices.lib   >> kicad_dsp_script
+../split_kicad_lib  -group kicad_dsp ./Kicad_symbols/DSP_Freescale.lib   >> kicad_dsp_script
+../split_kicad_lib  -group kicad_dsp ./Kicad_symbols/DSP_Microchip_DSPIC33.lib   >> kicad_dsp_script
+../split_kicad_lib  -group kicad_dsp ./Kicad_symbols/DSP_Motorola.lib   >> kicad_dsp_script
+../split_kicad_lib  -group kicad_dsp ./Kicad_symbols/DSP_Texas.lib   >> kicad_dsp_script
+chmod 755 kicad_dsp_script
+./kicad_dsp_script

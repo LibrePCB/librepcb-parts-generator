@@ -1,0 +1,9 @@
+rm kicad_analog_script
+rm -r kicad_analog
+rm -r out/kicad_analog
+../split_kicad_lib  -group kicad_analog ./Kicad_symbols/Analog_ADC.lib   >> kicad_analog_script
+../split_kicad_lib  -group kicad_analog ./Kicad_symbols/Analog_DAC.lib   >> kicad_analog_script
+../split_kicad_lib  -group kicad_analog ./Kicad_symbols/Analog.lib   >> kicad_analog_script
+../split_kicad_lib  -group kicad_analog ./Kicad_symbols/Analog_Switch.lib   >> kicad_analog_script
+chmod 755 kicad_analog_script
+./kicad_analog_script

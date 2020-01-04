@@ -1,0 +1,18 @@
+rm kicad_mcu_script
+rm -r kicad_mcu
+rm -r out/kicad_mcu
+../split_kicad_lib  -group kicad_mcu ./Kicad_symbols/MCU_AnalogDevices.lib   >> kicad_mcu_script
+../split_kicad_lib  -group kicad_mcu ./Kicad_symbols/MCU_Cypress.lib   >> kicad_mcu_script
+../split_kicad_lib  -group kicad_mcu ./Kicad_symbols/MCU_Espressif.lib   >> kicad_mcu_script
+../split_kicad_lib  -group kicad_mcu ./Kicad_symbols/MCU_Module.lib   >> kicad_mcu_script
+../split_kicad_lib  -group kicad_mcu ./Kicad_symbols/MCU_Nordic.lib   >> kicad_mcu_script
+../split_kicad_lib  -group kicad_mcu ./Kicad_symbols/MCU_Parallax.lib   >> kicad_mcu_script
+../split_kicad_lib  -group kicad_mcu ./Kicad_symbols/MCU_Renesas_Synergy_S1.lib   >> kicad_mcu_script
+../split_kicad_lib  -group kicad_mcu ./Kicad_symbols/MCU_SiFive.lib   >> kicad_mcu_script
+../split_kicad_lib  -group kicad_mcu ./Kicad_symbols/MCU_SiliconLabs.lib   >> kicad_mcu_script
+../split_kicad_lib  -group kicad_mcu ./Kicad_symbols/MCU_STC.lib   >> kicad_mcu_script
+../split_kicad_lib  -group kicad_mcu ./Kicad_symbols/MCU_Texas.lib   >> kicad_mcu_script
+../split_kicad_lib  -group kicad_mcu ./Kicad_symbols/MCU_Texas_MSP430.lib   >> kicad_mcu_script
+../split_kicad_lib  -group kicad_mcu ./Kicad_symbols/MCU_Texas_SimpleLink.lib   >> kicad_mcu_script
+chmod 755 kicad_mcu_script
+./kicad_mcu_script

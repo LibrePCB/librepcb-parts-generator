@@ -1,0 +1,18 @@
+rm kicad_rf_script
+rm -r kicad_rf
+rm -r out/kicad_rf
+../split_kicad_lib  -group kicad_rf ./Kicad_symbols/RF_AM_FM.lib   >> kicad_rf_script
+../split_kicad_lib  -group kicad_rf ./Kicad_symbols/RF_Amplifier.lib   >> kicad_rf_script
+../split_kicad_lib  -group kicad_rf ./Kicad_symbols/RF_Bluetooth.lib   >> kicad_rf_script
+../split_kicad_lib  -group kicad_rf ./Kicad_symbols/RF_Filter.lib   >> kicad_rf_script
+../split_kicad_lib  -group kicad_rf ./Kicad_symbols/RF_GPS.lib   >> kicad_rf_script
+../split_kicad_lib  -group kicad_rf ./Kicad_symbols/RF_GSM.lib   >> kicad_rf_script
+../split_kicad_lib  -group kicad_rf ./Kicad_symbols/RF.lib   >> kicad_rf_script
+../split_kicad_lib  -group kicad_rf ./Kicad_symbols/RF_Mixer.lib   >> kicad_rf_script
+../split_kicad_lib  -group kicad_rf ./Kicad_symbols/RF_Module.lib   >> kicad_rf_script
+../split_kicad_lib  -group kicad_rf ./Kicad_symbols/RF_RFID.lib   >> kicad_rf_script
+../split_kicad_lib  -group kicad_rf ./Kicad_symbols/RF_Switch.lib   >> kicad_rf_script
+../split_kicad_lib  -group kicad_rf ./Kicad_symbols/RF_WiFi.lib   >> kicad_rf_script
+../split_kicad_lib  -group kicad_rf ./Kicad_symbols/RF_ZigBee.lib   >> kicad_rf_script
+chmod 755 kicad_rf_script
+./kicad_rf_script

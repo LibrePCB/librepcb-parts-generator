@@ -1,0 +1,10 @@
+rm kicad_regulator_script
+rm -r kicad_regulator
+rm -r out/kicad_regulator
+../split_kicad_lib  -group kicad_regulator ./Kicad_symbols/Regulator_Controller.lib   >> kicad_regulator_script
+../split_kicad_lib  -group kicad_regulator ./Kicad_symbols/Regulator_Current.lib   >> kicad_regulator_script
+../split_kicad_lib  -group kicad_regulator ./Kicad_symbols/Regulator_Linear.lib   >> kicad_regulator_script
+../split_kicad_lib  -group kicad_regulator ./Kicad_symbols/Regulator_SwitchedCapacitor.lib   >> kicad_regulator_script
+../split_kicad_lib  -group kicad_regulator ./Kicad_symbols/Regulator_Switching.lib   >> kicad_regulator_script
+chmod 755 kicad_regulator_script
+./kicad_regulator_script
