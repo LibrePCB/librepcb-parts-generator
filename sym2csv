@@ -148,20 +148,17 @@ unless($Part){ $Part = 1;}
 
 
 
-  open  VERILOG , ">  $output_file";
   open   FILE, $input_file;
   while(<FILE>){push @intel_hex, $_  ;}
 
 
-  printf VERILOG ("(librepcb_symbol %s\n",$result);
-
 
 my $cmp_name;
 my $footprint_name;
-my $ver_a;
-my $ver_b;
-my $ver_c;
-my $ver_d;
+my $ver_a =0;
+my $ver_b =0;
+my $ver_c =0;
+my $ver_d =0;
 
 
 my $cmp_reference;
@@ -182,7 +179,6 @@ foreach $line (@intel_hex)
        $_ = $line; 
        if(/DEF (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+)/)
           { 
-
             $cmp_name       = $1;
             $cmp_reference  = $2;
             $draw_pinnumber = $5;
@@ -191,34 +187,22 @@ foreach $line (@intel_hex)
             $units_locked   = $8;
             $option_flag    = $9;
 
+            $xfer ="DEF,${cmp_name}\n";
+            push @dev_graph, $xfer;
+            printf("                          processing %s\n",$cmp_name);
+
           }
-       }
 
-
-printf("                          processing %s\n",$cmp_name);
-#unless ($cmp_name){printf("Warning Will Robinson\n");}
-
-printf VERILOG (" (name \"%s\")\n",$cmp_name);
-
-
-
-foreach $line (@intel_hex)
-       {
-       $_ = $line; 
        if(/F2 "(\S+)"/)
           { 
-
             $footprint_name       = $1;
-
-
+            $xfer ="FOOT,${footprint_name}\n";
+            push @dev_graph, $xfer;
           }
-       }
 
 
 
-
-
-
+     }
 
 
 
@@ -266,8 +250,6 @@ foreach $line (@intel_hex)
             if($in_polygon == 0)
               {
               my $poly_uuid = uuid();
-              printf VERILOG (" (polygon %s (layer sym_outlines)\n",$poly_uuid);
-              printf VERILOG ("  (width %.2f) (fill false) (grab_area true)\n",$thickness);
               $in_polygon  = 1;
               }
               elsif(( $polygon_x == $pos_x) && ($polygon_y == $pos_y) )
@@ -276,10 +258,7 @@ foreach $line (@intel_hex)
 	      }
               else
 	      {
-              printf VERILOG ("  )\n");
               my $poly_uuid = uuid();
-              printf VERILOG (" (polygon %s (layer sym_outlines)\n",$poly_uuid);
-	      printf VERILOG ("  (width %.2f) (fill false) (grab_area true)\n",$thickness);     
 	      $in_polygon  = 1;
 	      }
 
@@ -299,7 +278,7 @@ foreach $line (@intel_hex)
          if($low_x > $pos_x){ $low_x = $pos_x;};
          if($hi_y < $pos_y) { $hi_y = $pos_y;};
 
-         printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n",$pos_x,$pos_y);
+
          unless(( $polygon_x == $pos_x) && ($polygon_y == $pos_y) )
 	 {
 
@@ -363,8 +342,6 @@ my $C_angle = camp_angle ($posx,$posy,$radius,$start,$end,$startpointx,$startpoi
               {
 
               my $poly_uuid = uuid();
-              printf VERILOG (" (polygon %s (layer sym_outlines)\n",$poly_uuid);
-              printf VERILOG ("  (width %.2f) (fill false) (grab_area true)\n",$width);
               $in_polygon  = 1;
               }
               else
@@ -380,16 +357,10 @@ my $C_angle = camp_angle ($posx,$posy,$radius,$start,$end,$startpointx,$startpoi
 
                 printf VERILOG ("  )\n");
                 my $poly_uuid = uuid();
-                printf VERILOG (" (polygon %s (layer sym_outlines)\n",$poly_uuid);
-                printf VERILOG ("  (width %.2f) (fill false) (grab_area true)\n",$width);
+
 		              $in_polygon  = 1;
 	        }
 	      }
-
-        printf VERILOG ("  (vertex (position %s %s) (angle %s))\n",$startpointx,$startpointy,$angle);
-
-
-        printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n",$endpointx,$endpointy);
 
         $polygon_x = $endpointx;
 	$polygon_y = $endpointy;
@@ -406,7 +377,7 @@ my $C_angle = camp_angle ($posx,$posy,$radius,$start,$end,$startpointx,$startpoi
          {
 
 
-	 printf VERILOG ("  )\n");
+
 	 }
 
 
@@ -441,25 +412,17 @@ foreach $line (@intel_hex)
   if(($unit == 0)||(($Part == $unit)&&($convert < 2))) 
        {
        if($low_x > $a){ $low_x = $a;};
-            if($hi_y < $b) { $hi_y = $b;};
-            if($low_x > $c){ $low_x = $c;};
-            if($hi_y < $d) { $hi_y = $d;};
+       if($hi_y < $b) { $hi_y = $b;};
+       if($low_x > $c){ $low_x = $c;};
+       if($hi_y < $d) { $hi_y = $d;};
 
        $ver_a = $a;
        $ver_b = $b;
        $ver_c = $c;
        $ver_d = $d;
-
-
-        printf VERILOG (" (polygon %s (layer sym_outlines)\n",$pin_uuid);
-        printf VERILOG ("  (width %.2f) (fill false) (grab_area true)\n",$thickness);
-        printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n",$a,$b);
-        printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n",$c,$b);
-        printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n",$c,$d);
-        printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n",$a,$d);
-	printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n",$a,$b);
-        printf VERILOG ("  )\n");
-        }
+       $xfer ="RECT,${ver_a},${ver_b},${ver_c},${ver_d}\n";
+       push @dev_graph, $xfer;
+       }
 
 }
 
@@ -500,9 +463,7 @@ foreach $line (@intel_hex)
 
           if  ( $diameter > 0 )
 	    {
-            printf VERILOG (" (circle %s (layer sym_outlines)\n",$pin_uuid);
-            printf VERILOG ("  (width 0.254) (fill false) (grab_area false)");
-            printf VERILOG ("  (diameter %s ) (position %s %s)\n)\n",$diameter,$posx,$posy);
+
             }
 	  }
 
@@ -542,8 +503,7 @@ foreach $line (@intel_hex)
   if(($unit == 0)||(($Part == $unit)&&($convert < 2)))
        {
 
-        printf VERILOG (" (text %s (layer sym_outlines)  (value \"%s\")\n"                          ,$text_uuid,$text);
-        printf VERILOG (" (align left bottom) (height 2.54) (position %s %s) (rotation 0.0)\n)\n" ,$posx,$posy);
+
         }
 
     }
@@ -566,17 +526,11 @@ foreach $line (@intel_hex)
 $low_x = $low_x -5.08;
 
 my $value_uuid = uuid();
-printf VERILOG (" (text %s (layer sym_outlines) (value \"%s\")",$value_uuid,$cmp_name);
-printf VERILOG (" (align left bottom) (height 2.54) (position %s %s ) (rotation 0.0)\n )\n",$low_x,$hi_y);
+
 
 $hi_y  = $hi_y + 2.54;
 
 my $name_uuid = uuid();
-printf VERILOG (" (text %s (layer sym_outlines) (value \"{{NAME}}\")",$name_uuid);
-printf VERILOG (" (align left bottom) (height 2.54) (position %s %s ) (rotation 0.0)\n )\n",$low_x,$hi_y);
-
-
-
 
 
 #
@@ -605,6 +559,11 @@ foreach $line (@intel_hex)
 	my $convert      = $11;
 
         $row_adj = ($posy + 5000)/10;
+        $name  =~ s/,/_/;
+        $name  =~ s/,/_/;
+        $name  =~ s/,/_/;
+        $name  =~ s/,/_/;
+        $name  =~ s/,/_/;
 
 
   if(($unit == 0)||(($Part == $unit)&&($convert <2)))
@@ -644,55 +603,48 @@ foreach $line (@intel_hex)
 	
         if   ($7 eq "D")
 	     {
-	     printf  VERILOG (" (pin %s (name \"%s\")\n  (position %.2f %.2f) (rotation 270.0)    (length %.2f)\n )\n",$pin_uuid,$name,$b,$c,$d);
+
              $pos_x = $b;
 	     $pos_y = $c;
-             printf VERILOG (" (polygon %s (layer sym_outlines)\n",$poly_uuid);
-             printf VERILOG ("  (width 0.254) (fill false) (grab_area true)\n");
-             printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n",$pos_x,$pos_y);
+
+
              $pos_x = $b;
 	     $pos_y = $c -$d;
-             printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n)\n",$pos_x,$pos_y);
+
              }
         elsif($7 eq "U")
 	     {
-             printf  VERILOG (" (pin %s (name \"%s\")\n  (position %.2f %.2f) (rotation 90.0)   (length %.2f)\n )\n",$pin_uuid,$name,$b,$c,$d);
+
              $pos_x = $b;
 	     $pos_y = $c;
-             printf VERILOG (" (polygon %s (layer sym_outlines)\n",$poly_uuid);
-             printf VERILOG ("  (width 0.254) (fill false) (grab_area true)\n");
-             printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n",$pos_x,$pos_y);
+
              $pos_x = $b;
 	     $pos_y = $c +$d;
-             printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n)\n",$pos_x,$pos_y);
+
              }
         elsif($7 eq "L")
 	     {
-             printf  VERILOG (" (pin %s (name \"%s\")\n  (position %.2f %.2f) (rotation 180.0)   (length %.2f)\n )\n",$pin_uuid,$name,$b,$c,$d);
+
              $pos_x = $b;
 	     $pos_y = $c;
-             printf VERILOG (" (polygon %s (layer sym_outlines)\n",$poly_uuid);
-             printf VERILOG ("  (width 0.254) (fill false) (grab_area true)\n");
-             printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n",$pos_x,$pos_y);
+
              $pos_x = $b - $d;
 	     $pos_y = $c;
-             printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n)\n",$pos_x,$pos_y);
+
              }
         elsif($7 eq "R")
 	     {
-             printf  VERILOG (" (pin %s (name \"%s\")\n  (position %.2f %.2f) (rotation 0.0)     (length %.2f)\n )\n",$pin_uuid,$name,$b,$c,$d);
+
              $pos_x = $b;
 	     $pos_y = $c;
-             printf VERILOG (" (polygon %s (layer sym_outlines)\n",$poly_uuid);
-             printf VERILOG ("  (width 0.254) (fill false) (grab_area true)\n");
-             printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n",$pos_x,$pos_y);
+
              $pos_x = $b +$d;
 	     $pos_y = $c;
-             printf VERILOG ("  (vertex (position %s %s) (angle 0.0))\n)\n",$pos_x,$pos_y);
+
              }
         else
 	     {
-	     printf VERILOG (" (pin %s (name \"%s\")\n  (position %.2f %.2f) (rotation 0.0)     (length %.2f)\n )\n",$pin_uuid,$name,$b,$c,$d);
+
 	     }
         }
       }
@@ -710,23 +662,16 @@ foreach $line (@intel_hex)
 
 
 
+  $output_file  = "${home}/${group}/${cmp_name}_${Part}.csv";
+  open   COMPONENT , ">  $output_file";
 
-printf VERILOG (")\n");
+  while($item = pop(@dev_graph))
+
+  {
+  printf COMPONENT ("${item}");
+  }
 
 
-
-
-
-if(1)
-{
- $output_file  = "${home}/${group}/${cmp_name}_${Part}.csv";
-
-  open  COMPONENT , ">  $output_file";
-
-          printf COMPONENT ("DEF,%s\n",$cmp_name);
-          printf COMPONENT ("FOOT,%s\n",$footprint_name);
-
-          printf COMPONENT ("RECT,%s,%s,%s,%s\n",$ver_a,$ver_b,$ver_c,$ver_d);
 
   @dev_pins = trim_sort(@dev_pins);
   while($item = pop(@dev_pins))
@@ -745,8 +690,8 @@ if(1)
 	 $pin_side    = $8;
 	 $pin_Snum    = $9;
 	 $pin_Snom    = $10;
-	 $pin_unit    = 11;
-	 $pin_convert = 12;
+	 $pin_unit    = $11;
+	 $pin_convert = $12;
 
          printf COMPONENT ("PIN,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",$pin_name,$pin_side,$pin_number,$pin_posx,$pin_posy,$pin_length,$pin_side,$pin_Snum,$pin_Snom,$pin_unit,$pin_convert);
 
@@ -757,13 +702,6 @@ if(1)
 
        }
 
-
-
- 
-
-
-
-}
 
 
 #############################################################################

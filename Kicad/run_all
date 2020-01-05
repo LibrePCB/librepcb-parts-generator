@@ -26,3 +26,9 @@
 ./make_kicad_rf              > results_rf              2> results_rf_err             &
 ./make_kicad_sensor          > results_sensor          2> results_sensor_err         & 
 ./make_kicad_trans           > results_trans           2> results_trans_err          &
+./make_kicad_diode           > results_diode           2> results_diode_err          &
+./make_kicad_microsemi       > results_microsemi       2> results_microsemi_err      &
+./make_kicad_cpu             > results_cpu             2> results_cpu_err            &
+./make_kicad_power           > results_power           2> results_power_err          &
+./make_kicad_timer           > results_timer           2> results_timer_err          &
+./make_kicad_graphics        > results_graphics        2> results_graphics_err       &

@@ -155,6 +155,10 @@ def generate_sym(
       row_type =row[0]
 
 
+
+
+      
+    
       if row_type == "VERSION" :        version =row[1]
       if row_type == "KEYWORDS" :       keywords =row[1]
 
@@ -169,47 +173,47 @@ def generate_sym(
            
 
       if row_type == "PIN" :
-        pin_type =row[2]
-        if pin_type == "R" :
-            left_count   = left_count   +1
-            left_length = max(round(len(row[1])/5),left_length)
-            pad_orientation.append(0.0)
+
+
+          pin_type =row[2]
+          if pin_type == "R" :
+              left_count   = left_count   +1
+              left_length = max(round(len(row[1])/5),left_length)
+              pad_orientation.append(0.0)
             
-        if pin_type == "L" :
-            right_count  = right_count  +1
-            right_length = max(round(len(row[1])/5),right_length)
-            pad_orientation.append(180.0)
-        if pin_type == "D" :
-            top_count    = top_count    +1
-            pad_orientation.append(270.0)
+          if pin_type == "L" :
+              right_count  = right_count  +1
+              right_length = max(round(len(row[1])/5),right_length)
+              pad_orientation.append(180.0)
+          if pin_type == "D" :
+              top_count    = top_count    +1
+              pad_orientation.append(270.0)
             
-        if pin_type == "U" :
-            bottom_count = bottom_count +1
-            pad_orientation.append(90.0)
+          if pin_type == "U" :
+              bottom_count = bottom_count +1
+              pad_orientation.append(90.0)
             
-        pad_name.append(row[1])
-        pad_type.append(row[2])
-        pad_list.append(row[3])
-        if variant != "default" :   
-          pad_posx.append(float(row[4])/39.3701)
-          pad_posy.append(float(row[5])/39.3701)
-          pad_length.append(float(row[6])/39.3701)
+          pad_name.append(row[1])
+          pad_type.append(row[2])
+          pad_list.append(row[3])
+          if variant != "default" :   
+            pad_posx.append(float(row[4])/39.3701)
+            pad_posy.append(float(row[5])/39.3701)
+            pad_length.append(float(row[6])/39.3701)
           
-        if variant == "default" :   
-          pad_posx.append(0)
-          pad_posy.append(0)
-          pad_length.append(width)
+          if variant == "default" :   
+            pad_posx.append(0)
+            pad_posy.append(0)
+            pad_length.append(width)
 
+          uuid_pins.append(uuid('sym',name,'pin-{}_{}'.format(row[1],row[3])))
+          num_of_pins = num_of_pins +1
 
-
-
-        uuid_pins.append(uuid('sym',name,'pin-{}_{}'.format(row[1],row[3])))
-        num_of_pins = num_of_pins +1
-
+        
 
     real_width = max(top_count,bottom_count) + left_length +  right_length
     real_height = max(left_count,right_count)
-
+    print('add pins  {}'.format( num_of_pins))
 
 
     

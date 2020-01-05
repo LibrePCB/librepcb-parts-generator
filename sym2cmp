@@ -264,7 +264,12 @@ foreach $line (@intel_hex)
 	my $convert      = $11;
 
         $row_adj = ($posy + 5000)/10;
-
+        $orig_name = $name;
+        $name =~ s/,/_/;
+        $name =~ s/,/_/;
+        $name =~ s/,/_/;
+        $name =~ s/,/_/;
+        $name =~ s/,/_/;
 
   if(1)
   {
@@ -295,6 +300,11 @@ foreach $line (@intel_hex)
 	}
 
 
+        if ($orig_name ne $name)
+	  {
+           print " Mapped ${orig_name}  into ${name}\n";  
+          }
+	  
         my $xfer = "${side}::${row_adj}::${name}::${number}::${posx}::${posy}::${length}::${side}::${Snum}::${Snom}::${unit}::${convert}";
 	push  @dev_pins, $xfer;
 
