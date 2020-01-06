@@ -662,7 +662,7 @@ foreach $line (@intel_hex)
 
 
 
-  $output_file  = "${home}/${group}/${cmp_name}_${Part}.csv";
+  $output_file  = "${home}/${group}/F${cmp_name}_${Part}.csv";
   open   COMPONENT , ">  $output_file";
 
   while($item = pop(@dev_graph))

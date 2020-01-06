@@ -2,7 +2,9 @@
 ./make_kicad_memory          > results_memory          2> results_memory_err         &
 ./make_kicad_microchip       > results_microchip       2> results_microchip_err      &
 ./make_kicad_nxp             > results_nxp             2> results_nxp_err            &
-./make_kicad_stm             > results_stm             2> results_stm_err            & 
+./make_kicad_stm             > results_stm             2> results_stm_err            &
+./make_kicad_stmf            > results_stmf            2> results_stmf_err           &
+./make_kicad_stml            > results_stml            2> results_stml_err           & 
 ./make_kicad_xilinx          > results_xilinx          2> results_xilinx_err         &
 ./make_kicad_xilinx_artix7   > results_xilinx_artix7   2> results_xilinx_artix7_err  &
 ./make_kicad_xilinx_cpld     > results_xilinx_cpld     2> results_xilinx_cpld_err    & 
@@ -32,3 +34,4 @@
 ./make_kicad_power           > results_power           2> results_power_err          &
 ./make_kicad_timer           > results_timer           2> results_timer_err          &
 ./make_kicad_graphics        > results_graphics        2> results_graphics_err       &
+./make_kicad_gpu             > results_gpu             2> results_gpu_err            &

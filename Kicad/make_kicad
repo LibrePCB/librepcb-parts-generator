@@ -8,7 +8,6 @@ rm -r out/kicad
 ../split_kicad_lib  -group kicad ./Kicad_symbols/Display_Graphic.lib   >> kicad_script
 ../split_kicad_lib  -group kicad ./Kicad_symbols/Fiber_Optic.lib   >> kicad_script
 ../split_kicad_lib  -group kicad ./Kicad_symbols/Filter.lib   >> kicad_script
-../split_kicad_lib  -group kicad ./Kicad_symbols/GPU.lib   >> kicad_script
 ../split_kicad_lib  -group kicad ./Kicad_symbols/Isolator_Analog.lib   >> kicad_script
 ../split_kicad_lib  -group kicad ./Kicad_symbols/Isolator.lib   >> kicad_script
 ../split_kicad_lib  -group kicad ./Kicad_symbols/Jumper.lib   >> kicad_script

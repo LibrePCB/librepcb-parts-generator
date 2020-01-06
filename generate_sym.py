@@ -23,7 +23,6 @@ part_name = args.part
 cvs_raw_data = [] 
 
 
-
 """
 
 """
@@ -71,13 +70,51 @@ width = 2.54
 line_width = 0.25
 pkg_text_height = 1.0
 sym_text_height = 2.54
+part = float(part_name)
+
+
+if part >= 1 :
+   cvs_file='{}{}_{}.csv'.format(directory_name,design_name,part_name)
+else:
+   cvs_file='{}{}.csv'.format(directory_name,design_name)
+
+
+
+with open(cvs_file, 'r') as CSVxfile: 
+          # creating a csv reader object 
+          CSVxreader = csv.reader(CSVxfile)  
+          # extracting each data row one by one 
+          for row in CSVxreader:
+               cvs_raw_data.append(row) 
+               
+               
+          print("                                            Total no. of rows: %d"%(CSVxreader.line_num))
+          num_of_rows = CSVxreader.line_num
+
+
+for row in cvs_raw_data[:num_of_rows]: 
+      # parsing each column of a row
+      row_type =row[0]
+      if row_type == "VERSION"  :        version  =row[1]
+      if row_type == "KEYWORDS" :        keywords =row[1]
+      if row_type == "DEF"      :        def_name =row[1]
+
+
+
+   
+
+
+
+
+
+
 
 
    
 
 uuid_cmpcat_file = 'uuid_cache_{}_cmpcat.csv'.format(group_name)
 uuid_cache = init_cache(uuid_cmpcat_file)
-cmpcat = uuid('cmpcat',design_name,"cmpcat")
+cmpcat = uuid('cmpcat',def_name,"cmpcat")
 save_cache(uuid_cmpcat_file, uuid_cache)
 
 
@@ -87,12 +124,7 @@ uuid_cache_file = 'uuid_cache_{}.csv'.format(group_name)
 uuid_cache = init_cache(uuid_cache_file)
 
 
-part = float(part_name)
 
-if part >= 1 :
-   cvs_file='{}{}_{}.csv'.format(directory_name,design_name,part_name)
-else:
-   cvs_file='{}{}.csv'.format(directory_name,design_name)
 
 
 
@@ -120,19 +152,6 @@ def generate_sym(
     real_height   =  6
     version       = '0.1'
     keywords      = '   '
-
-
-    with open(cvs_file, 'r') as CSVxfile: 
-          # creating a csv reader object 
-          CSVxreader = csv.reader(CSVxfile)  
-          # extracting each data row one by one 
-          for row in CSVxreader:
-               cvs_raw_data.append(row) 
-               
-               
-          print("                                            Total no. of rows: %d"%(CSVxreader.line_num))
-          num_of_rows = CSVxreader.line_num
-
     pad_list  = []
     pad_type  = []
     pad_name  = []

@@ -63,11 +63,37 @@ def uuid(category: str, kind: str, identifier: str) -> str:
     if key not in uuid_cache:
         uuid_cache[key] = str(uuid4())
     return uuid_cache[key]
+cvs_file='{}{}.csv'.format(directory_name,design_name)
+with open(cvs_file, 'r') as CSVxfile: 
+          # creating a csv reader object 
+          CSVxreader = csv.reader(CSVxfile)  
+          # extracting each data row one by one 
+          for row in CSVxreader:
+               cvs_raw_data.append(row) 
+               
+
+          num_of_rows = CSVxreader.line_num
+
+
+for row in cvs_raw_data[:num_of_rows]: 
+      # parsing each column of a row
+      row_type =row[0]
+
+      if row_type == "VERSION" :        version  =row[1]
+      if row_type == "KEYWORDS" :       keywords =row[1]
+      if row_type == "UNITS" :          units    =row[1]
+      if row_type == "DEF"   :          def_name    =row[1]
+
+
+
+
+          
+
 
 
 uuid_cmpcat_file = 'uuid_cache_{}_cmpcat.csv'.format(group_name)
 uuid_cache = init_cache(uuid_cmpcat_file)
-cmpcat = uuid('cmpcat',design_name,"cmpcat")
+cmpcat = uuid('cmpcat',def_name,"cmpcat")
 save_cache(uuid_cmpcat_file, uuid_cache)
 
 
@@ -87,6 +113,9 @@ def generate_cmp(
     version       = '0.1'
     keywords      = '   '
 
+
+
+    
     with open(cvs_file, 'r') as CSVxfile: 
           # creating a csv reader object 
           CSVxreader = csv.reader(CSVxfile)  
@@ -285,7 +314,7 @@ if __name__ == '__main__':
 
     
     generate_cmp(
-        cvs_file='{}{}.csv'.format(directory_name,design_name),
+        cvs_file=cvs_file,
         dirpath='out/{}/cmp'.format(group_name),
         author='John E.',
         cmpcat=cmpcat,
