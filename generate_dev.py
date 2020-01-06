@@ -81,7 +81,6 @@ def generate_dev(
     cvs_file: str, 
     dirpath: str,
     author: str,
-    name: str,
     cmpcat: str,
     create_date: Optional[str],
 ) -> None:
@@ -110,8 +109,9 @@ def generate_dev(
       # parsing each column of a row
       row_type =row[0]
 
-      if row_type == "VERSION" :        version =row[1]
-      if row_type == "KEYWORDS" :       keywords =row[1]
+      if row_type == "VERSION"  :        version   =row[1]
+      if row_type == "KEYWORDS" :        keywords  =row[1]
+      if row_type == "DEF"      :        def_name  =row[1]
 
       if row_type == "FOOT":  package = row[1]
         
@@ -119,22 +119,22 @@ def generate_dev(
         pad_name.append(row[1])
         pad_list.append(row[3])
         uuid_pads.append(uuid('pkg', package,'pad-{}'.format(row[3]))) 
-        uuid_signals.append(uuid('cmp', name, 'signal-{}_{}'.format(row[1],row[3])) )
+        uuid_signals.append(uuid('cmp', def_name, 'signal-{}_{}'.format(row[1],row[3])) )
         num_of_pins = num_of_pins +1
         
-    print("                          device: %s Number of pins %s"%(design_name,num_of_pins ))    
+    print("                          device: %s Number of pins %s"%(def_name,num_of_pins ))    
         
 
 
       
-    uuid_dev = uuid('dev', name, 'dev')
-    uuid_cmp = uuid('cmp', name, 'cmp')
+    uuid_dev = uuid('dev', def_name, 'dev')
+    uuid_cmp = uuid('cmp', def_name, 'cmp')
     uuid_pkg = uuid('pkg', package, 'pkg')
       
     # General info
 
     lines.append('(librepcb_device {}'.format(uuid_dev))
-    lines.append(' (name "{}")'.format(name))
+    lines.append(' (name "{}")'.format(def_name))
     lines.append(' (description "  '
                    'Generated with {}")'.format(generator))
     lines.append(' (keywords "{}")'.format(keywords))
@@ -166,12 +166,6 @@ def generate_dev(
 
       print('                           {}'.format(uuid_dev))
 
-
-
-
-
-
-
             
 if __name__ == '__main__':
     def _make(dirpath: str) -> None:
@@ -181,13 +175,11 @@ if __name__ == '__main__':
     _make('out/{}'.format(group_name))
     _make('out/{}/dev'.format(group_name))
 
-
     
     generate_dev(
         cvs_file='{}{}.csv'.format(directory_name,design_name),
         dirpath='out/{}/dev'.format(group_name),
         author='John E.',
-        name=design_name,
         cmpcat=cmpcat,
         create_date='2019-12-17T00:00:00Z',
     )

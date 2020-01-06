@@ -91,19 +91,19 @@ part = float(part_name)
 
 if part >= 1 :
    cvs_file='{}{}_{}.csv'.format(directory_name,design_name,part_name)
-   uuid_sym = uuid('sym', '{}_{}_{}'.format(design_name,part_name, variant_name),'sym')
 else:
    cvs_file='{}{}.csv'.format(directory_name,design_name)
-   uuid_sym = uuid('sym', '{}_{}'.format(design_name, variant_name),'sym')
 
 
 
+
+
+   
 
 def generate_sym(
     cvs_file: str, 
     dirpath: str,
     author: str,
-    name: str,
     part: str,
     variant: str,
     cmpcat: str,
@@ -159,8 +159,9 @@ def generate_sym(
 
       
     
-      if row_type == "VERSION" :        version =row[1]
-      if row_type == "KEYWORDS" :       keywords =row[1]
+      if row_type == "VERSION"  :        version  =row[1]
+      if row_type == "KEYWORDS" :        keywords =row[1]
+      if row_type == "DEF"      :        def_name =row[1]
 
       if row_type == "RECT" :
            low_x  =float(row[1])
@@ -206,22 +207,26 @@ def generate_sym(
             pad_posy.append(0)
             pad_length.append(width)
 
-          uuid_pins.append(uuid('sym',name,'pin-{}_{}'.format(row[1],row[3])))
+          uuid_pins.append(uuid('sym',def_name,'pin-{}_{}'.format(row[1],row[3])))
           num_of_pins = num_of_pins +1
 
-        
+
+
+    if part >= 1 :
+       uuid_sym = uuid('sym', '{}_{}_{}'.format(def_name,part_name, variant_name),'sym')
+    else:
+       uuid_sym = uuid('sym', '{}_{}'.format(def_name, variant_name),'sym')
+
+   
+
+          
 
     real_width = max(top_count,bottom_count) + left_length +  right_length
     real_height = max(left_count,right_count)
-    print('add pins  {}'.format( num_of_pins))
-
-
-    
-
 
 
     def _uuid(identifier: str) -> str:
-            return uuid(category, name, identifier)
+            return uuid(category, def_name, identifier)
 
           
 
@@ -283,9 +288,9 @@ def generate_sym(
 
 
     if part >= 1 :
-      sym_name='{}_{}'.format(name,part_name)
+      sym_name='{}_{}'.format(def_name,part_name)
     else:
-      sym_name='{}'.format(name)
+      sym_name='{}'.format(def_name)
 
 
                             
@@ -392,7 +397,7 @@ def generate_sym(
             f.write(str(symbol))
             f.write('\n')
 
-    print('                                            {}: Wrote symbol {}'.format( name, uuid_sym))
+    print('                                            {}: Wrote symbol {}'.format( def_name, uuid_sym))
 
             
 if __name__ == '__main__':
@@ -408,7 +413,6 @@ if __name__ == '__main__':
         cvs_file=cvs_file,
         dirpath='out/{}/sym'.format(group_name),
         author='John E.',
-        name=design_name,
         part=part,
         variant=variant_name,
         cmpcat=cmpcat,

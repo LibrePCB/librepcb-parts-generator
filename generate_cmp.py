@@ -79,7 +79,6 @@ def generate_cmp(
     cvs_file: str, 
     dirpath: str,
     author: str,
-    name: str,
     cmpcat: str,
     default_value: str,
     create_date: Optional[str],
@@ -112,20 +111,21 @@ def generate_cmp(
       if row_type == "VERSION" :        version  =row[1]
       if row_type == "KEYWORDS" :       keywords =row[1]
       if row_type == "UNITS" :          units    =row[1]
+      if row_type == "DEF"   :          def_name    =row[1]
 
         
 
       if row_type == "PIN":  
           pad_name.append(row[1])
           pad_list.append(row[3])
-          uuid_pins.append(uuid('sym', name,'pin-{}_{}'.format(row[1],row[3])))
-          uuid_signals.append(uuid('cmp', name,'signal-{}_{}'.format(row[1],row[3])))
+          uuid_pins.append(uuid('sym', def_name,'pin-{}_{}'.format(row[1],row[3])))
+          uuid_signals.append(uuid('cmp', def_name,'signal-{}_{}'.format(row[1],row[3])))
           num_of_pins = num_of_pins + 1
           if units  != 0:  
               pad_unit.append(row[10])
       
     def _uuid(identifier: str) -> str:
-            return uuid(category, name, identifier)
+            return uuid(category, def_name, identifier)
 
 
           
@@ -138,13 +138,13 @@ def generate_cmp(
 
     uuid_variant_default = _uuid('variant-default')
     uuid_gate_default = _uuid('gate-default')
-    uuid_symbol_default = uuid('sym', '{}_default'.format(name), 'sym')
-    uuid_dev =   uuid('dev', name, 'dev')
+    uuid_symbol_default = uuid('sym', '{}_default'.format(def_name), 'sym')
+    uuid_dev =   uuid('dev', def_name, 'dev')
     
     # General info
     component = Component(
             uuid_cmp,
-            Name('{}'.format(name)),
+            Name('{}'.format(def_name)),
             Description('created from file---  {}.\\n'
                         'Generated with {}'.format(cvs_file, generator)),
             Keywords('{}'.format( keywords)),
@@ -201,7 +201,7 @@ def generate_cmp(
 
 
 
-    uuid_symbol_variant = uuid('sym', '{}_{}'.format(name,variant_name), 'sym')
+    uuid_symbol_variant = uuid('sym', '{}_{}'.format(def_name,variant_name), 'sym')
     uuid_variant_variant = _uuid('variant-{}'.format(variant_name))
     
     if uuid_symbol_default != uuid_symbol_variant :
@@ -216,7 +216,7 @@ def generate_cmp(
         position =0.0
         for u in range(1, iunits+1):
     
-          uuid_symbol_variant = uuid('sym', '{}_{}_{}'.format(name,u,variant_name), 'sym')
+          uuid_symbol_variant = uuid('sym', '{}_{}_{}'.format(def_name,u,variant_name), 'sym')
           uuid_gate_variant = _uuid('gate-{}_{}'.format(u,variant_name))
 
           gate = Gate(
@@ -271,7 +271,7 @@ def generate_cmp(
             f.write(str(component))
             f.write('\n')
 
-    print('                          :Wrote component {} {}'.format(design_name, uuid_cmp))
+    print('                          :Wrote component {} {}'.format(def_name, uuid_cmp))
 
             
 if __name__ == '__main__':
@@ -288,7 +288,6 @@ if __name__ == '__main__':
         cvs_file='{}{}.csv'.format(directory_name,design_name),
         dirpath='out/{}/cmp'.format(group_name),
         author='John E.',
-        name=design_name,
         cmpcat=cmpcat,
         default_value='{{PARTNUMBER or DEVICE or COMPONENT}}',
         create_date='2019-12-17T00:00:00Z',
