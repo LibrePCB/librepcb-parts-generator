@@ -229,32 +229,29 @@ foreach $line (@intel_hex)
         $in_polygon = 0;
         if($thickness == 0 ){ $thickness =1;}
         if($thickness < 0 ){ $thickness = 0;}
- printf("Polygon  num_pts- ${num_pts} unit- ${unit}   convert- ${convert}  Part- ${Part}      \n",);
  
-
-
        if(($unit == 0)||(($Part == $unit)&& ($convert <2 )    )         )
        {
 
 
- printf("Polygon 1    ${in_polygon}  \n",);
+
             if($in_polygon == 0)
               {
               my $poly_uuid = uuid();
- printf("Polygon 2  \n",);
+
               $xfer ="POLY,${thickness}\n";
               unshift @dev_graph, $xfer;
               $in_polygon  = 1;
               }
               elsif(( $polygon_x == $pos_x) && ($polygon_y == $pos_y) )
               {
- printf("Polygon 3  \n",);
+
 	      }
               else
 	      {
               $xfer ="POLY,${thickness}\n";
               unshift @dev_graph, $xfer;
- printf("Polygon 4  \n",);
+
               $in_polygon  = 1;
 	      }
 
@@ -276,7 +273,6 @@ foreach $line (@intel_hex)
 
          $xfer ="POLYPT,${pos_x},${pos_y}\n";
          unshift @dev_graph, $xfer;
- printf("Polygon 5  \n",);
 
 
          unless(( $polygon_x == $pos_x) && ($polygon_y == $pos_y) )
@@ -286,7 +282,7 @@ foreach $line (@intel_hex)
          $polygon_x = $pos_x;
          $polygon_y = $pos_y;	    
          }
- printf("Polygon 6  \n",);
+
          $xfer ="POLYST,${polygon_x},${polygon_y}\n";
          unshift @dev_graph, $xfer;
          $in_polygon  = 0;
@@ -327,8 +323,7 @@ foreach $line (@intel_hex)
         my $startpointy  = ($12);
         my $endpointx    = ($13);
         my $endpointy    = ($14);
-        $xfer ="ARC,${posx},${posy},${radius},${start},${end},${part},${convert},${width},${cc},${startpointx},${startpointy},${endpointx},${endpointy}\n";
-        push @dev_graph, $xfer;
+
 
 
 
@@ -340,6 +335,10 @@ my $C_angle = camp_angle ($posx,$posy,$radius,$start,$end,$startpointx,$startpoi
 
   if(($part == 0)||(($Part == $part) &&($convert < 2)))
 {
+        $xfer ="ARC,${posx},${posy},${radius},${start},${end},${part},${convert},${width},${cc},${startpointx},${startpointy},${endpointx},${endpointy}\n";
+        push @dev_graph, $xfer;
+
+
         if($low_x > $startpointx){ $low_x = $startpointx;};
         if($hi_y < $startpointy) { $hi_y = $startpointy;};
         if($low_x > $endpointx){ $low_x = $endpointx;};
@@ -453,12 +452,12 @@ foreach $line (@intel_hex)
         if(/(\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+)/)     
           {
           my $pin_uuid    = uuid();
-          my $posx        = ($2/10.16);
-          my $posy        = ($3/10.16);
-          my $diameter    = (($4/10.16)*2);
+          my $posx        = ($2);
+          my $posy        = ($3);
+          my $diameter    = (($4)*2);
           my $unit        = ($5);
 	  my $convert     = ($6);
-          my $width       = ($7/10.16);
+          my $width       = ($7);
           my $fill        = ($8);
 
           my $low  = $posx - $diameter;

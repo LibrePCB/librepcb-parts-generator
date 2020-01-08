@@ -125,7 +125,6 @@ foreach $line (@library_file)
       $output_file  = "${path}/${name}.sym";
       open  LIBREPCB_SYM , ">  $output_file";
 
-
       printf ("../sym2cmp -group %s   %s  \n",$group,$output_file);
       printf ("python3.7 ../generate_sym.py --part 0 --group %s --variant default  --directory  ./%s/    --design  F%s \n",$group, $group,$name);
       printf ("python3.7 ../generate_sym.py --part 0 --group %s --variant kicad    --directory  ./%s/    --design  F%s \n",$group, $group,$name);

@@ -271,7 +271,7 @@ foreach $line (@intel_hex)
         $name =~ s/,/_/;
         $name =~ s/,/_/;
 
-  if(1)
+  if($convert < 2 )
   {
 
 

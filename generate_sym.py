@@ -34,7 +34,7 @@ from typing import Callable, Iterable, List, Optional, Tuple
 from common import format_float as ff
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GrabArea, Height, Keywords, Layer, Length,
+    Align, Angle, Author, Category, Circle,Created, Deprecated, Description,Diameter, Fill, GrabArea, Height, Keywords, Layer, Length,
     Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
 )
 from entities.component import (
@@ -425,13 +425,37 @@ def generate_sym(
 
 
 
+          if row_type == "CIRC" :
+             pos_x  =float(row[1])/19.685
+             pos_y  =float(row[2])/19.685
+             dia    =float(row[3])/19.685
 
-          if row_type == "CAR" :
+
+             print('Circle ')
+             circle = Circle(
+               uuid_polygon,
+               Layer('sym_outlines'),
+               Width(line_width),
+               Fill(False),
+               GrabArea(True),
+               Diameter(dia),
+               Position(pos_x,pos_y)               
+               )
+             symbol.add_circle(circle)
+
+
+             
+          if row_type == "ARC" :
+             pos_x   =float(row[1])/19.685
+             pos_y   =float(row[2])/19.685
+             dia     =float(row[3])/19.685*2
+             start_ang  =float(row[4])/19.685
+             end_ang  =float(row[5])/19.685 
              start_x  =float(row[10])/19.685
              start_y  =float(row[11])/19.685
              end_x =float(row[12])/19.685
              end_y =float(row[13])/19.685
-
+             angle = (end_ang - start_ang) * 2
              print('Arc ')
              polygon = Polygon(
                uuid_polygon,
@@ -440,18 +464,9 @@ def generate_sym(
                Fill(False),
                GrabArea(True)
                )
-             polygon.add_vertex(Vertex(Position(start_x, start_y), Angle(0.0)))
+             polygon.add_vertex(Vertex(Position(start_x, start_y), Angle(angle)))
              polygon.add_vertex(Vertex(Position(end_x, end_y), Angle(0.0)))
              symbol.add_polygon(polygon)
-
-             
-
-
-
-
-
-
-
               
 
     # Text

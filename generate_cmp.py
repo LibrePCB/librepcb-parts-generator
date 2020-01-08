@@ -157,7 +157,7 @@ def generate_cmp(
             return uuid(category, def_name, identifier)
 
 
-          
+    print('Number of pins {}'.format(num_of_pins))       
 
 
 
