@@ -1,0 +1,9 @@
+rm kicad_cpld_script
+rm -r kicad_cpld
+rm -r out/kicad_cpld
+../split_kicad_lib  -group kicad_cpld ./Kicad_symbols/CPLD_Altera.lib   >> kicad_cpld_script
+../split_kicad_lib  -group kicad_cpld ./Kicad_symbols/CPLD_Microchip.lib   >> kicad_cpld_script
+../split_kicad_lib  -group kicad_cpld ./Kicad_symbols/CPLD_Xilinx.lib   >> kicad_cpld_script
+../split_kicad_lib  -group kicad_cpld ./Kicad_symbols/Logic_Programmable.lib   >> kicad_cpld_script
+chmod 755 kicad_cpld_script
+./kicad_cpld_script

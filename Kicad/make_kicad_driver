@@ -1,0 +1,11 @@
+rm kicad_driver_script
+rm -r kicad_driver
+rm -r out/kicad_driver
+../split_kicad_lib  -group kicad_driver ./Kicad_symbols/Driver_Display.lib   >> kicad_driver_script
+../split_kicad_lib  -group kicad_driver ./Kicad_symbols/Driver_FET.lib   >> kicad_driver_script
+../split_kicad_lib  -group kicad_driver ./Kicad_symbols/Driver_Haptic.lib   >> kicad_driver_script
+../split_kicad_lib  -group kicad_driver ./Kicad_symbols/Driver_LED.lib   >> kicad_driver_script
+../split_kicad_lib  -group kicad_driver ./Kicad_symbols/Driver_Motor.lib   >> kicad_driver_script
+../split_kicad_lib  -group kicad_driver ./Kicad_symbols/Driver_Relay.lib   >> kicad_driver_script
+chmod 755 kicad_driver_script
+./kicad_driver_script

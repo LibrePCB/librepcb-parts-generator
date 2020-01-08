@@ -1,0 +1,8 @@
+rm kicad_xilinx_spartan6_script
+rm -r kicad_xilinx_spartan6
+rm -r out/kicad_xilinx_spartan6
+../split_kicad_lib  -group kicad_xilinx_spartan6 ./Kicad_symbols/FPGA_Xilinx_Spartan6.lib  >> kicad_xilinx_spartan6_script
+chmod 755 kicad_xilinx_spartan6_script
+./kicad_xilinx_spartan6_script
+
+

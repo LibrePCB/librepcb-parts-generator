@@ -1,0 +1,6 @@
+rm kicad_lattice_script
+rm -r kicad_lattice
+rm -r out/kicad_lattice
+../split_kicad_lib  -group kicad_lattice ./Kicad_symbols/FPGA_Lattice.lib    >> kicad_lattice_script
+chmod 755 kicad_lattice_script
+./kicad_lattice_script

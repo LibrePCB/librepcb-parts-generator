@@ -1,0 +1,988 @@
+eval 'exec `which perl` -S $0 ${1+"$@"}'
+   if 0;
+
+#/**********************************************************************/
+#/*                                                                    */
+#/*             -------                                                */
+#/*            /   SOC  \                                              */
+#/*           /    GEN   \                                             */
+#/*          /    TOOL    \                                            */
+#/*          ==============                                            */
+#/*          |            |                                            */
+#/*          |____________|                                            */
+#/*                                                                    */
+#/*  Converts a kicad  symbol source file into a cvsfile               */
+#/*                                                                    */
+#/*                                                                    */
+#/*  Author(s):                                                        */
+#/*      - John Eaton, z3qmtr45@gmail.com                              */
+#/*                                                                    */
+#/**********************************************************************/
+#/*                                                                    */
+#/*    Copyright (C) <2020>  <Ouabache Design Works>                   */
+#/*                                                                    */
+#/*  This source file may be used and distributed without              */
+#/*  restriction provided that this copyright statement is not         */
+#/*  removed from the file and that any derivative work contains       */
+#/*  the original copyright notice and the associated disclaimer.      */
+#/*                                                                    */
+#/*  This source file is free software; you can redistribute it        */
+#/*  and/or modify it under the terms of the GNU Lesser General        */
+#/*  Public License as published by the Free Software Foundation;      */
+#/*  either version 2.1 of the License, or (at your option) any        */
+#/*  later version.                                                    */
+#/*                                                                    */
+#/*  This source is distributed in the hope that it will be            */
+#/*  useful, but WITHOUT ANY WARRANTY; without even the implied        */
+#/*  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR           */
+#/*  PURPOSE.  See the GNU Lesser General Public License for more      */
+#/*  details.                                                          */
+#/*                                                                    */
+#/*  You should have received a copy of the GNU Lesser General         */
+#/*  Public License along with this source; if not, download it        */
+#/*  from http://www.opencores.org/lgpl.shtml                          */
+#/*                                                                    */
+#/**********************************************************************/
+
+
+############################################################################
+# General PERL config
+############################################################################
+use Getopt::Long;
+use English;
+use File::Basename;
+use Cwd;
+$OUTPUT_AUTOFLUSH = 1; # set autoflush of stdout to TRUE.
+
+
+
+
+############################################################################
+### Process the options
+############################################################################
+
+Getopt::Long::config("require_order", "prefix=-");
+GetOptions("h",
+           "group=s" => \$group,
+	   "Part=s" => \$Part
+) || die "(use 'sym2csv -h' for help)";
+
+
+
+
+
+
+
+
+
+##############################################################################
+## Help option
+##############################################################################
+if ( ($opt_h eq "1") ) 
+  { print "\n type test filename.lib";
+    print "\n";
+    exit 1;
+  }
+
+
+
+#############################################################################
+## 
+##  open intel hex  file  and read into array
+## 
+#############################################################################
+
+my $home           = cwd();
+
+my $cmp_path       = "${home}/${group}";
+
+
+mkdir $cmp_path,0755   unless( -e $cmp_path );
+
+my $low_x  = 0;
+my $hi_y   = 0;
+my $pin_tiddle = 1; 
+
+my $in_polygon = 0;
+my $polygon_x  = 0;
+my $polygon_y  = 0;
+
+my $result =  uuid();
+
+
+my $cmpcat_val;
+unless($Part){ $Part = 1;}
+
+
+
+  my $prog_name         = $ARGV[0];
+
+  my $input_file   = ${prog_name};
+
+  $_ = $prog_name; 
+      if(/(\S+)\/(\S+).sym/)
+
+        {
+	$cmpcat_file = "$1/cmpcat.uuid";
+        open   FILE, $cmpcat_file;
+        while(<FILE>)
+             {
+	     push @cmpcat_store, $_  ;
+             $cmpcat_val = $_;
+             }
+        }
+
+
+  my $output_file  = "${home}/sym/${result}/symbol.lp";
+  print "                          Reading   kicad     File  $input_file\n";  
+
+  open   FILE, $input_file;
+  while(<FILE>){push @intel_hex, $_  ;}
+
+
+
+my $cmp_name;
+my $footprint_name;
+my $ver_a =0;
+my $ver_b =0;
+my $ver_c =0;
+my $ver_d =0;
+
+
+my $cmp_reference;
+my $draw_pinnumber;
+my $draw_pinname;
+my $unit_count;
+my $units_locked;
+my $option_flag;
+
+
+#
+# Collect part data and print out header
+#
+#
+#
+foreach $line (@intel_hex)
+       {
+       $_ = $line; 
+       if(/DEF (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+)/)
+          { 
+            $cmp_name       = $1;
+            $cmp_reference  = $2;
+            $draw_pinnumber = $5;
+            $draw_pinname   = $6;
+            $unit_count     = $7;
+            $units_locked   = $8;
+            $option_flag    = $9;
+
+            $xfer ="DEF,${cmp_name}\n";
+            push @dev_graph, $xfer;
+            printf("                          processing %s\n",$cmp_name);
+
+          }
+
+       if(/F2 "(\S+)"/)
+          { 
+            $footprint_name       = $1;
+            $xfer ="FOOT,${footprint_name}\n";
+            push @dev_graph, $xfer;
+          }
+
+     }
+
+
+
+
+
+#
+# Parse out and print graphics and pins
+#
+#
+#
+
+
+
+
+
+foreach $line (@intel_hex)
+    {
+    $_ = $line; 
+    if(/(\S+) (\S+)/)     
+      {
+      if($1 eq "P")
+        {
+        #
+        # Polygon
+        #
+        my @words = split / /, $line;
+        my $field_1  = shift @words;
+        my $num_pts  = shift @words;
+        my $unit     = shift @words;
+        my $convert  = shift @words;
+        my $thickness  = shift @words;
+	my $fill   = pop @words;
+        my $pos_x  = shift @words;
+	my $pos_y  = shift @words;
+        unshift @words, $pos_y;
+	unshift @words, $pos_x;
+
+        $in_polygon = 0;
+        if($thickness == 0 ){ $thickness =1;}
+        if($thickness < 0 ){ $thickness = 0;}
+ printf("Polygon  num_pts- ${num_pts} unit- ${unit}   convert- ${convert}  Part- ${Part}      \n",);
+ 
+
+
+       if(($unit == 0)||(($Part == $unit)&& ($convert <2 )    )         )
+       {
+
+
+ printf("Polygon 1    ${in_polygon}  \n",);
+            if($in_polygon == 0)
+              {
+              my $poly_uuid = uuid();
+ printf("Polygon 2  \n",);
+              $xfer ="POLY,${thickness}\n";
+              unshift @dev_graph, $xfer;
+              $in_polygon  = 1;
+              }
+              elsif(( $polygon_x == $pos_x) && ($polygon_y == $pos_y) )
+              {
+ printf("Polygon 3  \n",);
+	      }
+              else
+	      {
+              $xfer ="POLY,${thickness}\n";
+              unshift @dev_graph, $xfer;
+ printf("Polygon 4  \n",);
+              $in_polygon  = 1;
+	      }
+
+
+
+
+        while($num_pts)
+         {
+
+         $pos_x =shift @words;
+         $pos_y =shift @words;
+	 $num_pts = $num_pts -1;
+
+         $pos_x =($pos_x);
+         $pos_y =($pos_y);
+
+         if($low_x > $pos_x){ $low_x = $pos_x;};
+         if($hi_y < $pos_y) { $hi_y = $pos_y;};
+
+         $xfer ="POLYPT,${pos_x},${pos_y}\n";
+         unshift @dev_graph, $xfer;
+ printf("Polygon 5  \n",);
+
+
+         unless(( $polygon_x == $pos_x) && ($polygon_y == $pos_y) )
+	 {
+
+         }
+         $polygon_x = $pos_x;
+         $polygon_y = $pos_y;	    
+         }
+ printf("Polygon 6  \n",);
+         $xfer ="POLYST,${polygon_x},${polygon_y}\n";
+         unshift @dev_graph, $xfer;
+         $in_polygon  = 0;
+	 }
+
+
+
+
+}
+
+
+	
+
+#
+#
+# arc
+#
+#
+#
+
+      if($1 eq "A")        
+      {
+
+      $_ = $line; 
+      if(/(\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+)/)     
+        {
+        my $pin_uuid    = uuid();
+        my $posx        = ($2);
+        my $posy        = ($3);
+	my $radius      = ($4);
+        my $start       = ($5);
+        my $end         = ($6);
+        my $part        = ($7);
+        my $convert      = ($8);
+        my $width        = ($9);
+        my $cc           = ($10);
+        my $startpointx  = ($11);
+        my $startpointy  = ($12);
+        my $endpointx    = ($13);
+        my $endpointy    = ($14);
+        $xfer ="ARC,${posx},${posy},${radius},${start},${end},${part},${convert},${width},${cc},${startpointx},${startpointy},${endpointx},${endpointy}\n";
+        push @dev_graph, $xfer;
+
+
+
+my $angle = comp_angle ($posx,$posy,$radius,$start,$end,$startpointx,$startpointy,$endpointx,$endpointy);
+my $C_angle = camp_angle ($posx,$posy,$radius,$start,$end,$startpointx,$startpointy,$endpointx,$endpointy);
+
+#printf("Angle  %s   %s   \n",$angle,$C_angle);
+
+
+  if(($part == 0)||(($Part == $part) &&($convert < 2)))
+{
+        if($low_x > $startpointx){ $low_x = $startpointx;};
+        if($hi_y < $startpointy) { $hi_y = $startpointy;};
+        if($low_x > $endpointx){ $low_x = $endpointx;};
+        if($hi_y < $endpointy) { $hi_y = $endpointy;};
+
+
+            if($in_polygon == 0)
+              {
+
+              my $poly_uuid = uuid();
+              $in_polygon  = 1;
+              }
+              else
+
+              {
+
+                if(( $polygon_x == $startpointx) && ($polygon_y == $startpointy) )
+                {
+
+}
+                else
+                {
+
+                printf VERILOG ("  )\n");
+                my $poly_uuid = uuid();
+
+		              $in_polygon  = 1;
+	        }
+	      }
+
+        $polygon_x = $endpointx;
+	$polygon_y = $endpointy;
+      
+     }
+    }
+}
+
+  }
+
+  }
+
+       if($in_polygon == 1)
+         {
+
+
+
+	 }
+
+
+foreach $line (@intel_hex)
+    {
+    $_ = $line; 
+    if(/(\S+) (\S+)/)     
+      {
+
+
+      if($1 eq "S")        
+        {
+        #
+        # Rectangle
+        #
+
+        $_ = $line; 
+        if(/(\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+)/)     
+        {
+        my $pin_uuid = uuid();
+
+        my $a           = ($2);
+        my $b           = ($3);
+	my $c           = ($4);
+        my $d           = ($5);
+        my $unit        = ($6);
+        my $convert     = ($7);
+	my $thickness   = ($8);
+
+
+
+  if(($unit == 0)||(($Part == $unit)&&($convert < 2))) 
+       {
+       if($low_x > $a){ $low_x = $a;};
+       if($hi_y < $b) { $hi_y = $b;};
+       if($low_x > $c){ $low_x = $c;};
+       if($hi_y < $d) { $hi_y = $d;};
+
+       $ver_a = $a;
+       $ver_b = $b;
+       $ver_c = $c;
+       $ver_d = $d;
+       $xfer ="RECT,${ver_a},${ver_b},${ver_c},${ver_d}\n";
+       push @dev_graph, $xfer;
+       }
+
+}
+
+
+
+}
+
+
+
+
+
+      if($1 eq "C")        
+        {
+#
+#
+# circle 
+# 
+#
+        $_ = $line; 
+        if(/(\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+)/)     
+          {
+          my $pin_uuid    = uuid();
+          my $posx        = ($2/10.16);
+          my $posy        = ($3/10.16);
+          my $diameter    = (($4/10.16)*2);
+          my $unit        = ($5);
+	  my $convert     = ($6);
+          my $width       = ($7/10.16);
+          my $fill        = ($8);
+
+          my $low  = $posx - $diameter;
+	  my $high = $posy + $diameter;
+
+    if(($unit == 0)||(($Part == $unit)&&($convert < 2))) 
+          {
+          if($low_x > $low){ $low_x = $low;};
+          if($hi_y < $high) { $hi_y = $high;};
+
+          if  ( $diameter > 0 )
+	    {
+
+            $xfer ="CIRC,${posx},${posy},${diameter},${unit},${convert},${width},${fill}\n";
+            push @dev_graph, $xfer;
+
+
+            }
+	  }
+
+        }
+
+
+         }
+   
+
+
+
+
+
+
+#
+#
+# text 
+# 
+#
+
+
+      if($1 eq "T")        
+      {
+      $_ = $line; 
+      if(/(\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+)/)     
+
+        {
+        my $text_uuid    = uuid();
+        my $orientation  = ($2);
+        my $posx         = ($3/10.16);
+        my $posy         = ($4/10.16);
+	my $dimension    = ($5);
+        my $unit         = ($6);
+        my $convert      = ($7);
+	my $text         = ($8);
+
+  if(($unit == 0)||(($Part == $unit)&&($convert < 2)))
+       {
+
+
+            $xfer ="TEXT,${posx},${posy},${orientation},${dimension},${unit},${convert},${text}\n";
+            push @dev_graph, $xfer;
+
+
+        }
+
+    }
+      }
+
+
+
+
+
+
+    }
+    }
+
+
+
+
+#
+# Name and Ref
+#
+$low_x = $low_x -5.08;
+
+my $value_uuid = uuid();
+
+
+$hi_y  = $hi_y + 2.54;
+
+my $name_uuid = uuid();
+
+
+#
+# Pins
+#
+
+foreach $line (@intel_hex)
+    {
+    $_ = $line; 
+    if(/(\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+)/) 
+      {
+      if($1 eq "X")
+        {
+
+        my $pin_uuid = uuid();
+
+        my $name         = $2;
+	my $number       = $3;
+        my $posx         = $4;
+	my $posy         = $5;
+        my $length       = $6;
+        my $side         = $7;
+        my $Snum         = $8;
+        my $Snom         = $9;
+        my $unit         = $10;
+	my $convert      = $11;
+
+        $row_adj = ($posy + 5000)/10;
+        $name  =~ s/,/_/;
+        $name  =~ s/,/_/;
+        $name  =~ s/,/_/;
+        $name  =~ s/,/_/;
+        $name  =~ s/,/_/;
+
+
+  if(($unit == 0)||(($Part == $unit)&&($convert <2)))
+  {
+
+
+        if($name eq "~")
+	{
+	$name = "n${pin_tiddle}";
+	$pin_tiddle = $pin_tiddle +1;
+	}
+
+        if($name eq "~~")
+	{
+	$name = "n${pin_tiddle}";
+	$pin_tiddle = $pin_tiddle +1;
+	}
+
+        if($name eq "#")
+	{
+	$name = "n${pin_tiddle}";
+	$pin_tiddle = $pin_tiddle +1;
+	}
+
+        if($name eq ":")
+	{
+	$name = "n${pin_tiddle}";
+	$pin_tiddle = $pin_tiddle +1;
+	}
+
+
+        my $xfer = "${side}::${row_adj}::${name}::${number}::${posx}::${posy}::${length}::${side}::${Snum}::${Snom}::${unit}::${convert}";
+	push  @dev_pins, $xfer;
+
+
+        $poly_uuid = uuid();
+	
+        if   ($7 eq "D")
+	     {
+
+             $pos_x = $b;
+	     $pos_y = $c;
+
+
+             $pos_x = $b;
+	     $pos_y = $c -$d;
+
+             }
+        elsif($7 eq "U")
+	     {
+
+             $pos_x = $b;
+	     $pos_y = $c;
+
+             $pos_x = $b;
+	     $pos_y = $c +$d;
+
+             }
+        elsif($7 eq "L")
+	     {
+
+             $pos_x = $b;
+	     $pos_y = $c;
+
+             $pos_x = $b - $d;
+	     $pos_y = $c;
+
+             }
+        elsif($7 eq "R")
+	     {
+
+             $pos_x = $b;
+	     $pos_y = $c;
+
+             $pos_x = $b +$d;
+	     $pos_y = $c;
+
+             }
+        else
+	     {
+
+	     }
+        }
+      }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+  $output_file  = "${home}/${group}/F${cmp_name}_${Part}.csv";
+  open   COMPONENT , ">  $output_file";
+
+  while($item = pop(@dev_graph))
+
+  {
+  printf COMPONENT ("${item}");
+  }
+
+
+
+  @dev_pins = trim_sort(@dev_pins);
+  while($item = pop(@dev_pins))
+       {
+
+       $_ = $item; 
+       if(/(\S+)::(\S+)::(\S+)::(\S+)::(\S+)::(\S+)::(\S+)::(\S+)::(\S+)::(\S+)::(\S+)::(\S+)/)
+         {
+	 $pin_side    = $1;
+	 $pin_row     = $2;
+         $pin_name    = $3;
+	 $pin_number  = $4;
+	 $pin_posx    = $5;
+	 $pin_posy    = $6;
+	 $pin_length  = $7;
+	 $pin_side    = $8;
+	 $pin_Snum    = $9;
+	 $pin_Snom    = $10;
+	 $pin_unit    = $11;
+	 $pin_convert = $12;
+
+         printf COMPONENT ("PIN,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",$pin_name,$pin_side,$pin_number,$pin_posx,$pin_posy,$pin_length,$pin_side,$pin_Snum,$pin_Snom,$pin_unit,$pin_convert);
+
+
+
+
+         }
+
+       }
+
+
+
+#############################################################################
+## 
+##  convert 0-9,A-F to decimal or 0 if out of range
+## 
+#############################################################################
+
+
+sub cvt { 
+
+$temp =    ord($_[0]);
+if( $temp <= 48) { return 0 }
+if( $temp <= 58) { return $temp - 48 }
+if( $temp <= 64) { return 0 }
+if( $temp <= 70) { return ($temp - 65)+10 }
+return 0;
+
+
+
+}
+
+
+
+
+
+
+
+#############################################################################
+## 
+##  Create random UUID
+## 
+#############################################################################
+
+
+sub uuid { 
+
+  my $uuid1 = rand(65536);
+  my $uuid2 = rand(65536);
+  my $uuid3 = rand(65536);
+  my $uuid4 = rand(4096);
+  my $uuid5 = rand(4096);
+  my $uuid6 = rand(65536);
+  my $uuid7 = rand(65536);
+  my $uuid8 = rand(65536);
+
+my $temp =   sprintf("%04x%04x-%04x-4%03x-8%03x-%04x%04x%04x", $uuid1,$uuid2,$uuid3,$uuid4,$uuid5,$uuid6,$uuid7,$uuid8 );
+
+ 
+return $temp;
+
+
+
+}
+
+
+
+
+
+
+
+#############################################################################
+## 
+##  distance between
+## 
+#############################################################################
+
+
+sub distance { 
+  my ($x1,$x2) = @_;
+
+if(($x1>=0)&&($x2 >= 0))
+  {
+  $diff = abs($x1-$x2);
+  }
+  elsif(($x1>=0)&&($x2 < 0))
+  {
+  $diff = $x1-$x2;
+  }
+  elsif(($x1<0)&&($x2 >= 0))
+  {
+  $diff = $x2-$x1;
+  }
+  else
+  {
+  $diff = abs($x1-$x2);
+  }
+
+return $diff;
+
+}
+
+
+
+
+
+#############################################################################
+## 
+##  compute angle
+## 
+#############################################################################
+
+
+sub comp_angle { 
+  my ($posx,$posy,$radius,$start,$end,$startpointx,$startpointy,$endpointx,$endpointy) = @_;
+
+
+
+
+#printf ("Angle midpt  %6.2f   %6.2f  Radius  %6.2f  StartA %6.1f EndA %6.1f  Start Pt %6.2f,%6.2f  EndPt %6.2f,%6.2f\n",
+#          $posx,$posy, $radius,$start,$end,$startpointx,$startpointy,$endpointx,$endpointy   );
+
+
+
+
+
+        if(($start < 0)&&($end >= 0))
+	{
+        $angle = $end - $start;
+	
+	if ($angle >180){$angle = -1*${angle};}
+# 	if ($angle < -180){$angle = 180+  ${angle};
+#printf ("Angle1  = %s   %s  %s   \n",$angle , $start , $end  );
+}
+
+        if(($start >= 0)&&($end <0))
+	{
+        $angle =360-( $start - $end);
+	if ($angle >=180){$angle = ${angle}-180;}
+		if ($angle < -180){$angle = 180+  ${angle};}
+#printf ("Angle2  = %s   %s  %s   \n",$angle , $start , $end  );
+}
+
+
+        if(($start >= 0)&&($end >=0))
+	{
+        $angle = $end - $start;
+	if ($angle >=180){$angle = ${angle}-180;}
+ 	if ($angle < -180){$angle = 180+  ${angle}}
+#	printf ("Angle3  = %s   %s  %s   \n",$angle , $start , $end  );
+}
+
+
+       if(($start < 0)&&($end <0))
+	{
+        $angle =-1*( $start + $end);
+	if ($angle < -180){$angle = ${angle}+180;}
+#printf ("Angle4  = %s   %s  %s   \n",$angle , $start , $end  );
+        }
+
+
+	if ($angle >= 360){$angle = ${angle}- 360;}
+
+
+
+return $angle;
+
+}
+
+
+
+
+
+#############################################################################
+## 
+##  compute angle
+## 
+#############################################################################
+
+
+sub camp_angle { 
+  my ($posx,$posy,$radius,$start,$end,$startpointx,$startpointy,$endpointx,$endpointy) = @_;
+
+
+
+
+#printf ("Angle midpt  %6.2f   %6.2f  Radius  %6.2f  StartA %6.1f EndA %6.1f  Start Pt %6.2f,%6.2f  EndPt %6.2f,%6.2f\n",
+#          $posx,$posy, $radius,$start,$end,$startpointx,$startpointy,$endpointx,$endpointy   );
+
+
+$angle_start  = norm($start);
+$angle_end    = norm($end);
+
+$dist_x = distance($startpointx,$endpointx );
+$dist_y = distance($startpointy,$endpointy );
+
+if($dist_x == 0)
+  {
+  $L_angle = 180;
+  }
+else
+  {
+  $slope  = $dist_y/$dist_x;
+  $exp    = $slope * ($posx - $startpointx)+$startpointy;
+  if($exp > $posy)
+    {
+    $L_angle = abs($angle_start - $angle_end);
+    }
+  else
+    {
+    $L_angle = 360 -abs($angle_start - $angle_end);
+    }
+
+}
+
+
+
+#printf ("Angle midpt  %6.2f   %6.2f  Radius  %6.2f  StartA %6.1f EndA %6.1f\n",
+#          $posx,$posy, $radius,$start,$end );
+
+#printf ("A   Start Pt %6.2f,%6.2f  EndPt %6.2f,%6.2f angle %6.2f\n",
+#          $startpointx,$startpointy,$endpointx,$endpointy ,$L_angle  );
+
+
+
+
+
+return $angle;
+
+}
+
+
+
+
+
+
+#############################################################################
+## 
+##  normalize
+## 
+#############################################################################
+
+
+sub norm { 
+  my ($x1) = @_;
+
+if($x1>=360)
+  {
+  $ang = $x1-360;
+  }
+  elsif($x1<0)
+  {
+  $ang = $x1+360;
+  }
+  else
+  {
+  $ang = $x1;
+  }
+
+return $ang;
+
+}
+
+
+
+sub trim_sort {
+   my @output_files  = @_;
+   my %trim = ();
+   foreach my $descriptor (@output_files) { $trim{$descriptor}  = 1; }
+   my @k = keys %trim;
+   @output_files =  sort(sort @k);  
+   return(@output_files);
+   }
+
+
+1
+
+

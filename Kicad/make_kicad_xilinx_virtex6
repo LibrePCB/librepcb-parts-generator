@@ -1,0 +1,8 @@
+rm kicad_xilinx_virtex6_script
+rm -r kicad_xilinx_virtex6
+rm -r out/kicad_xilinx_virtex6
+../split_kicad_lib  -group kicad_xilinx_virtex6 ./Kicad_symbols/FPGA_Xilinx_Virtex6.lib  >> kicad_xilinx_virtex6_script
+chmod 755 kicad_xilinx_virtex6_script
+./kicad_xilinx_virtex6_script
+
+

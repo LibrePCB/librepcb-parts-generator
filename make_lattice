@@ -1,0 +1,106 @@
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-HX1K-CB132  --group fpga --directory  ./Lattice/  
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-HX1K-TQ144  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-HX1K-VQ100  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-HX4K-BG121  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-HX4K-CB132  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-HX4K-TQ144  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-HX8K-BG121  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-HX8K-CB132  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-HX8K-CM225  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-HX8K-CT256  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP1K-CB121  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP1K-CB81   --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP1K-CM121  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP1K-CM36   --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP1K-CM49   --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP1K-CM81   --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP1K-QN84   --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP1K-SWG16TR --group fpga --directory  ./Lattice/
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP384-CM36  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP384-CM49  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP384-QN32  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP4K-CM121  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP4K-CM225  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP4K-CM81   --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP8K-CM121  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP8K-CM225  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-LP8K-CM81   --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-UP3K-UWG30  --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-UP5K-SG48   --group fpga --directory  ./Lattice/ 
+python3.7 generate_sym.py --variant default --part  0 --design iCE40-UP5K-UWG30  --group fpga --directory  ./Lattice/ 
+python3.7 generate_cmp.py  --variant default --design iCE40-HX1K-CB132  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-HX1K-TQ144  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-HX1K-VQ100  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-HX4K-BG121  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-HX4K-CB132  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-HX4K-TQ144  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-HX8K-BG121  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-HX8K-CB132  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-HX8K-CM225  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-HX8K-CT256  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP1K-CB121  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP1K-CB81   --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP1K-CM121  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP1K-CM36   --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP1K-CM49   --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP1K-CM81   --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP1K-QN84   --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP1K-SWG16TR --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP384-CM36  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP384-CM49  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP384-QN32  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP4K-CM121  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP4K-CM225  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP4K-CM81   --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP8K-CM121  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP8K-CM225  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-LP8K-CM81   --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-UP3K-UWG30  --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-UP5K-SG48   --group fpga --directory  ./Lattice/
+python3.7 generate_cmp.py  --variant default --design iCE40-UP5K-UWG30  --group fpga --directory  ./Lattice/
+cp  uuid_cache_fpga.csv uuid_cache_fpga_pkg.csv 
+cat uuid_cache_bga.csv >>  uuid_cache_fpga_pkg.csv
+cat uuid_cache_qfp.csv >>  uuid_cache_fpga_pkg.csv
+python3.7 generate_dev.py --design iCE40-HX1K-CB132  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-HX1K-TQ144  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-HX1K-VQ100  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-HX4K-BG121  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-HX4K-CB132  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-HX4K-TQ144  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-HX8K-BG121  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-HX8K-CB132  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-HX8K-CM225  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-HX8K-CT256  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP1K-CB121  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP1K-CB81   --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP1K-CM121  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP1K-CM36   --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP1K-CM49   --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP1K-CM81   --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP1K-QN84   --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP1K-SWG16TR --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP384-CM36  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP384-CM49  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP384-QN32  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP4K-CM121  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP4K-CM225  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP4K-CM81   --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP8K-CM121  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP8K-CM225  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-LP8K-CM81   --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-UP3K-UWG30  --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-UP5K-SG48   --group fpga --directory  ./Lattice/
+python3.7 generate_dev.py --design iCE40-UP5K-UWG30  --group fpga --directory  ./Lattice/
+
+
+
+
+
+
+
+
+
+
+
+
+

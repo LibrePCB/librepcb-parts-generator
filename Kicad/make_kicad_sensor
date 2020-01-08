@@ -1,0 +1,18 @@
+rm kicad_sensor_script
+rm -r kicad_sensor
+rm -r out/kicad_sensor
+../split_kicad_lib  -group kicad_sensor ./Kicad_symbols/Sensor_Audio.lib   >> kicad_sensor_script
+../split_kicad_lib  -group kicad_sensor ./Kicad_symbols/Sensor_Current.lib   >> kicad_sensor_script
+../split_kicad_lib  -group kicad_sensor ./Kicad_symbols/Sensor_Gas.lib   >> kicad_sensor_script
+../split_kicad_lib  -group kicad_sensor ./Kicad_symbols/Sensor_Humidity.lib   >> kicad_sensor_script
+../split_kicad_lib  -group kicad_sensor ./Kicad_symbols/Sensor.lib   >> kicad_sensor_script
+../split_kicad_lib  -group kicad_sensor ./Kicad_symbols/Sensor_Magnetic.lib   >> kicad_sensor_script
+../split_kicad_lib  -group kicad_sensor ./Kicad_symbols/Sensor_Motion.lib   >> kicad_sensor_script
+../split_kicad_lib  -group kicad_sensor ./Kicad_symbols/Sensor_Optical.lib   >> kicad_sensor_script
+../split_kicad_lib  -group kicad_sensor ./Kicad_symbols/Sensor_Pressure.lib   >> kicad_sensor_script
+../split_kicad_lib  -group kicad_sensor ./Kicad_symbols/Sensor_Proximity.lib   >> kicad_sensor_script
+../split_kicad_lib  -group kicad_sensor ./Kicad_symbols/Sensor_Temperature.lib   >> kicad_sensor_script
+../split_kicad_lib  -group kicad_sensor ./Kicad_symbols/Sensor_Touch.lib   >> kicad_sensor_script
+../split_kicad_lib  -group kicad_sensor ./Kicad_symbols/Sensor_Voltage.lib   >> kicad_sensor_script
+chmod 755 kicad_sensor_script
+./kicad_sensor_script

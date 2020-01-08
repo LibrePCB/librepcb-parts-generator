@@ -1,0 +1,21 @@
+rm kicad_script
+rm -r kicad
+rm -r out/kicad
+../split_kicad_lib  -group kicad ./Kicad_symbols/Audio.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Converter_DCDC.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Device.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Fiber_Optic.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Filter.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Jumper.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/LED.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Logic_LevelTranslator.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Motor.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Oscillator.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Potentiometer_Digital.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Security.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Switch.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Transformer.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Valve.lib   >> kicad_script
+../split_kicad_lib  -group kicad ./Kicad_symbols/Video.lib   >> kicad_script
+chmod 755 kicad_script
+./kicad_script

@@ -1,0 +1,17 @@
+rm kicad_nxp_script
+rm -r kicad_nxp
+rm -r out/kicad_nxp
+../split_kicad_lib  -group kicad_nxp ./Kicad_symbols/CPU_NXP_68000.lib    >> kicad_nxp_script
+../split_kicad_lib  -group kicad_nxp ./Kicad_symbols/CPU_NXP_6800.lib       >> kicad_nxp_script
+../split_kicad_lib  -group kicad_nxp ./Kicad_symbols/CPU_NXP_IMX.lib     >> kicad_nxp_script
+../split_kicad_lib  -group kicad_nxp ./Kicad_symbols/MCU_NXP_ColdFire.lib    >> kicad_nxp_script
+../split_kicad_lib  -group kicad_nxp ./Kicad_symbols/MCU_NXP_HC11.lib     >> kicad_nxp_script
+../split_kicad_lib  -group kicad_nxp ./Kicad_symbols/MCU_NXP_HC12.lib      >> kicad_nxp_script
+../split_kicad_lib  -group kicad_nxp ./Kicad_symbols/MCU_NXP_HCS12.lib     >> kicad_nxp_script
+../split_kicad_lib  -group kicad_nxp ./Kicad_symbols/MCU_NXP_Kinetis.lib     >> kicad_nxp_script
+../split_kicad_lib  -group kicad_nxp ./Kicad_symbols/MCU_NXP_LPC.lib        >> kicad_nxp_script
+../split_kicad_lib  -group kicad_nxp ./Kicad_symbols/MCU_NXP_MAC7100.lib     >> kicad_nxp_script
+../split_kicad_lib  -group kicad_nxp ./Kicad_symbols/MCU_NXP_MCore.lib      >> kicad_nxp_script
+../split_kicad_lib  -group kicad_nxp ./Kicad_symbols/MCU_NXP_S08.lib    >> kicad_nxp_script
+chmod 755 kicad_nxp_script
+./kicad_nxp_script

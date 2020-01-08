@@ -1,0 +1,17 @@
+rm kicad_interface_script
+rm -r kicad_interface
+rm -r out/kicad_interface
+../split_kicad_lib  -group kicad_interface ./Kicad_symbols/Interface_CAN_LIN.lib   >> kicad_interface_script
+../split_kicad_lib  -group kicad_interface ./Kicad_symbols/Interface_CurrentLoop.lib   >> kicad_interface_script
+../split_kicad_lib  -group kicad_interface ./Kicad_symbols/Interface_Ethernet.lib   >> kicad_interface_script
+../split_kicad_lib  -group kicad_interface ./Kicad_symbols/Interface_Expansion.lib   >> kicad_interface_script
+../split_kicad_lib  -group kicad_interface ./Kicad_symbols/Interface_HDMI.lib   >> kicad_interface_script
+../split_kicad_lib  -group kicad_interface ./Kicad_symbols/Interface_HID.lib   >> kicad_interface_script
+../split_kicad_lib  -group kicad_interface ./Kicad_symbols/Interface.lib   >> kicad_interface_script
+../split_kicad_lib  -group kicad_interface ./Kicad_symbols/Interface_LineDriver.lib   >> kicad_interface_script
+../split_kicad_lib  -group kicad_interface ./Kicad_symbols/Interface_Optical.lib   >> kicad_interface_script
+../split_kicad_lib  -group kicad_interface ./Kicad_symbols/Interface_Telecom.lib   >> kicad_interface_script
+../split_kicad_lib  -group kicad_interface ./Kicad_symbols/Interface_UART.lib   >> kicad_interface_script
+../split_kicad_lib  -group kicad_interface ./Kicad_symbols/Interface_USB.lib   >> kicad_interface_script
+chmod 755 kicad_interface_script
+./kicad_interface_script

@@ -1,0 +1,8 @@
+rm kicad_xilinx_script
+rm -r kicad_xilinx
+rm -r out/kicad_xilinx
+../split_kicad_lib  -group kicad_xilinx ./Kicad_symbols/FPGA_Xilinx.lib  >> kicad_xilinx_script
+chmod 755 kicad_xilinx_script
+./kicad_xilinx_script
+
+

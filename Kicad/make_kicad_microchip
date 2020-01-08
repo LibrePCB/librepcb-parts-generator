@@ -1,0 +1,18 @@
+rm kicad_microchip_script
+rm -r kicad_microchip
+rm -r out/kicad_microchip
+../split_kicad_lib  -group kicad_microchip ./Kicad_symbols/MCU_Microchip_8051.lib     >> kicad_microchip_script
+../split_kicad_lib  -group kicad_microchip ./Kicad_symbols/MCU_Microchip_ATmega.lib   >> kicad_microchip_script
+../split_kicad_lib  -group kicad_microchip ./Kicad_symbols/MCU_Microchip_ATtiny.lib   >> kicad_microchip_script
+../split_kicad_lib  -group kicad_microchip ./Kicad_symbols/MCU_Microchip_AVR.lib      >> kicad_microchip_script
+../split_kicad_lib  -group kicad_microchip ./Kicad_symbols/MCU_Microchip_PIC10.lib    >> kicad_microchip_script
+../split_kicad_lib  -group kicad_microchip ./Kicad_symbols/MCU_Microchip_PIC12.lib    >> kicad_microchip_script
+../split_kicad_lib  -group kicad_microchip ./Kicad_symbols/MCU_Microchip_PIC16.lib    >> kicad_microchip_script
+../split_kicad_lib  -group kicad_microchip ./Kicad_symbols/MCU_Microchip_PIC18.lib    >> kicad_microchip_script
+../split_kicad_lib  -group kicad_microchip ./Kicad_symbols/MCU_Microchip_PIC24.lib    >> kicad_microchip_script
+../split_kicad_lib  -group kicad_microchip ./Kicad_symbols/MCU_Microchip_PIC32.lib    >> kicad_microchip_script
+../split_kicad_lib  -group kicad_microchip ./Kicad_symbols/MCU_Microchip_SAMD.lib     >> kicad_microchip_script
+../split_kicad_lib  -group kicad_microchip ./Kicad_symbols/MCU_Microchip_SAME.lib     >> kicad_microchip_script
+../split_kicad_lib  -group kicad_microchip ./Kicad_symbols/MCU_Microchip_SAML.lib     >> kicad_microchip_script
+chmod 755 kicad_microchip_script
+./kicad_microchip_script
