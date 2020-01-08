@@ -119,6 +119,9 @@ foreach $line (@library_file)
       my $name = $1;
       my $unit_count = $7;
       $print_on =1;
+
+      $name =~ s/"/_/;
+
       $output_file  = "${path}/${name}.sym";
       open  LIBREPCB_SYM , ">  $output_file";
 

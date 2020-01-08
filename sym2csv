@@ -45,7 +45,6 @@ eval 'exec `which perl` -S $0 ${1+"$@"}'
 #/**********************************************************************/
 
 
-
 ############################################################################
 # General PERL config
 ############################################################################
@@ -135,18 +134,7 @@ unless($Part){ $Part = 1;}
 
 
   my $output_file  = "${home}/sym/${result}/symbol.lp";
-
-
-
-
-
-
-
   print "                          Reading   kicad     File  $input_file\n";  
-
-
-
-
 
   open   FILE, $input_file;
   while(<FILE>){push @intel_hex, $_  ;}
@@ -200,8 +188,6 @@ foreach $line (@intel_hex)
             push @dev_graph, $xfer;
           }
 
-
-
      }
 
 
@@ -240,26 +226,36 @@ foreach $line (@intel_hex)
         unshift @words, $pos_y;
 	unshift @words, $pos_x;
 
-        $thickness =  $thickness /39.37;
-        if($thickness == 0 ){ $thickness =.254;}
+        $in_polygon = 0;
+        if($thickness == 0 ){ $thickness =1;}
         if($thickness < 0 ){ $thickness = 0;}
+ printf("Polygon  num_pts- ${num_pts} unit- ${unit}   convert- ${convert}  Part- ${Part}      \n",);
+ 
+
 
        if(($unit == 0)||(($Part == $unit)&& ($convert <2 )    )         )
        {
 
+
+ printf("Polygon 1    ${in_polygon}  \n",);
             if($in_polygon == 0)
               {
               my $poly_uuid = uuid();
+ printf("Polygon 2  \n",);
+              $xfer ="POLY,${thickness}\n";
+              unshift @dev_graph, $xfer;
               $in_polygon  = 1;
               }
               elsif(( $polygon_x == $pos_x) && ($polygon_y == $pos_y) )
               {
-
+ printf("Polygon 3  \n",);
 	      }
               else
 	      {
-              my $poly_uuid = uuid();
-	      $in_polygon  = 1;
+              $xfer ="POLY,${thickness}\n";
+              unshift @dev_graph, $xfer;
+ printf("Polygon 4  \n",);
+              $in_polygon  = 1;
 	      }
 
 
@@ -272,11 +268,15 @@ foreach $line (@intel_hex)
          $pos_y =shift @words;
 	 $num_pts = $num_pts -1;
 
-         $pos_x =($pos_x/19.685);
-         $pos_y =($pos_y/19.685);
+         $pos_x =($pos_x);
+         $pos_y =($pos_y);
 
          if($low_x > $pos_x){ $low_x = $pos_x;};
          if($hi_y < $pos_y) { $hi_y = $pos_y;};
+
+         $xfer ="POLYPT,${pos_x},${pos_y}\n";
+         unshift @dev_graph, $xfer;
+ printf("Polygon 5  \n",);
 
 
          unless(( $polygon_x == $pos_x) && ($polygon_y == $pos_y) )
@@ -286,7 +286,14 @@ foreach $line (@intel_hex)
          $polygon_x = $pos_x;
          $polygon_y = $pos_y;	    
          }
+ printf("Polygon 6  \n",);
+         $xfer ="POLYST,${polygon_x},${polygon_y}\n";
+         unshift @dev_graph, $xfer;
+         $in_polygon  = 0;
 	 }
+
+
+
 
 }
 
@@ -307,20 +314,21 @@ foreach $line (@intel_hex)
       if(/(\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+)/)     
         {
         my $pin_uuid    = uuid();
-        my $posx        = ($2/19.685);
-        my $posy        = ($3/19.685);
-	my $radius      = ($4/19.685);
-        my $start       = ($5/10);
-        my $end         = ($6/10);
+        my $posx        = ($2);
+        my $posy        = ($3);
+	my $radius      = ($4);
+        my $start       = ($5);
+        my $end         = ($6);
         my $part        = ($7);
         my $convert      = ($8);
-        my $width        = ($9/39.37);
+        my $width        = ($9);
         my $cc           = ($10);
-        my $startpointx  = ($11/19.685);
-        my $startpointy  = ($12/19.685);
-        my $endpointx    = ($13/19.685);
-        my $endpointy    = ($14/19.685);
-
+        my $startpointx  = ($11);
+        my $startpointy  = ($12);
+        my $endpointx    = ($13);
+        my $endpointy    = ($14);
+        $xfer ="ARC,${posx},${posy},${radius},${start},${end},${part},${convert},${width},${cc},${startpointx},${startpointy},${endpointx},${endpointy}\n";
+        push @dev_graph, $xfer;
 
 
 
@@ -399,13 +407,13 @@ foreach $line (@intel_hex)
         {
         my $pin_uuid = uuid();
 
-        my $a           = ($2/39.37);
-        my $b           = ($3/39.37);
-	my $c           = ($4/39.37);
-        my $d           = ($5/39.37);
+        my $a           = ($2);
+        my $b           = ($3);
+	my $c           = ($4);
+        my $d           = ($5);
         my $unit        = ($6);
         my $convert     = ($7);
-	my $thickness   = ($8/39.37);
+	my $thickness   = ($8);
 
 
 
@@ -445,12 +453,12 @@ foreach $line (@intel_hex)
         if(/(\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+)/)     
           {
           my $pin_uuid    = uuid();
-          my $posx        = ($2/19.685);
-          my $posy        = ($3/19.685);
-          my $diameter    = (($4/19.685)*2);
+          my $posx        = ($2/10.16);
+          my $posy        = ($3/10.16);
+          my $diameter    = (($4/10.16)*2);
           my $unit        = ($5);
 	  my $convert     = ($6);
-          my $width       = ($7/19.685);
+          my $width       = ($7/10.16);
           my $fill        = ($8);
 
           my $low  = $posx - $diameter;
@@ -463,6 +471,10 @@ foreach $line (@intel_hex)
 
           if  ( $diameter > 0 )
 	    {
+
+            $xfer ="CIRC,${posx},${posy},${diameter},${unit},${convert},${width},${fill}\n";
+            push @dev_graph, $xfer;
+
 
             }
 	  }
@@ -493,8 +505,8 @@ foreach $line (@intel_hex)
         {
         my $text_uuid    = uuid();
         my $orientation  = ($2);
-        my $posx         = ($3/19.685);
-        my $posy         = ($4/19.685);
+        my $posx         = ($3/10.16);
+        my $posy         = ($4/10.16);
 	my $dimension    = ($5);
         my $unit         = ($6);
         my $convert      = ($7);
@@ -502,6 +514,10 @@ foreach $line (@intel_hex)
 
   if(($unit == 0)||(($Part == $unit)&&($convert < 2)))
        {
+
+
+            $xfer ="TEXT,${posx},${posy},${orientation},${dimension},${unit},${convert},${text}\n";
+            push @dev_graph, $xfer;
 
 
         }

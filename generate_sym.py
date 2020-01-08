@@ -182,14 +182,6 @@ def generate_sym(
       if row_type == "KEYWORDS" :        keywords =row[1]
       if row_type == "DEF"      :        def_name =row[1]
 
-      if row_type == "RECT" :
-           low_x  =float(row[1])
-           low_y  =float(row[2])
-           high_x =float(row[3])
-           high_y =float(row[4])
-
-
-
            
 
       if row_type == "PIN" :
@@ -217,9 +209,9 @@ def generate_sym(
           pad_type.append(row[2])
           pad_list.append(row[3])
           if variant != "default" :   
-            pad_posx.append(float(row[4])/39.3701)
-            pad_posy.append(float(row[5])/39.3701)
-            pad_length.append(float(row[6])/39.3701)
+            pad_posx.append(float(row[4])/19.685)
+            pad_posy.append(float(row[5])/19.685)
+            pad_length.append(float(row[6])/19.685)
           
           if variant == "default" :   
             pad_posx.append(0)
@@ -377,27 +369,90 @@ def generate_sym(
     if variant != "default" :   
 
 
-        polygon = Polygon(
-             uuid_polygon,
-             Layer('sym_outlines'),
-             Width(line_width),
-             Fill(False),
-             GrabArea(True)
-            )
-        polygon.add_vertex(Vertex(Position(low_x, high_y), Angle(0.0)))
-        polygon.add_vertex(Vertex(Position(high_x, high_y), Angle(0.0)))
-        polygon.add_vertex(Vertex(Position(high_x, low_y), Angle(0.0)))
-        polygon.add_vertex(Vertex(Position(low_x, low_y), Angle(0.0)))
-        polygon.add_vertex(Vertex(Position(low_x, high_y), Angle(0.0)))
-        symbol.add_polygon(polygon)
+
+
+        for row in cvs_raw_data[:num_of_rows]: 
+          # parsing each column of a row
+          row_type =row[0]
+          if row_type == "POLY"  :
+              print('POLY {} '.format( row[1]))
+              polygon = Polygon(
+               uuid_polygon,
+               Layer('sym_outlines'),
+               Width(line_width),
+               Fill(False),
+               GrabArea(True)
+               )
+
+
+
+              
+          if row_type == "POLYPT":
+              print('POLYPT  {} {}'.format( row[1],row[2]))
+              poly_x = float(row[1])/19.685
+              poly_y = float(row[2])/19.685
+              polygon.add_vertex(Vertex(Position(poly_x, poly_y), Angle(0.0)))
+
+              
+          if row_type == "POLYST":
+              print('POLY Stop ')
+              symbol.add_polygon(polygon)
 
 
 
 
-        
+          if row_type == "RECT" :
+             low_x  =float(row[1])/19.685
+             low_y  =float(row[2])/19.685
+             high_x =float(row[3])/19.685
+             high_y =float(row[4])/19.685
+
+             print('Rectangle ')
+             polygon = Polygon(
+               uuid_polygon,
+               Layer('sym_outlines'),
+               Width(line_width),
+               Fill(False),
+               GrabArea(True)
+               )
+             polygon.add_vertex(Vertex(Position(low_x, low_y), Angle(0.0)))
+             polygon.add_vertex(Vertex(Position(low_x, high_y), Angle(0.0)))
+             polygon.add_vertex(Vertex(Position(high_x, high_y), Angle(0.0)))
+             polygon.add_vertex(Vertex(Position(high_x, low_y), Angle(0.0)))
+             polygon.add_vertex(Vertex(Position(low_x, low_y), Angle(0.0)))
+             symbol.add_polygon(polygon)
 
 
-        
+
+
+
+          if row_type == "CAR" :
+             start_x  =float(row[10])/19.685
+             start_y  =float(row[11])/19.685
+             end_x =float(row[12])/19.685
+             end_y =float(row[13])/19.685
+
+             print('Arc ')
+             polygon = Polygon(
+               uuid_polygon,
+               Layer('sym_outlines'),
+               Width(line_width),
+               Fill(False),
+               GrabArea(True)
+               )
+             polygon.add_vertex(Vertex(Position(start_x, start_y), Angle(0.0)))
+             polygon.add_vertex(Vertex(Position(end_x, end_y), Angle(0.0)))
+             symbol.add_polygon(polygon)
+
+             
+
+
+
+
+
+
+
+              
 
     # Text
 
