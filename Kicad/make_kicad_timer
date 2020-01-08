@@ -1,0 +1,8 @@
+rm kicad_timer_script
+rm -r kicad_timer
+rm -r out/kicad_timer
+../split_kicad_lib  -group kicad_timer ./Kicad_symbols/Timer.lib   >> kicad_timer_script
+../split_kicad_lib  -group kicad_timer ./Kicad_symbols/Timer_PLL.lib   >> kicad_timer_script
+../split_kicad_lib  -group kicad_timer ./Kicad_symbols/Timer_RTC.lib   >> kicad_timer_script
+chmod 755 kicad_timer_script
+./kicad_timer_script

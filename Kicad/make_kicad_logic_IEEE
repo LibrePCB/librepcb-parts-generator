@@ -1,0 +1,7 @@
+rm kicad_logic_IEEE_script
+rm -r kicad_logic_IEEE
+rm -r out/kicad_logic_IEEE
+../split_kicad_lib  -group kicad_logic_IEEE ./Kicad_symbols/4xxx_IEEE.lib   >> kicad_logic_IEEE_script
+../split_kicad_lib  -group kicad_logic_IEEE ./Kicad_symbols/74xx_IEEE.lib   >> kicad_logic_IEEE_script
+chmod 755 kicad_logic_IEEE_script
+./kicad_logic_IEEE_script

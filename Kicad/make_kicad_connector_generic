@@ -1,0 +1,8 @@
+rm kicad_connector_generic_script
+rm -r kicad_connector_generic
+rm -r out/kicad_connector_generic
+../split_kicad_lib  -group kicad_connector_generic ./Kicad_symbols/Connector_Generic.lib   >> kicad_connector_generic_script
+../split_kicad_lib  -group kicad_connector_generic ./Kicad_symbols/Connector_Generic_MountingPin.lib   >> kicad_connector_generic_script
+../split_kicad_lib  -group kicad_connector_generic ./Kicad_symbols/Connector_Generic_Shielded.lib   >> kicad_connector_generic_script
+chmod 755 kicad_connector_generic_script
+./kicad_connector_generic_script

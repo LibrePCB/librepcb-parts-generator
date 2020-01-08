@@ -1,0 +1,7 @@
+rm kicad_relay_script
+rm -r kicad_relay
+rm -r out/kicad_relay
+../split_kicad_lib  -group kicad_relay ./Kicad_symbols/Relay.lib   >> kicad_relay_script
+../split_kicad_lib  -group kicad_relay ./Kicad_symbols/Relay_SolidState.lib   >> kicad_relay_script
+chmod 755 kicad_relay_script
+./kicad_relay_script

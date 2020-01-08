@@ -24,6 +24,7 @@
 ./make_kicad_intel              > results_intel              2> results_intel_err             &
 ./make_kicad_interface          > results_interface          2> results_interface_err         &
 ./make_kicad_logic              > results_logic              2> results_logic_err             &
+./make_kicad_logic_IEEE         > results_logic_IEEE         2> results_logic_IEEE_err        &
 ./make_kicad_mcu                > results_mcu                2> results_mcu_err               &
 ./make_kicad_regulator          > results_regulator          2> results_regulator_err         &
 ./make_kicad_rf                 > results_rf                 2> results_rf_err                &

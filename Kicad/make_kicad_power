@@ -1,0 +1,13 @@
+rm kicad_power_script
+rm -r kicad_power
+rm -r out/kicad_power
+../split_kicad_lib  -group kicad_power ./Kicad_symbols/Battery_Management.lib   >> kicad_power_script
+../split_kicad_lib  -group kicad_power ./Kicad_symbols/Converter_DCDC.lib   >> kicad_power_script
+../split_kicad_lib  -group kicad_power ./Kicad_symbols/power.lib   >> kicad_power_script
+../split_kicad_lib  -group kicad_power ./Kicad_symbols/Power_Management.lib   >> kicad_power_script
+../split_kicad_lib  -group kicad_power ./Kicad_symbols/Power_Protection.lib   >> kicad_power_script
+../split_kicad_lib  -group kicad_power ./Kicad_symbols/Power_Supervisor.lib   >> kicad_power_script
+../split_kicad_lib  -group kicad_power ./Kicad_symbols/Reference_Current.lib   >> kicad_power_script
+../split_kicad_lib  -group kicad_power ./Kicad_symbols/Reference_Voltage.lib   >> kicad_power_script
+chmod 755 kicad_power_script
+./kicad_power_script

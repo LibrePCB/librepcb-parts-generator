@@ -1,0 +1,7 @@
+rm kicad_display_script
+rm -r kicad_display
+rm -r out/kicad_display
+../split_kicad_lib  -group kicad_display ./Kicad_symbols/Display_Character.lib   >> kicad_display_script
+../split_kicad_lib  -group kicad_display ./Kicad_symbols/Display_Graphic.lib   >> kicad_display_script
+chmod 755 kicad_display_script
+./kicad_display_script

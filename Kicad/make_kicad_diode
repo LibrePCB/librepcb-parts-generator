@@ -1,0 +1,8 @@
+rm kicad_diode_script
+rm -r kicad_diode
+rm -r out/kicad_diode
+../split_kicad_lib  -group kicad_diode ./Kicad_symbols/Diode_Bridge.lib   >> kicad_diode_script
+../split_kicad_lib  -group kicad_diode ./Kicad_symbols/Diode_Laser.lib   >> kicad_diode_script
+../split_kicad_lib  -group kicad_diode ./Kicad_symbols/Diode.lib   >> kicad_diode_script
+chmod 755 kicad_diode_script
+./kicad_diode_script

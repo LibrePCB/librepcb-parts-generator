@@ -581,7 +581,7 @@ foreach $line (@intel_hex)
         $name  =~ s/,/_/;
 
 
-  if(($unit == 0)||(($Part == $unit)&&($convert <2)))
+  if($convert <2)
   {
 
 
@@ -708,9 +708,13 @@ foreach $line (@intel_hex)
 	 $pin_unit    = $11;
 	 $pin_convert = $12;
 
+         if(($pin_unit == 0)||(($Part == $pin_unit)&& ($pin_convert <2 )    )         )
+          {
+#         printf("   Pin name  %s   Pin Unit  %s Part %s \n",$pin_name,$pin_unit,$Part);
+
          printf COMPONENT ("PIN,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",$pin_name,$pin_side,$pin_number,$pin_posx,$pin_posy,$pin_length,$pin_side,$pin_Snum,$pin_Snom,$pin_unit,$pin_convert);
 
-
+          }
 
 
          }

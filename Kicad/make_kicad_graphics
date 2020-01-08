@@ -1,0 +1,6 @@
+rm kicad_graphics_script
+rm -r kicad_graphics
+rm -r out/kicad_graphics
+../split_kicad_lib  -group kicad_graphics ./Kicad_symbols/Graphic.lib   >> kicad_graphics_script
+chmod 755 kicad_graphics_script
+./kicad_graphics_script

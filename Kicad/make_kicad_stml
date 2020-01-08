@@ -1,0 +1,9 @@
+rm kicad_stml_script
+rm -r kicad_stml
+rm -r out/kicad_stml
+../split_kicad_lib  -group kicad_stml ./Kicad_symbols/MCU_ST_STM32L0.lib   >> kicad_stml_script
+../split_kicad_lib  -group kicad_stml ./Kicad_symbols/MCU_ST_STM32L1.lib   >> kicad_stml_script
+../split_kicad_lib  -group kicad_stml ./Kicad_symbols/MCU_ST_STM32L4.lib   >> kicad_stml_script
+../split_kicad_lib  -group kicad_stml ./Kicad_symbols/MCU_ST_STM32L4+.lib  >> kicad_stml_script
+chmod 755 kicad_stml_script
+./kicad_stml_script

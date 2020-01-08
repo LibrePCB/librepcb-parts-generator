@@ -1,0 +1,7 @@
+rm kicad_spice_script
+rm -r kicad_spice
+rm -r out/kicad_spice
+../split_kicad_lib  -group kicad_spice ./Kicad_symbols/pspice.lib   >> kicad_spice_script
+../split_kicad_lib  -group kicad_spice ./Kicad_symbols/Simulation_SPICE.lib   >> kicad_spice_script
+chmod 755 kicad_spice_script
+./kicad_spice_script

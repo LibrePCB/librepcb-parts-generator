@@ -1,0 +1,7 @@
+rm kicad_isolator_script
+rm -r kicad_isolator
+rm -r out/kicad_isolator
+../split_kicad_lib  -group kicad_isolator ./Kicad_symbols/Isolator_Analog.lib   >> kicad_isolator_script
+../split_kicad_lib  -group kicad_isolator ./Kicad_symbols/Isolator.lib   >> kicad_isolator_script
+chmod 755 kicad_isolator_script
+./kicad_isolator_script

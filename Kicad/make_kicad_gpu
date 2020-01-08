@@ -1,0 +1,6 @@
+rm kicad_gpu_script
+rm -r kicad_gpu
+rm -r out/kicad_gpu
+../split_kicad_lib  -group kicad_gpu ./Kicad_symbols/GPU.lib   >> kicad_gpu_script
+chmod 755 kicad_gpu_script
+./kicad_gpu_script

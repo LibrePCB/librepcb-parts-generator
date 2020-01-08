@@ -1,0 +1,7 @@
+rm kicad_cpu_script
+rm -r kicad_cpu
+rm -r out/kicad_cpu
+../split_kicad_lib  -group kicad_cpu ./Kicad_symbols/CPU.lib   >> kicad_cpu_script
+../split_kicad_lib  -group kicad_cpu ./Kicad_symbols/CPU_PowerPC.lib   >> kicad_cpu_script
+chmod 755 kicad_cpu_script
+./kicad_cpu_script

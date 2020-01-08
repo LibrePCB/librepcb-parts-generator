@@ -1,0 +1,6 @@
+rm kicad_microsemi_script
+rm -r kicad_microsemi
+rm -r out/kicad_microsemi
+../split_kicad_lib  -group kicad_microsemi ./Kicad_symbols/FPGA_Microsemi.lib   >> kicad_microsemi_script
+chmod 755 kicad_microsemi_script
+./kicad_microsemi_script
