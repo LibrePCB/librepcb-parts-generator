@@ -316,10 +316,10 @@ if __name__ == '__main__':
     generate_cmp(
         cvs_file=cvs_file,
         dirpath='out/{}/cmp'.format(group_name),
-        author='John E.',
+        author='John Eaton',
         cmpcat=cmpcat,
         default_value='{{PARTNUMBER or DEVICE or COMPONENT}}',
-        create_date='2019-12-17T00:00:00Z',
+        create_date='2020-01-10T00:00:00Z',
     )
 
     save_cache(uuid_cache_file, uuid_cache)

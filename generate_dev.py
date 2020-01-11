@@ -137,13 +137,15 @@ def generate_dev(
         uuid_signals.append(uuid('cmp', def_name, 'signal-{}_{}'.format(row[1],row[3])) )
         num_of_pins = num_of_pins +1
         
-    print("                          device: %s Number of pins %s"%(def_name,num_of_pins ))    
-        
 
+        
+    print("                          device: %s Number of pins %s   Package  %s"%(def_name,num_of_pins,package ))    
 
       
     uuid_dev = uuid('dev', def_name, 'dev')
     uuid_cmp = uuid('cmp', def_name, 'cmp')
+
+    
     uuid_pkg = uuid('pkg', package, 'pkg')
       
     # General info
@@ -194,9 +196,9 @@ if __name__ == '__main__':
     generate_dev(
         cvs_file=cvs_file,
         dirpath='out/{}/dev'.format(group_name),
-        author='John E.',
+        author='John Eaton',
         cmpcat=cmpcat,
-        create_date='2019-12-17T00:00:00Z',
+        create_date='2020-01-10T00:00:00Z',
     )
 
 

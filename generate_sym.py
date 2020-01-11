@@ -168,7 +168,11 @@ def generate_sym(
     high_x  = 0
     high_y  = 0
 
+    max_y  = 0
+    min_y  = 0
 
+
+    
     for row in cvs_raw_data[:num_of_rows]: 
       # parsing each column of a row
       row_type =row[0]
@@ -363,7 +367,13 @@ def generate_sym(
         polygon.add_vertex(Vertex(Position(-w, y_max), Angle(0.0)))
         symbol.add_polygon(polygon)
 
+      # Text
 
+        text = Text(uuid_text_name, Layer('sym_names'), Value('{{NAME}}'), Align('center bottom'), Height(sym_text_height), Position(-w+2*width, y_max), Rotation(0.0))
+        symbol.add_text(text)
+
+        text = Text(uuid_text_value, Layer('sym_values'), Value('{{VALUE}}'), Align('center top'), Height(sym_text_height), Position(-w+2*width, y_min), Rotation(0.0))
+        symbol.add_text(text)
 
 
     if variant != "default" :   
@@ -392,7 +402,11 @@ def generate_sym(
               poly_x = float(row[1])/19.685
               poly_y = float(row[2])/19.685
               polygon.add_vertex(Vertex(Position(poly_x, poly_y), Angle(0.0)))
-
+              if poly_y > max_y :
+                  max_y = poly_y
+              if poly_y < min_y :
+                  min_y = poly_y
+                  
               
           if row_type == "POLYST":
               print('POLY Stop ')
@@ -406,7 +420,21 @@ def generate_sym(
              low_y  =float(row[2])/19.685
              high_x =float(row[3])/19.685
              high_y =float(row[4])/19.685
+             if high_y > max_y :
+                  max_y = high_y
+             if high_y < min_y :
+                  min_y = high_y
 
+             if low_y > max_y :
+                  max_y = low_y
+             if low_y < min_y :
+                  min_y = low_y
+                  
+
+
+
+
+             
              print('Rectangle ')
              polygon = Polygon(
                uuid_polygon,
@@ -430,7 +458,12 @@ def generate_sym(
              pos_y  =float(row[2])/19.685
              dia    =float(row[3])/19.685
 
+             if pos_y > max_y :
+                  max_y = pos_y
+             if pos_y < min_y :
+                  min_y = pos_y
 
+             
              print('Circle ')
              circle = Circle(
                uuid_polygon,
@@ -456,6 +489,7 @@ def generate_sym(
              end_x =float(row[12])/19.685
              end_y =float(row[13])/19.685
              angle = (end_ang - start_ang) * 2
+             if angle < -180 : angle = -angle 
              print('Arc ')
              polygon = Polygon(
                uuid_polygon,
@@ -467,15 +501,29 @@ def generate_sym(
              polygon.add_vertex(Vertex(Position(start_x, start_y), Angle(angle)))
              polygon.add_vertex(Vertex(Position(end_x, end_y), Angle(0.0)))
              symbol.add_polygon(polygon)
-              
 
-    # Text
+             if start_y > max_y :
+                  max_y = start_y
+             if start_y < min_y :
+                  min_y = start_y
 
-    text = Text(uuid_text_name, Layer('sym_names'), Value('{{NAME}}'), Align('center bottom'), Height(sym_text_height), Position(-w+2*width, y_max), Rotation(0.0))
-    symbol.add_text(text)
+             if end_y > max_y :
+                  max_y = end_y
+             if end_y < min_y :
+                  min_y = end_y 
 
-    text = Text(uuid_text_value, Layer('sym_values'), Value('{{VALUE}}'), Align('center top'), Height(sym_text_height), Position(-w+2*width, y_min), Rotation(0.0))
-    symbol.add_text(text)
+
+          # Text
+
+        text = Text(uuid_text_name, Layer('sym_names'), Value('{{NAME}}'), Align('center bottom'), Height(sym_text_height), Position(-w+2*width, max_y), Rotation(0.0))
+        symbol.add_text(text)
+
+        text = Text(uuid_text_value, Layer('sym_values'), Value('{{VALUE}}'), Align('center top'), Height(sym_text_height), Position(-w+2*width, min_y), Rotation(0.0))
+        symbol.add_text(text)
+
+
+
+             
 
     sym_dir_path = path.join(dirpath, uuid_sym)
     if not (path.exists(sym_dir_path) and path.isdir(sym_dir_path)):
@@ -501,11 +549,11 @@ if __name__ == '__main__':
     generate_sym(
         cvs_file=cvs_file,
         dirpath='out/{}/sym'.format(group_name),
-        author='John E.',
+        author='John Eaton',
         part=part,
         variant=variant_name,
         cmpcat=cmpcat,
-        create_date='2019-12-17T00:00:00Z',
+        create_date='2020-01-10T00:00:00Z',
     )
 
     save_cache(uuid_cache_file, uuid_cache)

@@ -143,11 +143,18 @@ foreach $line (@library_file)
       else 
 
          {
-         printf ("python3.7 ../generate_sym.py --part 0 --group %s --variant kicad    --directory  ./%s/    --design  F%s \n",$group, $group,$name); 
+         printf ("../sym2csv -group %s  -Part 1 %s  \n",$group ,$output_file);
+         printf ("python3.7 ../generate_sym.py --part 1 --group %s --variant kicad    --directory  ./%s/    --design  F%s \n",$group, $group,$name); 
          }
 
 
       printf ("python3.7 ../generate_cmp.py --group %s --variant kicad    --directory  ./%s/    --design  F%s \n",$group, $group,$name);
+  
+
+
+
+
+
 
 
       }
