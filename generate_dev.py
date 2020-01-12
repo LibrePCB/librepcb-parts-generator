@@ -17,6 +17,7 @@ directory_name = args.directory
 # initializing 
 
 cvs_raw_data = []
+boilerplate_raw_data = [] 
 uuid_pads = [] 
 uuid_signals = []
 
@@ -65,6 +66,62 @@ def uuid(category: str, kind: str, identifier: str) -> str:
 
 
 
+
+
+boilerplate_cvs_file='Boilerplate_{}.csv'.format(group_name)
+
+
+
+
+
+
+with open(boilerplate_cvs_file, 'r') as CSVBfile: 
+          # creating a csv reader object 
+          CSVbreader = csv.reader(CSVBfile)  
+          # extracting each data row one by one 
+          for brow in CSVbreader:
+               boilerplate_raw_data.append(brow) 
+               
+               
+          print("                                            Total no. of rows: %d"%(CSVbreader.line_num))
+          num_of_brows = CSVbreader.line_num
+
+
+for brow in boilerplate_raw_data[:num_of_brows]: 
+      # parsing each column of a row
+      row_type =brow[0]
+      if row_type == "CREATE"    :         create_date  =brow[1]
+      if row_type == "VERSION"   :         version  =brow[1]
+      if row_type == "AUTHOR"    :         author  =brow[1]
+      if row_type == "KEYWORDS"  :         keywords  =brow[1]
+
+     
+print("            Create Date  : {}".format(create_date))
+print("            Version  : {}".format(version))
+print("            Author   : {}".format(author))
+print("            Keywords  : {}".format(keywords))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 cvs_file='{}{}.csv'.format(directory_name,design_name)
 
 
@@ -86,7 +143,7 @@ for row in cvs_raw_data[:num_of_rows]:
       if row_type == "KEYWORDS" :        keywords  =row[1]
       if row_type == "DEF"      :        def_name  =row[1]
 
-      if row_type == "FOOT":  package = row[1]
+
 
 
 
@@ -108,12 +165,12 @@ def generate_dev(
     cvs_file: str, 
     dirpath: str,
     author: str,
+    version: str,
+    keywords: str,    
     cmpcat: str,
     create_date: Optional[str],
 ) -> None:
     category      = 'dev'
-    version       = '0.1'
-    keywords      = '   '
     pad_list =[]
     pad_name =[]
     lines = []
@@ -133,7 +190,6 @@ def generate_dev(
       if row_type == "PIN":  
         pad_name.append(row[1])
         pad_list.append(row[3])
-        uuid_pads.append(uuid('pkg', package,'pad-{}'.format(row[3]))) 
         uuid_signals.append(uuid('cmp', def_name, 'signal-{}_{}'.format(row[1],row[3])) )
         num_of_pins = num_of_pins +1
         
@@ -145,11 +201,22 @@ def generate_dev(
     uuid_dev = uuid('dev', def_name, 'dev')
     uuid_cmp = uuid('cmp', def_name, 'cmp')
 
-    
+
+
+    # Initialize UUID cache
+    uuid_cache_file = 'uuid_cache_pkg.csv'
+    uuid_cache = init_cache(uuid_cache_file)
+
+
     uuid_pkg = uuid('pkg', package, 'pkg')
+    
+
       
     # General info
 
+
+
+    
     lines.append('(librepcb_device {}'.format(uuid_dev))
     lines.append(' (name "{}")'.format(def_name))
     lines.append(' (description "  '
@@ -166,8 +233,11 @@ def generate_dev(
 
 
 
+    
+
     for p in range(1, num_of_pins + 1):
-                signalmappings.append(' (pad {} (signal {}))'.format(uuid_pads[p - 1], uuid_signals[p - 1]))
+                uuid_pad =uuid('pkg', package,'pad-{}'.format(pad_list[p-1])) 
+                signalmappings.append(' (pad {} (signal {}))'.format(uuid_pad, uuid_signals[p - 1]))
     lines.extend(sorted(signalmappings))
     lines.append(')')
 
@@ -196,9 +266,11 @@ if __name__ == '__main__':
     generate_dev(
         cvs_file=cvs_file,
         dirpath='out/{}/dev'.format(group_name),
-        author='John Eaton',
+        author=author,
+        version=version,
+        keywords=keywords,
         cmpcat=cmpcat,
-        create_date='2020-01-10T00:00:00Z',
+        create_date=create_date,
     )
 
 

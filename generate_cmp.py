@@ -18,7 +18,7 @@ directory_name = args.directory
 # initializing 
 
 cvs_raw_data = [] 
-
+boilerplate_raw_data = [] 
 
 
 """
@@ -63,6 +63,65 @@ def uuid(category: str, kind: str, identifier: str) -> str:
     if key not in uuid_cache:
         uuid_cache[key] = str(uuid4())
     return uuid_cache[key]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+boilerplate_cvs_file='Boilerplate_{}.csv'.format(group_name)
+
+
+
+
+
+
+with open(boilerplate_cvs_file, 'r') as CSVBfile: 
+          # creating a csv reader object 
+          CSVbreader = csv.reader(CSVBfile)  
+          # extracting each data row one by one 
+          for brow in CSVbreader:
+               boilerplate_raw_data.append(brow) 
+               
+               
+          print("                                            Total no. of rows: %d"%(CSVbreader.line_num))
+          num_of_brows = CSVbreader.line_num
+
+
+for brow in boilerplate_raw_data[:num_of_brows]: 
+      # parsing each column of a row
+      row_type =brow[0]
+      if row_type == "CREATE"    :         create_date  =brow[1]
+      if row_type == "VERSION"   :         version  =brow[1]
+      if row_type == "AUTHOR"    :         author  =brow[1]
+      if row_type == "KEYWORDS"  :         keywords  =brow[1]
+
+     
+print("            Create Date  : {}".format(create_date))
+print("            Version  : {}".format(version))
+print("            Author   : {}".format(author))
+print("            Keywords  : {}".format(keywords))
+
+
+
+
+
+
+
+
+
+
+
+
+
 cvs_file='{}{}.csv'.format(directory_name,design_name)
 with open(cvs_file, 'r') as CSVxfile: 
           # creating a csv reader object 
@@ -105,13 +164,14 @@ def generate_cmp(
     cvs_file: str, 
     dirpath: str,
     author: str,
+    version: str,
+    keywords: str,    
     cmpcat: str,
     default_value: str,
     create_date: Optional[str],
 ) -> None:
     category      = 'cmp'
-    version       = '0.1'
-    keywords      = '   '
+    
 
 
 
@@ -316,10 +376,12 @@ if __name__ == '__main__':
     generate_cmp(
         cvs_file=cvs_file,
         dirpath='out/{}/cmp'.format(group_name),
-        author='John Eaton',
+        author=author,
+        version=version,
+        keywords=keywords,
         cmpcat=cmpcat,
         default_value='{{PARTNUMBER or DEVICE or COMPONENT}}',
-        create_date='2020-01-10T00:00:00Z',
+        create_date=create_date,
     )
 
     save_cache(uuid_cache_file, uuid_cache)

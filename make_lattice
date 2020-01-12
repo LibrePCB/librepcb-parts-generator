@@ -58,9 +58,6 @@ python3.7 generate_cmp.py  --variant default --design iCE40-LP8K-CM81   --group 
 python3.7 generate_cmp.py  --variant default --design iCE40-UP3K-UWG30  --group fpga --directory  ./Lattice/
 python3.7 generate_cmp.py  --variant default --design iCE40-UP5K-SG48   --group fpga --directory  ./Lattice/
 python3.7 generate_cmp.py  --variant default --design iCE40-UP5K-UWG30  --group fpga --directory  ./Lattice/
-cp  uuid_cache_fpga.csv uuid_cache_fpga_pkg.csv 
-cat uuid_cache_bga.csv >>  uuid_cache_fpga_pkg.csv
-cat uuid_cache_qfp.csv >>  uuid_cache_fpga_pkg.csv
 python3.7 generate_dev.py --design iCE40-HX1K-CB132  --group fpga --directory  ./Lattice/
 python3.7 generate_dev.py --design iCE40-HX1K-TQ144  --group fpga --directory  ./Lattice/
 python3.7 generate_dev.py --design iCE40-HX1K-VQ100  --group fpga --directory  ./Lattice/

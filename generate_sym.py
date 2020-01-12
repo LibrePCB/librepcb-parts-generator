@@ -19,7 +19,7 @@ directory_name = args.directory
 part_name = args.part
 
 # initializing 
-
+boilerplate_raw_data = [] 
 cvs_raw_data = [] 
 
 
@@ -70,6 +70,55 @@ width = 2.54
 line_width = 0.25
 pkg_text_height = 1.0
 sym_text_height = 2.54
+
+
+
+boilerplate_cvs_file='Boilerplate_{}.csv'.format(group_name)
+
+
+
+
+
+
+with open(boilerplate_cvs_file, 'r') as CSVBfile: 
+          # creating a csv reader object 
+          CSVbreader = csv.reader(CSVBfile)  
+          # extracting each data row one by one 
+          for brow in CSVbreader:
+               boilerplate_raw_data.append(brow) 
+               
+               
+          print("                                            Total no. of rows: %d"%(CSVbreader.line_num))
+          num_of_brows = CSVbreader.line_num
+
+
+for brow in boilerplate_raw_data[:num_of_brows]: 
+      # parsing each column of a row
+      row_type =brow[0]
+      if row_type == "CREATE"    :         create_date  =brow[1]
+      if row_type == "VERSION"   :         version  =brow[1]
+      if row_type == "AUTHOR"    :         author  =brow[1]
+      if row_type == "KEYWORDS"  :         keywords  =brow[1]
+
+     
+print("            Create Date  : {}".format(create_date))
+print("            Version  : {}".format(version))
+print("            Author   : {}".format(author))
+print("            Keywords  : {}".format(keywords))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 part = float(part_name)
 
 
@@ -95,7 +144,6 @@ with open(cvs_file, 'r') as CSVxfile:
 for row in cvs_raw_data[:num_of_rows]: 
       # parsing each column of a row
       row_type =row[0]
-      if row_type == "VERSION"  :        version  =row[1]
       if row_type == "KEYWORDS" :        keywords =row[1]
       if row_type == "DEF"      :        def_name =row[1]
 
@@ -138,6 +186,8 @@ def generate_sym(
     author: str,
     part: str,
     variant: str,
+    keywords: str,
+    version: str,    
     cmpcat: str,
     create_date: Optional[str],
 ) -> None:
@@ -150,8 +200,6 @@ def generate_sym(
     right_count   =  6
     real_width    =  6
     real_height   =  6
-    version       = '0.1'
-    keywords      = '   '
     pad_list  = []
     pad_type  = []
     pad_name  = []
@@ -182,7 +230,6 @@ def generate_sym(
 
       
     
-      if row_type == "VERSION"  :        version  =row[1]
       if row_type == "KEYWORDS" :        keywords =row[1]
       if row_type == "DEF"      :        def_name =row[1]
 
@@ -549,11 +596,13 @@ if __name__ == '__main__':
     generate_sym(
         cvs_file=cvs_file,
         dirpath='out/{}/sym'.format(group_name),
-        author='John Eaton',
+        author=author,
         part=part,
         variant=variant_name,
+        version=version,
+        keywords=keywords,
         cmpcat=cmpcat,
-        create_date='2020-01-10T00:00:00Z',
+        create_date=create_date,
     )
 
     save_cache(uuid_cache_file, uuid_cache)
