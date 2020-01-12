@@ -102,7 +102,12 @@ for brow in boilerplate_raw_data[:num_of_brows]:
       if row_type == "CREATE"    :         create_date  =brow[1]
       if row_type == "VERSION"   :         version  =brow[1]
       if row_type == "AUTHOR"    :         author  =brow[1]
-      if row_type == "KEYWORDS"  :         keywords  =brow[1]
+      if row_type == "KEYWORDS"  :
+          keywords  =brow[1]
+          if len(brow) > 2:
+            for p in range(2, len(brow)):
+                keywords  ='{},{}'.format(keywords,brow[p])
+
 
      
 print("            Create Date  : {}".format(create_date))
