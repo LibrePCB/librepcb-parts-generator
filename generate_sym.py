@@ -544,7 +544,8 @@ def generate_sym(
              end_x =float(row[12])/19.685
              end_y =float(row[13])/19.685
              angle = (end_ang - start_ang) * 2
-             if angle < -180 : angle = -angle 
+             if angle < -180 : angle = -angle
+             if angle >  180 : angle = 180 -angle
              print('Arc ')
              polygon = Polygon(
                uuid_polygon,

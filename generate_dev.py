@@ -31,7 +31,7 @@ from uuid import uuid4
 from typing import Callable, Iterable, List, Optional, Tuple
 
 from common import format_float as ff
-from common import init_cache, now, save_cache
+from common import init_cache, now, save_cache,init_CACHE, save_CACHE
 from entities.common import (
     Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GrabArea, Height, Keywords, Layer, Length,
     Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
@@ -63,6 +63,21 @@ def uuid(category: str, kind: str, identifier: str) -> str:
     if key not in uuid_cache:
         uuid_cache[key] = str(uuid4())
     return uuid_cache[key]
+
+
+
+
+
+def UUID(category: str) -> str:
+    """
+
+    """
+    key = '{}'.format(category).lower().replace(' ', '~')
+    if key not in uuid_CACHE:
+        uuid_CACHE[key] = 'none'
+    return uuid_CACHE[key]
+
+
 
 
 
@@ -165,7 +180,8 @@ uuid_cache_file = 'uuid_cache_{}_pkg.csv'.format(group_name)
 uuid_cache = init_cache(uuid_cache_file)
 
 
-
+uuid_CACHE_file = 'MapFile_{}.csv'.format(group_name)
+uuid_CACHE = init_CACHE(uuid_CACHE_file)
 
 def generate_dev(
     cvs_file: str, 
@@ -200,8 +216,16 @@ def generate_dev(
         num_of_pins = num_of_pins +1
         
 
+
+
+    uuid_PKG = UUID(package)
+    uuid_CACHE_file = 'MapFile_{}.out'.format(group_name)
+    save_CACHE(uuid_CACHE_file, uuid_CACHE)
+
+    package = uuid_PKG
         
-    print("                          device: %s Number of pins %s   Package  %s"%(def_name,num_of_pins,package ))    
+        
+    print("                          device: %s Number of pins %s   Package  %s   UUID  %s"%(def_name,num_of_pins,package,uuid_PKG ))    
 
       
     uuid_dev = uuid('dev', def_name, 'dev')

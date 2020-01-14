@@ -149,6 +149,7 @@ foreach $line (@library_file)
 
 
       printf ("python3.7 ../generate_cmp.py --group %s --variant kicad    --directory  ./%s/    --design  F%s \n",$group, $group,$name);
+      printf ("python3.7 ../generate_dev.py --group %s    --directory  ./%s/    --design  F%s \n",$group, $group,$name);
   
 
 

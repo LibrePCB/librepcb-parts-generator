@@ -34,6 +34,36 @@ def save_cache(uuid_cache_file: str, uuid_cache: Dict[str, str]) -> None:
     print('Done, cached {} UUIDs'.format(len(uuid_cache)))
 
 
+
+
+
+
+def init_CACHE(uuid_CACHE_file: str) -> Dict[str, str]:
+    print('Loading CACHE: {}'.format(uuid_CACHE_file))
+    uuid_CACHE = collections.OrderedDict()  # type: Dict[str, str]
+    try:
+        with open(uuid_CACHE_file, 'r') as f:
+            reader = csv.reader(f, delimiter=',', quotechar='"')
+            for row in reader:
+                uuid_CACHE[row[0]] = row[1]
+    except FileNotFoundError:
+        pass
+    return uuid_CACHE
+
+
+def save_CACHE(uuid_CACHE_file: str, uuid_CACHE: Dict[str, str]) -> None:
+    print('Saving CACHE: {}'.format(uuid_CACHE_file))
+    with open(uuid_CACHE_file, 'w') as f:
+        writer = csv.writer(f, delimiter=',', quotechar='"', lineterminator='\n')
+        for k, v in sorted(uuid_CACHE.items()):
+            writer.writerow([k, v])
+    print('Done, CACHEd {} UUIDs'.format(len(uuid_CACHE)))
+
+
+
+
+    
+
 def now() -> str:
     """
     Return current timestamp as string.
