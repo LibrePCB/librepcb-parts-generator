@@ -370,7 +370,7 @@ if __name__ == '__main__':
         lead_contact_length=0.8,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
-        version='0.2',
+        version='0.2.1',
         create_date='2018-11-10T20:32:03Z',
     )
     configs = []
@@ -393,7 +393,7 @@ if __name__ == '__main__':
         lead_contact_length=0.8,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
-        version='0.2',
+        version='0.2.1',
         create_date='2018-11-10T20:32:03Z',
     )
     configs = []
@@ -416,7 +416,7 @@ if __name__ == '__main__':
         lead_contact_length=0.835,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec',
-        version='0.2',
+        version='0.2.1',
         create_date='2018-11-10T20:32:03Z',
     )
 
