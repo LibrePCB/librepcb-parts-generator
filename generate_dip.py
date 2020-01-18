@@ -11,12 +11,15 @@ from common import init_cache, now, save_cache
 
 generator = 'librepcb-parts-generator (generate_dip.py)'
 
-spacing = 2.54
-line_width = 0.25
-drill_diameter = 0.8
-pkg_text_height = 1.0
-silkscreen_offset = 0.15
+spacing            = 2.54
+line_width         = 0.25
+drill_diameter     = 0.8
+pkg_text_height    = 1.0
+silkscreen_offset  = 0.15
 pin_package_offset = 0.762  # Distance between drill hole and the package outline
+lead_width         = 52
+component_height   = 508 
+
 
 
 # Initialize UUID cache
@@ -103,15 +106,25 @@ def generate_pkg(
 
         uuid_pkg = _uuid('pkg')
         uuid_pads = [_uuid('pad-{}'.format(p)) for p in range(1, pin_count + 1)]
+        
+        # IPC-7251 name  Example: DIP762W52P254L1905H508Q14B
+        # DIP + width + W lead_width + P spacing + L pin_package_offset*2 +(pin_count/2)* spacing + H component_height + Q pin_count B
+        DIP =  float(width) *100
+        W   =  lead_width
+        P   =  spacing*100
+        L   =  (pin_count/2) * P + pin_package_offset *200
+        H   =  component_height
+        Q   =  pin_count
 
+        
         # General info
         lines.append('(librepcb_package {}'.format(uuid_pkg))
-        lines.append(' (name "{}-{} {}mm")'.format(name, pin_count, width))
+        lines.append(' (name "DIP{:.0f}W{:.0f}P{:.0f}L{:.0f}H{:.0f}Q{}B")'.format(DIP,W,P,L,H,Q))
         lines.append(' (description "{}-lead {}mm wide {}\\n\\n'
                      'Generated with {}")'.format(pin_count, width, name_lower, generator))
         lines.append(' (keywords "dip{},pdip{},{}")'.format(pin_count, pin_count, keywords))
         lines.append(' (author "{}")'.format(author))
-        lines.append(' (version "0.1")')
+        lines.append(' (version "0.1.1")')
         lines.append(' (created {})'.format(create_date or now()))
         lines.append(' (deprecated false)')
         lines.append(' (category {})'.format(pkgcat))
@@ -253,7 +266,7 @@ if __name__ == '__main__':
         keywords='dip,pdip,cdip,cerdip,dual inline package',
         pins=[4, 6, 8, 14, 16, 18, 20, 24, 28],
         top_offset=0.8255,
-        create_date='2018-11-04T23:13:00Z',
+        create_date='2020-01-18T12:00:00Z',
     )
     generate_pkg(
         dirpath='out/dip/pkg',
@@ -265,6 +278,6 @@ if __name__ == '__main__':
         keywords='dip,pdip,cdip,cerdip,dual inline package,wide',
         pins=[24, 28, 32, 36, 40, 48, 52, 64],
         top_offset=0.8255,
-        create_date='2018-11-04T23:13:00Z',
+        create_date='2020-01-18T12:00:00Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
