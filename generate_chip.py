@@ -707,7 +707,7 @@ if __name__ == '__main__':
             'ad623f98-9e73-49c3-9404-f7cfa99d17cd',
         ],
         keywords='r,resistor,resistance,smd,smt',
-        version='0.3.2',
+        version='0.3',
         create_date='2019-01-29T19:47:42Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
