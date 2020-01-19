@@ -8,7 +8,7 @@ Generate the following  packages:
 from os import makedirs, path
 from uuid import uuid4
 
-from typing import Dict, Iterable, List, Optional
+from typing import Dict, Iterable, Optional
 
 from common import format_float as ff
 from common import format_ipc_dimension as fd
@@ -16,12 +16,12 @@ from common import generate_courtyard, indent, init_cache, now, save_cache
 
 generator = 'librepcb-parts-generator (generate_pga.py)'
 
-line_width        = 0.25  #
-pkg_text_height   = 1.0   #
+line_width = 0.25  #
+pkg_text_height = 1.0   #
 silkscreen_offset = 0.8   #
-silkscreen_pin_1  = 2.4   #
-courtyard_excess  = 0.5   #
-label_offset      = 1.27  #
+silkscreen_pin_1 = 2.4   #
+courtyard_excess = 0.5   #
+label_offset = 1.27  #
 
 # Initialize UUID cache
 uuid_cache_file = 'uuid_cache_pga.csv'
@@ -46,9 +46,6 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
-
-
-
 class PgaConfig:
     def __init__(
         self,
@@ -61,7 +58,7 @@ class PgaConfig:
         body_width: float,
         body_length: float,
         height: float,
-        mask: int,    
+        mask: int,
         variation: Optional[str] = None,
     ):
         self.pin_count = pin_count
@@ -73,7 +70,7 @@ class PgaConfig:
         self.body_width = body_width
         self.body_length = body_length
         self.height = height
-        self.mask   = mask
+        self.mask = mask
         self.variation = variation
 
 
@@ -96,14 +93,14 @@ def generate_pkg(
         row_count = config.row_count
         col_count = config.col_count
         height = config.height
-        hole_size = config.hole_size
         body_width = config.body_width
         body_length = config.body_length
+        hole_size = config.hole_size
         pad_width = config.pad_width
-        mask  = config.mask
+        mask = config.mask
 
-        lines  = []
-        
+        lines = []
+
         full_name = name.format(
             height=fd(height),
             pitch=fd(pitch),
@@ -148,8 +145,6 @@ def generate_pkg(
         print('   pad_width : {}'.format(pad_width))
         print('   variation : {}'.format(config.variation))
 
-                
-        
         # General info
         lines.append('(librepcb_package {}'.format(uuid_pkg))
         lines.append(' (name "{}")'.format(full_name))
@@ -162,19 +157,18 @@ def generate_pkg(
         lines.append(' (category {})'.format(pkgcat))
 
         max_pin_count = row_count * col_count
-   
-        S_mask = mask     
-        for p in range(1, max_pin_count + 1):
-            m =  (S_mask % 2) 
 
-            if m :
-               xo =   ( (p-1)  % col_count)+1    
-               yo=    row_lookup[ (p-1) // row_count  ]
-               uuid_pads.append(_uuid('pad-{}'.format("%s%s"%(yo,xo))))
-               lines.append(' (pad {} (name "{}"))'.format( _uuid('pad-{}'.format("%s%s"%(yo,xo)))     , "%s%s"%(yo,xo)))
+        S_mask = mask
+        for p in range(1, max_pin_count + 1):
+            m = (S_mask % 2)
+
+            if m:
+                xo = ((p - 1) % col_count) + 1
+                yo = row_lookup[ (p - 1) // row_count]
+                uuid_pads.append(_uuid('pad-{}'.format("%s%s" % (yo, xo))))
+                lines.append(' (pad {} (name "{}"))'.format( _uuid('pad-{}'.format("%s%s" % (yo, xo))), "%s%s" % (yo, xo)))
             S_mask = S_mask >> 1
 
-            
         def add_footprint_variant(
             key: str,
             name: str,
@@ -182,7 +176,7 @@ def generate_pkg(
         ) -> None:
             uuid_footprint = _uuid('footprint-{}'.format(key))
             uuid_silkscreen_top = _uuid('polygon-silkscreen-{}'.format(key))
-            uuid_silkscreen_bot = _uuid('polygon-silkscreen2-{}'.format(key))
+
             uuid_outline = _uuid('polygon-outline-{}'.format(key))
             uuid_courtyard = _uuid('polygon-courtyard-{}'.format(key))
             uuid_text_name = _uuid('text-name-{}'.format(key))
@@ -192,29 +186,24 @@ def generate_pkg(
             lines.append('  (name "{}")'.format(name))
             lines.append('  (description "")')
 
-
             # Pads
 
-            mid =   round( ((row_count / 2 ) - .5) * pitch,3)
-            pad_pointer=0
-            S_mask = mask     
-            for p in range(0, max_pin_count  ):
-              m =  (S_mask % 2) 
+            mid = round(((row_count / 2) - .5) * pitch, 3)
+            pad_pointer = 0
+            S_mask = mask
+            for p in range(0, max_pin_count):
+                m = (S_mask % 2)
 
-              if m :
-                pxo =   round( ((p  % col_count) * pitch) - mid , 3)  
-                y = -round((p // row_count)*pitch,3) + mid 
-                pad_uuid = uuid_pads[pad_pointer ]
-                pad_pointer = pad_pointer+1
-                lines.append('  (pad {} (side tht) (shape round)'.format(pad_uuid))
-                lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill {})'.format(
-                    pxo, ff(y), ff(pad_width), ff(pad_width), ff(hole_size),
-                ))
-                lines.append('  )')
-              S_mask = S_mask >> 1
+                if m:
+                    pxo = round( ((p % col_count) * pitch) - mid, 3)
+                    y = -round((p // row_count) * pitch, 3) + mid
+                    pad_uuid = uuid_pads[pad_pointer]
+                    pad_pointer = pad_pointer + 1
 
-
-
+                    lines.append('  (pad {} (side tht) (shape round)'.format(pad_uuid))
+                    lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill {})'.format(pxo, ff(y), ff(pad_width), ff(pad_width), ff(hole_size),))
+                    lines.append('  )')
+                S_mask = S_mask >> 1
 
             # Silkscreen (fully outside body)
             # Ensure minimum clearance between copper and silkscreen
@@ -222,9 +211,8 @@ def generate_pkg(
             short_y_max = ff(body_width / 2 + y_offset - silkscreen_pin_1)
             y_max = ff(body_width / 2 + y_offset)
             y_min = ff(-body_width / 2 - y_offset)
-            short_x_offset = silkscreen_offset -silkscreen_pin_1+ (body_width / 2)
+            short_x_offset = silkscreen_offset - silkscreen_pin_1 + (body_width / 2)
             x_offset = silkscreen_offset + (body_width / 2)
-            
             lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_top))
             lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-short_x_offset), y_max))  # noqa
@@ -236,11 +224,11 @@ def generate_pkg(
             lines.append('  )')
 
             # Documentation outline (fully inside body)
-            outline_x_offset = body_width/2   -line_width /2
+            outline_x_offset = body_width / 2 - line_width / 2
             lines.append('  (polygon {} (layer top_documentation)'.format(uuid_outline))
             lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
-            y_max = ff(body_width/2  -line_width /2)
-            y_min = ff(-body_width/2  +line_width /2)
+            y_max = ff(body_width / 2 - line_width / 2)
+            y_min = ff(-body_width / 2 + line_width / 2)
             oxo = ff(outline_x_offset)  # Used for shorter code lines below :)
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
             lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_max))
@@ -249,14 +237,12 @@ def generate_pkg(
             lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
             lines.append('  )')
 
-
             # Max boundaries (pads or body)
-                
-            max_x =  body_width / 2 
-            max_y =  body_width / 2
+
+            max_x = body_width / 2
+            max_y = body_width / 2
 
             # Courtyard
- 
             lines.extend(indent(2, generate_courtyard(
                 uuid=uuid_courtyard,
                 max_x=max_x,
@@ -266,7 +252,7 @@ def generate_pkg(
             )))
 
             # Labels
-            y_max = ff(body_width /  2 + label_offset)
+            y_max = ff(body_width / 2 + label_offset)
             y_min = ff(-body_width / 2 - label_offset)
             text_attrs = '(height {}) (stroke_width 0.2) ' \
                          '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
@@ -280,7 +266,6 @@ def generate_pkg(
             lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(y_min))
             lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
             lines.append('  )')
-
             lines.append(' )')
 
         add_footprint_variant('density~b', 'Reflow nom', 'nom')
@@ -300,15 +285,13 @@ if __name__ == '__main__':
     def _make(dirpath: str) -> None:
         if not (path.exists(dirpath) and path.isdir(dirpath)):
             makedirs(dirpath)
-
-
     # PGA
-
     _make('out/pga/pkg')
     generate_pkg(
         dirpath='out/pga/pkg',
         author='John E.',
         # Name according to IPC7351C
+
         name='PGA{pin_count}P{pitch}C{col_count}R{row_count}L{body_length}X{body_width}H{height}B',
         description='{pin_count}-pin Pin Grid Array  (PGA), '
                     'standardized by JEDEC (), variation {variation}.\\n\\n'
@@ -316,28 +299,23 @@ if __name__ == '__main__':
                     'Body width: {body_width:.2f} mm\\n'
                     'Height: {height:.2f} mm\\n'
                     'Pad width: {pad_width:.2f} mm',
+        #  IPC-7251  Naming Convention fo Through-Hole Land Patterns  Pin Grid Array’s
+        #  PGA + Pin Qty + P Pitch + C Pin Columns + R Pin Rows + L Body Length X Body Width + H Component Height
+        #
+        #  Example: PGA 84 P254 C10 R10 L2500 X2500 H300 B
+        #  Pin Grid Array: Pin Qty 84; Pin Pitch 2.54; Columns 10; Rows 10; Body Length 25.00 X 25.00; Component Height 3.00
+        #               pin   row    col   pitch   pad     hole         body     body    height    mask                variation
+        #              count  count count   mm    width    size         width   length    mm
+        #                                           mm      mm           mm       mm
+
+
         configs=[
-#  IPC-7251  Naming Convention fo Through-Hole Land Patterns  Pin Grid Array’s
-#  PGA + Pin Qty + P Pitch + C Pin Columns + R Pin Rows + L Body Length X Body Width + H Component Height
-#
-#  Example: PGA 84 P254 C10 R10 L2500 X2500 H300 B
-#  Pin Grid Array: Pin Qty 84; Pin Pitch 2.54; Columns 10; Rows 10; Body Length 25.00 X 25.00; Component Height 3.00 B ?????           
-#               pin   row    col   pitch   pad     hole         body     body    height    mask                variation
-#              count  count count   mm    width    size         width   length    mm
-#                                           mm      mm           mm       mm         
-#  11 x 11
-   PgaConfig(  68,   11,   11,    2.54,  1.6,     .8,          28.19,    28.19, 4.17,
-               0b0111111111011111111111110000000111100000001111000000011110000000111100000001111000000011110000001111111111111101111111110              ,  'G-68' ), #
 
-#  13 x 13
-   PgaConfig(  100,   13,   13,    2.54,  1.6,     .8,          34.09,    34.09, 4.29,
-               0b1111111111111111111111111111000111000111100000000011110000000001111100000001111110000000111111000000011111000000000111100000000011110001110011111111111111111111111111111 ,'G-100' ), #  
-            
-#  14 x 14
-   PgaConfig(  133,   14,   14,    2.54,  1.6,     .8,          37.6,    37.6, 3.68,
-               0b1111111111111111111111111111111111111111111110000000011111100000000111111000000001111110000000011111100000000111111000000001111110000000011111100000001111111111111111111111111111111111111111111111   ,  'CPGA' ), #  PGA133P254C14R14L3760X3760H368B
+            PgaConfig(  68,   11,   11,    2.54,  1.6,     .8,          28.19,    28.19, 4.17,  0b0111111111011111111111110000000111100000001111000000011110000000111100000001111000000011110000001111111111111101111111110,  'G-68'),
 
-            
+            PgaConfig(  100,   13,   13,    2.54,  1.6,     .8,          34.09,    34.09, 4.29,  0b1111111111111111111111111111000111000111100000000011110000000001111100000001111110000000111111000000011111000000000111100000000011110001110011111111111111111111111111111, 'G-100'),
+
+            PgaConfig(  133,   14,   14,    2.54,  1.6,     .8,          37.6,    37.6, 3.68, 0b1111111111111111111111111111111111111111111110000000011111100000000111111000000001111110000000011111100000000111111000000001111110000000011111100000001111111111111111111111111111111111111111111111,  'CPGA'),
 
         ],
         row_lookup={
@@ -374,7 +352,6 @@ if __name__ == '__main__':
             30: "BL",
             31: "BM",
             32: "BN",
-            
         },
         pkgcat='5bc3a6c4-2f77-4a9e-85ca-e261f4757312',
         keywords='pga, package,smd,jedec,MO',
