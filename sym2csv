@@ -324,18 +324,17 @@ foreach $line (@intel_hex)
         my $endpointx    = ($13);
         my $endpointy    = ($14);
 
+        my $angle =      $end /10  - $start /10;
+	
+        if($angle < -180) { $angle = 360 + angle}
 
+       if($angle >  180) { $angle = -(360 - angle)}
 
-
-my $angle = comp_angle ($posx,$posy,$radius,$start,$end,$startpointx,$startpointy,$endpointx,$endpointy);
-my $C_angle = camp_angle ($posx,$posy,$radius,$start,$end,$startpointx,$startpointy,$endpointx,$endpointy);
-
-#printf("Angle  %s   %s   \n",$angle,$C_angle);
 
 
   if(($part == 0)||(($Part == $part) &&($convert < 2)))
 {
-        $xfer ="ARC,${posx},${posy},${radius},${start},${end},${part},${convert},${width},${cc},${startpointx},${startpointy},${endpointx},${endpointy}\n";
+        $xfer ="ARC,${posx},${posy},${radius},${start},${end},${part},${convert},${width},${cc},${startpointx},${startpointy},${endpointx},${endpointy},${angle}\n";
         push @dev_graph, $xfer;
 
 

@@ -537,16 +537,19 @@ def generate_sym(
              pos_x   =float(row[1])/19.685
              pos_y   =float(row[2])/19.685
              dia     =float(row[3])/19.685*2
-             start_ang  =float(row[4])/19.685
-             end_ang  =float(row[5])/19.685 
+             start_ang  =float(row[4])/10
+             end_ang  =float(row[5])/10 
              start_x  =float(row[10])/19.685
              start_y  =float(row[11])/19.685
              end_x =float(row[12])/19.685
              end_y =float(row[13])/19.685
-             angle = (end_ang - start_ang) * 2
-             if angle < -180 : angle = -angle
-             if angle >  180 : angle = 180 -angle
-             print('Arc ')
+             cangle=float(row[4])/10
+             dangle=float(row[5])/10
+             angle = (end_ang - start_ang) 
+             print('Arc angle {} {} {}'.format(cangle,dangle,angle))
+             if angle < -180 : angle = 360 + angle
+             if angle >  180 : angle = -(360 - angle)
+             print('ARC angle {}'.format(angle))
              polygon = Polygon(
                uuid_polygon,
                Layer('sym_outlines'),
