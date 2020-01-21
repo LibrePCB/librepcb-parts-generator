@@ -440,13 +440,17 @@ def generate_sym(
           # parsing each column of a row
           row_type =row[0]
           if row_type == "POLY"  :
+              fill = row[2]
+              fill_str = "False"
+              if fill == "F":
+                  fill_str = "True"
               print('POLY {} '.format( row[1]))
               polygon = Polygon(
                uuid_polygon,
                Layer('sym_outlines'),
                Width(line_width),
                Fill(False),
-               GrabArea(True)
+               GrabArea(fill_str)
                )
 
 
@@ -544,9 +548,8 @@ def generate_sym(
              end_x =float(row[12])/19.685
              end_y =float(row[13])/19.685
              cangle=float(row[4])/10
-             dangle=float(row[5])/10
+             dangle=float(row[14])
              angle = (end_ang - start_ang) 
-             print('Arc angle {} {} {}'.format(cangle,dangle,angle))
              if angle < -180 : angle = 360 + angle
              if angle >  180 : angle = -(360 - angle)
              print('ARC angle {}'.format(angle))
@@ -555,9 +558,9 @@ def generate_sym(
                Layer('sym_outlines'),
                Width(line_width),
                Fill(False),
-               GrabArea(True)
+               GrabArea(False)
                )
-             polygon.add_vertex(Vertex(Position(start_x, start_y), Angle(angle)))
+             polygon.add_vertex(Vertex(Position(start_x, start_y), Angle(dangle)))
              polygon.add_vertex(Vertex(Position(end_x, end_y), Angle(0.0)))
              symbol.add_polygon(polygon)
 

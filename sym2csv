@@ -175,7 +175,7 @@ foreach $line (@intel_hex)
             $units_locked   = $8;
             $option_flag    = $9;
 
-            $xfer ="DEF,${cmp_name}\n";
+            $xfer ="DEF,${cmp_name}";
             push @dev_graph, $xfer;
             printf("                          processing %s\n",$cmp_name);
 
@@ -184,7 +184,7 @@ foreach $line (@intel_hex)
        if(/F2 "(\S+)"/)
           { 
             $footprint_name       = $1;
-            $xfer ="FOOT,${footprint_name}\n";
+            $xfer ="FOOT,${footprint_name}";
             push @dev_graph, $xfer;
           }
 
@@ -226,6 +226,17 @@ foreach $line (@intel_hex)
         unshift @words, $pos_y;
 	unshift @words, $pos_x;
 
+        my $fill_c = "x";
+        $_ = $fill; 
+        if(/(\S+)/)      
+          {
+          if($1 eq "F")
+           {$fill_c = "F";}
+          else
+           {$fill_c = "N";}
+          }
+
+
         $in_polygon = 0;
         if($thickness == 0 ){ $thickness =1;}
         if($thickness < 0 ){ $thickness = 0;}
@@ -239,7 +250,7 @@ foreach $line (@intel_hex)
               {
               my $poly_uuid = uuid();
 
-              $xfer ="POLY,${thickness}\n";
+              $xfer ="POLY,${thickness},${fill_c}";
               unshift @dev_graph, $xfer;
               $in_polygon  = 1;
               }
@@ -249,7 +260,7 @@ foreach $line (@intel_hex)
 	      }
               else
 	      {
-              $xfer ="POLY,${thickness}\n";
+              $xfer ="POLY,${thickness},${fill_c}";
               unshift @dev_graph, $xfer;
 
               $in_polygon  = 1;
@@ -271,7 +282,7 @@ foreach $line (@intel_hex)
          if($low_x > $pos_x){ $low_x = $pos_x;};
          if($hi_y < $pos_y) { $hi_y = $pos_y;};
 
-         $xfer ="POLYPT,${pos_x},${pos_y}\n";
+         $xfer ="POLYPT,${pos_x},${pos_y}";
          unshift @dev_graph, $xfer;
 
 
@@ -283,7 +294,7 @@ foreach $line (@intel_hex)
          $polygon_y = $pos_y;	    
          }
 
-         $xfer ="POLYST,${polygon_x},${polygon_y}\n";
+         $xfer ="POLYST,${polygon_x},${polygon_y}";
          unshift @dev_graph, $xfer;
          $in_polygon  = 0;
 	 }
@@ -326,15 +337,15 @@ foreach $line (@intel_hex)
 
         my $angle =      $end /10  - $start /10;
 	
-        if($angle < -180) { $angle = 360 + angle}
+        if($angle < -180) { $angle = 360 + $angle}
 
-       if($angle >  180) { $angle = -(360 - angle)}
+       if($angle >  180) { $angle = -(360 - $angle)}
 
 
 
   if(($part == 0)||(($Part == $part) &&($convert < 2)))
 {
-        $xfer ="ARC,${posx},${posy},${radius},${start},${end},${part},${convert},${width},${cc},${startpointx},${startpointy},${endpointx},${endpointy},${angle}\n";
+        $xfer ="ARC,${posx},${posy},${radius},${start},${end},${part},${convert},${width},${cc},${startpointx},${startpointy},${endpointx},${endpointy},${angle}";
         push @dev_graph, $xfer;
 
 
@@ -426,7 +437,7 @@ foreach $line (@intel_hex)
        $ver_b = $b;
        $ver_c = $c;
        $ver_d = $d;
-       $xfer ="RECT,${ver_a},${ver_b},${ver_c},${ver_d}\n";
+       $xfer ="RECT,${ver_a},${ver_b},${ver_c},${ver_d}";
        push @dev_graph, $xfer;
        }
 
@@ -470,7 +481,7 @@ foreach $line (@intel_hex)
           if  ( $diameter > 0 )
 	    {
 
-            $xfer ="CIRC,${posx},${posy},${diameter},${unit},${convert},${width},${fill}\n";
+            $xfer ="CIRC,${posx},${posy},${diameter},${unit},${convert},${width},${fill}";
             push @dev_graph, $xfer;
 
 
@@ -514,7 +525,7 @@ foreach $line (@intel_hex)
        {
 
 
-            $xfer ="TEXT,${posx},${posy},${orientation},${dimension},${unit},${convert},${text}\n";
+            $xfer ="TEXT,${posx},${posy},${orientation},${dimension},${unit},${convert},${text}";
             push @dev_graph, $xfer;
 
 
@@ -682,7 +693,7 @@ foreach $line (@intel_hex)
   while($item = pop(@dev_graph))
 
   {
-  printf COMPONENT ("${item}");
+  printf COMPONENT ("${item}\n");
   }
 
 
