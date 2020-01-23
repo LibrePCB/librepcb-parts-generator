@@ -122,6 +122,13 @@ foreach $line (@library_file)
 
       $name =~ s/"/_/;
 
+      $name =~ s/"/_/;
+
+
+      $name =~ s/\|/_/;
+
+
+
       $output_file  = "${path}/${name}.sym";
       open  LIBREPCB_SYM , ">  $output_file";
 

@@ -682,9 +682,9 @@ foreach $line (@intel_hex)
 
 
 
-
-
-
+  $cmp_name =~ s/"/_/;
+  $cmp_name =~ s/"/_/;
+  $cmp_name =~ s/\|/_/;
 
 
   $output_file  = "${home}/${group}/F${cmp_name}_${Part}.csv";

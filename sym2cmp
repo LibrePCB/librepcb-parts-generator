@@ -329,8 +329,9 @@ foreach $line (@intel_hex)
 
 
 
-
-
+ $cmp_name =~ s/"/_/;
+ $cmp_name =~ s/"/_/;
+ $cmp_name =~ s/\|/_/;
 
 if(1)
 {
