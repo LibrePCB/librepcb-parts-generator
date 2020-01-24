@@ -122,27 +122,6 @@ print("            Version  : {}".format(version))
 print("            Author   : {}".format(author))
 print("            Keywords  : {}".format(keywords))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 cvs_file='{}{}.csv'.format(directory_name,design_name)
 
 
@@ -164,10 +143,6 @@ for row in cvs_raw_data[:num_of_rows]:
       if row_type == "KEYWORDS" :        keywords  =row[1]
       if row_type == "DEF"      :        def_name  =row[1]
 
-
-
-
-
 # Initialize cmpcat UUID 
 uuid_cmpcat_file = 'uuid_cache_{}_cmpcat.csv'.format(group_name)
 uuid_cache = init_cache(uuid_cmpcat_file)
@@ -176,30 +151,21 @@ save_cache(uuid_cmpcat_file, uuid_cache)
 
 
 # Initialize UUID cache
-uuid_cache_file = 'uuid_cache_{}_pkg.csv'.format(group_name)
+uuid_cache_file = 'uuid_cache_{}.csv'.format(group_name)
 uuid_cache = init_cache(uuid_cache_file)
 
 
 uuid_CACHE_file = 'MapFile.csv'
 uuid_CACHE = init_CACHE(uuid_CACHE_file)
 
-def generate_dev(
-    cvs_file: str, 
-    dirpath: str,
-    author: str,
-    version: str,
-    keywords: str,    
-    cmpcat: str,
-    create_date: Optional[str],
-) -> None:
-    category      = 'dev'
-    pad_list =[]
-    pad_name =[]
-    lines = []
-    num_of_pins = 0
-    package = "none"
+category      = 'dev'
+pad_list =[]
+pad_name =[]
+lines = []
+num_of_pins = 0
+package = "none"
     
-    for row in cvs_raw_data[:num_of_rows]: 
+for row in cvs_raw_data[:num_of_rows]: 
       # parsing each column of a row
       row_type =row[0]
 
@@ -217,27 +183,39 @@ def generate_dev(
 
 
 
-    uuid_PKG = UUID(package)
-    uuid_CACHE_file = 'MapFile.out'
-    save_CACHE(uuid_CACHE_file, uuid_CACHE)
+uuid_PKG = UUID(package)
+uuid_CACHE_file = 'MapFile.out'
+save_CACHE(uuid_CACHE_file, uuid_CACHE)
 
-    package = uuid_PKG
+package = uuid_PKG
         
         
-    print("                          device: %s Number of pins %s   Package  %s   UUID  %s"%(def_name,num_of_pins,package,uuid_PKG ))    
+print("                          device: %s Number of pins %s   Package  %s   UUID  %s"%(def_name,num_of_pins,package,uuid_PKG ))          
+uuid_dev = uuid('dev', def_name, 'dev')
+uuid_cmp = uuid('cmp', def_name, 'cmp')
 
-      
-    uuid_dev = uuid('dev', def_name, 'dev')
-    uuid_cmp = uuid('cmp', def_name, 'cmp')
-
-
-
-    # Initialize UUID cache
-    uuid_cache_file = 'uuid_cache_pkg.csv'
-    uuid_cache = init_cache(uuid_cache_file)
+# Initialize UUID cache
+uuid_cache_file = 'uuid_cache_pkg.csv'
+uuid_cache = init_cache(uuid_cache_file)
 
 
-    uuid_pkg = uuid('pkg', package, 'pkg')
+uuid_pkg = uuid('pkg', package, 'pkg')
+
+
+
+
+def generate_dev(
+    cvs_file: str, 
+    dirpath: str,
+    author: str,
+    version: str,
+    keywords: str,    
+    cmpcat: str,
+    create_date: Optional[str],
+) -> None:
+
+
+
     
 
       
