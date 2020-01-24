@@ -180,7 +180,7 @@ uuid_cache_file = 'uuid_cache_{}_pkg.csv'.format(group_name)
 uuid_cache = init_cache(uuid_cache_file)
 
 
-uuid_CACHE_file = 'MapFile_{}.csv'.format(group_name)
+uuid_CACHE_file = 'MapFile.csv'
 uuid_CACHE = init_CACHE(uuid_CACHE_file)
 
 def generate_dev(
@@ -207,8 +207,7 @@ def generate_dev(
       if row_type == "KEYWORDS" :        keywords  =row[1]
       if row_type == "DEF"      :        def_name  =row[1]
 
-      if row_type == "FOOT":  package = row[1]
-        
+      if row_type == "FOOT":  package = row[1].lower()        
       if row_type == "PIN":  
         pad_name.append(row[1])
         pad_list.append(row[3])
@@ -219,7 +218,7 @@ def generate_dev(
 
 
     uuid_PKG = UUID(package)
-    uuid_CACHE_file = 'MapFile_{}.out'.format(group_name)
+    uuid_CACHE_file = 'MapFile.out'
     save_CACHE(uuid_CACHE_file, uuid_CACHE)
 
     package = uuid_PKG
