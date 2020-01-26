@@ -192,14 +192,14 @@ class LTQfpConfig:
 JEDEC_CONFIGS = [  # May contain any type that has a `get_configs(self) -> List[QfpConfig]` method
     # Datasheet designators       D1    E1       A   e           D     E    b
     # Description                 body-x,y           ptch   pin  span-x,y
-    LTQfpConfig(QfpConfig('LCC',   8.97,   8.97, -1, -1, 1.27,  20, 10.20,  6.0, 0.50, 4.57, ''), None, 'BKA'),
-    LTQfpConfig(QfpConfig('LCC',  11.50,  11.50, -1, -1, 1.27,  28, 12.80,  6.0, 0.50, 4.57, ''), None, 'BKB'),
-    LTQfpConfig(QfpConfig('LCC',  16.57,  16.57, -1, -1, 1.27,  44, 17.80,  6.0, 0.50, 4.57, ''), None, 'BKD'),
-    LTQfpConfig(QfpConfig('LCC',  19.11,  19.11, -1, -1, 1.27,  52, 20.40,  6.0, 0.50, 5.08, ''), None, 'BKE'),
-    LTQfpConfig(QfpConfig('LCC',  24.23,  24.23, -1, -1, 1.27,  68, 25.40,  6.0, 0.50, 5.08, ''), None, 'BKF'),
-    LTQfpConfig(QfpConfig('LCC',  29.30,  29.30, -1, -1, 1.27,  84, 30.60,  6.0, 0.50, 5.08, ''), None, 'BKG'),
-    LTQfpConfig(QfpConfig('LCC',  34.31,  34.31, -1, -1, 1.27, 100, 35.60,  6.0, 0.50, 5.08, ''), None, 'BKH'),
-    LTQfpConfig(QfpConfig('LCC',  42.01,  42.01, -1, -1, 1.27, 124, 43.20,  6.0, 0.50, 5.08, ''), None, 'BKI'),
+    LTQfpConfig(QfpConfig('LCC',   8.97,   8.97, -1, -1, 1.27,  20, 10.20,  6.0, 0.50, 4.57, ''), None, 'AA'),
+    LTQfpConfig(QfpConfig('LCC',  11.50,  11.50, -1, -1, 1.27,  28, 12.80,  6.0, 0.50, 4.57, ''), None, 'AA'),
+    LTQfpConfig(QfpConfig('LCC',  16.57,  16.57, -1, -1, 1.27,  44, 17.80,  6.0, 0.50, 4.57, ''), None, 'AA'),
+    LTQfpConfig(QfpConfig('LCC',  19.11,  19.11, -1, -1, 1.27,  52, 20.40,  6.0, 0.50, 5.08, ''), None, 'AA'),
+    LTQfpConfig(QfpConfig('LCC',  24.23,  24.23, -1, -1, 1.27,  68, 25.40,  6.0, 0.50, 5.08, ''), None, 'AA'),
+    LTQfpConfig(QfpConfig('LCC',  29.30,  29.30, -1, -1, 1.27,  84, 30.60,  6.0, 0.50, 5.08, ''), None, 'AA'),
+    LTQfpConfig(QfpConfig('LCC',  34.31,  34.31, -1, -1, 1.27, 100, 35.60,  6.0, 0.50, 5.08, ''), None, 'AA'),
+    LTQfpConfig(QfpConfig('LCC',  42.01,  42.01, -1, -1, 1.27, 124, 43.20,  6.0, 0.50, 5.08, ''), None, 'AA'),
 
 ]
 
