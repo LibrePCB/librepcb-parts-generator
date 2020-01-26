@@ -26,7 +26,8 @@ generator = 'librepcb-parts-generator (generate_plcc.py)'
 line_width = 0.25
 pkg_text_height = 1.0
 text_y_offset = 1.0
-silkscreen_offset = 0.150  # 150 µm
+silkscreen_offset = 3.0  # 150 µm
+silkscreen_notch = 1.95  #
 
 
 # Initialize UUID cache
@@ -102,6 +103,9 @@ class QfpConfig:
 
     def get_configs(self) -> List['QfpConfig']:
         return [self]
+
+    # Plastic Leaded Chip Carriers ..................................................
+    # PLCC + Pitch P + Lead Span L1 X Lead Span L2 Nominal X Height - Pin Qty
 
     def ipc_name(self) -> str:
         return '{}{}{}P{}X{}X{}-{}'.format(
@@ -185,10 +189,6 @@ class LTQfpConfig:
 JEDEC_CONFIGS = [  # May contain any type that has a `get_configs(self) -> List[QfpConfig]` method
     # Datasheet designators       D1    E1       A   e           D     E    b
     # Description                 body-x,y           ptch   pin  span-x,y
-
-    # Plastic Leaded Chip Carriers ..................................................
-    # PLCC + Pitch P + Lead Span L1 X Lead Span L2 Nominal X Height - Pin Qty
-
     LTQfpConfig(QfpConfig('LCC',   8.96,   8.96, -1, -1, 1.27,  20, 10.2,  6.0, 0.50, ''), None, 'BKA'),
     LTQfpConfig(QfpConfig('LCC',  11.50,  11.50, -1, -1, 1.27,  28, 12.8,  6.0, 0.50, ''), None, 'BKB'),
     LTQfpConfig(QfpConfig('LCC',  16.82,  16.82, -1, -1, 1.27,  44, 17.8,  6.0, 0.50, ''), None, 'BKD'),
@@ -336,6 +336,7 @@ def generate_pkg(
             # UUIDs
             uuid_footprint = _uuid('footprint-{}'.format(key))
             uuid_silkscreen = [_uuid('polygon-silkscreen-{}-{}'.format(quadrant, key)) for quadrant in [1, 2, 3, 4]]
+
             uuid_outline = _uuid('polygon-outline-{}'.format(key))
             uuid_courtyard = _uuid('polygon-courtyard-{}'.format(key))
             uuid_text_name = _uuid('text-name-{}'.format(key))
@@ -423,31 +424,28 @@ def generate_pkg(
 
             # Silkscreen: 1 per quadrant
             # (Quadrant 1 is at the top right, the rest follows CCW)
-            for quadrant in [1, 2, 3, 4]:
-                uuid = uuid_silkscreen[quadrant - 1]
 
-                x_min = abs(pos_last.x) + config.lead_width / 2 + excess.side + silkscreen_offset + line_width / 2
-                x_max = config.body_size_x / 2 + line_width / 2
-                y_min = abs(pos_first.y) + config.lead_width / 2 + excess.side + silkscreen_offset + line_width / 2
-                y_max = config.body_size_y / 2 + line_width / 2
-                vertices = [(x_min, y_max), (x_max, y_max), (x_max, y_min)]
+            x_min = abs(pos_last.x) + config.lead_width / 2 + excess.side + silkscreen_offset + line_width / 2
+            x_max = config.body_size_x / 2 + line_width / 2
+            y_min = abs(pos_first.y) + config.lead_width / 2 + excess.side + silkscreen_offset + line_width / 2
+            y_max = config.body_size_y / 2 + line_width / 2
+            vertices = [(x_min, y_max), (x_max, y_max), (x_max, y_min)]
+            uuid = uuid_silkscreen[0]
 
-                # Pin 1 marking line
-                if quadrant == 2:
-                    vertices.append((
-                        config.lead_span_x / 2 + excess.toe - line_width / 2,
-                        y_min,
-                    ))
+            x_s = round((x_min - silkscreen_notch), 3)
+            y_s = round((y_min - silkscreen_notch), 3)
+            x_n = round((x_min), 3)
+            y_n = round((y_min), 3)
 
-                lines.append('  (polygon {} (layer top_placement)'.format(uuid))
-                lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
-                sign_x = 1 if quadrant in [1, 4] else -1
-                sign_y = 1 if quadrant in [1, 2] else -1
-                for (x, y) in vertices:
-                    xx = ff(sign_x * x)
-                    yy = ff(sign_y * y)
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(xx, yy))
-                lines.append('  )')
+            lines.append('  (polygon {} (layer top_placement)'.format(uuid))
+            lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-x_s, y_n))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_n,  y_n))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format( x_n, -y_n))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-x_n, -y_n))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-x_n, y_s))
+            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-x_s, y_n))
+            lines.append('  )')
 
             # Documentation outline (fully inside body)
             outline_x_offset = config.body_size_x / 2 - line_width / 2
@@ -491,17 +489,16 @@ def generate_pkg(
             lines.append('  )')
 
             # Labels
-            y_offset = ff(config.lead_span_y / 2 + text_y_offset)
             text_attrs = '(height {}) (stroke_width 0.2) ' \
                          '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
             lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
             lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(y_offset))
+            lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(text_y_offset))
             lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
             lines.append('  )')
             lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
             lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center top) (position 0.0 -{}) (rotation 0.0)'.format(y_offset))
+            lines.append('   (align center top) (position 0.0 -{}) (rotation 0.0)'.format(text_y_offset))
             lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
             lines.append('  )')
 
