@@ -26,8 +26,8 @@ generator = 'librepcb-parts-generator (generate_plcc.py)'
 line_width = 0.25
 pkg_text_height = 1.0
 text_y_offset = 1.0
-silkscreen_offset = 3.0  # 150 µm
-silkscreen_notch = 1.95  #
+silkscreen_offset = 3.0
+silkscreen_notch = 2.75
 
 
 # Initialize UUID cache
@@ -76,6 +76,7 @@ class QfpConfig:
         lead_span_x: float,  # Total length from tip to tip, D in the datasheet
         lead_span_y: float,  # Total length from tip to tip, E in the datasheet
         lead_width: float,  # b in the datasheet, nominal
+        height: float,
         keywords: str,
         name_prefix: Optional[str] = None,  # E.g. the manufacturer name
     ):
@@ -91,6 +92,7 @@ class QfpConfig:
         self.lead_span_x = lead_span_x
         self.lead_span_y = lead_span_y
         self.lead_width = lead_width
+        self.height = height
         self.keywords = keywords
         self.name_prefix = name_prefix or ''
 
@@ -106,16 +108,17 @@ class QfpConfig:
 
     # Plastic Leaded Chip Carriers ..................................................
     # PLCC + Pitch P + Lead Span L1 X Lead Span L2 Nominal X Height - Pin Qty
-
+    # PLCC + Pin Qty. + P Pitch _ Lead Span L1 X Lead Span L2 Nominal X Height + L Lead Width
     def ipc_name(self) -> str:
-        return '{}{}{}P{}X{}X{}-{}'.format(
+        return '{}{}{}.+P{}_{}X{}X{}+L{}'.format(
             self.name_prefix,
             self.name,
+            self.lead_count,
             fd(self.pitch),
             fd(self.lead_span_x),
             fd(self.lead_span_y),
-            fd(self.height_nom),
-            self.lead_count,
+            fd(self.height),
+            fd(self.lead_width),
         )
 
     def description(self) -> str:
@@ -125,10 +128,10 @@ class QfpConfig:
             raise ValueError('Invalid name: {}'.format(self.name))
         return '{}-pin {}, standardized by JEDEC in MS-047.\\n\\n' \
                'Pitch: {} mm\\nBody size: {}x{} mm\\nLead span: {}x{} mm\\n' \
-               'Nominal height: {} mm\\nMax height: {} mm\\n\\nGenerated with {}'.format(
+               'Max height: {} mm\\n\\nGenerated with {}'.format(
                    self.lead_count, full_name, self.pitch, self.body_size_x,
                    self.body_size_y, self.lead_span_x, self.lead_span_y,
-                   self.height_nom, self.height_max, generator,
+                   self.height, generator,
                )
 
     def excess_by_density(self, density: str) -> Excess:
@@ -172,8 +175,8 @@ class LTQfpConfig:
     def get_configs(self) -> List[QfpConfig]:
         configs = []
         for (variation, height_nom, height_max, prefix) in [
-            (self.variation_t, 1.00, 1.20, 'P'),
-            (self.variation_l, 1.40, 1.60, 'P'),
+            (self.variation_t, 1.00, 4.57, 'P'),
+            (self.variation_l, 1.40, 4.57, 'P'),
         ]:
             if variation is None:
                 continue
@@ -189,14 +192,14 @@ class LTQfpConfig:
 JEDEC_CONFIGS = [  # May contain any type that has a `get_configs(self) -> List[QfpConfig]` method
     # Datasheet designators       D1    E1       A   e           D     E    b
     # Description                 body-x,y           ptch   pin  span-x,y
-    LTQfpConfig(QfpConfig('LCC',   8.96,   8.96, -1, -1, 1.27,  20, 10.2,  6.0, 0.50, ''), None, 'BKA'),
-    LTQfpConfig(QfpConfig('LCC',  11.50,  11.50, -1, -1, 1.27,  28, 12.8,  6.0, 0.50, ''), None, 'BKB'),
-    LTQfpConfig(QfpConfig('LCC',  16.82,  16.82, -1, -1, 1.27,  44, 17.8,  6.0, 0.50, ''), None, 'BKD'),
-    LTQfpConfig(QfpConfig('LCC',  19.36,  19.36, -1, -1, 1.27,  52, 20.4,  6.0, 0.50, ''), None, 'BKE'),
-    LTQfpConfig(QfpConfig('LCC',  24.45,  24.45, -1, -1, 1.27,  68, 25.4,  6.0, 0.50, ''), None, 'BKF'),
-    LTQfpConfig(QfpConfig('LCC',  29.55,  29.55, -1, -1, 1.27,  84, 30.6,  6.0, 0.50, ''), None, 'BKG'),
-    LTQfpConfig(QfpConfig('LCC',  34.35,  34.35, -1, -1, 1.27, 100, 35.6,  6.0, 0.50, ''), None, 'BKH'),
-    LTQfpConfig(QfpConfig('LCC',  42.22,  42.22, -1, -1, 1.27, 124, 43.2,  6.0, 0.50, ''), None, 'BKI'),
+    LTQfpConfig(QfpConfig('LCC',   8.97,   8.97, -1, -1, 1.27,  20, 10.20,  6.0, 0.50, 4.57, ''), None, 'BKA'),
+    LTQfpConfig(QfpConfig('LCC',  11.50,  11.50, -1, -1, 1.27,  28, 12.80,  6.0, 0.50, 4.57, ''), None, 'BKB'),
+    LTQfpConfig(QfpConfig('LCC',  16.57,  16.57, -1, -1, 1.27,  44, 17.80,  6.0, 0.50, 4.57, ''), None, 'BKD'),
+    LTQfpConfig(QfpConfig('LCC',  19.11,  19.11, -1, -1, 1.27,  52, 20.40,  6.0, 0.50, 5.08, ''), None, 'BKE'),
+    LTQfpConfig(QfpConfig('LCC',  24.23,  24.23, -1, -1, 1.27,  68, 25.40,  6.0, 0.50, 5.08, ''), None, 'BKF'),
+    LTQfpConfig(QfpConfig('LCC',  29.30,  29.30, -1, -1, 1.27,  84, 30.60,  6.0, 0.50, 5.08, ''), None, 'BKG'),
+    LTQfpConfig(QfpConfig('LCC',  34.31,  34.31, -1, -1, 1.27, 100, 35.60,  6.0, 0.50, 5.08, ''), None, 'BKH'),
+    LTQfpConfig(QfpConfig('LCC',  42.01,  42.01, -1, -1, 1.27, 124, 43.20,  6.0, 0.50, 5.08, ''), None, 'BKI'),
 
 ]
 
