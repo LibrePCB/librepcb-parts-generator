@@ -4,6 +4,7 @@ Generate STM32 microcontroller symbols, components and devices.
 TODO: More information about data source.
 
 """
+from collections import OrderedDict
 import csv
 import math
 import re
@@ -46,14 +47,14 @@ class Pin:
 
 class SymbolPinPlacement:
     def __init__(self):
-        self.left = []  # type: List[Tuple[Pin, int]]
-        self.right = []  # type: List[Tuple[Pin, int]]
+        self.left = []  # type: List[Tuple[str, int]]
+        self.right = []  # type: List[Tuple[str, int]]
 
-    def add_left_pin(self, pin: Pin, y_pos: int):
-        self.left.append((pin, y_pos))
+    def add_left_pin(self, pin_name: str, y_pos: int):
+        self.left.append((pin_name, y_pos))
 
-    def add_right_pin(self, pin: Pin, y_pos: int):
-        self.right.append((pin, y_pos))
+    def add_right_pin(self, pin_name: str, y_pos: int):
+        self.right.append((pin_name, y_pos))
 
     def sort(self):
         """
@@ -88,11 +89,20 @@ class MCU:
 
     def get_pins_by_type(self, pin_type: str) -> List[Pin]:
         """
-        Return all pins of that type, sorted alphanumerically.
+        Return all pins of that type, sorted.
         """
         pins = [p for p in self.pins if p.pin_type == pin_type]
         pins.sort(key=lambda p: (p.name, p.number))
         return pins
+
+    def get_pin_names_by_type(self, pin_type: str) -> List[str]:
+        """
+        Return all pin names of that type (without duplicates), sorted.
+        """
+        pins = self.get_pins_by_type(pin_type)
+        names = [p.name for p in pins]
+        deduplicated = list(OrderedDict.fromkeys(names))
+        return deduplicated
 
     def generate_placement_data(self) -> SymbolPinPlacement:
         """
@@ -120,10 +130,10 @@ class MCU:
         assert len(unknown_pin_types) == 0, 'Unknown pin types: {}'.format(unknown_pin_types)
 
         # Determine number of pins on both sides
-        left_pins = [self.get_pins_by_type(t) for t in ['Reset', 'Power', 'MonoIO', 'NC']]
+        left_pins = [self.get_pin_names_by_type(t) for t in ['Reset', 'Power', 'MonoIO', 'NC']]
         left_pins = [group for group in left_pins if len(group) > 0]
         left_count = sum(len(group) for group in left_pins)
-        right_pins = [self.get_pins_by_type(t) for t in ['I/O']]
+        right_pins = [self.get_pin_names_by_type(t) for t in ['I/O']]
         right_pins = [group for group in right_pins if len(group) > 0]
         right_count = sum(len(group) for group in right_pins)
         height = max([left_count + len(left_pins) - 1, right_count + len(right_pins) - 1])
@@ -146,26 +156,26 @@ class MCU:
             if i > 0:
                 # Put a space between groups
                 y -= 1
-            for pin in group:
-                placement.add_left_pin(pin, y)
+            for pin_name in group:
+                placement.add_left_pin(pin_name, y)
                 y -= 1
         y = max_y
         for i, group in enumerate(right_pins):
             if i > 0:
                 # Put a space between groups
                 y -= 1
-            for pin in group:
-                placement.add_right_pin(pin, y)
+            for pin_name in group:
+                placement.add_right_pin(pin_name, y)
                 y -= 1
         placement.sort()
 
         print('Placement:')
         print('  Left:')
-        for (pin, y) in placement.left:
-            print('    {} {}'.format(y, pin.name))
+        for (pin_name, y) in placement.left:
+            print('    {} {}'.format(y, pin_name))
         print('  Right:')
-        for (pin, y) in placement.right:
-            print('    {} {}'.format(y, pin.name))
+        for (pin_name, y) in placement.right:
+            print('    {} {}'.format(y, pin_name))
 
         return placement
 
