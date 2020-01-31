@@ -1,0 +1,2681 @@
+load  STM32F030C6Tx
+csv pinout pinsrc/STM32F030C6Tx.csv
+load  STM32F030C8Tx
+csv pinout pinsrc/STM32F030C8Tx.csv
+load  STM32F030CCTx
+csv pinout pinsrc/STM32F030CCTx.csv
+load  STM32F030F4Px
+csv pinout pinsrc/STM32F030F4Px.csv
+load  STM32F030K6Tx
+csv pinout pinsrc/STM32F030K6Tx.csv
+load  STM32F030R8Tx
+csv pinout pinsrc/STM32F030R8Tx.csv
+load  STM32F030RCTx
+csv pinout pinsrc/STM32F030RCTx.csv
+load  STM32F031C4Tx
+csv pinout pinsrc/STM32F031C4Tx.csv
+load  STM32F031C6Tx
+csv pinout pinsrc/STM32F031C6Tx.csv
+load  STM32F031E6Yx
+csv pinout pinsrc/STM32F031E6Yx.csv
+load  STM32F031F4Px
+csv pinout pinsrc/STM32F031F4Px.csv
+load  STM32F031F6Px
+csv pinout pinsrc/STM32F031F6Px.csv
+load  STM32F031G4Ux
+csv pinout pinsrc/STM32F031G4Ux.csv
+load  STM32F031G6Ux
+csv pinout pinsrc/STM32F031G6Ux.csv
+load  STM32F031K4Ux
+csv pinout pinsrc/STM32F031K4Ux.csv
+load  STM32F031K6Tx
+csv pinout pinsrc/STM32F031K6Tx.csv
+load  STM32F031K6Ux
+csv pinout pinsrc/STM32F031K6Ux.csv
+load  STM32F038C6Tx
+csv pinout pinsrc/STM32F038C6Tx.csv
+load  STM32F038E6Yx
+csv pinout pinsrc/STM32F038E6Yx.csv
+load  STM32F038F6Px
+csv pinout pinsrc/STM32F038F6Px.csv
+load  STM32F038G6Ux
+csv pinout pinsrc/STM32F038G6Ux.csv
+load  STM32F038K6Ux
+csv pinout pinsrc/STM32F038K6Ux.csv
+load  STM32F042C4Tx
+csv pinout pinsrc/STM32F042C4Tx.csv
+load  STM32F042C4Ux
+csv pinout pinsrc/STM32F042C4Ux.csv
+load  STM32F042C6Tx
+csv pinout pinsrc/STM32F042C6Tx.csv
+load  STM32F042C6Ux
+csv pinout pinsrc/STM32F042C6Ux.csv
+load  STM32F042F4Px
+csv pinout pinsrc/STM32F042F4Px.csv
+load  STM32F042F6Px
+csv pinout pinsrc/STM32F042F6Px.csv
+load  STM32F042G4Ux
+csv pinout pinsrc/STM32F042G4Ux.csv
+load  STM32F042G6Ux
+csv pinout pinsrc/STM32F042G6Ux.csv
+load  STM32F042K4Tx
+csv pinout pinsrc/STM32F042K4Tx.csv
+load  STM32F042K4Ux
+csv pinout pinsrc/STM32F042K4Ux.csv
+load  STM32F042K6Tx
+csv pinout pinsrc/STM32F042K6Tx.csv
+load  STM32F042K6Ux
+csv pinout pinsrc/STM32F042K6Ux.csv
+load  STM32F042T6Yx
+csv pinout pinsrc/STM32F042T6Yx.csv
+load  STM32F048C6Ux
+csv pinout pinsrc/STM32F048C6Ux.csv
+load  STM32F048G6Ux
+csv pinout pinsrc/STM32F048G6Ux.csv
+load  STM32F048T6Yx
+csv pinout pinsrc/STM32F048T6Yx.csv
+load  STM32F051C4Tx
+csv pinout pinsrc/STM32F051C4Tx.csv
+load  STM32F051C4Ux
+csv pinout pinsrc/STM32F051C4Ux.csv
+load  STM32F051C6Tx
+csv pinout pinsrc/STM32F051C6Tx.csv
+load  STM32F051C6Ux
+csv pinout pinsrc/STM32F051C6Ux.csv
+load  STM32F051C8Tx
+csv pinout pinsrc/STM32F051C8Tx.csv
+load  STM32F051C8Ux
+csv pinout pinsrc/STM32F051C8Ux.csv
+load  STM32F051K4Tx
+csv pinout pinsrc/STM32F051K4Tx.csv
+load  STM32F051K4Ux
+csv pinout pinsrc/STM32F051K4Ux.csv
+load  STM32F051K6Tx
+csv pinout pinsrc/STM32F051K6Tx.csv
+load  STM32F051K6Ux
+csv pinout pinsrc/STM32F051K6Ux.csv
+load  STM32F051K8Tx
+csv pinout pinsrc/STM32F051K8Tx.csv
+load  STM32F051K8Ux
+csv pinout pinsrc/STM32F051K8Ux.csv
+load  STM32F051R4Tx
+csv pinout pinsrc/STM32F051R4Tx.csv
+load  STM32F051R6Tx
+csv pinout pinsrc/STM32F051R6Tx.csv
+load  STM32F051R8Hx
+csv pinout pinsrc/STM32F051R8Hx.csv
+load  STM32F051R8Tx
+csv pinout pinsrc/STM32F051R8Tx.csv
+load  STM32F051T8Yx
+csv pinout pinsrc/STM32F051T8Yx.csv
+load  STM32F058C8Ux
+csv pinout pinsrc/STM32F058C8Ux.csv
+load  STM32F058R8Hx
+csv pinout pinsrc/STM32F058R8Hx.csv
+load  STM32F058R8Tx
+csv pinout pinsrc/STM32F058R8Tx.csv
+load  STM32F058T8Yx
+csv pinout pinsrc/STM32F058T8Yx.csv
+load  STM32F070C6Tx
+csv pinout pinsrc/STM32F070C6Tx.csv
+load  STM32F070CBTx
+csv pinout pinsrc/STM32F070CBTx.csv
+load  STM32F070F6Px
+csv pinout pinsrc/STM32F070F6Px.csv
+load  STM32F070RBTx
+csv pinout pinsrc/STM32F070RBTx.csv
+load  STM32F071C8Tx
+csv pinout pinsrc/STM32F071C8Tx.csv
+load  STM32F071C8Ux
+csv pinout pinsrc/STM32F071C8Ux.csv
+load  STM32F071CBTx
+csv pinout pinsrc/STM32F071CBTx.csv
+load  STM32F071CBUx
+csv pinout pinsrc/STM32F071CBUx.csv
+load  STM32F071CBYx
+csv pinout pinsrc/STM32F071CBYx.csv
+load  STM32F071RBTx
+csv pinout pinsrc/STM32F071RBTx.csv
+load  STM32F071V8Hx
+csv pinout pinsrc/STM32F071V8Hx.csv
+load  STM32F071V8Tx
+csv pinout pinsrc/STM32F071V8Tx.csv
+load  STM32F071VBHx
+csv pinout pinsrc/STM32F071VBHx.csv
+load  STM32F071VBTx
+csv pinout pinsrc/STM32F071VBTx.csv
+load  STM32F072C8Tx
+csv pinout pinsrc/STM32F072C8Tx.csv
+load  STM32F072C8Ux
+csv pinout pinsrc/STM32F072C8Ux.csv
+load  STM32F072CBTx
+csv pinout pinsrc/STM32F072CBTx.csv
+load  STM32F072CBUx
+csv pinout pinsrc/STM32F072CBUx.csv
+load  STM32F072CBYx
+csv pinout pinsrc/STM32F072CBYx.csv
+load  STM32F072R8Tx
+csv pinout pinsrc/STM32F072R8Tx.csv
+load  STM32F072RBHx
+csv pinout pinsrc/STM32F072RBHx.csv
+load  STM32F072RBTx
+csv pinout pinsrc/STM32F072RBTx.csv
+load  STM32F072V8Hx
+csv pinout pinsrc/STM32F072V8Hx.csv
+load  STM32F072V8Tx
+csv pinout pinsrc/STM32F072V8Tx.csv
+load  STM32F072VBHx
+csv pinout pinsrc/STM32F072VBHx.csv
+load  STM32F072VBTx
+csv pinout pinsrc/STM32F072VBTx.csv
+load  STM32F078CBTx
+csv pinout pinsrc/STM32F078CBTx.csv
+load  STM32F078CBUx
+csv pinout pinsrc/STM32F078CBUx.csv
+load  STM32F078CBYx
+csv pinout pinsrc/STM32F078CBYx.csv
+load  STM32F078RBHx
+csv pinout pinsrc/STM32F078RBHx.csv
+load  STM32F078RBTx
+csv pinout pinsrc/STM32F078RBTx.csv
+load  STM32F078VBHx
+csv pinout pinsrc/STM32F078VBHx.csv
+load  STM32F078VBTx
+csv pinout pinsrc/STM32F078VBTx.csv
+load  STM32F091CBTx
+csv pinout pinsrc/STM32F091CBTx.csv
+load  STM32F091CBUx
+csv pinout pinsrc/STM32F091CBUx.csv
+load  STM32F091CCTx
+csv pinout pinsrc/STM32F091CCTx.csv
+load  STM32F091CCUx
+csv pinout pinsrc/STM32F091CCUx.csv
+load  STM32F091RBTx
+csv pinout pinsrc/STM32F091RBTx.csv
+load  STM32F091RCHx
+csv pinout pinsrc/STM32F091RCHx.csv
+load  STM32F091RCTx
+csv pinout pinsrc/STM32F091RCTx.csv
+load  STM32F091RCYx
+csv pinout pinsrc/STM32F091RCYx.csv
+load  STM32F091VBTx
+csv pinout pinsrc/STM32F091VBTx.csv
+load  STM32F091VCHx
+csv pinout pinsrc/STM32F091VCHx.csv
+load  STM32F091VCTx
+csv pinout pinsrc/STM32F091VCTx.csv
+load  STM32F098CCTx
+csv pinout pinsrc/STM32F098CCTx.csv
+load  STM32F098CCUx
+csv pinout pinsrc/STM32F098CCUx.csv
+load  STM32F098RCHx
+csv pinout pinsrc/STM32F098RCHx.csv
+load  STM32F098RCTx
+csv pinout pinsrc/STM32F098RCTx.csv
+load  STM32F098RCYx
+csv pinout pinsrc/STM32F098RCYx.csv
+load  STM32F098VCHx
+csv pinout pinsrc/STM32F098VCHx.csv
+load  STM32F098VCTx
+csv pinout pinsrc/STM32F098VCTx.csv
+load  STM32F100C4Tx
+csv pinout pinsrc/STM32F100C4Tx.csv
+load  STM32F100C6Tx
+csv pinout pinsrc/STM32F100C6Tx.csv
+load  STM32F100C8Tx
+csv pinout pinsrc/STM32F100C8Tx.csv
+load  STM32F100CBTx
+csv pinout pinsrc/STM32F100CBTx.csv
+load  STM32F100R4Hx
+csv pinout pinsrc/STM32F100R4Hx.csv
+load  STM32F100R4Tx
+csv pinout pinsrc/STM32F100R4Tx.csv
+load  STM32F100R6Hx
+csv pinout pinsrc/STM32F100R6Hx.csv
+load  STM32F100R6Tx
+csv pinout pinsrc/STM32F100R6Tx.csv
+load  STM32F100R8Hx
+csv pinout pinsrc/STM32F100R8Hx.csv
+load  STM32F100R8Tx
+csv pinout pinsrc/STM32F100R8Tx.csv
+load  STM32F100RBHx
+csv pinout pinsrc/STM32F100RBHx.csv
+load  STM32F100RBTx
+csv pinout pinsrc/STM32F100RBTx.csv
+load  STM32F100RCTx
+csv pinout pinsrc/STM32F100RCTx.csv
+load  STM32F100RDTx
+csv pinout pinsrc/STM32F100RDTx.csv
+load  STM32F100RETx
+csv pinout pinsrc/STM32F100RETx.csv
+load  STM32F100V8Tx
+csv pinout pinsrc/STM32F100V8Tx.csv
+load  STM32F100VBTx
+csv pinout pinsrc/STM32F100VBTx.csv
+load  STM32F100ZCTx
+csv pinout pinsrc/STM32F100ZCTx.csv
+load  STM32F100ZDTx
+csv pinout pinsrc/STM32F100ZDTx.csv
+load  STM32F100ZETx
+csv pinout pinsrc/STM32F100ZETx.csv
+load  STM32F101C4Tx
+csv pinout pinsrc/STM32F101C4Tx.csv
+load  STM32F101C6Tx
+csv pinout pinsrc/STM32F101C6Tx.csv
+load  STM32F101C8Tx
+csv pinout pinsrc/STM32F101C8Tx.csv
+load  STM32F101C8Ux
+csv pinout pinsrc/STM32F101C8Ux.csv
+load  STM32F101CBTx
+csv pinout pinsrc/STM32F101CBTx.csv
+load  STM32F101CBUx
+csv pinout pinsrc/STM32F101CBUx.csv
+load  STM32F101R4Tx
+csv pinout pinsrc/STM32F101R4Tx.csv
+load  STM32F101R6Tx
+csv pinout pinsrc/STM32F101R6Tx.csv
+load  STM32F101R8Tx
+csv pinout pinsrc/STM32F101R8Tx.csv
+load  STM32F101RBHx
+csv pinout pinsrc/STM32F101RBHx.csv
+load  STM32F101RBTx
+csv pinout pinsrc/STM32F101RBTx.csv
+load  STM32F101RCTx
+csv pinout pinsrc/STM32F101RCTx.csv
+load  STM32F101RDTx
+csv pinout pinsrc/STM32F101RDTx.csv
+load  STM32F101RETx
+csv pinout pinsrc/STM32F101RETx.csv
+load  STM32F101RFTx
+csv pinout pinsrc/STM32F101RFTx.csv
+load  STM32F101RGTx
+csv pinout pinsrc/STM32F101RGTx.csv
+load  STM32F101T4Ux
+csv pinout pinsrc/STM32F101T4Ux.csv
+load  STM32F101T6Ux
+csv pinout pinsrc/STM32F101T6Ux.csv
+load  STM32F101T8Ux
+csv pinout pinsrc/STM32F101T8Ux.csv
+load  STM32F101TBUx
+csv pinout pinsrc/STM32F101TBUx.csv
+load  STM32F101V8Tx
+csv pinout pinsrc/STM32F101V8Tx.csv
+load  STM32F101VBTx
+csv pinout pinsrc/STM32F101VBTx.csv
+load  STM32F101VCTx
+csv pinout pinsrc/STM32F101VCTx.csv
+load  STM32F101VDTx
+csv pinout pinsrc/STM32F101VDTx.csv
+load  STM32F101VETx
+csv pinout pinsrc/STM32F101VETx.csv
+load  STM32F101VFTx
+csv pinout pinsrc/STM32F101VFTx.csv
+load  STM32F101VGTx
+csv pinout pinsrc/STM32F101VGTx.csv
+load  STM32F101ZCTx
+csv pinout pinsrc/STM32F101ZCTx.csv
+load  STM32F101ZDTx
+csv pinout pinsrc/STM32F101ZDTx.csv
+load  STM32F101ZETx
+csv pinout pinsrc/STM32F101ZETx.csv
+load  STM32F101ZFTx
+csv pinout pinsrc/STM32F101ZFTx.csv
+load  STM32F101ZGTx
+csv pinout pinsrc/STM32F101ZGTx.csv
+load  STM32F102C4Tx
+csv pinout pinsrc/STM32F102C4Tx.csv
+load  STM32F102C6Tx
+csv pinout pinsrc/STM32F102C6Tx.csv
+load  STM32F102C8Tx
+csv pinout pinsrc/STM32F102C8Tx.csv
+load  STM32F102CBTx
+csv pinout pinsrc/STM32F102CBTx.csv
+load  STM32F102R4Tx
+csv pinout pinsrc/STM32F102R4Tx.csv
+load  STM32F102R6Tx
+csv pinout pinsrc/STM32F102R6Tx.csv
+load  STM32F102R8Tx
+csv pinout pinsrc/STM32F102R8Tx.csv
+load  STM32F102RBTx
+csv pinout pinsrc/STM32F102RBTx.csv
+load  STM32F103C4Tx
+csv pinout pinsrc/STM32F103C4Tx.csv
+load  STM32F103C6Tx
+csv pinout pinsrc/STM32F103C6Tx.csv
+load  STM32F103C6Ux
+csv pinout pinsrc/STM32F103C6Ux.csv
+load  STM32F103C8Tx
+csv pinout pinsrc/STM32F103C8Tx.csv
+load  STM32F103CBTx
+csv pinout pinsrc/STM32F103CBTx.csv
+load  STM32F103CBUx
+csv pinout pinsrc/STM32F103CBUx.csv
+load  STM32F103R6Hx
+csv pinout pinsrc/STM32F103R6Hx.csv
+load  STM32F103R6Tx
+csv pinout pinsrc/STM32F103R6Tx.csv
+load  STM32F103R8Hx
+csv pinout pinsrc/STM32F103R8Hx.csv
+load  STM32F103R8Tx
+csv pinout pinsrc/STM32F103R8Tx.csv
+load  STM32F103RBHx
+csv pinout pinsrc/STM32F103RBHx.csv
+load  STM32F103RBTx
+csv pinout pinsrc/STM32F103RBTx.csv
+load  STM32F103RCTx
+csv pinout pinsrc/STM32F103RCTx.csv
+load  STM32F103RCYx
+csv pinout pinsrc/STM32F103RCYx.csv
+load  STM32F103RDTx
+csv pinout pinsrc/STM32F103RDTx.csv
+load  STM32F103RDYx
+csv pinout pinsrc/STM32F103RDYx.csv
+load  STM32F103RETx
+csv pinout pinsrc/STM32F103RETx.csv
+load  STM32F103REYx
+csv pinout pinsrc/STM32F103REYx.csv
+load  STM32F103RFTx
+csv pinout pinsrc/STM32F103RFTx.csv
+load  STM32F103RGTx
+csv pinout pinsrc/STM32F103RGTx.csv
+load  STM32F103T4Ux
+csv pinout pinsrc/STM32F103T4Ux.csv
+load  STM32F103T6Ux
+csv pinout pinsrc/STM32F103T6Ux.csv
+load  STM32F103T8Ux
+csv pinout pinsrc/STM32F103T8Ux.csv
+load  STM32F103TBUx
+csv pinout pinsrc/STM32F103TBUx.csv
+load  STM32F103V8Hx
+csv pinout pinsrc/STM32F103V8Hx.csv
+load  STM32F103V8Tx
+csv pinout pinsrc/STM32F103V8Tx.csv
+load  STM32F103VBHx
+csv pinout pinsrc/STM32F103VBHx.csv
+load  STM32F103VBIx
+csv pinout pinsrc/STM32F103VBIx.csv
+load  STM32F103VBTx
+csv pinout pinsrc/STM32F103VBTx.csv
+load  STM32F103VCHx
+csv pinout pinsrc/STM32F103VCHx.csv
+load  STM32F103VCTx
+csv pinout pinsrc/STM32F103VCTx.csv
+load  STM32F103VDHx
+csv pinout pinsrc/STM32F103VDHx.csv
+load  STM32F103VDTx
+csv pinout pinsrc/STM32F103VDTx.csv
+load  STM32F103VEHx
+csv pinout pinsrc/STM32F103VEHx.csv
+load  STM32F103VETx
+csv pinout pinsrc/STM32F103VETx.csv
+load  STM32F103VFTx
+csv pinout pinsrc/STM32F103VFTx.csv
+load  STM32F103VGTx
+csv pinout pinsrc/STM32F103VGTx.csv
+load  STM32F103ZCHx
+csv pinout pinsrc/STM32F103ZCHx.csv
+load  STM32F103ZCTx
+csv pinout pinsrc/STM32F103ZCTx.csv
+load  STM32F103ZDHx
+csv pinout pinsrc/STM32F103ZDHx.csv
+load  STM32F103ZDTx
+csv pinout pinsrc/STM32F103ZDTx.csv
+load  STM32F103ZEHx
+csv pinout pinsrc/STM32F103ZEHx.csv
+load  STM32F103ZETx
+csv pinout pinsrc/STM32F103ZETx.csv
+load  STM32F103ZFHx
+csv pinout pinsrc/STM32F103ZFHx.csv
+load  STM32F103ZFTx
+csv pinout pinsrc/STM32F103ZFTx.csv
+load  STM32F103ZGHx
+csv pinout pinsrc/STM32F103ZGHx.csv
+load  STM32F103ZGTx
+csv pinout pinsrc/STM32F103ZGTx.csv
+load  STM32F105R8Tx
+csv pinout pinsrc/STM32F105R8Tx.csv
+load  STM32F105RBTx
+csv pinout pinsrc/STM32F105RBTx.csv
+load  STM32F105RCTx
+csv pinout pinsrc/STM32F105RCTx.csv
+load  STM32F105V8Hx
+csv pinout pinsrc/STM32F105V8Hx.csv
+load  STM32F105V8Tx
+csv pinout pinsrc/STM32F105V8Tx.csv
+load  STM32F105VBHx
+csv pinout pinsrc/STM32F105VBHx.csv
+load  STM32F105VBTx
+csv pinout pinsrc/STM32F105VBTx.csv
+load  STM32F105VCTx
+csv pinout pinsrc/STM32F105VCTx.csv
+load  STM32F107RBTx
+csv pinout pinsrc/STM32F107RBTx.csv
+load  STM32F107RCTx
+csv pinout pinsrc/STM32F107RCTx.csv
+load  STM32F107VBTx
+csv pinout pinsrc/STM32F107VBTx.csv
+load  STM32F107VCHx
+csv pinout pinsrc/STM32F107VCHx.csv
+load  STM32F107VCTx
+csv pinout pinsrc/STM32F107VCTx.csv
+load  STM32F205RBTx
+csv pinout pinsrc/STM32F205RBTx.csv
+load  STM32F205RCTx
+csv pinout pinsrc/STM32F205RCTx.csv
+load  STM32F205RETx
+csv pinout pinsrc/STM32F205RETx.csv
+load  STM32F205REYx
+csv pinout pinsrc/STM32F205REYx.csv
+load  STM32F205RFTx
+csv pinout pinsrc/STM32F205RFTx.csv
+load  STM32F205VBTx
+csv pinout pinsrc/STM32F205VBTx.csv
+load  STM32F205VCTx
+csv pinout pinsrc/STM32F205VCTx.csv
+load  STM32F205VETx
+csv pinout pinsrc/STM32F205VETx.csv
+load  STM32F205VFTx
+csv pinout pinsrc/STM32F205VFTx.csv
+load  STM32F205VGTx
+csv pinout pinsrc/STM32F205VGTx.csv
+load  STM32F205ZCTx
+csv pinout pinsrc/STM32F205ZCTx.csv
+load  STM32F205ZETx
+csv pinout pinsrc/STM32F205ZETx.csv
+load  STM32F205ZFTx
+csv pinout pinsrc/STM32F205ZFTx.csv
+load  STM32F205ZGTx
+csv pinout pinsrc/STM32F205ZGTx.csv
+load  STM32F207ICHx
+csv pinout pinsrc/STM32F207ICHx.csv
+load  STM32F207ICTx
+csv pinout pinsrc/STM32F207ICTx.csv
+load  STM32F207IEHx
+csv pinout pinsrc/STM32F207IEHx.csv
+load  STM32F207IETx
+csv pinout pinsrc/STM32F207IETx.csv
+load  STM32F207IFHx
+csv pinout pinsrc/STM32F207IFHx.csv
+load  STM32F207IFTx
+csv pinout pinsrc/STM32F207IFTx.csv
+load  STM32F207IGHx
+csv pinout pinsrc/STM32F207IGHx.csv
+load  STM32F207IGTx
+csv pinout pinsrc/STM32F207IGTx.csv
+load  STM32F207VCTx
+csv pinout pinsrc/STM32F207VCTx.csv
+load  STM32F207VETx
+csv pinout pinsrc/STM32F207VETx.csv
+load  STM32F207VFTx
+csv pinout pinsrc/STM32F207VFTx.csv
+load  STM32F207VGTx
+csv pinout pinsrc/STM32F207VGTx.csv
+load  STM32F207ZCTx
+csv pinout pinsrc/STM32F207ZCTx.csv
+load  STM32F207ZETx
+csv pinout pinsrc/STM32F207ZETx.csv
+load  STM32F207ZFTx
+csv pinout pinsrc/STM32F207ZFTx.csv
+load  STM32F207ZGTx
+csv pinout pinsrc/STM32F207ZGTx.csv
+load  STM32F215RETx
+csv pinout pinsrc/STM32F215RETx.csv
+load  STM32F215RGTx
+csv pinout pinsrc/STM32F215RGTx.csv
+load  STM32F215VETx
+csv pinout pinsrc/STM32F215VETx.csv
+load  STM32F215VGTx
+csv pinout pinsrc/STM32F215VGTx.csv
+load  STM32F215ZETx
+csv pinout pinsrc/STM32F215ZETx.csv
+load  STM32F215ZGTx
+csv pinout pinsrc/STM32F215ZGTx.csv
+load  STM32F217IEHx
+csv pinout pinsrc/STM32F217IEHx.csv
+load  STM32F217IETx
+csv pinout pinsrc/STM32F217IETx.csv
+load  STM32F217IGHx
+csv pinout pinsrc/STM32F217IGHx.csv
+load  STM32F217IGTx
+csv pinout pinsrc/STM32F217IGTx.csv
+load  STM32F217VETx
+csv pinout pinsrc/STM32F217VETx.csv
+load  STM32F217VGTx
+csv pinout pinsrc/STM32F217VGTx.csv
+load  STM32F217ZETx
+csv pinout pinsrc/STM32F217ZETx.csv
+load  STM32F217ZGTx
+csv pinout pinsrc/STM32F217ZGTx.csv
+load  STM32F301C6Tx
+csv pinout pinsrc/STM32F301C6Tx.csv
+load  STM32F301C8Tx
+csv pinout pinsrc/STM32F301C8Tx.csv
+load  STM32F301C8Yx
+csv pinout pinsrc/STM32F301C8Yx.csv
+load  STM32F301K6Tx
+csv pinout pinsrc/STM32F301K6Tx.csv
+load  STM32F301K6Ux
+csv pinout pinsrc/STM32F301K6Ux.csv
+load  STM32F301K8Tx
+csv pinout pinsrc/STM32F301K8Tx.csv
+load  STM32F301K8Ux
+csv pinout pinsrc/STM32F301K8Ux.csv
+load  STM32F301R6Tx
+csv pinout pinsrc/STM32F301R6Tx.csv
+load  STM32F301R8Tx
+csv pinout pinsrc/STM32F301R8Tx.csv
+load  STM32F302C6Tx
+csv pinout pinsrc/STM32F302C6Tx.csv
+load  STM32F302C8Tx
+csv pinout pinsrc/STM32F302C8Tx.csv
+load  STM32F302C8Yx
+csv pinout pinsrc/STM32F302C8Yx.csv
+load  STM32F302CBTx
+csv pinout pinsrc/STM32F302CBTx.csv
+load  STM32F302CCTx
+csv pinout pinsrc/STM32F302CCTx.csv
+load  STM32F302K6Ux
+csv pinout pinsrc/STM32F302K6Ux.csv
+load  STM32F302K8Ux
+csv pinout pinsrc/STM32F302K8Ux.csv
+load  STM32F302R6Tx
+csv pinout pinsrc/STM32F302R6Tx.csv
+load  STM32F302R8Tx
+csv pinout pinsrc/STM32F302R8Tx.csv
+load  STM32F302RBTx
+csv pinout pinsrc/STM32F302RBTx.csv
+load  STM32F302RCTx
+csv pinout pinsrc/STM32F302RCTx.csv
+load  STM32F302RDTx
+csv pinout pinsrc/STM32F302RDTx.csv
+load  STM32F302RETx
+csv pinout pinsrc/STM32F302RETx.csv
+load  STM32F302VBTx
+csv pinout pinsrc/STM32F302VBTx.csv
+load  STM32F302VCTx
+csv pinout pinsrc/STM32F302VCTx.csv
+load  STM32F302VCYx
+csv pinout pinsrc/STM32F302VCYx.csv
+load  STM32F302VDHx
+csv pinout pinsrc/STM32F302VDHx.csv
+load  STM32F302VDTx
+csv pinout pinsrc/STM32F302VDTx.csv
+load  STM32F302VEHx
+csv pinout pinsrc/STM32F302VEHx.csv
+load  STM32F302VETx
+csv pinout pinsrc/STM32F302VETx.csv
+load  STM32F302ZDTx
+csv pinout pinsrc/STM32F302ZDTx.csv
+load  STM32F302ZETx
+csv pinout pinsrc/STM32F302ZETx.csv
+load  STM32F303C6Tx
+csv pinout pinsrc/STM32F303C6Tx.csv
+load  STM32F303C8Tx
+csv pinout pinsrc/STM32F303C8Tx.csv
+load  STM32F303C8Yx
+csv pinout pinsrc/STM32F303C8Yx.csv
+load  STM32F303CBTx
+csv pinout pinsrc/STM32F303CBTx.csv
+load  STM32F303CCTx
+csv pinout pinsrc/STM32F303CCTx.csv
+load  STM32F303K6Tx
+csv pinout pinsrc/STM32F303K6Tx.csv
+load  STM32F303K8Tx
+csv pinout pinsrc/STM32F303K8Tx.csv
+load  STM32F303R6Tx
+csv pinout pinsrc/STM32F303R6Tx.csv
+load  STM32F303R8Tx
+csv pinout pinsrc/STM32F303R8Tx.csv
+load  STM32F303RBTx
+csv pinout pinsrc/STM32F303RBTx.csv
+load  STM32F303RCTx
+csv pinout pinsrc/STM32F303RCTx.csv
+load  STM32F303RDTx
+csv pinout pinsrc/STM32F303RDTx.csv
+load  STM32F303RETx
+csv pinout pinsrc/STM32F303RETx.csv
+load  STM32F303VBTx
+csv pinout pinsrc/STM32F303VBTx.csv
+load  STM32F303VCTx
+csv pinout pinsrc/STM32F303VCTx.csv
+load  STM32F303VCYx
+csv pinout pinsrc/STM32F303VCYx.csv
+load  STM32F303VDHx
+csv pinout pinsrc/STM32F303VDHx.csv
+load  STM32F303VDTx
+csv pinout pinsrc/STM32F303VDTx.csv
+load  STM32F303VEHx
+csv pinout pinsrc/STM32F303VEHx.csv
+load  STM32F303VETx
+csv pinout pinsrc/STM32F303VETx.csv
+load  STM32F303VEYx
+csv pinout pinsrc/STM32F303VEYx.csv
+load  STM32F303ZDTx
+csv pinout pinsrc/STM32F303ZDTx.csv
+load  STM32F303ZETx
+csv pinout pinsrc/STM32F303ZETx.csv
+load  STM32F318C8Tx
+csv pinout pinsrc/STM32F318C8Tx.csv
+load  STM32F318C8Yx
+csv pinout pinsrc/STM32F318C8Yx.csv
+load  STM32F318K8Ux
+csv pinout pinsrc/STM32F318K8Ux.csv
+load  STM32F328C8Tx
+csv pinout pinsrc/STM32F328C8Tx.csv
+load  STM32F334C4Tx
+csv pinout pinsrc/STM32F334C4Tx.csv
+load  STM32F334C6Tx
+csv pinout pinsrc/STM32F334C6Tx.csv
+load  STM32F334C8Tx
+csv pinout pinsrc/STM32F334C8Tx.csv
+load  STM32F334C8Yx
+csv pinout pinsrc/STM32F334C8Yx.csv
+load  STM32F334K4Tx
+csv pinout pinsrc/STM32F334K4Tx.csv
+load  STM32F334K6Tx
+csv pinout pinsrc/STM32F334K6Tx.csv
+load  STM32F334K8Tx
+csv pinout pinsrc/STM32F334K8Tx.csv
+load  STM32F334K8Ux
+csv pinout pinsrc/STM32F334K8Ux.csv
+load  STM32F334R6Tx
+csv pinout pinsrc/STM32F334R6Tx.csv
+load  STM32F334R8Tx
+csv pinout pinsrc/STM32F334R8Tx.csv
+load  STM32F358CCTx
+csv pinout pinsrc/STM32F358CCTx.csv
+load  STM32F358RCTx
+csv pinout pinsrc/STM32F358RCTx.csv
+load  STM32F358VCTx
+csv pinout pinsrc/STM32F358VCTx.csv
+load  STM32F373C8Tx
+csv pinout pinsrc/STM32F373C8Tx.csv
+load  STM32F373CBTx
+csv pinout pinsrc/STM32F373CBTx.csv
+load  STM32F373CCTx
+csv pinout pinsrc/STM32F373CCTx.csv
+load  STM32F373R8Tx
+csv pinout pinsrc/STM32F373R8Tx.csv
+load  STM32F373RBTx
+csv pinout pinsrc/STM32F373RBTx.csv
+load  STM32F373RCTx
+csv pinout pinsrc/STM32F373RCTx.csv
+load  STM32F373V8Hx
+csv pinout pinsrc/STM32F373V8Hx.csv
+load  STM32F373V8Tx
+csv pinout pinsrc/STM32F373V8Tx.csv
+load  STM32F373VBHx
+csv pinout pinsrc/STM32F373VBHx.csv
+load  STM32F373VBTx
+csv pinout pinsrc/STM32F373VBTx.csv
+load  STM32F373VCHx
+csv pinout pinsrc/STM32F373VCHx.csv
+load  STM32F373VCTx
+csv pinout pinsrc/STM32F373VCTx.csv
+load  STM32F378CCTx
+csv pinout pinsrc/STM32F378CCTx.csv
+load  STM32F378RCTx
+csv pinout pinsrc/STM32F378RCTx.csv
+load  STM32F378RCYx
+csv pinout pinsrc/STM32F378RCYx.csv
+load  STM32F378VCHx
+csv pinout pinsrc/STM32F378VCHx.csv
+load  STM32F378VCTx
+csv pinout pinsrc/STM32F378VCTx.csv
+load  STM32F398VETx
+csv pinout pinsrc/STM32F398VETx.csv
+load  STM32F401CBUx
+csv pinout pinsrc/STM32F401CBUx.csv
+load  STM32F401CCFx
+csv pinout pinsrc/STM32F401CCFx.csv
+load  STM32F401CCUx
+csv pinout pinsrc/STM32F401CCUx.csv
+load  STM32F401CCYx
+csv pinout pinsrc/STM32F401CCYx.csv
+load  STM32F401CDUx
+csv pinout pinsrc/STM32F401CDUx.csv
+load  STM32F401CDYx
+csv pinout pinsrc/STM32F401CDYx.csv
+load  STM32F401CEUx
+csv pinout pinsrc/STM32F401CEUx.csv
+load  STM32F401RBTx
+csv pinout pinsrc/STM32F401RBTx.csv
+load  STM32F401RCTx
+csv pinout pinsrc/STM32F401RCTx.csv
+load  STM32F401RDTx
+csv pinout pinsrc/STM32F401RDTx.csv
+load  STM32F401RETx
+csv pinout pinsrc/STM32F401RETx.csv
+load  STM32F401VBHx
+csv pinout pinsrc/STM32F401VBHx.csv
+load  STM32F401VBTx
+csv pinout pinsrc/STM32F401VBTx.csv
+load  STM32F401VCHx
+csv pinout pinsrc/STM32F401VCHx.csv
+load  STM32F401VCTx
+csv pinout pinsrc/STM32F401VCTx.csv
+load  STM32F401VDHx
+csv pinout pinsrc/STM32F401VDHx.csv
+load  STM32F401VDTx
+csv pinout pinsrc/STM32F401VDTx.csv
+load  STM32F401VEHx
+csv pinout pinsrc/STM32F401VEHx.csv
+load  STM32F401VETx
+csv pinout pinsrc/STM32F401VETx.csv
+load  STM32F405OEYx
+csv pinout pinsrc/STM32F405OEYx.csv
+load  STM32F405OGYx
+csv pinout pinsrc/STM32F405OGYx.csv
+load  STM32F405RGTx
+csv pinout pinsrc/STM32F405RGTx.csv
+load  STM32F405VGTx
+csv pinout pinsrc/STM32F405VGTx.csv
+load  STM32F405ZGTx
+csv pinout pinsrc/STM32F405ZGTx.csv
+load  STM32F407IEHx
+csv pinout pinsrc/STM32F407IEHx.csv
+load  STM32F407IETx
+csv pinout pinsrc/STM32F407IETx.csv
+load  STM32F407IGHx
+csv pinout pinsrc/STM32F407IGHx.csv
+load  STM32F407IGTx
+csv pinout pinsrc/STM32F407IGTx.csv
+load  STM32F407VETx
+csv pinout pinsrc/STM32F407VETx.csv
+load  STM32F407VGTx
+csv pinout pinsrc/STM32F407VGTx.csv
+load  STM32F407ZETx
+csv pinout pinsrc/STM32F407ZETx.csv
+load  STM32F407ZGTx
+csv pinout pinsrc/STM32F407ZGTx.csv
+load  STM32F410C8Ux
+csv pinout pinsrc/STM32F410C8Ux.csv
+load  STM32F410CBTx
+csv pinout pinsrc/STM32F410CBTx.csv
+load  STM32F410CBUx
+csv pinout pinsrc/STM32F410CBUx.csv
+load  STM32F410R8Tx
+csv pinout pinsrc/STM32F410R8Tx.csv
+load  STM32F410RBIx
+csv pinout pinsrc/STM32F410RBIx.csv
+load  STM32F410RBTx
+csv pinout pinsrc/STM32F410RBTx.csv
+load  STM32F410T8Yx
+csv pinout pinsrc/STM32F410T8Yx.csv
+load  STM32F410TBYx
+csv pinout pinsrc/STM32F410TBYx.csv
+load  STM32F411CCUx
+csv pinout pinsrc/STM32F411CCUx.csv
+load  STM32F411CCYx
+csv pinout pinsrc/STM32F411CCYx.csv
+load  STM32F411CEUx
+csv pinout pinsrc/STM32F411CEUx.csv
+load  STM32F411CEYx
+csv pinout pinsrc/STM32F411CEYx.csv
+load  STM32F411RCTx
+csv pinout pinsrc/STM32F411RCTx.csv
+load  STM32F411RETx
+csv pinout pinsrc/STM32F411RETx.csv
+load  STM32F411VCTx
+csv pinout pinsrc/STM32F411VCTx.csv
+load  STM32F411VEHx
+csv pinout pinsrc/STM32F411VEHx.csv
+load  STM32F411VETx
+csv pinout pinsrc/STM32F411VETx.csv
+load  STM32F412CEUx
+csv pinout pinsrc/STM32F412CEUx.csv
+load  STM32F412CGUx
+csv pinout pinsrc/STM32F412CGUx.csv
+load  STM32F412RETx
+csv pinout pinsrc/STM32F412RETx.csv
+load  STM32F412REYx
+csv pinout pinsrc/STM32F412REYx.csv
+load  STM32F412RGTx
+csv pinout pinsrc/STM32F412RGTx.csv
+load  STM32F412RGYx
+csv pinout pinsrc/STM32F412RGYx.csv
+load  STM32F412RGYxP
+csv pinout pinsrc/STM32F412RGYxP.csv
+load  STM32F412VEHx
+csv pinout pinsrc/STM32F412VEHx.csv
+load  STM32F412VETx
+csv pinout pinsrc/STM32F412VETx.csv
+load  STM32F412VGHx
+csv pinout pinsrc/STM32F412VGHx.csv
+load  STM32F412VGTx
+csv pinout pinsrc/STM32F412VGTx.csv
+load  STM32F412ZEJx
+csv pinout pinsrc/STM32F412ZEJx.csv
+load  STM32F412ZETx
+csv pinout pinsrc/STM32F412ZETx.csv
+load  STM32F412ZGJx
+csv pinout pinsrc/STM32F412ZGJx.csv
+load  STM32F412ZGTx
+csv pinout pinsrc/STM32F412ZGTx.csv
+load  STM32F413CHUx
+csv pinout pinsrc/STM32F413CHUx.csv
+load  STM32F413RHTx
+csv pinout pinsrc/STM32F413RHTx.csv
+load  STM32F413VGHx
+csv pinout pinsrc/STM32F413VGHx.csv
+load  STM32F413VGTx
+csv pinout pinsrc/STM32F413VGTx.csv
+load  STM32F413ZHJx
+csv pinout pinsrc/STM32F413ZHJx.csv
+load  STM32F413ZHTx
+csv pinout pinsrc/STM32F413ZHTx.csv
+load  STM32F415OGYx
+csv pinout pinsrc/STM32F415OGYx.csv
+load  STM32F415RGTx
+csv pinout pinsrc/STM32F415RGTx.csv
+load  STM32F415VGTx
+csv pinout pinsrc/STM32F415VGTx.csv
+load  STM32F415ZGTx
+csv pinout pinsrc/STM32F415ZGTx.csv
+load  STM32F417IEHx
+csv pinout pinsrc/STM32F417IEHx.csv
+load  STM32F417IETx
+csv pinout pinsrc/STM32F417IETx.csv
+load  STM32F417IGHx
+csv pinout pinsrc/STM32F417IGHx.csv
+load  STM32F417IGTx
+csv pinout pinsrc/STM32F417IGTx.csv
+load  STM32F417VETx
+csv pinout pinsrc/STM32F417VETx.csv
+load  STM32F417VGTx
+csv pinout pinsrc/STM32F417VGTx.csv
+load  STM32F417ZETx
+csv pinout pinsrc/STM32F417ZETx.csv
+load  STM32F417ZGTx
+csv pinout pinsrc/STM32F417ZGTx.csv
+load  STM32F423MHYx
+csv pinout pinsrc/STM32F423MHYx.csv
+load  STM32F423ZHJx
+csv pinout pinsrc/STM32F423ZHJx.csv
+load  STM32F423ZHTx
+csv pinout pinsrc/STM32F423ZHTx.csv
+load  STM32F427AGHx
+csv pinout pinsrc/STM32F427AGHx.csv
+load  STM32F427AIHx
+csv pinout pinsrc/STM32F427AIHx.csv
+load  STM32F427IGHx
+csv pinout pinsrc/STM32F427IGHx.csv
+load  STM32F427IGTx
+csv pinout pinsrc/STM32F427IGTx.csv
+load  STM32F427IIHx
+csv pinout pinsrc/STM32F427IIHx.csv
+load  STM32F427IITx
+csv pinout pinsrc/STM32F427IITx.csv
+load  STM32F427VGTx
+csv pinout pinsrc/STM32F427VGTx.csv
+load  STM32F427VITx
+csv pinout pinsrc/STM32F427VITx.csv
+load  STM32F427ZGTx
+csv pinout pinsrc/STM32F427ZGTx.csv
+load  STM32F427ZITx
+csv pinout pinsrc/STM32F427ZITx.csv
+load  STM32F429AGHx
+csv pinout pinsrc/STM32F429AGHx.csv
+load  STM32F429AIHx
+csv pinout pinsrc/STM32F429AIHx.csv
+load  STM32F429BETx
+csv pinout pinsrc/STM32F429BETx.csv
+load  STM32F429BGTx
+csv pinout pinsrc/STM32F429BGTx.csv
+load  STM32F429BITx
+csv pinout pinsrc/STM32F429BITx.csv
+load  STM32F429IEHx
+csv pinout pinsrc/STM32F429IEHx.csv
+load  STM32F429IETx
+csv pinout pinsrc/STM32F429IETx.csv
+load  STM32F429IGHx
+csv pinout pinsrc/STM32F429IGHx.csv
+load  STM32F429IGTx
+csv pinout pinsrc/STM32F429IGTx.csv
+load  STM32F429IIHx
+csv pinout pinsrc/STM32F429IIHx.csv
+load  STM32F429IITx
+csv pinout pinsrc/STM32F429IITx.csv
+load  STM32F429NEHx
+csv pinout pinsrc/STM32F429NEHx.csv
+load  STM32F429NGHx
+csv pinout pinsrc/STM32F429NGHx.csv
+load  STM32F429NIHx
+csv pinout pinsrc/STM32F429NIHx.csv
+load  STM32F429VETx
+csv pinout pinsrc/STM32F429VETx.csv
+load  STM32F429VGTx
+csv pinout pinsrc/STM32F429VGTx.csv
+load  STM32F429VITx
+csv pinout pinsrc/STM32F429VITx.csv
+load  STM32F429ZETx
+csv pinout pinsrc/STM32F429ZETx.csv
+load  STM32F429ZGTx
+csv pinout pinsrc/STM32F429ZGTx.csv
+load  STM32F429ZGYx
+csv pinout pinsrc/STM32F429ZGYx.csv
+load  STM32F429ZITx
+csv pinout pinsrc/STM32F429ZITx.csv
+load  STM32F429ZIYx
+csv pinout pinsrc/STM32F429ZIYx.csv
+load  STM32F437AIHx
+csv pinout pinsrc/STM32F437AIHx.csv
+load  STM32F437IGHx
+csv pinout pinsrc/STM32F437IGHx.csv
+load  STM32F437IGTx
+csv pinout pinsrc/STM32F437IGTx.csv
+load  STM32F437IIHx
+csv pinout pinsrc/STM32F437IIHx.csv
+load  STM32F437IITx
+csv pinout pinsrc/STM32F437IITx.csv
+load  STM32F437VGTx
+csv pinout pinsrc/STM32F437VGTx.csv
+load  STM32F437VITx
+csv pinout pinsrc/STM32F437VITx.csv
+load  STM32F437ZGTx
+csv pinout pinsrc/STM32F437ZGTx.csv
+load  STM32F437ZITx
+csv pinout pinsrc/STM32F437ZITx.csv
+load  STM32F439AIHx
+csv pinout pinsrc/STM32F439AIHx.csv
+load  STM32F439BGTx
+csv pinout pinsrc/STM32F439BGTx.csv
+load  STM32F439BITx
+csv pinout pinsrc/STM32F439BITx.csv
+load  STM32F439IGHx
+csv pinout pinsrc/STM32F439IGHx.csv
+load  STM32F439IGTx
+csv pinout pinsrc/STM32F439IGTx.csv
+load  STM32F439IIHx
+csv pinout pinsrc/STM32F439IIHx.csv
+load  STM32F439IITx
+csv pinout pinsrc/STM32F439IITx.csv
+load  STM32F439NGHx
+csv pinout pinsrc/STM32F439NGHx.csv
+load  STM32F439NIHx
+csv pinout pinsrc/STM32F439NIHx.csv
+load  STM32F439VGTx
+csv pinout pinsrc/STM32F439VGTx.csv
+load  STM32F439VITx
+csv pinout pinsrc/STM32F439VITx.csv
+load  STM32F439ZGTx
+csv pinout pinsrc/STM32F439ZGTx.csv
+load  STM32F439ZGYx
+csv pinout pinsrc/STM32F439ZGYx.csv
+load  STM32F439ZITx
+csv pinout pinsrc/STM32F439ZITx.csv
+load  STM32F439ZIYx
+csv pinout pinsrc/STM32F439ZIYx.csv
+load  STM32F446MCYx
+csv pinout pinsrc/STM32F446MCYx.csv
+load  STM32F446MEYx
+csv pinout pinsrc/STM32F446MEYx.csv
+load  STM32F446RCTx
+csv pinout pinsrc/STM32F446RCTx.csv
+load  STM32F446RETx
+csv pinout pinsrc/STM32F446RETx.csv
+load  STM32F446VCTx
+csv pinout pinsrc/STM32F446VCTx.csv
+load  STM32F446VETx
+csv pinout pinsrc/STM32F446VETx.csv
+load  STM32F446ZCHx
+csv pinout pinsrc/STM32F446ZCHx.csv
+load  STM32F446ZCJx
+csv pinout pinsrc/STM32F446ZCJx.csv
+load  STM32F446ZCTx
+csv pinout pinsrc/STM32F446ZCTx.csv
+load  STM32F446ZEHx
+csv pinout pinsrc/STM32F446ZEHx.csv
+load  STM32F446ZEJx
+csv pinout pinsrc/STM32F446ZEJx.csv
+load  STM32F446ZETx
+csv pinout pinsrc/STM32F446ZETx.csv
+load  STM32F469AEHx
+csv pinout pinsrc/STM32F469AEHx.csv
+load  STM32F469AGHx
+csv pinout pinsrc/STM32F469AGHx.csv
+load  STM32F469AGYx
+csv pinout pinsrc/STM32F469AGYx.csv
+load  STM32F469AIHx
+csv pinout pinsrc/STM32F469AIHx.csv
+load  STM32F469AIYx
+csv pinout pinsrc/STM32F469AIYx.csv
+load  STM32F469BETx
+csv pinout pinsrc/STM32F469BETx.csv
+load  STM32F469BGTx
+csv pinout pinsrc/STM32F469BGTx.csv
+load  STM32F469BITx
+csv pinout pinsrc/STM32F469BITx.csv
+load  STM32F469IEHx
+csv pinout pinsrc/STM32F469IEHx.csv
+load  STM32F469IGHx
+csv pinout pinsrc/STM32F469IGHx.csv
+load  STM32F469IGTx
+csv pinout pinsrc/STM32F469IGTx.csv
+load  STM32F469IIHx
+csv pinout pinsrc/STM32F469IIHx.csv
+load  STM32F469IITx
+csv pinout pinsrc/STM32F469IITx.csv
+load  STM32F469NEHx
+csv pinout pinsrc/STM32F469NEHx.csv
+load  STM32F469NGHx
+csv pinout pinsrc/STM32F469NGHx.csv
+load  STM32F469NIHx
+csv pinout pinsrc/STM32F469NIHx.csv
+load  STM32F469VETx
+csv pinout pinsrc/STM32F469VETx.csv
+load  STM32F469VGTx
+csv pinout pinsrc/STM32F469VGTx.csv
+load  STM32F469VITx
+csv pinout pinsrc/STM32F469VITx.csv
+load  STM32F469ZETx
+csv pinout pinsrc/STM32F469ZETx.csv
+load  STM32F469ZGTx
+csv pinout pinsrc/STM32F469ZGTx.csv
+load  STM32F469ZITx
+csv pinout pinsrc/STM32F469ZITx.csv
+load  STM32F479AGHx
+csv pinout pinsrc/STM32F479AGHx.csv
+load  STM32F479AIHx
+csv pinout pinsrc/STM32F479AIHx.csv
+load  STM32F479AIYx
+csv pinout pinsrc/STM32F479AIYx.csv
+load  STM32F479BGTx
+csv pinout pinsrc/STM32F479BGTx.csv
+load  STM32F479BITx
+csv pinout pinsrc/STM32F479BITx.csv
+load  STM32F479IGHx
+csv pinout pinsrc/STM32F479IGHx.csv
+load  STM32F479IITx
+csv pinout pinsrc/STM32F479IITx.csv
+load  STM32F479NGHx
+csv pinout pinsrc/STM32F479NGHx.csv
+load  STM32F479NIHx
+csv pinout pinsrc/STM32F479NIHx.csv
+load  STM32F479VGTx
+csv pinout pinsrc/STM32F479VGTx.csv
+load  STM32F479VITx
+csv pinout pinsrc/STM32F479VITx.csv
+load  STM32F479ZGTx
+csv pinout pinsrc/STM32F479ZGTx.csv
+load  STM32F479ZITx
+csv pinout pinsrc/STM32F479ZITx.csv
+load  STM32F722ICKx
+csv pinout pinsrc/STM32F722ICKx.csv
+load  STM32F722ICTx
+csv pinout pinsrc/STM32F722ICTx.csv
+load  STM32F722IEKx
+csv pinout pinsrc/STM32F722IEKx.csv
+load  STM32F722IETx
+csv pinout pinsrc/STM32F722IETx.csv
+load  STM32F722RCTx
+csv pinout pinsrc/STM32F722RCTx.csv
+load  STM32F722RETx
+csv pinout pinsrc/STM32F722RETx.csv
+load  STM32F722VCTx
+csv pinout pinsrc/STM32F722VCTx.csv
+load  STM32F722VETx
+csv pinout pinsrc/STM32F722VETx.csv
+load  STM32F722ZCTx
+csv pinout pinsrc/STM32F722ZCTx.csv
+load  STM32F722ZETx
+csv pinout pinsrc/STM32F722ZETx.csv
+load  STM32F723ICKx
+csv pinout pinsrc/STM32F723ICKx.csv
+load  STM32F723ICTx
+csv pinout pinsrc/STM32F723ICTx.csv
+load  STM32F723IEKx
+csv pinout pinsrc/STM32F723IEKx.csv
+load  STM32F723IETx
+csv pinout pinsrc/STM32F723IETx.csv
+load  STM32F723VEYx
+csv pinout pinsrc/STM32F723VEYx.csv
+load  STM32F723ZCIx
+csv pinout pinsrc/STM32F723ZCIx.csv
+load  STM32F723ZCTx
+csv pinout pinsrc/STM32F723ZCTx.csv
+load  STM32F723ZEIx
+csv pinout pinsrc/STM32F723ZEIx.csv
+load  STM32F723ZETx
+csv pinout pinsrc/STM32F723ZETx.csv
+load  STM32F730I8Kx
+csv pinout pinsrc/STM32F730I8Kx.csv
+load  STM32F730R8Tx
+csv pinout pinsrc/STM32F730R8Tx.csv
+load  STM32F730V8Tx
+csv pinout pinsrc/STM32F730V8Tx.csv
+load  STM32F730Z8Tx
+csv pinout pinsrc/STM32F730Z8Tx.csv
+load  STM32F732IEKx
+csv pinout pinsrc/STM32F732IEKx.csv
+load  STM32F732IETx
+csv pinout pinsrc/STM32F732IETx.csv
+load  STM32F732RETx
+csv pinout pinsrc/STM32F732RETx.csv
+load  STM32F732VETx
+csv pinout pinsrc/STM32F732VETx.csv
+load  STM32F732ZETx
+csv pinout pinsrc/STM32F732ZETx.csv
+load  STM32F733IEKx
+csv pinout pinsrc/STM32F733IEKx.csv
+load  STM32F733IETx
+csv pinout pinsrc/STM32F733IETx.csv
+load  STM32F733VEYx
+csv pinout pinsrc/STM32F733VEYx.csv
+load  STM32F733ZEIx
+csv pinout pinsrc/STM32F733ZEIx.csv
+load  STM32F733ZETx
+csv pinout pinsrc/STM32F733ZETx.csv
+load  STM32F745IEKx
+csv pinout pinsrc/STM32F745IEKx.csv
+load  STM32F745IETx
+csv pinout pinsrc/STM32F745IETx.csv
+load  STM32F745IGKx
+csv pinout pinsrc/STM32F745IGKx.csv
+load  STM32F745IGTx
+csv pinout pinsrc/STM32F745IGTx.csv
+load  STM32F745VEHx
+csv pinout pinsrc/STM32F745VEHx.csv
+load  STM32F745VETx
+csv pinout pinsrc/STM32F745VETx.csv
+load  STM32F745VGHx
+csv pinout pinsrc/STM32F745VGHx.csv
+load  STM32F745VGTx
+csv pinout pinsrc/STM32F745VGTx.csv
+load  STM32F745ZETx
+csv pinout pinsrc/STM32F745ZETx.csv
+load  STM32F745ZGTx
+csv pinout pinsrc/STM32F745ZGTx.csv
+load  STM32F746BETx
+csv pinout pinsrc/STM32F746BETx.csv
+load  STM32F746BGTx
+csv pinout pinsrc/STM32F746BGTx.csv
+load  STM32F746IEKx
+csv pinout pinsrc/STM32F746IEKx.csv
+load  STM32F746IETx
+csv pinout pinsrc/STM32F746IETx.csv
+load  STM32F746IGKx
+csv pinout pinsrc/STM32F746IGKx.csv
+load  STM32F746IGTx
+csv pinout pinsrc/STM32F746IGTx.csv
+load  STM32F746NEHx
+csv pinout pinsrc/STM32F746NEHx.csv
+load  STM32F746NGHx
+csv pinout pinsrc/STM32F746NGHx.csv
+load  STM32F746VEHx
+csv pinout pinsrc/STM32F746VEHx.csv
+load  STM32F746VETx
+csv pinout pinsrc/STM32F746VETx.csv
+load  STM32F746VGHx
+csv pinout pinsrc/STM32F746VGHx.csv
+load  STM32F746VGTx
+csv pinout pinsrc/STM32F746VGTx.csv
+load  STM32F746ZETx
+csv pinout pinsrc/STM32F746ZETx.csv
+load  STM32F746ZEYx
+csv pinout pinsrc/STM32F746ZEYx.csv
+load  STM32F746ZGTx
+csv pinout pinsrc/STM32F746ZGTx.csv
+load  STM32F746ZGYx
+csv pinout pinsrc/STM32F746ZGYx.csv
+load  STM32F750N8Hx
+csv pinout pinsrc/STM32F750N8Hx.csv
+load  STM32F750V8Tx
+csv pinout pinsrc/STM32F750V8Tx.csv
+load  STM32F750Z8Tx
+csv pinout pinsrc/STM32F750Z8Tx.csv
+load  STM32F756BGTx
+csv pinout pinsrc/STM32F756BGTx.csv
+load  STM32F756IGKx
+csv pinout pinsrc/STM32F756IGKx.csv
+load  STM32F756IGTx
+csv pinout pinsrc/STM32F756IGTx.csv
+load  STM32F756NGHx
+csv pinout pinsrc/STM32F756NGHx.csv
+load  STM32F756VGHx
+csv pinout pinsrc/STM32F756VGHx.csv
+load  STM32F756VGTx
+csv pinout pinsrc/STM32F756VGTx.csv
+load  STM32F756ZGTx
+csv pinout pinsrc/STM32F756ZGTx.csv
+load  STM32F756ZGYx
+csv pinout pinsrc/STM32F756ZGYx.csv
+load  STM32F765BGTx
+csv pinout pinsrc/STM32F765BGTx.csv
+load  STM32F765BITx
+csv pinout pinsrc/STM32F765BITx.csv
+load  STM32F765IGKx
+csv pinout pinsrc/STM32F765IGKx.csv
+load  STM32F765IGTx
+csv pinout pinsrc/STM32F765IGTx.csv
+load  STM32F765IIKx
+csv pinout pinsrc/STM32F765IIKx.csv
+load  STM32F765IITx
+csv pinout pinsrc/STM32F765IITx.csv
+load  STM32F765NGHx
+csv pinout pinsrc/STM32F765NGHx.csv
+load  STM32F765NIHx
+csv pinout pinsrc/STM32F765NIHx.csv
+load  STM32F765VGHx
+csv pinout pinsrc/STM32F765VGHx.csv
+load  STM32F765VGTx
+csv pinout pinsrc/STM32F765VGTx.csv
+load  STM32F765VIHx
+csv pinout pinsrc/STM32F765VIHx.csv
+load  STM32F765VITx
+csv pinout pinsrc/STM32F765VITx.csv
+load  STM32F765ZGTx
+csv pinout pinsrc/STM32F765ZGTx.csv
+load  STM32F765ZITx
+csv pinout pinsrc/STM32F765ZITx.csv
+load  STM32F767BGTx
+csv pinout pinsrc/STM32F767BGTx.csv
+load  STM32F767BITx
+csv pinout pinsrc/STM32F767BITx.csv
+load  STM32F767IGKx
+csv pinout pinsrc/STM32F767IGKx.csv
+load  STM32F767IGTx
+csv pinout pinsrc/STM32F767IGTx.csv
+load  STM32F767IIKx
+csv pinout pinsrc/STM32F767IIKx.csv
+load  STM32F767IITx
+csv pinout pinsrc/STM32F767IITx.csv
+load  STM32F767NGHx
+csv pinout pinsrc/STM32F767NGHx.csv
+load  STM32F767NIHx
+csv pinout pinsrc/STM32F767NIHx.csv
+load  STM32F767VGHx
+csv pinout pinsrc/STM32F767VGHx.csv
+load  STM32F767VGTx
+csv pinout pinsrc/STM32F767VGTx.csv
+load  STM32F767VIHx
+csv pinout pinsrc/STM32F767VIHx.csv
+load  STM32F767VITx
+csv pinout pinsrc/STM32F767VITx.csv
+load  STM32F767ZGTx
+csv pinout pinsrc/STM32F767ZGTx.csv
+load  STM32F767ZITx
+csv pinout pinsrc/STM32F767ZITx.csv
+load  STM32F769AIYx
+csv pinout pinsrc/STM32F769AIYx.csv
+load  STM32F769BGTx
+csv pinout pinsrc/STM32F769BGTx.csv
+load  STM32F769BITx
+csv pinout pinsrc/STM32F769BITx.csv
+load  STM32F769IGTx
+csv pinout pinsrc/STM32F769IGTx.csv
+load  STM32F769IITx
+csv pinout pinsrc/STM32F769IITx.csv
+load  STM32F769NGHx
+csv pinout pinsrc/STM32F769NGHx.csv
+load  STM32F769NIHx
+csv pinout pinsrc/STM32F769NIHx.csv
+load  STM32F777BITx
+csv pinout pinsrc/STM32F777BITx.csv
+load  STM32F777IIKx
+csv pinout pinsrc/STM32F777IIKx.csv
+load  STM32F777IITx
+csv pinout pinsrc/STM32F777IITx.csv
+load  STM32F777NIHx
+csv pinout pinsrc/STM32F777NIHx.csv
+load  STM32F777VIHx
+csv pinout pinsrc/STM32F777VIHx.csv
+load  STM32F777VITx
+csv pinout pinsrc/STM32F777VITx.csv
+load  STM32F777ZITx
+csv pinout pinsrc/STM32F777ZITx.csv
+load  STM32F778AIYx
+csv pinout pinsrc/STM32F778AIYx.csv
+load  STM32F779AIYx
+csv pinout pinsrc/STM32F779AIYx.csv
+load  STM32F779BITx
+csv pinout pinsrc/STM32F779BITx.csv
+load  STM32F779IITx
+csv pinout pinsrc/STM32F779IITx.csv
+load  STM32F779NIHx
+csv pinout pinsrc/STM32F779NIHx.csv
+load  STM32G030C6Tx
+csv pinout pinsrc/STM32G030C6Tx.csv
+load  STM32G030C8Tx
+csv pinout pinsrc/STM32G030C8Tx.csv
+load  STM32G030F6Px
+csv pinout pinsrc/STM32G030F6Px.csv
+load  STM32G030J6Mx
+csv pinout pinsrc/STM32G030J6Mx.csv
+load  STM32G030K6Tx
+csv pinout pinsrc/STM32G030K6Tx.csv
+load  STM32G030K8Tx
+csv pinout pinsrc/STM32G030K8Tx.csv
+load  STM32G031C4Tx
+csv pinout pinsrc/STM32G031C4Tx.csv
+load  STM32G031C4Ux
+csv pinout pinsrc/STM32G031C4Ux.csv
+load  STM32G031C6Tx
+csv pinout pinsrc/STM32G031C6Tx.csv
+load  STM32G031C6Ux
+csv pinout pinsrc/STM32G031C6Ux.csv
+load  STM32G031C8Tx
+csv pinout pinsrc/STM32G031C8Tx.csv
+load  STM32G031C8Ux
+csv pinout pinsrc/STM32G031C8Ux.csv
+load  STM32G031F4Px
+csv pinout pinsrc/STM32G031F4Px.csv
+load  STM32G031F6Px
+csv pinout pinsrc/STM32G031F6Px.csv
+load  STM32G031F8Px
+csv pinout pinsrc/STM32G031F8Px.csv
+load  STM32G031G4Ux
+csv pinout pinsrc/STM32G031G4Ux.csv
+load  STM32G031G6Ux
+csv pinout pinsrc/STM32G031G6Ux.csv
+load  STM32G031G8Ux
+csv pinout pinsrc/STM32G031G8Ux.csv
+load  STM32G031J4Mx
+csv pinout pinsrc/STM32G031J4Mx.csv
+load  STM32G031J6Mx
+csv pinout pinsrc/STM32G031J6Mx.csv
+load  STM32G031K4Tx
+csv pinout pinsrc/STM32G031K4Tx.csv
+load  STM32G031K4Ux
+csv pinout pinsrc/STM32G031K4Ux.csv
+load  STM32G031K6Tx
+csv pinout pinsrc/STM32G031K6Tx.csv
+load  STM32G031K6Ux
+csv pinout pinsrc/STM32G031K6Ux.csv
+load  STM32G031K8Tx
+csv pinout pinsrc/STM32G031K8Tx.csv
+load  STM32G031K8Ux
+csv pinout pinsrc/STM32G031K8Ux.csv
+load  STM32G031Y8Yx
+csv pinout pinsrc/STM32G031Y8Yx.csv
+load  STM32G041C6Tx
+csv pinout pinsrc/STM32G041C6Tx.csv
+load  STM32G041C8Tx
+csv pinout pinsrc/STM32G041C8Tx.csv
+load  STM32G041C8Ux
+csv pinout pinsrc/STM32G041C8Ux.csv
+load  STM32G041F6Px
+csv pinout pinsrc/STM32G041F6Px.csv
+load  STM32G041F8Px
+csv pinout pinsrc/STM32G041F8Px.csv
+load  STM32G041G6Ux
+csv pinout pinsrc/STM32G041G6Ux.csv
+load  STM32G041G8Ux
+csv pinout pinsrc/STM32G041G8Ux.csv
+load  STM32G041J6Mx
+csv pinout pinsrc/STM32G041J6Mx.csv
+load  STM32G041K6Tx
+csv pinout pinsrc/STM32G041K6Tx.csv
+load  STM32G041K8Tx
+csv pinout pinsrc/STM32G041K8Tx.csv
+load  STM32G041K8Ux
+csv pinout pinsrc/STM32G041K8Ux.csv
+load  STM32G041Y8Yx
+csv pinout pinsrc/STM32G041Y8Yx.csv
+load  STM32G070CBTx
+csv pinout pinsrc/STM32G070CBTx.csv
+load  STM32G070KBTx
+csv pinout pinsrc/STM32G070KBTx.csv
+load  STM32G070RBTx
+csv pinout pinsrc/STM32G070RBTx.csv
+load  STM32G071C8Tx
+csv pinout pinsrc/STM32G071C8Tx.csv
+load  STM32G071C8Ux
+csv pinout pinsrc/STM32G071C8Ux.csv
+load  STM32G071CBTx
+csv pinout pinsrc/STM32G071CBTx.csv
+load  STM32G071CBUx
+csv pinout pinsrc/STM32G071CBUx.csv
+load  STM32G071EBYx
+csv pinout pinsrc/STM32G071EBYx.csv
+load  STM32G071G8Ux
+csv pinout pinsrc/STM32G071G8Ux.csv
+load  STM32G071G8UxN
+csv pinout pinsrc/STM32G071G8UxN.csv
+load  STM32G071GBUx
+csv pinout pinsrc/STM32G071GBUx.csv
+load  STM32G071GBUxN
+csv pinout pinsrc/STM32G071GBUxN.csv
+load  STM32G071K8Tx
+csv pinout pinsrc/STM32G071K8Tx.csv
+load  STM32G071K8Ux
+csv pinout pinsrc/STM32G071K8Ux.csv
+load  STM32G071KBTx
+csv pinout pinsrc/STM32G071KBTx.csv
+load  STM32G071KBTxN
+csv pinout pinsrc/STM32G071KBTxN.csv
+load  STM32G071KBUx
+csv pinout pinsrc/STM32G071KBUx.csv
+load  STM32G071KBUxN
+csv pinout pinsrc/STM32G071KBUxN.csv
+load  STM32G071R8Tx
+csv pinout pinsrc/STM32G071R8Tx.csv
+load  STM32G071RBIx
+csv pinout pinsrc/STM32G071RBIx.csv
+load  STM32G071RBTx
+csv pinout pinsrc/STM32G071RBTx.csv
+load  STM32G081CBTx
+csv pinout pinsrc/STM32G081CBTx.csv
+load  STM32G081CBUx
+csv pinout pinsrc/STM32G081CBUx.csv
+load  STM32G081EBYx
+csv pinout pinsrc/STM32G081EBYx.csv
+load  STM32G081GBUx
+csv pinout pinsrc/STM32G081GBUx.csv
+load  STM32G081KBTx
+csv pinout pinsrc/STM32G081KBTx.csv
+load  STM32G081KBUx
+csv pinout pinsrc/STM32G081KBUx.csv
+load  STM32G081RBIx
+csv pinout pinsrc/STM32G081RBIx.csv
+load  STM32G081RBTx
+csv pinout pinsrc/STM32G081RBTx.csv
+load  STM32G431C6Tx
+csv pinout pinsrc/STM32G431C6Tx.csv
+load  STM32G431C8Tx
+csv pinout pinsrc/STM32G431C8Tx.csv
+load  STM32G431C8Ux
+csv pinout pinsrc/STM32G431C8Ux.csv
+load  STM32G431K6Ux
+csv pinout pinsrc/STM32G431K6Ux.csv
+load  STM32G431K8Tx
+csv pinout pinsrc/STM32G431K8Tx.csv
+load  STM32G431KBTx
+csv pinout pinsrc/STM32G431KBTx.csv
+load  STM32G431KBUx
+csv pinout pinsrc/STM32G431KBUx.csv
+load  STM32G431R6Tx
+csv pinout pinsrc/STM32G431R6Tx.csv
+load  STM32G431R8Tx
+csv pinout pinsrc/STM32G431R8Tx.csv
+load  STM32G431RBIx
+csv pinout pinsrc/STM32G431RBIx.csv
+load  STM32G431RBTx
+csv pinout pinsrc/STM32G431RBTx.csv
+load  STM32G431V6Tx
+csv pinout pinsrc/STM32G431V6Tx.csv
+load  STM32G431V8Tx
+csv pinout pinsrc/STM32G431V8Tx.csv
+load  STM32G473CBUx
+csv pinout pinsrc/STM32G473CBUx.csv
+load  STM32G473CCUx
+csv pinout pinsrc/STM32G473CCUx.csv
+load  STM32G473QBTx
+csv pinout pinsrc/STM32G473QBTx.csv
+load  STM32G473QCTx
+csv pinout pinsrc/STM32G473QCTx.csv
+load  STM32G473QETx
+csv pinout pinsrc/STM32G473QETx.csv
+load  STM32G473RBTx
+csv pinout pinsrc/STM32G473RBTx.csv
+load  STM32G473RCTx
+csv pinout pinsrc/STM32G473RCTx.csv
+load  STM32G473VBHx
+csv pinout pinsrc/STM32G473VBHx.csv
+load  STM32G473VBTx
+csv pinout pinsrc/STM32G473VBTx.csv
+load  STM32G473VCHx
+csv pinout pinsrc/STM32G473VCHx.csv
+load  STM32G473VCIx
+csv pinout pinsrc/STM32G473VCIx.csv
+load  STM32G473VCTx
+csv pinout pinsrc/STM32G473VCTx.csv
+load  STM32G473VEHx
+csv pinout pinsrc/STM32G473VEHx.csv
+load  STM32G473VETx
+csv pinout pinsrc/STM32G473VETx.csv
+load  STM32G474CBTx
+csv pinout pinsrc/STM32G474CBTx.csv
+load  STM32G474CBUx
+csv pinout pinsrc/STM32G474CBUx.csv
+load  STM32G474CCUx
+csv pinout pinsrc/STM32G474CCUx.csv
+load  STM32G474QBTx
+csv pinout pinsrc/STM32G474QBTx.csv
+load  STM32G474QCTx
+csv pinout pinsrc/STM32G474QCTx.csv
+load  STM32G474QETx
+csv pinout pinsrc/STM32G474QETx.csv
+load  STM32G474RBTx
+csv pinout pinsrc/STM32G474RBTx.csv
+load  STM32G474RCTx
+csv pinout pinsrc/STM32G474RCTx.csv
+load  STM32G474RETx
+csv pinout pinsrc/STM32G474RETx.csv
+load  STM32G474VBTx
+csv pinout pinsrc/STM32G474VBTx.csv
+load  STM32G474VCTx
+csv pinout pinsrc/STM32G474VCTx.csv
+load  STM32G474VEHx
+csv pinout pinsrc/STM32G474VEHx.csv
+load  STM32G474VETx
+csv pinout pinsrc/STM32G474VETx.csv
+load  STM32G483QETx
+csv pinout pinsrc/STM32G483QETx.csv
+load  STM32H742AGIx
+csv pinout pinsrc/STM32H742AGIx.csv
+load  STM32H742AIIx
+csv pinout pinsrc/STM32H742AIIx.csv
+load  STM32H742BGTx
+csv pinout pinsrc/STM32H742BGTx.csv
+load  STM32H742BITx
+csv pinout pinsrc/STM32H742BITx.csv
+load  STM32H742IGKx
+csv pinout pinsrc/STM32H742IGKx.csv
+load  STM32H742IIKx
+csv pinout pinsrc/STM32H742IIKx.csv
+load  STM32H742IITx
+csv pinout pinsrc/STM32H742IITx.csv
+load  STM32H742VGHx
+csv pinout pinsrc/STM32H742VGHx.csv
+load  STM32H742VGTx
+csv pinout pinsrc/STM32H742VGTx.csv
+load  STM32H742VIHx
+csv pinout pinsrc/STM32H742VIHx.csv
+load  STM32H742VITx
+csv pinout pinsrc/STM32H742VITx.csv
+load  STM32H742XGHx
+csv pinout pinsrc/STM32H742XGHx.csv
+load  STM32H742XIHx
+csv pinout pinsrc/STM32H742XIHx.csv
+load  STM32H742ZGTx
+csv pinout pinsrc/STM32H742ZGTx.csv
+load  STM32H742ZITx
+csv pinout pinsrc/STM32H742ZITx.csv
+load  STM32H743AGIx
+csv pinout pinsrc/STM32H743AGIx.csv
+load  STM32H743AIIx
+csv pinout pinsrc/STM32H743AIIx.csv
+load  STM32H743BGTx
+csv pinout pinsrc/STM32H743BGTx.csv
+load  STM32H743BITx
+csv pinout pinsrc/STM32H743BITx.csv
+load  STM32H743IGTx
+csv pinout pinsrc/STM32H743IGTx.csv
+load  STM32H743IIKx
+csv pinout pinsrc/STM32H743IIKx.csv
+load  STM32H743IITx
+csv pinout pinsrc/STM32H743IITx.csv
+load  STM32H743VGHx
+csv pinout pinsrc/STM32H743VGHx.csv
+load  STM32H743VGTx
+csv pinout pinsrc/STM32H743VGTx.csv
+load  STM32H743VIHx
+csv pinout pinsrc/STM32H743VIHx.csv
+load  STM32H743VITx
+csv pinout pinsrc/STM32H743VITx.csv
+load  STM32H743XGHx
+csv pinout pinsrc/STM32H743XGHx.csv
+load  STM32H743XIHx
+csv pinout pinsrc/STM32H743XIHx.csv
+load  STM32H743ZGTx
+csv pinout pinsrc/STM32H743ZGTx.csv
+load  STM32H743ZITx
+csv pinout pinsrc/STM32H743ZITx.csv
+load  STM32H745BGTx
+csv pinout pinsrc/STM32H745BGTx.csv
+load  STM32H745BITx
+csv pinout pinsrc/STM32H745BITx.csv
+load  STM32H745IGKx
+csv pinout pinsrc/STM32H745IGKx.csv
+load  STM32H745IGTx
+csv pinout pinsrc/STM32H745IGTx.csv
+load  STM32H745IIKx
+csv pinout pinsrc/STM32H745IIKx.csv
+load  STM32H745IITx
+csv pinout pinsrc/STM32H745IITx.csv
+load  STM32H745XGHx
+csv pinout pinsrc/STM32H745XGHx.csv
+load  STM32H745XIHx
+csv pinout pinsrc/STM32H745XIHx.csv
+load  STM32H745ZGTx
+csv pinout pinsrc/STM32H745ZGTx.csv
+load  STM32H745ZITx
+csv pinout pinsrc/STM32H745ZITx.csv
+load  STM32H747AGIx
+csv pinout pinsrc/STM32H747AGIx.csv
+load  STM32H747AIIx
+csv pinout pinsrc/STM32H747AIIx.csv
+load  STM32H747BGTx
+csv pinout pinsrc/STM32H747BGTx.csv
+load  STM32H747BITx
+csv pinout pinsrc/STM32H747BITx.csv
+load  STM32H747IGTx
+csv pinout pinsrc/STM32H747IGTx.csv
+load  STM32H747IITx
+csv pinout pinsrc/STM32H747IITx.csv
+load  STM32H747XGHx
+csv pinout pinsrc/STM32H747XGHx.csv
+load  STM32H747XIHx
+csv pinout pinsrc/STM32H747XIHx.csv
+load  STM32H750IBKx
+csv pinout pinsrc/STM32H750IBKx.csv
+load  STM32H750IBTx
+csv pinout pinsrc/STM32H750IBTx.csv
+load  STM32H750VBTx
+csv pinout pinsrc/STM32H750VBTx.csv
+load  STM32H750XBHx
+csv pinout pinsrc/STM32H750XBHx.csv
+load  STM32H750ZBTx
+csv pinout pinsrc/STM32H750ZBTx.csv
+load  STM32H753AIIx
+csv pinout pinsrc/STM32H753AIIx.csv
+load  STM32H753BITx
+csv pinout pinsrc/STM32H753BITx.csv
+load  STM32H753IIKx
+csv pinout pinsrc/STM32H753IIKx.csv
+load  STM32H753IITx
+csv pinout pinsrc/STM32H753IITx.csv
+load  STM32H753VIHx
+csv pinout pinsrc/STM32H753VIHx.csv
+load  STM32H753VITx
+csv pinout pinsrc/STM32H753VITx.csv
+load  STM32H753XIHx
+csv pinout pinsrc/STM32H753XIHx.csv
+load  STM32H753ZITx
+csv pinout pinsrc/STM32H753ZITx.csv
+load  STM32H755BITx
+csv pinout pinsrc/STM32H755BITx.csv
+load  STM32H755XIHx
+csv pinout pinsrc/STM32H755XIHx.csv
+load  STM32H757AIIx
+csv pinout pinsrc/STM32H757AIIx.csv
+load  STM32H757BITx
+csv pinout pinsrc/STM32H757BITx.csv
+load  STM32H757IITx
+csv pinout pinsrc/STM32H757IITx.csv
+load  STM32H757XIHx
+csv pinout pinsrc/STM32H757XIHx.csv
+load  STM32L010C6Tx
+csv pinout pinsrc/STM32L010C6Tx.csv
+load  STM32L010F4Px
+csv pinout pinsrc/STM32L010F4Px.csv
+load  STM32L010K4Tx
+csv pinout pinsrc/STM32L010K4Tx.csv
+load  STM32L010K8Tx
+csv pinout pinsrc/STM32L010K8Tx.csv
+load  STM32L010R8Tx
+csv pinout pinsrc/STM32L010R8Tx.csv
+load  STM32L010RBTx
+csv pinout pinsrc/STM32L010RBTx.csv
+load  STM32L011D3Px
+csv pinout pinsrc/STM32L011D3Px.csv
+load  STM32L011D4Px
+csv pinout pinsrc/STM32L011D4Px.csv
+load  STM32L011E3Yx
+csv pinout pinsrc/STM32L011E3Yx.csv
+load  STM32L011E4Yx
+csv pinout pinsrc/STM32L011E4Yx.csv
+load  STM32L011F3Px
+csv pinout pinsrc/STM32L011F3Px.csv
+load  STM32L011F3Ux
+csv pinout pinsrc/STM32L011F3Ux.csv
+load  STM32L011F4Px
+csv pinout pinsrc/STM32L011F4Px.csv
+load  STM32L011F4Ux
+csv pinout pinsrc/STM32L011F4Ux.csv
+load  STM32L011G3Ux
+csv pinout pinsrc/STM32L011G3Ux.csv
+load  STM32L011G4Ux
+csv pinout pinsrc/STM32L011G4Ux.csv
+load  STM32L011K3Ux
+csv pinout pinsrc/STM32L011K3Ux.csv
+load  STM32L011K4Tx
+csv pinout pinsrc/STM32L011K4Tx.csv
+load  STM32L011K4Ux
+csv pinout pinsrc/STM32L011K4Ux.csv
+load  STM32L021D4Px
+csv pinout pinsrc/STM32L021D4Px.csv
+load  STM32L021F4Ux
+csv pinout pinsrc/STM32L021F4Ux.csv
+load  STM32L021G4Ux
+csv pinout pinsrc/STM32L021G4Ux.csv
+load  STM32L021K4Tx
+csv pinout pinsrc/STM32L021K4Tx.csv
+load  STM32L031C6Tx
+csv pinout pinsrc/STM32L031C6Tx.csv
+load  STM32L031C6Ux
+csv pinout pinsrc/STM32L031C6Ux.csv
+load  STM32L031E4Yx
+csv pinout pinsrc/STM32L031E4Yx.csv
+load  STM32L031E6Yx
+csv pinout pinsrc/STM32L031E6Yx.csv
+load  STM32L031F4Px
+csv pinout pinsrc/STM32L031F4Px.csv
+load  STM32L031F6Px
+csv pinout pinsrc/STM32L031F6Px.csv
+load  STM32L031G4Ux
+csv pinout pinsrc/STM32L031G4Ux.csv
+load  STM32L031G6Ux
+csv pinout pinsrc/STM32L031G6Ux.csv
+load  STM32L031G6UxS
+csv pinout pinsrc/STM32L031G6UxS.csv
+load  STM32L031K4Ux
+csv pinout pinsrc/STM32L031K4Ux.csv
+load  STM32L031K6Tx
+csv pinout pinsrc/STM32L031K6Tx.csv
+load  STM32L031K6Ux
+csv pinout pinsrc/STM32L031K6Ux.csv
+load  STM32L041E6Yx
+csv pinout pinsrc/STM32L041E6Yx.csv
+load  STM32L041F6Px
+csv pinout pinsrc/STM32L041F6Px.csv
+load  STM32L041G6Ux
+csv pinout pinsrc/STM32L041G6Ux.csv
+load  STM32L041G6UxS
+csv pinout pinsrc/STM32L041G6UxS.csv
+load  STM32L041K6Tx
+csv pinout pinsrc/STM32L041K6Tx.csv
+load  STM32L041K6Ux
+csv pinout pinsrc/STM32L041K6Ux.csv
+load  STM32L051C8Tx
+csv pinout pinsrc/STM32L051C8Tx.csv
+load  STM32L051C8Ux
+csv pinout pinsrc/STM32L051C8Ux.csv
+load  STM32L051K6Tx
+csv pinout pinsrc/STM32L051K6Tx.csv
+load  STM32L051K6Ux
+csv pinout pinsrc/STM32L051K6Ux.csv
+load  STM32L051K8Tx
+csv pinout pinsrc/STM32L051K8Tx.csv
+load  STM32L051K8Ux
+csv pinout pinsrc/STM32L051K8Ux.csv
+load  STM32L051R6Hx
+csv pinout pinsrc/STM32L051R6Hx.csv
+load  STM32L051R6Tx
+csv pinout pinsrc/STM32L051R6Tx.csv
+load  STM32L051R8Hx
+csv pinout pinsrc/STM32L051R8Hx.csv
+load  STM32L051R8Tx
+csv pinout pinsrc/STM32L051R8Tx.csv
+load  STM32L051T6Yx
+csv pinout pinsrc/STM32L051T6Yx.csv
+load  STM32L051T8Yx
+csv pinout pinsrc/STM32L051T8Yx.csv
+load  STM32L052C8Tx
+csv pinout pinsrc/STM32L052C8Tx.csv
+load  STM32L052C8Ux
+csv pinout pinsrc/STM32L052C8Ux.csv
+load  STM32L052K6Tx
+csv pinout pinsrc/STM32L052K6Tx.csv
+load  STM32L052K6Ux
+csv pinout pinsrc/STM32L052K6Ux.csv
+load  STM32L052K8Tx
+csv pinout pinsrc/STM32L052K8Tx.csv
+load  STM32L052K8Ux
+csv pinout pinsrc/STM32L052K8Ux.csv
+load  STM32L052R6Hx
+csv pinout pinsrc/STM32L052R6Hx.csv
+load  STM32L052R6Tx
+csv pinout pinsrc/STM32L052R6Tx.csv
+load  STM32L052R8Hx
+csv pinout pinsrc/STM32L052R8Hx.csv
+load  STM32L052R8Tx
+csv pinout pinsrc/STM32L052R8Tx.csv
+load  STM32L052T6Yx
+csv pinout pinsrc/STM32L052T6Yx.csv
+load  STM32L052T8Fx
+csv pinout pinsrc/STM32L052T8Fx.csv
+load  STM32L052T8Yx
+csv pinout pinsrc/STM32L052T8Yx.csv
+load  STM32L053C8Tx
+csv pinout pinsrc/STM32L053C8Tx.csv
+load  STM32L053C8Ux
+csv pinout pinsrc/STM32L053C8Ux.csv
+load  STM32L053R6Hx
+csv pinout pinsrc/STM32L053R6Hx.csv
+load  STM32L053R6Tx
+csv pinout pinsrc/STM32L053R6Tx.csv
+load  STM32L053R8Hx
+csv pinout pinsrc/STM32L053R8Hx.csv
+load  STM32L053R8Tx
+csv pinout pinsrc/STM32L053R8Tx.csv
+load  STM32L062K8Tx
+csv pinout pinsrc/STM32L062K8Tx.csv
+load  STM32L062K8Ux
+csv pinout pinsrc/STM32L062K8Ux.csv
+load  STM32L063C8Tx
+csv pinout pinsrc/STM32L063C8Tx.csv
+load  STM32L063C8Ux
+csv pinout pinsrc/STM32L063C8Ux.csv
+load  STM32L063R8Tx
+csv pinout pinsrc/STM32L063R8Tx.csv
+load  STM32L071C8Tx
+csv pinout pinsrc/STM32L071C8Tx.csv
+load  STM32L071C8Ux
+csv pinout pinsrc/STM32L071C8Ux.csv
+load  STM32L071CBTx
+csv pinout pinsrc/STM32L071CBTx.csv
+load  STM32L071CBUx
+csv pinout pinsrc/STM32L071CBUx.csv
+load  STM32L071CZTx
+csv pinout pinsrc/STM32L071CZTx.csv
+load  STM32L071CZUx
+csv pinout pinsrc/STM32L071CZUx.csv
+load  STM32L071CZYx
+csv pinout pinsrc/STM32L071CZYx.csv
+load  STM32L071K8Ux
+csv pinout pinsrc/STM32L071K8Ux.csv
+load  STM32L071KBTx
+csv pinout pinsrc/STM32L071KBTx.csv
+load  STM32L071KBUx
+csv pinout pinsrc/STM32L071KBUx.csv
+load  STM32L071KZTx
+csv pinout pinsrc/STM32L071KZTx.csv
+load  STM32L071KZUx
+csv pinout pinsrc/STM32L071KZUx.csv
+load  STM32L071RBHx
+csv pinout pinsrc/STM32L071RBHx.csv
+load  STM32L071RBTx
+csv pinout pinsrc/STM32L071RBTx.csv
+load  STM32L071RZHx
+csv pinout pinsrc/STM32L071RZHx.csv
+load  STM32L071RZTx
+csv pinout pinsrc/STM32L071RZTx.csv
+load  STM32L071V8Tx
+csv pinout pinsrc/STM32L071V8Tx.csv
+load  STM32L071VBTx
+csv pinout pinsrc/STM32L071VBTx.csv
+load  STM32L071VZTx
+csv pinout pinsrc/STM32L071VZTx.csv
+load  STM32L072CBTx
+csv pinout pinsrc/STM32L072CBTx.csv
+load  STM32L072CBUx
+csv pinout pinsrc/STM32L072CBUx.csv
+load  STM32L072CBYx
+csv pinout pinsrc/STM32L072CBYx.csv
+load  STM32L072CZEx
+csv pinout pinsrc/STM32L072CZEx.csv
+load  STM32L072CZTx
+csv pinout pinsrc/STM32L072CZTx.csv
+load  STM32L072CZUx
+csv pinout pinsrc/STM32L072CZUx.csv
+load  STM32L072CZYx
+csv pinout pinsrc/STM32L072CZYx.csv
+load  STM32L072KBUx
+csv pinout pinsrc/STM32L072KBUx.csv
+load  STM32L072KZTx
+csv pinout pinsrc/STM32L072KZTx.csv
+load  STM32L072KZUx
+csv pinout pinsrc/STM32L072KZUx.csv
+load  STM32L072RBHx
+csv pinout pinsrc/STM32L072RBHx.csv
+load  STM32L072RBIx
+csv pinout pinsrc/STM32L072RBIx.csv
+load  STM32L072RBTx
+csv pinout pinsrc/STM32L072RBTx.csv
+load  STM32L072RZIx
+csv pinout pinsrc/STM32L072RZIx.csv
+load  STM32L072RZTx
+csv pinout pinsrc/STM32L072RZTx.csv
+load  STM32L072V8Ix
+csv pinout pinsrc/STM32L072V8Ix.csv
+load  STM32L072V8Tx
+csv pinout pinsrc/STM32L072V8Tx.csv
+load  STM32L072VBTx
+csv pinout pinsrc/STM32L072VBTx.csv
+load  STM32L072VZIx
+csv pinout pinsrc/STM32L072VZIx.csv
+load  STM32L072VZTx
+csv pinout pinsrc/STM32L072VZTx.csv
+load  STM32L073CBTx
+csv pinout pinsrc/STM32L073CBTx.csv
+load  STM32L073CBUx
+csv pinout pinsrc/STM32L073CBUx.csv
+load  STM32L073CZTx
+csv pinout pinsrc/STM32L073CZTx.csv
+load  STM32L073CZUx
+csv pinout pinsrc/STM32L073CZUx.csv
+load  STM32L073RBHx
+csv pinout pinsrc/STM32L073RBHx.csv
+load  STM32L073RBTx
+csv pinout pinsrc/STM32L073RBTx.csv
+load  STM32L073RZHx
+csv pinout pinsrc/STM32L073RZHx.csv
+load  STM32L073RZIx
+csv pinout pinsrc/STM32L073RZIx.csv
+load  STM32L073RZTx
+csv pinout pinsrc/STM32L073RZTx.csv
+load  STM32L073V8Tx
+csv pinout pinsrc/STM32L073V8Tx.csv
+load  STM32L073VBTx
+csv pinout pinsrc/STM32L073VBTx.csv
+load  STM32L073VZIx
+csv pinout pinsrc/STM32L073VZIx.csv
+load  STM32L073VZTx
+csv pinout pinsrc/STM32L073VZTx.csv
+load  STM32L081CBTx
+csv pinout pinsrc/STM32L081CBTx.csv
+load  STM32L081CZTx
+csv pinout pinsrc/STM32L081CZTx.csv
+load  STM32L081CZUx
+csv pinout pinsrc/STM32L081CZUx.csv
+load  STM32L081KZTx
+csv pinout pinsrc/STM32L081KZTx.csv
+load  STM32L081KZUx
+csv pinout pinsrc/STM32L081KZUx.csv
+load  STM32L082KZTx
+csv pinout pinsrc/STM32L082KZTx.csv
+load  STM32L082KZUx
+csv pinout pinsrc/STM32L082KZUx.csv
+load  STM32L083CBTx
+csv pinout pinsrc/STM32L083CBTx.csv
+load  STM32L083CZTx
+csv pinout pinsrc/STM32L083CZTx.csv
+load  STM32L083CZUx
+csv pinout pinsrc/STM32L083CZUx.csv
+load  STM32L083RBHx
+csv pinout pinsrc/STM32L083RBHx.csv
+load  STM32L083RZHx
+csv pinout pinsrc/STM32L083RZHx.csv
+load  STM32L083RZTx
+csv pinout pinsrc/STM32L083RZTx.csv
+load  STM32L083V8Tx
+csv pinout pinsrc/STM32L083V8Tx.csv
+load  STM32L083VBTx
+csv pinout pinsrc/STM32L083VBTx.csv
+load  STM32L083VZIx
+csv pinout pinsrc/STM32L083VZIx.csv
+load  STM32L083VZTx
+csv pinout pinsrc/STM32L083VZTx.csv
+load  STM32L100C6UxA
+csv pinout pinsrc/STM32L100C6UxA.csv
+load  STM32L100R8TxA
+csv pinout pinsrc/STM32L100R8TxA.csv
+load  STM32L100RBTxA
+csv pinout pinsrc/STM32L100RBTxA.csv
+load  STM32L100RCTx
+csv pinout pinsrc/STM32L100RCTx.csv
+load  STM32L151C6TxA
+csv pinout pinsrc/STM32L151C6TxA.csv
+load  STM32L151C6UxA
+csv pinout pinsrc/STM32L151C6UxA.csv
+load  STM32L151C8UxA
+csv pinout pinsrc/STM32L151C8UxA.csv
+load  STM32L151CBTxA
+csv pinout pinsrc/STM32L151CBTxA.csv
+load  STM32L151CBUxA
+csv pinout pinsrc/STM32L151CBUxA.csv
+load  STM32L151CCTx
+csv pinout pinsrc/STM32L151CCTx.csv
+load  STM32L151CCUx
+csv pinout pinsrc/STM32L151CCUx.csv
+load  STM32L151QCHx
+csv pinout pinsrc/STM32L151QCHx.csv
+load  STM32L151QDHx
+csv pinout pinsrc/STM32L151QDHx.csv
+load  STM32L151QEHx
+csv pinout pinsrc/STM32L151QEHx.csv
+load  STM32L151R6HxA
+csv pinout pinsrc/STM32L151R6HxA.csv
+load  STM32L151R6TxA
+csv pinout pinsrc/STM32L151R6TxA.csv
+load  STM32L151R8HxA
+csv pinout pinsrc/STM32L151R8HxA.csv
+load  STM32L151R8TxA
+csv pinout pinsrc/STM32L151R8TxA.csv
+load  STM32L151RBHxA
+csv pinout pinsrc/STM32L151RBHxA.csv
+load  STM32L151RBTxA
+csv pinout pinsrc/STM32L151RBTxA.csv
+load  STM32L151RCTx
+csv pinout pinsrc/STM32L151RCTx.csv
+load  STM32L151RCYx
+csv pinout pinsrc/STM32L151RCYx.csv
+load  STM32L151RDTx
+csv pinout pinsrc/STM32L151RDTx.csv
+load  STM32L151RDYx
+csv pinout pinsrc/STM32L151RDYx.csv
+load  STM32L151RETx
+csv pinout pinsrc/STM32L151RETx.csv
+load  STM32L151UCYx
+csv pinout pinsrc/STM32L151UCYx.csv
+load  STM32L151V8HxA
+csv pinout pinsrc/STM32L151V8HxA.csv
+load  STM32L151V8TxA
+csv pinout pinsrc/STM32L151V8TxA.csv
+load  STM32L151VBHxA
+csv pinout pinsrc/STM32L151VBHxA.csv
+load  STM32L151VBTxA
+csv pinout pinsrc/STM32L151VBTxA.csv
+load  STM32L151VCHx
+csv pinout pinsrc/STM32L151VCHx.csv
+load  STM32L151VCTx
+csv pinout pinsrc/STM32L151VCTx.csv
+load  STM32L151VDTx
+csv pinout pinsrc/STM32L151VDTx.csv
+load  STM32L151VDTxX
+csv pinout pinsrc/STM32L151VDTxX.csv
+load  STM32L151VDYxX
+csv pinout pinsrc/STM32L151VDYxX.csv
+load  STM32L151VETx
+csv pinout pinsrc/STM32L151VETx.csv
+load  STM32L151VEYx
+csv pinout pinsrc/STM32L151VEYx.csv
+load  STM32L151ZCTx
+csv pinout pinsrc/STM32L151ZCTx.csv
+load  STM32L151ZDTx
+csv pinout pinsrc/STM32L151ZDTx.csv
+load  STM32L151ZETx
+csv pinout pinsrc/STM32L151ZETx.csv
+load  STM32L152C6TxA
+csv pinout pinsrc/STM32L152C6TxA.csv
+load  STM32L152C6UxA
+csv pinout pinsrc/STM32L152C6UxA.csv
+load  STM32L152C8TxA
+csv pinout pinsrc/STM32L152C8TxA.csv
+load  STM32L152C8UxA
+csv pinout pinsrc/STM32L152C8UxA.csv
+load  STM32L152CBTxA
+csv pinout pinsrc/STM32L152CBTxA.csv
+load  STM32L152CBUxA
+csv pinout pinsrc/STM32L152CBUxA.csv
+load  STM32L152CCTx
+csv pinout pinsrc/STM32L152CCTx.csv
+load  STM32L152CCUx
+csv pinout pinsrc/STM32L152CCUx.csv
+load  STM32L152QCHx
+csv pinout pinsrc/STM32L152QCHx.csv
+load  STM32L152QDHx
+csv pinout pinsrc/STM32L152QDHx.csv
+load  STM32L152QEHx
+csv pinout pinsrc/STM32L152QEHx.csv
+load  STM32L152R6HxA
+csv pinout pinsrc/STM32L152R6HxA.csv
+load  STM32L152R6TxA
+csv pinout pinsrc/STM32L152R6TxA.csv
+load  STM32L152R8HxA
+csv pinout pinsrc/STM32L152R8HxA.csv
+load  STM32L152R8TxA
+csv pinout pinsrc/STM32L152R8TxA.csv
+load  STM32L152RBHxA
+csv pinout pinsrc/STM32L152RBHxA.csv
+load  STM32L152RBTxA
+csv pinout pinsrc/STM32L152RBTxA.csv
+load  STM32L152RCTx
+csv pinout pinsrc/STM32L152RCTx.csv
+load  STM32L152RDTx
+csv pinout pinsrc/STM32L152RDTx.csv
+load  STM32L152RDYx
+csv pinout pinsrc/STM32L152RDYx.csv
+load  STM32L152RETx
+csv pinout pinsrc/STM32L152RETx.csv
+load  STM32L152UCYx
+csv pinout pinsrc/STM32L152UCYx.csv
+load  STM32L152V8HxA
+csv pinout pinsrc/STM32L152V8HxA.csv
+load  STM32L152V8TxA
+csv pinout pinsrc/STM32L152V8TxA.csv
+load  STM32L152VBHxA
+csv pinout pinsrc/STM32L152VBHxA.csv
+load  STM32L152VBTxA
+csv pinout pinsrc/STM32L152VBTxA.csv
+load  STM32L152VCHx
+csv pinout pinsrc/STM32L152VCHx.csv
+load  STM32L152VCTx
+csv pinout pinsrc/STM32L152VCTx.csv
+load  STM32L152VDTx
+csv pinout pinsrc/STM32L152VDTx.csv
+load  STM32L152VDTxX
+csv pinout pinsrc/STM32L152VDTxX.csv
+load  STM32L152VETx
+csv pinout pinsrc/STM32L152VETx.csv
+load  STM32L152VEYx
+csv pinout pinsrc/STM32L152VEYx.csv
+load  STM32L152ZCTx
+csv pinout pinsrc/STM32L152ZCTx.csv
+load  STM32L152ZDTx
+csv pinout pinsrc/STM32L152ZDTx.csv
+load  STM32L152ZETx
+csv pinout pinsrc/STM32L152ZETx.csv
+load  STM32L162QCHx
+csv pinout pinsrc/STM32L162QCHx.csv
+load  STM32L162QDHx
+csv pinout pinsrc/STM32L162QDHx.csv
+load  STM32L162RCTx
+csv pinout pinsrc/STM32L162RCTx.csv
+load  STM32L162RDTx
+csv pinout pinsrc/STM32L162RDTx.csv
+load  STM32L162RDYx
+csv pinout pinsrc/STM32L162RDYx.csv
+load  STM32L162RETx
+csv pinout pinsrc/STM32L162RETx.csv
+load  STM32L162VCHx
+csv pinout pinsrc/STM32L162VCHx.csv
+load  STM32L162VCTx
+csv pinout pinsrc/STM32L162VCTx.csv
+load  STM32L162VDTx
+csv pinout pinsrc/STM32L162VDTx.csv
+load  STM32L162VETx
+csv pinout pinsrc/STM32L162VETx.csv
+load  STM32L162VEYx
+csv pinout pinsrc/STM32L162VEYx.csv
+load  STM32L162ZCTx
+csv pinout pinsrc/STM32L162ZCTx.csv
+load  STM32L162ZDTx
+csv pinout pinsrc/STM32L162ZDTx.csv
+load  STM32L162ZETx
+csv pinout pinsrc/STM32L162ZETx.csv
+load  STM32L412C8Tx
+csv pinout pinsrc/STM32L412C8Tx.csv
+load  STM32L412C8Ux
+csv pinout pinsrc/STM32L412C8Ux.csv
+load  STM32L412CBTx
+csv pinout pinsrc/STM32L412CBTx.csv
+load  STM32L412CBUx
+csv pinout pinsrc/STM32L412CBUx.csv
+load  STM32L412K8Tx
+csv pinout pinsrc/STM32L412K8Tx.csv
+load  STM32L412K8Ux
+csv pinout pinsrc/STM32L412K8Ux.csv
+load  STM32L412KBTx
+csv pinout pinsrc/STM32L412KBTx.csv
+load  STM32L412KBUx
+csv pinout pinsrc/STM32L412KBUx.csv
+load  STM32L412R8Ix
+csv pinout pinsrc/STM32L412R8Ix.csv
+load  STM32L412R8Tx
+csv pinout pinsrc/STM32L412R8Tx.csv
+load  STM32L412TBYx
+csv pinout pinsrc/STM32L412TBYx.csv
+load  STM32L412TBYxP
+csv pinout pinsrc/STM32L412TBYxP.csv
+load  STM32L422CBTx
+csv pinout pinsrc/STM32L422CBTx.csv
+load  STM32L422CBUx
+csv pinout pinsrc/STM32L422CBUx.csv
+load  STM32L422KBTx
+csv pinout pinsrc/STM32L422KBTx.csv
+load  STM32L422KBUx
+csv pinout pinsrc/STM32L422KBUx.csv
+load  STM32L422RBIx
+csv pinout pinsrc/STM32L422RBIx.csv
+load  STM32L422RBTx
+csv pinout pinsrc/STM32L422RBTx.csv
+load  STM32L422TBYx
+csv pinout pinsrc/STM32L422TBYx.csv
+load  STM32L431CBTx
+csv pinout pinsrc/STM32L431CBTx.csv
+load  STM32L431CBUx
+csv pinout pinsrc/STM32L431CBUx.csv
+load  STM32L431CBYx
+csv pinout pinsrc/STM32L431CBYx.csv
+load  STM32L431CCTx
+csv pinout pinsrc/STM32L431CCTx.csv
+load  STM32L431CCUx
+csv pinout pinsrc/STM32L431CCUx.csv
+load  STM32L431CCYx
+csv pinout pinsrc/STM32L431CCYx.csv
+load  STM32L431KBUx
+csv pinout pinsrc/STM32L431KBUx.csv
+load  STM32L431KCUx
+csv pinout pinsrc/STM32L431KCUx.csv
+load  STM32L431RBIx
+csv pinout pinsrc/STM32L431RBIx.csv
+load  STM32L431RBTx
+csv pinout pinsrc/STM32L431RBTx.csv
+load  STM32L431RBYx
+csv pinout pinsrc/STM32L431RBYx.csv
+load  STM32L431RCIx
+csv pinout pinsrc/STM32L431RCIx.csv
+load  STM32L431RCTx
+csv pinout pinsrc/STM32L431RCTx.csv
+load  STM32L431RCYx
+csv pinout pinsrc/STM32L431RCYx.csv
+load  STM32L431VCIx
+csv pinout pinsrc/STM32L431VCIx.csv
+load  STM32L431VCTx
+csv pinout pinsrc/STM32L431VCTx.csv
+load  STM32L432KBUx
+csv pinout pinsrc/STM32L432KBUx.csv
+load  STM32L432KCUx
+csv pinout pinsrc/STM32L432KCUx.csv
+load  STM32L433CBTx
+csv pinout pinsrc/STM32L433CBTx.csv
+load  STM32L433CBUx
+csv pinout pinsrc/STM32L433CBUx.csv
+load  STM32L433CBYx
+csv pinout pinsrc/STM32L433CBYx.csv
+load  STM32L433CCTx
+csv pinout pinsrc/STM32L433CCTx.csv
+load  STM32L433CCUx
+csv pinout pinsrc/STM32L433CCUx.csv
+load  STM32L433CCYx
+csv pinout pinsrc/STM32L433CCYx.csv
+load  STM32L433RBIx
+csv pinout pinsrc/STM32L433RBIx.csv
+load  STM32L433RBTx
+csv pinout pinsrc/STM32L433RBTx.csv
+load  STM32L433RBYx
+csv pinout pinsrc/STM32L433RBYx.csv
+load  STM32L433RCIx
+csv pinout pinsrc/STM32L433RCIx.csv
+load  STM32L433RCTx
+csv pinout pinsrc/STM32L433RCTx.csv
+load  STM32L433RCTxP
+csv pinout pinsrc/STM32L433RCTxP.csv
+load  STM32L433RCYx
+csv pinout pinsrc/STM32L433RCYx.csv
+load  STM32L433VCIx
+csv pinout pinsrc/STM32L433VCIx.csv
+load  STM32L433VCTx
+csv pinout pinsrc/STM32L433VCTx.csv
+load  STM32L442KCUx
+csv pinout pinsrc/STM32L442KCUx.csv
+load  STM32L443CCTx
+csv pinout pinsrc/STM32L443CCTx.csv
+load  STM32L443CCUx
+csv pinout pinsrc/STM32L443CCUx.csv
+load  STM32L443CCYx
+csv pinout pinsrc/STM32L443CCYx.csv
+load  STM32L443RCIx
+csv pinout pinsrc/STM32L443RCIx.csv
+load  STM32L443RCTx
+csv pinout pinsrc/STM32L443RCTx.csv
+load  STM32L443RCYx
+csv pinout pinsrc/STM32L443RCYx.csv
+load  STM32L443VCIx
+csv pinout pinsrc/STM32L443VCIx.csv
+load  STM32L443VCTx
+csv pinout pinsrc/STM32L443VCTx.csv
+load  STM32L451CCUx
+csv pinout pinsrc/STM32L451CCUx.csv
+load  STM32L451CEUx
+csv pinout pinsrc/STM32L451CEUx.csv
+load  STM32L451RCIx
+csv pinout pinsrc/STM32L451RCIx.csv
+load  STM32L451RCTx
+csv pinout pinsrc/STM32L451RCTx.csv
+load  STM32L451REIx
+csv pinout pinsrc/STM32L451REIx.csv
+load  STM32L451RETx
+csv pinout pinsrc/STM32L451RETx.csv
+load  STM32L451REYx
+csv pinout pinsrc/STM32L451REYx.csv
+load  STM32L451VCIx
+csv pinout pinsrc/STM32L451VCIx.csv
+load  STM32L451VCTx
+csv pinout pinsrc/STM32L451VCTx.csv
+load  STM32L451VEIx
+csv pinout pinsrc/STM32L451VEIx.csv
+load  STM32L451VETx
+csv pinout pinsrc/STM32L451VETx.csv
+load  STM32L452CCUx
+csv pinout pinsrc/STM32L452CCUx.csv
+load  STM32L452CEUx
+csv pinout pinsrc/STM32L452CEUx.csv
+load  STM32L452RCIx
+csv pinout pinsrc/STM32L452RCIx.csv
+load  STM32L452RCTx
+csv pinout pinsrc/STM32L452RCTx.csv
+load  STM32L452VCIx
+csv pinout pinsrc/STM32L452VCIx.csv
+load  STM32L452VCTx
+csv pinout pinsrc/STM32L452VCTx.csv
+load  STM32L452VEIx
+csv pinout pinsrc/STM32L452VEIx.csv
+load  STM32L452VETx
+csv pinout pinsrc/STM32L452VETx.csv
+load  STM32L462REIx
+csv pinout pinsrc/STM32L462REIx.csv
+load  STM32L462RETx
+csv pinout pinsrc/STM32L462RETx.csv
+load  STM32L462REYx
+csv pinout pinsrc/STM32L462REYx.csv
+load  STM32L462VEIx
+csv pinout pinsrc/STM32L462VEIx.csv
+load  STM32L462VETx
+csv pinout pinsrc/STM32L462VETx.csv
+load  STM32L471QEIx
+csv pinout pinsrc/STM32L471QEIx.csv
+load  STM32L471QGIx
+csv pinout pinsrc/STM32L471QGIx.csv
+load  STM32L471RETx
+csv pinout pinsrc/STM32L471RETx.csv
+load  STM32L471RGTx
+csv pinout pinsrc/STM32L471RGTx.csv
+load  STM32L471VETx
+csv pinout pinsrc/STM32L471VETx.csv
+load  STM32L471VGTx
+csv pinout pinsrc/STM32L471VGTx.csv
+load  STM32L471ZEJx
+csv pinout pinsrc/STM32L471ZEJx.csv
+load  STM32L471ZETx
+csv pinout pinsrc/STM32L471ZETx.csv
+load  STM32L471ZGJx
+csv pinout pinsrc/STM32L471ZGJx.csv
+load  STM32L471ZGTx
+csv pinout pinsrc/STM32L471ZGTx.csv
+load  STM32L475RCTx
+csv pinout pinsrc/STM32L475RCTx.csv
+load  STM32L475RETx
+csv pinout pinsrc/STM32L475RETx.csv
+load  STM32L475RGTx
+csv pinout pinsrc/STM32L475RGTx.csv
+load  STM32L475VCTx
+csv pinout pinsrc/STM32L475VCTx.csv
+load  STM32L475VETx
+csv pinout pinsrc/STM32L475VETx.csv
+load  STM32L475VGTx
+csv pinout pinsrc/STM32L475VGTx.csv
+load  STM32L476JEYx
+csv pinout pinsrc/STM32L476JEYx.csv
+load  STM32L476MEYx
+csv pinout pinsrc/STM32L476MEYx.csv
+load  STM32L476MGYx
+csv pinout pinsrc/STM32L476MGYx.csv
+load  STM32L476QEIx
+csv pinout pinsrc/STM32L476QEIx.csv
+load  STM32L476QGIx
+csv pinout pinsrc/STM32L476QGIx.csv
+load  STM32L476RCTx
+csv pinout pinsrc/STM32L476RCTx.csv
+load  STM32L476RETx
+csv pinout pinsrc/STM32L476RETx.csv
+load  STM32L476RGTx
+csv pinout pinsrc/STM32L476RGTx.csv
+load  STM32L476VCTx
+csv pinout pinsrc/STM32L476VCTx.csv
+load  STM32L476VETx
+csv pinout pinsrc/STM32L476VETx.csv
+load  STM32L476VGTx
+csv pinout pinsrc/STM32L476VGTx.csv
+load  STM32L476ZETx
+csv pinout pinsrc/STM32L476ZETx.csv
+load  STM32L476ZGJx
+csv pinout pinsrc/STM32L476ZGJx.csv
+load  STM32L476ZGTx
+csv pinout pinsrc/STM32L476ZGTx.csv
+load  STM32L486JGYx
+csv pinout pinsrc/STM32L486JGYx.csv
+load  STM32L486QGIx
+csv pinout pinsrc/STM32L486QGIx.csv
+load  STM32L486RGTx
+csv pinout pinsrc/STM32L486RGTx.csv
+load  STM32L486VGTx
+csv pinout pinsrc/STM32L486VGTx.csv
+load  STM32L486ZGTx
+csv pinout pinsrc/STM32L486ZGTx.csv
+load  STM32L496AEIx
+csv pinout pinsrc/STM32L496AEIx.csv
+load  STM32L496AGIx
+csv pinout pinsrc/STM32L496AGIx.csv
+load  STM32L496AGIxP
+csv pinout pinsrc/STM32L496AGIxP.csv
+load  STM32L496QEIx
+csv pinout pinsrc/STM32L496QEIx.csv
+load  STM32L496QGIx
+csv pinout pinsrc/STM32L496QGIx.csv
+load  STM32L496QGIxP
+csv pinout pinsrc/STM32L496QGIxP.csv
+load  STM32L496RETx
+csv pinout pinsrc/STM32L496RETx.csv
+load  STM32L496RGTx
+csv pinout pinsrc/STM32L496RGTx.csv
+load  STM32L496RGTxP
+csv pinout pinsrc/STM32L496RGTxP.csv
+load  STM32L496VETx
+csv pinout pinsrc/STM32L496VETx.csv
+load  STM32L496VGTx
+csv pinout pinsrc/STM32L496VGTx.csv
+load  STM32L496VGYx
+csv pinout pinsrc/STM32L496VGYx.csv
+load  STM32L496VGYxP
+csv pinout pinsrc/STM32L496VGYxP.csv
+load  STM32L496ZETx
+csv pinout pinsrc/STM32L496ZETx.csv
+load  STM32L496ZGTx
+csv pinout pinsrc/STM32L496ZGTx.csv
+load  STM32L496ZGTxP
+csv pinout pinsrc/STM32L496ZGTxP.csv
+load  STM32L4A6AGIx
+csv pinout pinsrc/STM32L4A6AGIx.csv
+load  STM32L4A6AGIxP
+csv pinout pinsrc/STM32L4A6AGIxP.csv
+load  STM32L4A6QGIx
+csv pinout pinsrc/STM32L4A6QGIx.csv
+load  STM32L4A6QGIxP
+csv pinout pinsrc/STM32L4A6QGIxP.csv
+load  STM32L4A6RGTx
+csv pinout pinsrc/STM32L4A6RGTx.csv
+load  STM32L4A6RGTxP
+csv pinout pinsrc/STM32L4A6RGTxP.csv
+load  STM32L4A6VGTx
+csv pinout pinsrc/STM32L4A6VGTx.csv
+load  STM32L4A6VGYx
+csv pinout pinsrc/STM32L4A6VGYx.csv
+load  STM32L4A6VGYxP
+csv pinout pinsrc/STM32L4A6VGYxP.csv
+load  STM32L4A6ZGTx
+csv pinout pinsrc/STM32L4A6ZGTx.csv
+load  STM32L4A6ZGTxP
+csv pinout pinsrc/STM32L4A6ZGTxP.csv
+load  STM32L4R5AGIx
+csv pinout pinsrc/STM32L4R5AGIx.csv
+load  STM32L4R5AIIx
+csv pinout pinsrc/STM32L4R5AIIx.csv
+load  STM32L4R5QGIx
+csv pinout pinsrc/STM32L4R5QGIx.csv
+load  STM32L4R5QIIx
+csv pinout pinsrc/STM32L4R5QIIx.csv
+load  STM32L4R5VGTx
+csv pinout pinsrc/STM32L4R5VGTx.csv
+load  STM32L4R5VITx
+csv pinout pinsrc/STM32L4R5VITx.csv
+load  STM32L4R5ZGTx
+csv pinout pinsrc/STM32L4R5ZGTx.csv
+load  STM32L4R5ZGYx
+csv pinout pinsrc/STM32L4R5ZGYx.csv
+load  STM32L4R5ZITx
+csv pinout pinsrc/STM32L4R5ZITx.csv
+load  STM32L4R5ZITxP
+csv pinout pinsrc/STM32L4R5ZITxP.csv
+load  STM32L4R5ZIYx
+csv pinout pinsrc/STM32L4R5ZIYx.csv
+load  STM32L4R7AIIx
+csv pinout pinsrc/STM32L4R7AIIx.csv
+load  STM32L4R7VITx
+csv pinout pinsrc/STM32L4R7VITx.csv
+load  STM32L4R7ZITx
+csv pinout pinsrc/STM32L4R7ZITx.csv
+load  STM32L4R9AGIx
+csv pinout pinsrc/STM32L4R9AGIx.csv
+load  STM32L4R9AIIx
+csv pinout pinsrc/STM32L4R9AIIx.csv
+load  STM32L4R9VGTx
+csv pinout pinsrc/STM32L4R9VGTx.csv
+load  STM32L4R9VITx
+csv pinout pinsrc/STM32L4R9VITx.csv
+load  STM32L4R9ZGJx
+csv pinout pinsrc/STM32L4R9ZGJx.csv
+load  STM32L4R9ZGTx
+csv pinout pinsrc/STM32L4R9ZGTx.csv
+load  STM32L4R9ZGYx
+csv pinout pinsrc/STM32L4R9ZGYx.csv
+load  STM32L4R9ZIJx
+csv pinout pinsrc/STM32L4R9ZIJx.csv
+load  STM32L4R9ZITx
+csv pinout pinsrc/STM32L4R9ZITx.csv
+load  STM32L4R9ZIYx
+csv pinout pinsrc/STM32L4R9ZIYx.csv
+load  STM32L4S5AIIx
+csv pinout pinsrc/STM32L4S5AIIx.csv
+load  STM32L4S5QIIx
+csv pinout pinsrc/STM32L4S5QIIx.csv
+load  STM32L4S5VITx
+csv pinout pinsrc/STM32L4S5VITx.csv
+load  STM32L4S5ZITx
+csv pinout pinsrc/STM32L4S5ZITx.csv
+load  STM32L4S5ZIYx
+csv pinout pinsrc/STM32L4S5ZIYx.csv
+load  STM32L4S7AIIx
+csv pinout pinsrc/STM32L4S7AIIx.csv
+load  STM32L4S7VITx
+csv pinout pinsrc/STM32L4S7VITx.csv
+load  STM32L4S7ZITx
+csv pinout pinsrc/STM32L4S7ZITx.csv
+load  STM32L4S9AIIx
+csv pinout pinsrc/STM32L4S9AIIx.csv
+load  STM32L4S9VITx
+csv pinout pinsrc/STM32L4S9VITx.csv
+load  STM32L4S9ZIJx
+csv pinout pinsrc/STM32L4S9ZIJx.csv
+load  STM32L4S9ZITx
+csv pinout pinsrc/STM32L4S9ZITx.csv
+load  STM32L4S9ZIYx
+csv pinout pinsrc/STM32L4S9ZIYx.csv
+load  STM32L552CCTx
+csv pinout pinsrc/STM32L552CCTx.csv
+load  STM32L552CCUx
+csv pinout pinsrc/STM32L552CCUx.csv
+load  STM32L552CETx
+csv pinout pinsrc/STM32L552CETx.csv
+load  STM32L552CETxP
+csv pinout pinsrc/STM32L552CETxP.csv
+load  STM32L552CEUx
+csv pinout pinsrc/STM32L552CEUx.csv
+load  STM32L552CEUxP
+csv pinout pinsrc/STM32L552CEUxP.csv
+load  STM32L552MEYx
+csv pinout pinsrc/STM32L552MEYx.csv
+load  STM32L552MEYxP
+csv pinout pinsrc/STM32L552MEYxP.csv
+load  STM32L552MEYxQ
+csv pinout pinsrc/STM32L552MEYxQ.csv
+load  STM32L552QCIx
+csv pinout pinsrc/STM32L552QCIx.csv
+load  STM32L552QCIxQ
+csv pinout pinsrc/STM32L552QCIxQ.csv
+load  STM32L552QEIx
+csv pinout pinsrc/STM32L552QEIx.csv
+load  STM32L552QEIxP
+csv pinout pinsrc/STM32L552QEIxP.csv
+load  STM32L552QEIxQ
+csv pinout pinsrc/STM32L552QEIxQ.csv
+load  STM32L552RCTx
+csv pinout pinsrc/STM32L552RCTx.csv
+load  STM32L552VCTx
+csv pinout pinsrc/STM32L552VCTx.csv
+load  STM32L552VCTxQ
+csv pinout pinsrc/STM32L552VCTxQ.csv
+load  STM32L552VETx
+csv pinout pinsrc/STM32L552VETx.csv
+load  STM32L552VETxQ
+csv pinout pinsrc/STM32L552VETxQ.csv
+load  STM32L552ZCTxQ
+csv pinout pinsrc/STM32L552ZCTxQ.csv
+load  STM32L552ZETx
+csv pinout pinsrc/STM32L552ZETx.csv
+load  STM32L552ZETxQ
+csv pinout pinsrc/STM32L552ZETxQ.csv
+load  STM32L562CETx
+csv pinout pinsrc/STM32L562CETx.csv
+load  STM32L562CETxP
+csv pinout pinsrc/STM32L562CETxP.csv
+load  STM32L562CEUx
+csv pinout pinsrc/STM32L562CEUx.csv
+load  STM32L562CEUxP
+csv pinout pinsrc/STM32L562CEUxP.csv
+load  STM32L562MEYx
+csv pinout pinsrc/STM32L562MEYx.csv
+load  STM32L562MEYxP
+csv pinout pinsrc/STM32L562MEYxP.csv
+load  STM32L562MEYxQ
+csv pinout pinsrc/STM32L562MEYxQ.csv
+load  STM32L562QEIx
+csv pinout pinsrc/STM32L562QEIx.csv
+load  STM32L562QEIxP
+csv pinout pinsrc/STM32L562QEIxP.csv
+load  STM32L562QEIxQ
+csv pinout pinsrc/STM32L562QEIxQ.csv
+load  STM32L562RETx
+csv pinout pinsrc/STM32L562RETx.csv
+load  STM32L562RETxP
+csv pinout pinsrc/STM32L562RETxP.csv
+load  STM32L562VETx
+csv pinout pinsrc/STM32L562VETx.csv
+load  STM32L562VETxQ
+csv pinout pinsrc/STM32L562VETxQ.csv
+load  STM32L562ZETx
+csv pinout pinsrc/STM32L562ZETx.csv
+load  STM32L562ZETxQ
+csv pinout pinsrc/STM32L562ZETxQ.csv
+load  STM32MP151AAAx
+csv pinout pinsrc/STM32MP151AAAx.csv
+load  STM32MP151AABx
+csv pinout pinsrc/STM32MP151AABx.csv
+load  STM32MP151AACx
+csv pinout pinsrc/STM32MP151AACx.csv
+load  STM32MP151AADx
+csv pinout pinsrc/STM32MP151AADx.csv
+load  STM32MP151CAAx
+csv pinout pinsrc/STM32MP151CAAx.csv
+load  STM32MP151CABx
+csv pinout pinsrc/STM32MP151CABx.csv
+load  STM32MP151CACx
+csv pinout pinsrc/STM32MP151CACx.csv
+load  STM32MP151CADx
+csv pinout pinsrc/STM32MP151CADx.csv
+load  STM32MP153AAAx
+csv pinout pinsrc/STM32MP153AAAx.csv
+load  STM32MP153AABx
+csv pinout pinsrc/STM32MP153AABx.csv
+load  STM32MP153AACx
+csv pinout pinsrc/STM32MP153AACx.csv
+load  STM32MP153AADx
+csv pinout pinsrc/STM32MP153AADx.csv
+load  STM32MP153CAAx
+csv pinout pinsrc/STM32MP153CAAx.csv
+load  STM32MP153CABx
+csv pinout pinsrc/STM32MP153CABx.csv
+load  STM32MP153CACx
+csv pinout pinsrc/STM32MP153CACx.csv
+load  STM32MP153CADx
+csv pinout pinsrc/STM32MP153CADx.csv
+load  STM32MP157AAAx
+csv pinout pinsrc/STM32MP157AAAx.csv
+load  STM32MP157AABx
+csv pinout pinsrc/STM32MP157AABx.csv
+load  STM32MP157AACx
+csv pinout pinsrc/STM32MP157AACx.csv
+load  STM32MP157AADx
+csv pinout pinsrc/STM32MP157AADx.csv
+load  STM32MP157CAAx
+csv pinout pinsrc/STM32MP157CAAx.csv
+load  STM32MP157CABx
+csv pinout pinsrc/STM32MP157CABx.csv
+load  STM32MP157CACx
+csv pinout pinsrc/STM32MP157CACx.csv
+load  STM32MP157CADx
+csv pinout pinsrc/STM32MP157CADx.csv
+load  STM32WB55CCUx
+csv pinout pinsrc/STM32WB55CCUx.csv
+load  STM32WB55CEUx
+csv pinout pinsrc/STM32WB55CEUx.csv
+load  STM32WB55CGUx
+csv pinout pinsrc/STM32WB55CGUx.csv
+load  STM32WB55RCVx
+csv pinout pinsrc/STM32WB55RCVx.csv
+load  STM32WB55REVx
+csv pinout pinsrc/STM32WB55REVx.csv
+load  STM32WB55RGVx
+csv pinout pinsrc/STM32WB55RGVx.csv
+load  STM32WB55VCQx
+csv pinout pinsrc/STM32WB55VCQx.csv
+load  STM32WB55VCYx
+csv pinout pinsrc/STM32WB55VCYx.csv
+load  STM32WB55VEQx
+csv pinout pinsrc/STM32WB55VEQx.csv
+load  STM32WB55VEYx
+csv pinout pinsrc/STM32WB55VEYx.csv
+load  STM32WB55VGQx
+csv pinout pinsrc/STM32WB55VGQx.csv
+load  STM32WB55VGYx
+csv pinout pinsrc/STM32WB55VGYx.csv
+load  STM32WLE5J8Ix
+csv pinout pinsrc/STM32WLE5J8Ix.csv
+load  STM32WLE5JBIx
+csv pinout pinsrc/STM32WLE5JBIx.csv
+load  STM32WLE5JCIx
+csv pinout pinsrc/STM32WLE5JCIx.csv
+exit
