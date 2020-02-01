@@ -1,3 +1,4 @@
+rm -r out
 load  STM32F030C6Tx
 csv pinout pinsrc/STM32F030C6Tx.csv
 load  STM32F030C8Tx
