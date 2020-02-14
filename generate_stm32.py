@@ -1,17 +1,19 @@
 """
 Generate STM32 microcontroller symbols, components and devices.
 
-TODO: More information about data source.
+Data source: https://github.com/LibrePCB/stm32-pinout
 
 """
-import csv
-import math
-import re
+import argparse
 from collections import OrderedDict
-from os import makedirs, path
+import csv
+import json
+import math
+from os import listdir, makedirs, path
+import re
 from uuid import uuid4
 
-from typing import Iterable, List, Optional, Set, Tuple
+from typing import Iterable, List, Set, Tuple
 
 from common import init_cache, save_cache
 from entities.common import (
@@ -26,9 +28,6 @@ width = 10  # Symbol width in grid units
 line_width = 0.25  # Line width in mm
 text_height = 2.5  # Name / value text height
 generator = 'librepcb-parts-generator (generate_stm32.py)'
-
-# Enable debug printing
-DEBUG = False
 
 # Initialize UUID cache
 uuid_cache_file = 'uuid_cache_stm32.csv'
@@ -59,32 +58,13 @@ class Pin:
     """
     def __init__(
         self,
-        number: int,
+        position: str,
         name: str,
         pin_type: str,
     ):
-        self.number = number
+        self.position = position
         self.name = name
         self.pin_type = pin_type
-
-    def classify(self) -> Optional[str]:
-        """
-        Classify a pin into one of the following classes:
-
-        - reset
-        - power
-        - oscillator
-
-        TODO Remove?
-
-        If the class cannot be determined, return `None`.
-
-        """
-        if 'RST' in self.name:
-            return 'reset'
-        if re.match(r'^V(BAT|CC|DD|SS)', self.name):
-            return 'power'
-        return None
 
 
 class SymbolPinPlacement:
@@ -127,21 +107,28 @@ class MCU:
     """
     Data class for a MCU.
     """
-    def __init__(self, name: str, pins: Iterable[Pin]):
-        self.name = name
+    def __init__(self, ref: str, info: dict, pins: Iterable[Pin]):
+        self.ref = ref
+        self.name = info['part_no']
+        self.package = info['package']
         self.pins = list(pins)
+        self.boards = info['boards']
+        self.flash = info['flash']
+        self.ram = info['ram']
+        self.io = info['io']
+        self.frequency = info['frequency']
 
     @staticmethod
-    def from_dictreader(name: str, reader: csv.DictReader) -> 'MCU':
+    def from_dictreader(ref: str, info: dict, reader: csv.DictReader) -> 'MCU':
         pins = []
         for row in reader:
             pin = Pin(
-                number=int(row['Position']),
+                position=row['Position'],
                 name=row['Name'],
                 pin_type=row['Type'],
             )
             pins.append(pin)
-        return MCU(name, pins)
+        return MCU(ref, info, pins)
 
     def pin_types(self) -> Set[str]:
         return {p.pin_type for p in self.pins}
@@ -151,7 +138,7 @@ class MCU:
         Return all pins of that type, sorted.
         """
         pins = [p for p in self.pins if p.pin_type == pin_type]
-        pins.sort(key=lambda p: (p.name, p.number))
+        pins.sort(key=lambda p: (p.name, p.position))
         return pins
 
     def get_pin_names_by_type(self, pin_type: str) -> List[str]:
@@ -163,7 +150,7 @@ class MCU:
         deduplicated = list(OrderedDict.fromkeys(names))
         return deduplicated
 
-    def generate_placement_data(self) -> SymbolPinPlacement:
+    def generate_placement_data(self, debug: bool = False) -> SymbolPinPlacement:
         """
         This method will generate placement data for the symbol.
 
@@ -180,16 +167,18 @@ class MCU:
         |              |
         | MonoIO       |
         |              |
+        | Boot         |
+        |              |
         | NC           |
         +--------------+
 
         """
         # Ensure that only known pin types are present
-        unknown_pin_types = self.pin_types() - {'Reset', 'Power', 'MonoIO', 'NC', 'I/O'}
+        unknown_pin_types = self.pin_types() - {'Reset', 'Power', 'MonoIO', 'Boot', 'NC', 'I/O'}
         assert len(unknown_pin_types) == 0, 'Unknown pin types: {}'.format(unknown_pin_types)
 
         # Determine number of pins on both sides
-        left_pins = [self.get_pin_names_by_type(t) for t in ['Reset', 'Power', 'MonoIO', 'NC']]
+        left_pins = [self.get_pin_names_by_type(t) for t in ['Reset', 'Power', 'MonoIO', 'Boot', 'NC']]
         left_pins = [group for group in left_pins if len(group) > 0]
         left_count = sum(len(group) for group in left_pins)
         right_pins = [self.get_pin_names_by_type(t) for t in ['I/O']]
@@ -197,7 +186,7 @@ class MCU:
         right_count = sum(len(group) for group in right_pins)
         height = max([left_count + len(left_pins) - 1, right_count + len(right_pins) - 1])
         max_y = math.ceil(height / 2)
-        if DEBUG:
+        if debug:
             print('Placement info:')
             print('  Left {} pins {} steps'.format(
                 left_count,
@@ -229,7 +218,7 @@ class MCU:
                 y -= 1
         placement.sort()
 
-        if DEBUG:
+        if debug:
             print('Placement:')
             print('  Left:')
             for (pin_name, y) in placement.left:
@@ -241,42 +230,54 @@ class MCU:
         return placement
 
     def __str__(self) -> str:
-        return '<MCU {} ({} pins)>'.format(self.name, len(self.pins))
+        return '<MCU {} ({} pins, {})>'.format(self.name, len(self.pins), self.package)
 
 
-if __name__ == '__main__':
-    def _make(dirpath: str) -> None:
-        if not (path.exists(dirpath) and path.isdir(dirpath)):
-            makedirs(dirpath)
+def _make(dirpath: str) -> None:
+    if not (path.exists(dirpath) and path.isdir(dirpath)):
+        makedirs(dirpath)
+
+
+def generate(mcu_ref: str, data_dir: str, debug: bool = False):
     _make('out')
     _make('out/stm32')
     _make('out/stm32/sym')
 
-    mcu_name = 'STM32WB55CEUx'
-    with open('stm32/data/{}.txt'.format(mcu_name)) as f:
+    with open(path.join(data_dir, '{}.info.json'.format(mcu_ref)), 'r') as f:
+        info = json.loads(f.read())
+
+    with open(path.join(data_dir, '{}.pinout.csv'.format(mcu_ref)), 'r') as f:
         reader = csv.DictReader(f, delimiter=',', quotechar='"')
-        mcu = MCU.from_dictreader(mcu_name, reader)
+        mcu = MCU.from_dictreader(mcu_ref, info, reader)
         assert None not in mcu.pin_types()
 
-    if DEBUG:
-        print(mcu)
+    if debug:
+        print()
+        print('Processing {}'.format(mcu))
         print('Pin types: {}'.format(mcu.pin_types()))
         for pt in mcu.pin_types():
             print('# {}'.format(pt))
             for pin in mcu.get_pins_by_type(pt):
-                print('  - {} [{}]'.format(pin.name, pin.number))
+                print('  - {} [{}]'.format(pin.name, pin.position))
 
-    placement = mcu.generate_placement_data()
+    placement = mcu.generate_placement_data(debug)
 
-    uuid_sym = uuid('sym', mcu_name, 'sym')
+    description = '{} MCU by ST Microelectronics.\\n\\n'.format(mcu.name)
+    description += 'Package: {}\\nFlash: {}\\nRAM: {}\\nI/Os: {}\\nFrequency: {}\\n\\n'.format(
+        mcu.package, mcu.flash, mcu.ram, mcu.io, mcu.frequency,
+    )
+    if mcu.boards:
+        description += 'Available evalboards:\\n'
+        for board in mcu.boards:
+            description += '- {}\\n'.format(board)
+        description += '\\n'
+    description += 'Generated with {}'.format(generator)
+
+    uuid_sym = uuid('sym', mcu.ref, 'sym')
     symbol = Symbol(
         uuid_sym,
-        Name(mcu_name),
-        Description(
-            '{} MCU by ST Microelectronics.\\n\\nGenerated with {}'.format(
-                mcu_name, generator,
-            )
-        ),
+        Name(mcu.name),
+        Description(description),
         Keywords('stm32, stm, st, mcu, microcontroller, arm, cortex'),
         Author('Danilo Bargen, John Eaton'),
         Version('0.1'),
@@ -285,14 +286,14 @@ if __name__ == '__main__':
     )
     for pin_name, position, rotation in placement.pins(width, grid):
         symbol.add_pin(SymbolPin(
-            uuid('sym', mcu_name, 'pin-{}'.format(pin_name.lower())),
+            uuid('sym', mcu.ref, 'pin-{}'.format(pin_name.lower())),
             Name(pin_name),
             position,
             rotation,
             Length(grid),
         ))
     polygon = Polygon(
-        uuid('sym', mcu_name, 'polygon'),
+        uuid('sym', mcu.ref, 'polygon'),
         Layer('sym_outlines'),
         Width(line_width),
         Fill(False),
@@ -308,7 +309,7 @@ if __name__ == '__main__':
     symbol.add_polygon(polygon)
 
     text_name = Text(
-        uuid('sym', mcu_name, 'text-name'),
+        uuid('sym', mcu.ref, 'text-name'),
         Layer('sym_names'),
         Value('{{NAME}}'),
         Align('left bottom'),
@@ -317,7 +318,7 @@ if __name__ == '__main__':
         Rotation(0.0),
     )
     text_value = Text(
-        uuid('sym', mcu_name, 'text-value'),
+        uuid('sym', mcu.ref, 'text-value'),
         Layer('sym_values'),
         Value('{{VALUE}}'),
         Align('left top'),
@@ -338,6 +339,33 @@ if __name__ == '__main__':
         f.write(str(symbol))
         f.write('\n')
 
-    print('Wrote symbol {} ({})'.format(mcu_name, uuid_sym))
+    print('Wrote sym for {} ({})'.format(mcu.ref, uuid_sym))
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Generate STM32 library elements')
+    parser.add_argument(
+        '--data-dir', metavar='path-to-data-dir', required=True,
+        help='path to the data dir from https://github.com/LibrePCB/stm32-pinout',
+    )
+    parser.add_argument(
+        '--mcu', metavar='mcu-ref',
+        help='only process the specified MCU',
+    )
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='print debug information',
+    )
+    args = parser.parse_args()
+
+    if args.mcu:
+        generate(args.mcu, args.data_dir, args.debug)
+    else:
+        for filename in listdir(args.data_dir):
+            match = re.match(r'(STM32.*)\.pinout\.csv$', filename)
+            if match:
+                mcu = match.group(1)
+                generate(mcu, args.data_dir, args.debug)
 
     save_cache(uuid_cache_file, uuid_cache)
