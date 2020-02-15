@@ -150,6 +150,19 @@ class MCU:
         deduplicated = list(OrderedDict.fromkeys(names))
         return deduplicated
 
+    @property
+    def description(self) -> str:
+        description = '{} self by ST Microelectronics.\\n\\n'.format(self.name)
+        description += 'Package: {}\\nFlash: {}\\nRAM: {}\\nI/Os: {}\\nFrequency: {}\\n\\n'.format(
+            self.package, self.flash, self.ram, self.io, self.frequency,
+        )
+        if self.boards:
+            description += 'Available evalboards:\\n'
+            for board in self.boards:
+                description += '- {}\\n'.format(board)
+            description += '\\n'
+        description += 'Generated with {}'.format(generator)
+
     def generate_placement_data(self, debug: bool = False) -> SymbolPinPlacement:
         """
         This method will generate placement data for the symbol.
@@ -238,46 +251,14 @@ def _make(dirpath: str) -> None:
         makedirs(dirpath)
 
 
-def generate(mcu_ref: str, data_dir: str, debug: bool = False):
-    _make('out')
-    _make('out/stm32')
-    _make('out/stm32/sym')
-
-    with open(path.join(data_dir, '{}.info.json'.format(mcu_ref)), 'r') as f:
-        info = json.loads(f.read())
-
-    with open(path.join(data_dir, '{}.pinout.csv'.format(mcu_ref)), 'r') as f:
-        reader = csv.DictReader(f, delimiter=',', quotechar='"')
-        mcu = MCU.from_dictreader(mcu_ref, info, reader)
-        assert None not in mcu.pin_types()
-
-    if debug:
-        print()
-        print('Processing {}'.format(mcu))
-        print('Pin types: {}'.format(mcu.pin_types()))
-        for pt in mcu.pin_types():
-            print('# {}'.format(pt))
-            for pin in mcu.get_pins_by_type(pt):
-                print('  - {} [{}]'.format(pin.name, pin.position))
-
+def generate_symbol(mcu: MCU, data_dir: str, debug: bool = False):
     placement = mcu.generate_placement_data(debug)
-
-    description = '{} MCU by ST Microelectronics.\\n\\n'.format(mcu.name)
-    description += 'Package: {}\\nFlash: {}\\nRAM: {}\\nI/Os: {}\\nFrequency: {}\\n\\n'.format(
-        mcu.package, mcu.flash, mcu.ram, mcu.io, mcu.frequency,
-    )
-    if mcu.boards:
-        description += 'Available evalboards:\\n'
-        for board in mcu.boards:
-            description += '- {}\\n'.format(board)
-        description += '\\n'
-    description += 'Generated with {}'.format(generator)
 
     uuid_sym = uuid('sym', mcu.ref, 'sym')
     symbol = Symbol(
         uuid_sym,
         Name(mcu.name),
-        Description(description),
+        Description(mcu.description),
         Keywords('stm32, stm, st, mcu, microcontroller, arm, cortex'),
         Author('Danilo Bargen, John Eaton'),
         Version('0.1'),
@@ -340,6 +321,31 @@ def generate(mcu_ref: str, data_dir: str, debug: bool = False):
         f.write('\n')
 
     print('Wrote sym for {} ({})'.format(mcu.ref, uuid_sym))
+
+
+def generate(mcu_ref: str, data_dir: str, debug: bool = False):
+    _make('out')
+    _make('out/stm32')
+    _make('out/stm32/sym')
+
+    with open(path.join(data_dir, '{}.info.json'.format(mcu_ref)), 'r') as f:
+        info = json.loads(f.read())
+
+    with open(path.join(data_dir, '{}.pinout.csv'.format(mcu_ref)), 'r') as f:
+        reader = csv.DictReader(f, delimiter=',', quotechar='"')
+        mcu = MCU.from_dictreader(mcu_ref, info, reader)
+        assert None not in mcu.pin_types()
+
+    if debug:
+        print()
+        print('Processing {}'.format(mcu))
+        print('Pin types: {}'.format(mcu.pin_types()))
+        for pt in mcu.pin_types():
+            print('# {}'.format(pt))
+            for pin in mcu.get_pins_by_type(pt):
+                print('  - {} [{}]'.format(pin.name, pin.position))
+
+    generate_symbol(mcu, data_dir, debug)
 
 
 if __name__ == '__main__':
