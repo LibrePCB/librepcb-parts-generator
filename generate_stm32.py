@@ -13,7 +13,7 @@ from os import listdir, makedirs, path
 import re
 from uuid import uuid4
 
-from typing import Iterable, List, Set, Tuple
+from typing import Iterable, List, Set, Tuple, Dict
 
 from common import init_cache, save_cache
 from entities.common import (
@@ -58,11 +58,11 @@ class Pin:
     """
     def __init__(
         self,
-        position: str,
+        number: str,
         name: str,
         pin_type: str,
     ):
-        self.position = position
+        self.number = number
         self.name = name
         self.pin_type = pin_type
 
@@ -103,6 +103,18 @@ class SymbolPinPlacement:
         )
 
 
+class PinName:
+    """
+    This class holds a generic pin name (like IO7) and a concrete pin name (like PB3).
+    """
+    def __init__(self, generic: str, concrete: str):
+        self.generic = generic
+        self.concrete = concrete
+
+    def __str__(self) -> str:
+        return '{}/{}'.format(self.generic, self.concrete)
+
+
 class MCU:
     """
     Data class for a MCU.
@@ -119,13 +131,17 @@ class MCU:
         self.frequency = info['frequency']
 
     @staticmethod
-    def from_dictreader(ref: str, info: dict, reader: csv.DictReader) -> 'MCU':
+    def cleanup_type(pin_type: str) -> str:
+        return pin_type.replace('/', '')
+
+    @classmethod
+    def from_dictreader(cls, ref: str, info: dict, reader: csv.DictReader) -> 'MCU':
         pins = []
         for row in reader:
             pin = Pin(
-                position=row['Position'],
+                number=row['Position'],
                 name=row['Name'],
-                pin_type=row['Type'],
+                pin_type=cls.cleanup_type(row['Type']),
             )
             pins.append(pin)
         return MCU(ref, info, pins)
@@ -138,21 +154,66 @@ class MCU:
         Return all pins of that type, sorted.
         """
         pins = [p for p in self.pins if p.pin_type == pin_type]
-        pins.sort(key=lambda p: (p.name, p.position))
+        pins.sort(key=lambda p: (p.name, p.number))
         return pins
 
-    def get_pin_names_by_type(self, pin_type: str) -> List[str]:
+    def get_pin_names_by_type(self, pin_type: str) -> List[PinName]:
         """
         Return all pin names of that type (without duplicates), sorted.
         """
         pins = self.get_pins_by_type(pin_type)
-        names = [p.name for p in pins]
+        names = []
+        for i, pin in enumerate(pins):
+            names.append(PinName(
+                '{}{}'.format(pin_type, i + 1),
+                pin.name,
+            ))
         deduplicated = list(OrderedDict.fromkeys(names))
         return deduplicated
 
     @property
+    def symbol_name(self) -> str:
+        """
+        Get a symbol name based on pin types.
+        """
+        match = re.match(r'^(STM32..)', self.name)
+        assert match is not None
+        series = match.group(0)
+        name_parts = [series]
+        for pin_type in sorted(self.pin_types()):
+            count = len([p for p in self.pins if p.pin_type == pin_type])
+            name_parts.append('{}-{}'.format(pin_type, count))
+        return ' '.join(name_parts)
+
+    @property
+    def symbol_identifier(self) -> str:
+        """
+        Get the symbol identifier, used as a key for the UUID lookup.
+        """
+        return self.symbol_name \
+            .lower() \
+            .replace(' ', '_') \
+            .replace('-', '~') \
+            .replace('/', '')
+
+    @property
+    def symbol_description(self) -> str:
+        """
+        Get a description of the symbol.
+        """
+        match = re.match(r'^(STM32..)', self.name)
+        assert match is not None
+        series = match.group(0)
+        description = 'A {} MCU by ST Microelectronics with the following pins:\\n\\n'.format(series)
+        for pin_type in sorted(self.pin_types()):
+            count = len([p for p in self.pins if p.pin_type == pin_type])
+            description += '- {} {} pins\\n'.format(count, pin_type)
+        description += '\\nGenerated with {}'.format(generator)
+        return description
+
+    @property
     def description(self) -> str:
-        description = '{} self by ST Microelectronics.\\n\\n'.format(self.name)
+        description = '{} MCU by ST Microelectronics.\\n\\n'.format(self.name)
         description += 'Package: {}\\nFlash: {}\\nRAM: {}\\nI/Os: {}\\nFrequency: {}\\n\\n'.format(
             self.package, self.flash, self.ram, self.io, self.frequency,
         )
@@ -162,8 +223,9 @@ class MCU:
                 description += '- {}\\n'.format(board)
             description += '\\n'
         description += 'Generated with {}'.format(generator)
+        return description
 
-    def generate_placement_data(self, debug: bool = False) -> SymbolPinPlacement:
+    def generate_placement_data(self, debug: bool = False) -> Tuple[SymbolPinPlacement, Dict[str, str]]:
         """
         This method will generate placement data for the symbol.
 
@@ -185,16 +247,19 @@ class MCU:
         | NC           |
         +--------------+
 
+        Returned data: A tuple with the abstract pin placement info, as well as
+        a mapping from abstract name to real name.
+
         """
         # Ensure that only known pin types are present
-        unknown_pin_types = self.pin_types() - {'Reset', 'Power', 'MonoIO', 'Boot', 'NC', 'I/O'}
+        unknown_pin_types = self.pin_types() - {'Reset', 'Power', 'MonoIO', 'Boot', 'NC', 'IO'}
         assert len(unknown_pin_types) == 0, 'Unknown pin types: {}'.format(unknown_pin_types)
 
         # Determine number of pins on both sides
         left_pins = [self.get_pin_names_by_type(t) for t in ['Reset', 'Power', 'MonoIO', 'Boot', 'NC']]
         left_pins = [group for group in left_pins if len(group) > 0]
         left_count = sum(len(group) for group in left_pins)
-        right_pins = [self.get_pin_names_by_type(t) for t in ['I/O']]
+        right_pins = [self.get_pin_names_by_type(t) for t in ['IO']]
         right_pins = [group for group in right_pins if len(group) > 0]
         right_count = sum(len(group) for group in right_pins)
         height = max([left_count + len(left_pins) - 1, right_count + len(right_pins) - 1])
@@ -219,7 +284,7 @@ class MCU:
                 # Put a space between groups
                 y -= 1
             for pin_name in group:
-                placement.add_left_pin(pin_name, y)
+                placement.add_left_pin(pin_name.generic, y)
                 y -= 1
         y = max_y
         for i, group in enumerate(right_pins):
@@ -227,20 +292,26 @@ class MCU:
                 # Put a space between groups
                 y -= 1
             for pin_name in group:
-                placement.add_right_pin(pin_name, y)
+                placement.add_right_pin(pin_name.generic, y)
                 y -= 1
         placement.sort()
+
+        # Dict that holds mapping from generic name to concrete name
+        name_mapping = {}
+        for group in left_pins + right_pins:
+            for pin_name in group:
+                name_mapping[pin_name.generic] = pin_name.concrete
 
         if debug:
             print('Placement:')
             print('  Left:')
-            for (pin_name, y) in placement.left:
-                print('    {} {}'.format(y, pin_name))
+            for (pin_name_str, y) in placement.left:
+                print('    {} {}'.format(y, pin_name_str))
             print('  Right:')
-            for (pin_name, y) in placement.right:
-                print('    {} {}'.format(y, pin_name))
+            for (pin_name_str, y) in placement.right:
+                print('    {} {}'.format(y, pin_name_str))
 
-        return placement
+        return (placement, name_mapping)
 
     def __str__(self) -> str:
         return '<MCU {} ({} pins, {})>'.format(self.name, len(self.pins), self.package)
@@ -251,30 +322,38 @@ def _make(dirpath: str) -> None:
         makedirs(dirpath)
 
 
-def generate_symbol(mcu: MCU, data_dir: str, debug: bool = False):
-    placement = mcu.generate_placement_data(debug)
+def generate_symbol(mcu: MCU, data_dir: str, symbol_map: Dict[str, str], debug: bool = False):
+    if mcu.symbol_identifier in symbol_map:
+        print('Skipped sym for {} ({})'.format(mcu.name, mcu.symbol_name))
+        return
 
-    uuid_sym = uuid('sym', mcu.ref, 'sym')
+    (placement, pin_mapping) = mcu.generate_placement_data(debug)
+    if debug:
+        print(pin_mapping)
+
+    uuid_sym = uuid('sym', mcu.symbol_identifier, 'sym')
     symbol = Symbol(
         uuid_sym,
-        Name(mcu.name),
-        Description(mcu.description),
+        Name(mcu.symbol_name),
+        Description(mcu.symbol_description),
         Keywords('stm32, stm, st, mcu, microcontroller, arm, cortex'),
         Author('Danilo Bargen, John Eaton'),
         Version('0.1'),
         Created('2020-01-30T20:55:23Z'),
         Category('22151601-c2d9-419a-87bc-266f9c7c3459'),
     )
+    placement_pins = placement.pins(width, grid)
+    placement_pins.sort(key=lambda x: (x[1].x, x[1].y))
     for pin_name, position, rotation in placement.pins(width, grid):
         symbol.add_pin(SymbolPin(
-            uuid('sym', mcu.ref, 'pin-{}'.format(pin_name.lower())),
+            uuid('sym', mcu.symbol_identifier, 'pin-{}'.format(pin_name.lower())),
             Name(pin_name),
             position,
             rotation,
             Length(grid),
         ))
     polygon = Polygon(
-        uuid('sym', mcu.ref, 'polygon'),
+        uuid('sym', mcu.symbol_identifier, 'polygon'),
         Layer('sym_outlines'),
         Width(line_width),
         Fill(False),
@@ -290,7 +369,7 @@ def generate_symbol(mcu: MCU, data_dir: str, debug: bool = False):
     symbol.add_polygon(polygon)
 
     text_name = Text(
-        uuid('sym', mcu.ref, 'text-name'),
+        uuid('sym', mcu.symbol_identifier, 'text-name'),
         Layer('sym_names'),
         Value('{{NAME}}'),
         Align('left bottom'),
@@ -299,7 +378,7 @@ def generate_symbol(mcu: MCU, data_dir: str, debug: bool = False):
         Rotation(0.0),
     )
     text_value = Text(
-        uuid('sym', mcu.ref, 'text-value'),
+        uuid('sym', mcu.symbol_identifier, 'text-value'),
         Layer('sym_values'),
         Value('{{VALUE}}'),
         Align('left top'),
@@ -320,10 +399,12 @@ def generate_symbol(mcu: MCU, data_dir: str, debug: bool = False):
         f.write(str(symbol))
         f.write('\n')
 
-    print('Wrote sym for {} ({})'.format(mcu.ref, uuid_sym))
+    symbol_map[mcu.symbol_identifier] = uuid_sym
+
+    print('Wrote sym for {} ({})'.format(mcu.ref, mcu.symbol_name))
 
 
-def generate(mcu_ref: str, data_dir: str, debug: bool = False):
+def generate(mcu_ref: str, data_dir: str, symbol_map: Dict[str, str], debug: bool = False):
     _make('out')
     _make('out/stm32')
     _make('out/stm32/sym')
@@ -343,9 +424,9 @@ def generate(mcu_ref: str, data_dir: str, debug: bool = False):
         for pt in mcu.pin_types():
             print('# {}'.format(pt))
             for pin in mcu.get_pins_by_type(pt):
-                print('  - {} [{}]'.format(pin.name, pin.position))
+                print('  - {} [{}]'.format(pin.name, pin.number))
 
-    generate_symbol(mcu, data_dir, debug)
+    generate_symbol(mcu, data_dir, symbol_map, debug)
 
 
 if __name__ == '__main__':
@@ -365,13 +446,16 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
 
+    # A map mapping symbol names to UUIDs
+    symbol_map = {}  # type: Dict[str, str]
+
     if args.mcu:
-        generate(args.mcu, args.data_dir, args.debug)
+        generate(args.mcu, args.data_dir, symbol_map, args.debug)
     else:
         for filename in listdir(args.data_dir):
             match = re.match(r'(STM32.*)\.pinout\.csv$', filename)
             if match:
                 mcu = match.group(1)
-                generate(mcu, args.data_dir, args.debug)
+                generate(mcu, args.data_dir, symbol_map, args.debug)
 
     save_cache(uuid_cache_file, uuid_cache)
