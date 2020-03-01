@@ -3,9 +3,9 @@ Common functionality for generator scripts.
 """
 import collections
 import csv
+import os.path
 import re
 from datetime import datetime
-
 from typing import Dict, Iterable, List, Union
 
 # Commonly used dimensions
@@ -116,3 +116,23 @@ def sign(val: Union[int, float]) -> int:
         return 1
     else:
         return -1
+
+
+def get_pad_uuids(base_lib_path: str, pkg_uuid: str) -> Dict[str, str]:
+    """
+    Return a mapping from pad name to pad UUID.
+    """
+    with open(os.path.join(base_lib_path, 'pkg', pkg_uuid, 'package.lp'), 'r') as f:
+        lines = f.readlines()
+    opt_matches = [
+        re.match(r' \(pad ([^\s]*) \(name "([^"]*)"\)\)$', line)
+        for line in lines
+    ]
+    matches = list(filter(None, opt_matches))
+    mapping = {}
+    for match in matches:
+        uuid = match.group(1)
+        name = match.group(2)
+        mapping[name] = uuid
+    assert len(matches) == len(mapping)
+    return mapping
