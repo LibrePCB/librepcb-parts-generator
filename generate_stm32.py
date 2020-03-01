@@ -3,22 +3,44 @@ Generate STM32 microcontroller symbols, components and devices.
 
 Data source: https://github.com/LibrePCB/stm32-pinout
 
+In order to reduce the number of symbols, the following items are reused:
+
+- For every family, MCUs with the same number of pins per pin class are merged
+  into a single symbol
+- Components are merged if they share the same pinout.
+
+Example:
+
++--------------------------------------+------------------+---------------+
+| Symbol                               | Component        | Device        |
++--------------------------------------+------------------+---------------+
+| STM32L0 Boot-1 IO-23 Power-7         | STM32L071KBUx    | STM32L071KBUx |
+|--------------------------------------|------------------|---------------|
+| STM32L0 Boot-1 IO-25 Power-5 Reset-1 | STM32L071K[BZ]Tx | STM32L071KBTx |
+|                                      |                  |---------------|
+|                                      |                  | STM32L071KZTx |
++--------------------------------------+------------------+---------------+
+
 """
 import argparse
-from collections import OrderedDict
-import csv
+import hashlib
 import json
 import math
-from os import listdir, makedirs, path
 import re
+from collections import OrderedDict, defaultdict
+from os import listdir, makedirs, path
 from uuid import uuid4
 
-from typing import Iterable, List, Set, Tuple, Dict
+from typing import Dict, Iterable, List, Optional, Set, Tuple
 
 from common import init_cache, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Description, Fill, GrabArea, Height, Keywords, Layer, Length, Name,
-    Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
+    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GrabArea, Height, Keywords, Layer, Length,
+    Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
+)
+from entities.component import (
+    Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
+    Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
 )
 from entities.symbol import Pin as SymbolPin
 from entities.symbol import Symbol
@@ -28,6 +50,9 @@ width = 10  # Symbol width in grid units
 line_width = 0.25  # Line width in mm
 text_height = 2.5  # Name / value text height
 generator = 'librepcb-parts-generator (generate_stm32.py)'
+keywords = Keywords('stm32, stm, st, mcu, microcontroller, arm, cortex')
+author = Author('Danilo Bargen, John Eaton')
+cmpcat = Category('22151601-c2d9-419a-87bc-266f9c7c3459')
 
 # Initialize UUID cache
 uuid_cache_file = 'uuid_cache_stm32.csv'
@@ -120,33 +145,67 @@ class MCU:
     Data class for a MCU.
     """
     def __init__(self, ref: str, info: dict, pins: Iterable[Pin]):
+        # Note: Don't use this directly, use `from_json` instead
         self.ref = ref
-        self.name = info['part_no']
+        self.name = info['names']['name']
+        self.family = info['names']['family']
         self.package = info['package']
         self.pins = list(pins)
-        self.boards = info['boards']
-        self.flash = info['flash']
-        self.ram = info['ram']
-        self.io = info['io']
-        self.frequency = info['frequency']
+        self.flash = '{} KiB'.format(info['info']['flash'])
+        self.ram = '{} KiB'.format(info['info']['ram'])
+        self.io_count = info['info']['io']  # type: int
+        if 'frequency' in info['info']:
+            self.frequency = '{} MHz'.format(info['info']['frequency'])  # type: Optional[str]
+        else:
+            self.frequency = None
+        if 'voltage' in info['info']:
+            self.voltage = '{:.2}-{:.2}V'.format(
+                info['info']['voltage']['min'],
+                info['info']['voltage']['max'],
+            )  # type: Optional[str]
+        else:
+            self.voltage = None
+        if 'temperature' in info['info']:
+            self.temperature = '{:.0}-{:.0}°C'.format(
+                info['info']['temperature']['min'],
+                info['info']['temperature']['max'],
+            )  # type: Optional[str]
+        else:
+            self.temperature = None
 
     @staticmethod
-    def cleanup_type(pin_type: str) -> str:
+    def _cleanup_type(pin_type: str) -> str:
         return pin_type.replace('/', '')
 
+    @staticmethod
+    def _cleanup_pin_name(pin_name: str) -> str:
+        # WARNING: Changing this has an effect on the pinout hash!
+        if 'OSC' in pin_name:
+            # Oscillator pins sometimes have variations between different MCUs, even though
+            # the rest of the pinout is identical. Therefore, normalize those pin names.
+            val = pin_name
+            val = re.sub(r'\s*-\s*OSC', r'-OSC', val)
+            val = re.sub(r'\s*/\s*OSC', r'-OSC', val)
+            val = re.sub(r'([0-9])OSC', r'\1-OSC', val)
+            return val
+        return pin_name
+
     @classmethod
-    def from_dictreader(cls, ref: str, info: dict, reader: csv.DictReader) -> 'MCU':
+    def from_json(cls, ref: str, info: dict) -> 'MCU':
         pins = []
-        for row in reader:
+        for entry in info['pinout']:
             pin = Pin(
-                number=row['Position'],
-                name=row['Name'],
-                pin_type=cls.cleanup_type(row['Type']),
+                number=entry['position'],
+                name=cls._cleanup_pin_name(entry['name']),
+                pin_type=cls._cleanup_type(entry['type']),
             )
             pins.append(pin)
         return MCU(ref, info, pins)
 
     def pin_types(self) -> Set[str]:
+        """
+        Return a set containing all pin types present in this MCU.
+        """
         return {p.pin_type for p in self.pins}
 
     def get_pins_by_type(self, pin_type: str) -> List[Pin]:
@@ -162,26 +221,63 @@ class MCU:
         Return all pin names of that type (without duplicates), sorted.
         """
         pins = self.get_pins_by_type(pin_type)
-        names = []
-        for i, pin in enumerate(pins):
-            names.append(PinName(
-                '{}{}'.format(pin_type, i + 1),
+        known_names = set()  # type: Set[str]
+        result = []
+        i = 1
+        for pin in pins:
+            if pin.name in known_names:
+                continue
+            result.append(PinName(
+                '{}{}'.format(pin_type, i),
                 pin.name,
             ))
-        deduplicated = list(OrderedDict.fromkeys(names))
-        return deduplicated
+            known_names.add(pin.name)
+            i += 1
+        return result
+
+    @property
+    def ref_without_flash(self) -> str:
+        """
+        Return the ref with the flash size replaced with an 'x'.
+
+        Example:
+
+        - STM32F429NEHx -> STM32F429NxHx
+        - STM32L552CETxP -> STM32L552CxTxP
+
+        """
+        return self.ref[:10] + 'x' + self.ref[11:]
+
+    def ref_for_flash_variants(self, variants: List[str]) -> str:
+        """
+        Return the name that integrates all flash size variants.
+
+        Args:
+            variants:
+                List of refs. Must share the same "ref without flash".
+
+        Example:
+
+        - STM32F429IEHx + STM32F429IGHx + STM32F429IIHx = STM32F429I[EGI]Hx.
+
+        """
+        for variant in variants:
+            assert variant[:10] == self.ref[:10]
+            assert variant[11:] == self.ref[11:]
+        flash_variants = sorted([ref[10] for ref in variants])
+        if len(flash_variants) > 1:
+            return '{}[{}]{}'.format(self.ref[:10], ''.join(flash_variants), self.ref[11:])
+        else:
+            return self.ref
 
     @property
     def symbol_name(self) -> str:
         """
         Get a symbol name based on pin types.
         """
-        match = re.match(r'^(STM32..)', self.name)
-        assert match is not None
-        series = match.group(0)
-        name_parts = [series]
+        name_parts = [self.family]
         for pin_type in sorted(self.pin_types()):
-            count = len([p for p in self.pins if p.pin_type == pin_type])
+            count = len(self.get_pin_names_by_type(pin_type))
             name_parts.append('{}-{}'.format(pin_type, count))
         return ' '.join(name_parts)
 
@@ -201,29 +297,57 @@ class MCU:
         """
         Get a description of the symbol.
         """
-        match = re.match(r'^(STM32..)', self.name)
-        assert match is not None
-        series = match.group(0)
-        description = 'A {} MCU by ST Microelectronics with the following pins:\\n\\n'.format(series)
+        description = 'A {} MCU by ST Microelectronics with the following pins:\\n\\n'.format(self.family)
         for pin_type in sorted(self.pin_types()):
-            count = len([p for p in self.pins if p.pin_type == pin_type])
+            count = len(self.get_pin_names_by_type(pin_type))
             description += '- {} {} pins\\n'.format(count, pin_type)
         description += '\\nGenerated with {}'.format(generator)
         return description
 
     @property
-    def description(self) -> str:
-        description = '{} MCU by ST Microelectronics.\\n\\n'.format(self.name)
-        description += 'Package: {}\\nFlash: {}\\nRAM: {}\\nI/Os: {}\\nFrequency: {}\\n\\n'.format(
-            self.package, self.flash, self.ram, self.io, self.frequency,
+    def component_identifier(self) -> str:
+        """
+        Return the component identifier, composed of the ref without flash and
+        the pinout hash.
+        """
+        return '{}~{}'.format(self.ref_without_flash, self.pinout_hash).lower()
+
+    @property
+    def component_description(self) -> str:
+        """
+        Get a description of the component.
+        """
+        description = 'A {} MCU by ST Microelectronics.\\n\\n'.format(self.ref_without_flash)
+        description += 'Package: {}\\nI/Os: {}\\nFrequency: {}\\n'.format(
+            self.package, self.io_count, self.frequency,
         )
-        if self.boards:
-            description += 'Available evalboards:\\n'
-            for board in self.boards:
-                description += '- {}\\n'.format(board)
-            description += '\\n'
-        description += 'Generated with {}'.format(generator)
+        description += '\\nGenerated with {}'.format(generator)
         return description
+
+    @property
+    def description(self) -> str:
+        description = 'A {} MCU by ST Microelectronics.\\n\\n'.format(self.name)
+        description += 'Package: {}\\nFlash: {}\\nRAM: {}\\nI/Os: {}\\nFrequency: {}\\n'.format(
+            self.package, self.flash, self.ram, self.io_count, self.frequency,
+        )
+        if self.voltage:
+            description += 'Voltage: {}\\n'.format(self.voltage)
+        if self.temperature:
+            description += 'Temperature range: {}\\n'.format(self.temperature)
+        description += '\\nGenerated with {}'.format(generator)
+        return description
+
+    @property
+    def pinout_hash(self) -> str:
+        """
+        Return a hash of the pinout.
+
+        Before hashing, the pins are sorted *alphanumerically* by pin type
+        followed by pin name (io_pa15 comes before io_pa2).
+
+        """
+        pinout = ','.join(sorted('{}_{}'.format(pin.pin_type, pin.name) for pin in self.pins)).lower()
+        return hashlib.sha1(pinout.encode('ascii')).hexdigest()
 
     def generate_placement_data(self, debug: bool = False) -> Tuple[SymbolPinPlacement, Dict[str, str]]:
         """
@@ -313,8 +437,8 @@ class MCU:
 
         return (placement, name_mapping)
 
-    def __str__(self) -> str:
-        return '<MCU {} ({} pins, {})>'.format(self.name, len(self.pins), self.package)
+    def __repr__(self) -> str:
+        return '<MCU {} ({} pins, {})>'.format(self.ref, len(self.pins), self.package)
 
 
 def _make(dirpath: str) -> None:
@@ -322,10 +446,8 @@ def _make(dirpath: str) -> None:
         makedirs(dirpath)
 
 
-def generate_symbol(mcu: MCU, data_dir: str, symbol_map: Dict[str, str], debug: bool = False):
-    if mcu.symbol_identifier in symbol_map:
-        print('Skipped sym for {} ({})'.format(mcu.name, mcu.symbol_name))
-        return
+def generate_sym(mcu: MCU, symbol_map: Dict[str, str], debug: bool = False):
+    assert mcu.symbol_identifier not in symbol_map
 
     (placement, pin_mapping) = mcu.generate_placement_data(debug)
     if debug:
@@ -336,17 +458,17 @@ def generate_symbol(mcu: MCU, data_dir: str, symbol_map: Dict[str, str], debug: 
         uuid_sym,
         Name(mcu.symbol_name),
         Description(mcu.symbol_description),
-        Keywords('stm32, stm, st, mcu, microcontroller, arm, cortex'),
-        Author('Danilo Bargen, John Eaton'),
+        keywords,
+        author,
         Version('0.1'),
         Created('2020-01-30T20:55:23Z'),
-        Category('22151601-c2d9-419a-87bc-266f9c7c3459'),
+        cmpcat,
     )
     placement_pins = placement.pins(width, grid)
     placement_pins.sort(key=lambda x: (x[1].x, x[1].y))
     for pin_name, position, rotation in placement.pins(width, grid):
         symbol.add_pin(SymbolPin(
-            uuid('sym', mcu.symbol_identifier, 'pin-{}'.format(pin_name.lower())),
+            uuid('sym', mcu.symbol_identifier, 'pin-{}'.format(pin_name)),
             Name(pin_name),
             position,
             rotation,
@@ -401,32 +523,147 @@ def generate_symbol(mcu: MCU, data_dir: str, symbol_map: Dict[str, str], debug: 
 
     symbol_map[mcu.symbol_identifier] = uuid_sym
 
-    print('Wrote sym for {} ({})'.format(mcu.ref, mcu.symbol_name))
+    print('Wrote sym {}'.format(mcu.symbol_name))
 
 
-def generate(mcu_ref: str, data_dir: str, symbol_map: Dict[str, str], debug: bool = False):
+def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = False):
+    """
+    When generating components, to reduce the number of components, they are
+    merged as follows:
+
+    - For every MCU, the "ref without flash" is calculated by replacing the
+      11th character in the ref name with an `x` and cutting off everything after
+      the package character.
+    - MCUs that share the same pinout will be merged if their ref names without
+      flash are the same
+    - The name of the component will be generated as follows: STM32F429IEHx +
+      STM32F429IGHx + STM32F429IIHx = STM32F429I[EGI]Hx.
+    - To achieve a stable UUID even if new MCUs are added, the "ref without
+      flash" is combined with the SHA1 hash of the pins.
+
+    Because renaming the pinout might result in a different UUID, when
+    upgrading the stm32-pinout database, changes (but not additions) must be
+    analyzed manually.
+
+    """
+    (placement, pin_mapping) = mcu.generate_placement_data(debug)
+
+    uuid_cmp = uuid('cmp', mcu.component_identifier, 'cmp')
+    component = Component(
+        uuid_cmp,
+        Name(name),
+        Description(mcu.component_description),
+        keywords,
+        author,
+        Version('0.1'),
+        Created('2020-01-30T20:55:23Z'),
+        Deprecated(False),
+        cmpcat,
+        SchematicOnly(False),
+        DefaultValue('{{PARTNUMBER or DEVICE or COMPONENT}}'),
+        Prefix('U'),
+    )
+
+    # Add signals
+    signals = {pin.name for pin in mcu.pins}
+    for signal in signals:
+        component.add_signal(Signal(
+            uuid('cmp', mcu.ref, 'signal-{}'.format(signal)),
+            Name(signal),
+            Role.PASSIVE,
+            Required(False),
+            Negated(False),
+            Clock(False),
+            ForcedNet(''),
+        ))
+
+    # Add symbol variant
+    gate = Gate(
+        uuid('cmp', mcu.ref, 'variant-single-gate1'),
+        SymbolUUID(uuid('sym', mcu.symbol_identifier, 'sym')),
+        Position(0, 0),
+        Rotation(0.0),
+        Required(True),
+        Suffix(''),
+    )
+    for generic, concrete in pin_mapping.items():
+        gate.add_pin_signal_map(PinSignalMap(
+            uuid('sym', mcu.symbol_identifier, 'pin-{}'.format(generic)),
+            SignalUUID(uuid('cmp', mcu.ref, 'signal-{}'.format(concrete))),
+            TextDesignator.SIGNAL_NAME,
+        ))
+    component.add_variant(Variant(
+        uuid('cmp', mcu.ref, 'variant-single'),
+        Norm.EMPTY,
+        Name('single'),
+        Description('Symbol with all MCU pins'),
+        gate,
+    ))
+
+    component.serialize('out/stm32/cmp')
+
+    print('Wrote cmp {}'.format(name))
+
+
+def generate(mcu_ref: str, data: Dict[str, MCU], debug: bool = False):
     _make('out')
     _make('out/stm32')
     _make('out/stm32/sym')
+    _make('out/stm32/cmp')
 
-    with open(path.join(data_dir, '{}.info.json'.format(mcu_ref)), 'r') as f:
-        info = json.loads(f.read())
+    # A map mapping symbol names to UUIDs
+    symbol_map = {}  # type: Dict[str, str]
 
-    with open(path.join(data_dir, '{}.pinout.csv'.format(mcu_ref)), 'r') as f:
-        reader = csv.DictReader(f, delimiter=',', quotechar='"')
-        mcu = MCU.from_dictreader(mcu_ref, info, reader)
-        assert None not in mcu.pin_types()
+    print('\nProcessing {} MCUs'.format(len(data)))
 
-    if debug:
-        print()
-        print('Processing {}'.format(mcu))
-        print('Pin types: {}'.format(mcu.pin_types()))
-        for pt in mcu.pin_types():
-            print('# {}'.format(pt))
-            for pin in mcu.get_pins_by_type(pt):
-                print('  - {} [{}]'.format(pin.name, pin.number))
+    # Group symbols
+    symbols = defaultdict(list)  # type: Dict[str, List[MCU]]
+    for mcu in data.values():
+        symbols[mcu.symbol_identifier].append(mcu)
+    print('Generating {} symbols'.format(len(symbols)))
 
-    generate_symbol(mcu, data_dir, symbol_map, debug)
+    # Group components
+    components_tmp = defaultdict(list)  # type: Dict[str, List[MCU]]
+    for mcu in data.values():
+        components_tmp[mcu.component_identifier].append(mcu)
+    components = defaultdict(list)  # type: Dict[str, List[MCU]]
+    for k, v in components_tmp.items():
+        combined_name = v[0].ref_for_flash_variants([mcu.ref for mcu in v])
+        components[combined_name] = v
+    print('Generating {} components'.format(len(components)))
+
+    # No grouping for devices
+    print('Generating {} devices'.format(len(data)))
+
+    # Generate
+    print()
+    for mcus in symbols.values():
+        generate_sym(mcus[0], symbol_map, debug)
+    for name, mcus in components.items():
+        generate_cmp(name, mcus[0], symbol_map, debug)
+
+    # Check for duplicates
+    print()
+    d = defaultdict(int)  # type: Dict[str, int]
+    for mcus in components.values():
+        d[mcus[0].ref_without_flash] += 1
+    # Sometimes parts have the same pin names, but different writings (e.g.
+    # `PC14 / OSC32_IN` vs `PC14-OSC32_IN`). These differences should be
+    # filtered out by the cleanup function.
+    #
+    # Whitelist contains parts that actually have different variants, verified
+    # manually by comparing pinout files.
+    #
+    # To compare more easily:
+    # for f in data/STM32F302V*T*.json; do cat $f | jq -c '.pinout[] | del(.signals)' > cmp/$(basename $f); done
+    whitelist = [
+        'STM32F302VxTx', 'STM32F303RxTx', 'STM32F303VxYx', 'STM32F302RxTx', 'STM32L151QxHx',
+        'STM32L152QxHx', 'STM32L010KxTx', 'STM32F030CxTx', 'STM32F303VxTx', 'STM32F030RxTx',
+        'STM32L010RxTx',
+    ]
+    for kk, vv in d.items():
+        if vv > 1 and kk not in whitelist:
+            print('WARNING: MCU {} has {} pinout variants'.format(kk, vv))
 
 
 if __name__ == '__main__':
@@ -436,26 +673,28 @@ if __name__ == '__main__':
         help='path to the data dir from https://github.com/LibrePCB/stm32-pinout',
     )
     parser.add_argument(
-        '--mcu', metavar='mcu-ref',
-        help='only process the specified MCU',
-    )
-    parser.add_argument(
         '--debug',
         action='store_true',
         help='print debug information',
     )
     args = parser.parse_args()
 
-    # A map mapping symbol names to UUIDs
-    symbol_map = {}  # type: Dict[str, str]
+    # Load and parse all data
+    data = {}  # type: Dict[str, MCU]
+    for filename in listdir(args.data_dir):
+        match = re.match(r'(STM32.*)\.json$', filename)
+        if match:
+            mcu_ref = match.group(1)
+            info_path = path.join(args.data_dir, '{}.json'.format(mcu_ref))
+            with open(info_path, 'r') as f:
+                info = json.loads(f.read())
+                mcu = MCU.from_json(mcu_ref, info)
+                assert None not in mcu.pin_types()
+            assert mcu_ref not in data
+            data[mcu_ref] = mcu
 
-    if args.mcu:
-        generate(args.mcu, args.data_dir, symbol_map, args.debug)
-    else:
-        for filename in listdir(args.data_dir):
-            match = re.match(r'(STM32.*)\.pinout\.csv$', filename)
-            if match:
-                mcu = match.group(1)
-                generate(mcu, args.data_dir, symbol_map, args.debug)
+    # Generate library elements
+    generate(mcu_ref, data, args.debug)
 
+    print()
     save_cache(uuid_cache_file, uuid_cache)

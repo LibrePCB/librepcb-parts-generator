@@ -141,8 +141,7 @@ class Norm(EnumValue):
 
 
 class Variant:
-    def __init__(self, uuid: str, norm: Norm, name: Name, description: Description,
-                 gate: Gate, ):
+    def __init__(self, uuid: str, norm: Norm, name: Name, description: Description, gate: Gate):
         self.uuid = uuid
         self.norm = norm
         self.name = name
