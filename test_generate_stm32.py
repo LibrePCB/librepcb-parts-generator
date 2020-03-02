@@ -1,4 +1,5 @@
 import hashlib
+
 from typing import Dict
 
 import pytest

@@ -27,12 +27,13 @@ import hashlib
 import json
 import math
 import re
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 from os import listdir, makedirs, path
 from uuid import uuid4
 
-from typing import Dict, Iterable, List, Optional, Set, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
+import common
 from common import init_cache, save_cache
 from entities.common import (
     Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GrabArea, Height, Keywords, Layer, Length,
@@ -42,6 +43,7 @@ from entities.component import (
     Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
     Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
 )
+from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.symbol import Pin as SymbolPin
 from entities.symbol import Symbol
 
@@ -144,7 +146,7 @@ class MCU:
     """
     Data class for a MCU.
     """
-    def __init__(self, ref: str, info: dict, pins: Iterable[Pin]):
+    def __init__(self, ref: str, info: Dict[str, Any], pins: Iterable[Pin]):
         # Note: Don't use this directly, use `from_json` instead
         self.ref = ref
         self.name = info['names']['name']
@@ -166,7 +168,7 @@ class MCU:
         else:
             self.voltage = None
         if 'temperature' in info['info']:
-            self.temperature = '{:.0}-{:.0}°C'.format(
+            self.temperature = '{:.0f}-{:.0f}°C'.format(
                 info['info']['temperature']['min'],
                 info['info']['temperature']['max'],
             )  # type: Optional[str]
@@ -191,7 +193,7 @@ class MCU:
         return pin_name
 
     @classmethod
-    def from_json(cls, ref: str, info: dict) -> 'MCU':
+    def from_json(cls, ref: str, info: Dict[str, Any]) -> 'MCU':
         pins = []
         for entry in info['pinout']:
             pin = Pin(
@@ -446,8 +448,10 @@ def _make(dirpath: str) -> None:
         makedirs(dirpath)
 
 
-def generate_sym(mcu: MCU, symbol_map: Dict[str, str], debug: bool = False):
+def generate_sym(mcu: MCU, symbol_map: Dict[str, str], debug: bool = False) -> None:
     assert mcu.symbol_identifier not in symbol_map
+
+    sym_version = '0.1'
 
     (placement, pin_mapping) = mcu.generate_placement_data(debug)
     if debug:
@@ -460,7 +464,7 @@ def generate_sym(mcu: MCU, symbol_map: Dict[str, str], debug: bool = False):
         Description(mcu.symbol_description),
         keywords,
         author,
-        Version('0.1'),
+        Version(sym_version),
         Created('2020-01-30T20:55:23Z'),
         cmpcat,
     )
@@ -526,7 +530,7 @@ def generate_sym(mcu: MCU, symbol_map: Dict[str, str], debug: bool = False):
     print('Wrote sym {}'.format(mcu.symbol_name))
 
 
-def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = False):
+def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = False) -> None:
     """
     When generating components, to reduce the number of components, they are
     merged as follows:
@@ -548,14 +552,15 @@ def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = 
     """
     (placement, pin_mapping) = mcu.generate_placement_data(debug)
 
-    uuid_cmp = uuid('cmp', mcu.component_identifier, 'cmp')
+    cmp_version = '0.1'
+
     component = Component(
-        uuid_cmp,
+        uuid('cmp', mcu.component_identifier, 'cmp'),
         Name(name),
         Description(mcu.component_description),
         keywords,
         author,
-        Version('0.1'),
+        Version(cmp_version),
         Created('2020-01-30T20:55:23Z'),
         Deprecated(False),
         cmpcat,
@@ -568,7 +573,7 @@ def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = 
     signals = {pin.name for pin in mcu.pins}
     for signal in signals:
         component.add_signal(Signal(
-            uuid('cmp', mcu.ref, 'signal-{}'.format(signal)),
+            uuid('cmp', mcu.component_identifier, 'signal-{}'.format(signal)),
             Name(signal),
             Role.PASSIVE,
             Required(False),
@@ -579,7 +584,7 @@ def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = 
 
     # Add symbol variant
     gate = Gate(
-        uuid('cmp', mcu.ref, 'variant-single-gate1'),
+        uuid('cmp', mcu.component_identifier, 'variant-single-gate1'),
         SymbolUUID(uuid('sym', mcu.symbol_identifier, 'sym')),
         Position(0, 0),
         Rotation(0.0),
@@ -589,11 +594,11 @@ def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = 
     for generic, concrete in pin_mapping.items():
         gate.add_pin_signal_map(PinSignalMap(
             uuid('sym', mcu.symbol_identifier, 'pin-{}'.format(generic)),
-            SignalUUID(uuid('cmp', mcu.ref, 'signal-{}'.format(concrete))),
+            SignalUUID(uuid('cmp', mcu.component_identifier, 'signal-{}'.format(concrete))),
             TextDesignator.SIGNAL_NAME,
         ))
     component.add_variant(Variant(
-        uuid('cmp', mcu.ref, 'variant-single'),
+        uuid('cmp', mcu.component_identifier, 'variant-single'),
         Norm.EMPTY,
         Name('single'),
         Description('Symbol with all MCU pins'),
@@ -605,7 +610,54 @@ def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = 
     print('Wrote cmp {}'.format(name))
 
 
-def generate(mcu_ref: str, data: Dict[str, MCU], debug: bool = False):
+def generate_dev(mcu: MCU, symbol_map: Dict[str, str], base_lib_path: str, debug: bool = False) -> None:
+    """
+    A device will be generated for every MCU ref.
+    """
+    (placement, pin_mapping) = mcu.generate_placement_data(debug)
+
+    name = mcu.ref
+    dev_version = '0.1'
+
+    package_uuid_mapping = {
+        'LQFP32':  'd1944164-969d-421f-8b46-1e79fc368195',  # LQFP80P900X900X140-32
+        'LQFP48':  '584b7c26-5a8e-4a2b-807a-977edd1df991',  # LQFP50P900X900X140-48
+        'LQFP100': 'f74cdcb2-833d-4877-876f-56d4c15b5cb8',  # LQFP50P1600X1600X140-100
+        'LQFP144': '2fc34b46-a86d-40e3-9dd1-def143ac3318',  # LQFP50P2200X2200X140-144
+        'LQFP176': '43ab9eca-7912-433f-afaa-61d3ec6c84b2',  # LQFP50P2600X2600X140-176
+    }
+    if mcu.package not in package_uuid_mapping:
+        print('Skipping dev {} (missing package {})'.format(name, mcu.package))
+        return
+
+    pad_uuid_mapping = common.get_pad_uuids(base_lib_path, package_uuid_mapping[mcu.package])
+
+    device = Device(
+        uuid('dev', mcu.ref, 'dev'),
+        Name(mcu.ref),
+        Description(mcu.description),
+        keywords,
+        author,
+        Version(dev_version),
+        Created('2020-03-01T01:55:20Z'),
+        Deprecated(False),
+        cmpcat,
+        ComponentUUID(uuid('cmp', mcu.component_identifier, 'cmp')),
+        PackageUUID(package_uuid_mapping[mcu.package]),
+    )
+    for pin in mcu.pins:
+        pad_uuid = pad_uuid_mapping[pin.number]
+        device.add_pad(ComponentPad(
+            pad_uuid,
+            SignalUUID(uuid('cmp', mcu.component_identifier, 'signal-{}'.format(pin.name))),
+        ))
+
+    device.serialize('out/stm32/dev')
+
+    print('Wrote dev {}'.format(name))
+
+
+def generate(data: Dict[str, MCU], base_lib_path: str, debug: bool = False) -> None:
     _make('out')
     _make('out/stm32')
     _make('out/stm32/sym')
@@ -641,6 +693,8 @@ def generate(mcu_ref: str, data: Dict[str, MCU], debug: bool = False):
         generate_sym(mcus[0], symbol_map, debug)
     for name, mcus in components.items():
         generate_cmp(name, mcus[0], symbol_map, debug)
+    for mcu in data.values():
+        generate_dev(mcu, symbol_map, base_lib_path, debug)
 
     # Check for duplicates
     print()
@@ -673,6 +727,10 @@ if __name__ == '__main__':
         help='path to the data dir from https://github.com/LibrePCB/stm32-pinout',
     )
     parser.add_argument(
+        '--base-lib', metavar='path-to-base-lib', required=True,
+        help='path to the LibrePCB-Base.lplib library',
+    )
+    parser.add_argument(
         '--debug',
         action='store_true',
         help='print debug information',
@@ -694,7 +752,7 @@ if __name__ == '__main__':
             data[mcu_ref] = mcu
 
     # Generate library elements
-    generate(mcu_ref, data, args.debug)
+    generate(data, args.base_lib, args.debug)
 
     print()
     save_cache(uuid_cache_file, uuid_cache)

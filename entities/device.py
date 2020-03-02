@@ -1,3 +1,5 @@
+from os import makedirs, path
+
 from typing import List
 
 from .common import Author, Category, Created, Deprecated, Description, Keywords, Name, UUIDValue, Version
@@ -16,16 +18,18 @@ class PackageUUID(UUIDValue):
 
 
 class ComponentPad():
-    def __init__(self, uuid: str, signal: SignalUUID):
-        self.uuid = uuid
+    def __init__(self, pad_uuid: str, signal: SignalUUID):
+        self.pad_uuid = pad_uuid
         self.signal = signal
 
     def __str__(self) -> str:
-        return '(pad {} {})'.format(self.uuid, self.signal)
+        return '(pad {} {})'.format(self.pad_uuid, self.signal)
 
 
 class Device():
-    def __init__(self, uuid: str, name: Name, description: Description, keywords: Keywords, author: Author, version: Version, created: Created, deprecated: Deprecated, category: Category, component_uuid: ComponentUUID, package_uuid: PackageUUID):
+    def __init__(self, uuid: str, name: Name, description: Description, keywords: Keywords,
+                 author: Author, version: Version, created: Created, deprecated: Deprecated,
+                 category: Category, component_uuid: ComponentUUID, package_uuid: PackageUUID):
         self.uuid = uuid
         self.name = name
         self.description = description
@@ -54,6 +58,16 @@ class Device():
             ' {}\n'.format(self.category) +\
             ' {}\n'.format(self.component_uuid) +\
             ' {}\n'.format(self.package_uuid)
-        ret += indent_entities(sorted(self.pads, key=lambda x: x.uuid))
+        ret += indent_entities(sorted(self.pads, key=lambda x: x.pad_uuid))
         ret += ')'
         return ret
+
+    def serialize(self, output_directory: str) -> None:
+        dev_dir_path = path.join(output_directory, self.uuid)
+        if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
+            makedirs(dev_dir_path)
+        with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
+            f.write('0.1\n')
+        with open(path.join(dev_dir_path, 'device.lp'), 'w') as f:
+            f.write(str(self))
+            f.write('\n')

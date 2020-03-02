@@ -6,6 +6,7 @@ import csv
 import os.path
 import re
 from datetime import datetime
+
 from typing import Dict, Iterable, List, Union
 
 # Commonly used dimensions
