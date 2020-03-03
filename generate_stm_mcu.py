@@ -630,10 +630,18 @@ def generate_dev(mcu: MCU, symbol_map: Dict[str, str], base_lib_path: str, debug
 
     package_uuid_mapping = {
         'LQFP32':  'd1944164-969d-421f-8b46-1e79fc368195',  # LQFP80P900X900X140-32
+        'LQFP44':  'b373f788-8d26-4e3d-9256-89851d962373',  # LQFP80P1200X1200X140-44
         'LQFP48':  '584b7c26-5a8e-4a2b-807a-977edd1df991',  # LQFP50P900X900X140-48
+        'LQFP64':  '54cc857c-3af1-4af3-82b0-fba7a121bcb1',  # LQFP50P1200X1200X140-64
+        'LQFP80':  'fde7e4d0-0548-4c0a-aa3e-6f8ce25e751c',  # LQFP65P1600X1600X140-80
         'LQFP100': 'f74cdcb2-833d-4877-876f-56d4c15b5cb8',  # LQFP50P1600X1600X140-100
         'LQFP144': '2fc34b46-a86d-40e3-9dd1-def143ac3318',  # LQFP50P2200X2200X140-144
         'LQFP176': '43ab9eca-7912-433f-afaa-61d3ec6c84b2',  # LQFP50P2600X2600X140-176
+        'LQFP208': '422600f0-a868-49b6-92f7-22c1874258bb',  # LQFP50P3000X3000X140-208
+        'SO8':     'ffbf2bed-9155-45a9-b154-2f766c7f9019',  # SOIC127P600X175-8
+        'SO8N':    'ffbf2bed-9155-45a9-b154-2f766c7f9019',  # SOIC127P600X175-8
+        'TSSOP14': 'fb8c2dc2-9812-4383-a810-b2fdbd525b4e',  # TSSOP14P65_500X640X120L100X30
+        'TSSOP20': 'a040fccc-54e5-4f95-a5db-20044d8b37a5',  # TSSOP20P65_650X640X120L100X30
     }
     if mcu.package not in package_uuid_mapping:
         print('Skipping dev {} (missing package {})'.format(name, mcu.package))
