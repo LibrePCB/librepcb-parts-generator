@@ -4,15 +4,15 @@ from typing import Dict
 
 import pytest
 
-from generate_stm32 import MCU, Pin
+from generate_stm_mcu import MCU, Pin
 
 
 def _make_empty_info() -> Dict[str, str]:
     return {
         'names': {
-            'name': '',
+            'name': 'STM32F3xxxx',
             'ref': '',
-            'family': '',
+            'family': 'STM32F3',
         },
         'package': '',
         'info': {

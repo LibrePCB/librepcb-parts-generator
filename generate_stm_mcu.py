@@ -1,7 +1,7 @@
 """
-Generate STM32 microcontroller symbols, components and devices.
+Generate STM8 / STM32 microcontroller symbols, components and devices.
 
-Data source: https://github.com/LibrePCB/stm32-pinout
+Data source: https://github.com/LibrePCB/stm-pinout
 
 In order to reduce the number of symbols, the following items are reused:
 
@@ -51,13 +51,14 @@ grid = 2.54  # Grid size in mm
 width = 10  # Symbol width in grid units
 line_width = 0.25  # Line width in mm
 text_height = 2.5  # Name / value text height
-generator = 'librepcb-parts-generator (generate_stm32.py)'
-keywords = Keywords('stm32, stm, st, mcu, microcontroller, arm, cortex')
+generator = 'librepcb-parts-generator (generate_stm_mcu.py)'
+keywords_stm32 = Keywords('stm32, stm, st, mcu, microcontroller, arm, cortex')
+keywords_stm8 = Keywords('stm8, stm, st, mcu, microcontroller, 8bit')
 author = Author('Danilo Bargen, John Eaton')
 cmpcat = Category('22151601-c2d9-419a-87bc-266f9c7c3459')
 
 # Initialize UUID cache
-uuid_cache_file = 'uuid_cache_stm32.csv'
+uuid_cache_file = 'uuid_cache_stm_mcu.csv'
 uuid_cache = init_cache(uuid_cache_file)
 
 
@@ -150,6 +151,14 @@ class MCU:
         # Note: Don't use this directly, use `from_json` instead
         self.ref = ref
         self.name = info['names']['name']
+        if self.name.startswith('STM8'):
+            self.type = 'STM8'
+            self.keywords = keywords_stm8
+        elif self.name.startswith('STM32'):
+            self.type = 'STM32'
+            self.keywords = keywords_stm32
+        else:
+            raise ValueError('Invalid type: {}'.format(self.name))
         self.family = info['names']['family']
         self.package = info['package']
         self.pins = list(pins)
@@ -462,7 +471,7 @@ def generate_sym(mcu: MCU, symbol_map: Dict[str, str], debug: bool = False) -> N
         uuid_sym,
         Name(mcu.symbol_name),
         Description(mcu.symbol_description),
-        keywords,
+        mcu.keywords,
         author,
         Version(sym_version),
         Created('2020-01-30T20:55:23Z'),
@@ -515,7 +524,7 @@ def generate_sym(mcu: MCU, symbol_map: Dict[str, str], debug: bool = False) -> N
     symbol.add_text(text_name)
     symbol.add_text(text_value)
 
-    dirpath = 'out/stm32/sym'
+    dirpath = 'out/stm_mcu/sym'
     sym_dir_path = path.join(dirpath, uuid_sym)
     if not (path.exists(sym_dir_path) and path.isdir(sym_dir_path)):
         makedirs(sym_dir_path)
@@ -546,7 +555,7 @@ def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = 
       flash" is combined with the SHA1 hash of the pins.
 
     Because renaming the pinout might result in a different UUID, when
-    upgrading the stm32-pinout database, changes (but not additions) must be
+    upgrading the stm-pinout database, changes (but not additions) must be
     analyzed manually.
 
     """
@@ -558,7 +567,7 @@ def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = 
         uuid('cmp', mcu.component_identifier, 'cmp'),
         Name(name),
         Description(mcu.component_description),
-        keywords,
+        mcu.keywords,
         author,
         Version(cmp_version),
         Created('2020-01-30T20:55:23Z'),
@@ -605,7 +614,7 @@ def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = 
         gate,
     ))
 
-    component.serialize('out/stm32/cmp')
+    component.serialize('out/stm_mcu/cmp')
 
     print('Wrote cmp {}'.format(name))
 
@@ -636,7 +645,7 @@ def generate_dev(mcu: MCU, symbol_map: Dict[str, str], base_lib_path: str, debug
         uuid('dev', mcu.ref, 'dev'),
         Name(mcu.ref),
         Description(mcu.description),
-        keywords,
+        mcu.keywords,
         author,
         Version(dev_version),
         Created('2020-03-01T01:55:20Z'),
@@ -652,16 +661,16 @@ def generate_dev(mcu: MCU, symbol_map: Dict[str, str], base_lib_path: str, debug
             SignalUUID(uuid('cmp', mcu.component_identifier, 'signal-{}'.format(pin.name))),
         ))
 
-    device.serialize('out/stm32/dev')
+    device.serialize('out/stm_mcu/dev')
 
     print('Wrote dev {}'.format(name))
 
 
 def generate(data: Dict[str, MCU], base_lib_path: str, debug: bool = False) -> None:
     _make('out')
-    _make('out/stm32')
-    _make('out/stm32/sym')
-    _make('out/stm32/cmp')
+    _make('out/stm_mcu')
+    _make('out/stm_mcu/sym')
+    _make('out/stm_mcu/cmp')
 
     # A map mapping symbol names to UUIDs
     symbol_map = {}  # type: Dict[str, str]
@@ -713,7 +722,7 @@ def generate(data: Dict[str, MCU], base_lib_path: str, debug: bool = False) -> N
     whitelist = [
         'STM32F302VxTx', 'STM32F303RxTx', 'STM32F303VxYx', 'STM32F302RxTx', 'STM32L151QxHx',
         'STM32L152QxHx', 'STM32L010KxTx', 'STM32F030CxTx', 'STM32F303VxTx', 'STM32F030RxTx',
-        'STM32L010RxTx',
+        'STM32L010RxTx', 'STM8AL31E8xTx', 'STM8AL3LE8xTx',
     ]
     for kk, vv in d.items():
         if vv > 1 and kk not in whitelist:
@@ -721,10 +730,10 @@ def generate(data: Dict[str, MCU], base_lib_path: str, debug: bool = False) -> N
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Generate STM32 library elements')
+    parser = argparse.ArgumentParser(description='Generate STM MCU library elements')
     parser.add_argument(
         '--data-dir', metavar='path-to-data-dir', required=True,
-        help='path to the data dir from https://github.com/LibrePCB/stm32-pinout',
+        help='path to the data dir from https://github.com/LibrePCB/stm-pinout',
     )
     parser.add_argument(
         '--base-lib', metavar='path-to-base-lib', required=True,
@@ -740,7 +749,7 @@ if __name__ == '__main__':
     # Load and parse all data
     data = {}  # type: Dict[str, MCU]
     for filename in listdir(args.data_dir):
-        match = re.match(r'(STM32.*)\.json$', filename)
+        match = re.match(r'(STM.*)\.json$', filename)
         if match:
             mcu_ref = match.group(1)
             info_path = path.join(args.data_dir, '{}.json'.format(mcu_ref))
