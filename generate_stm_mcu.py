@@ -23,7 +23,6 @@ Example:
 
 """
 import argparse
-import hashlib
 import json
 import math
 import re
@@ -183,6 +182,7 @@ class MCU:
         self.flash = '{} KiB'.format(info['info']['flash'])
         self.ram = '{} KiB'.format(info['info']['ram'])
         self.io_count = info['info']['io']  # type: int
+        self.gpio_version = info['gpio_version'] if len(info['gpio_version']) else None
         if 'frequency' in info['info']:
             self.frequency = '{} MHz'.format(info['info']['frequency'])  # type: Optional[str]
         else:
@@ -341,7 +341,10 @@ class MCU:
         Return the component identifier, composed of the ref without flash and
         the pinout hash.
         """
-        return '{}~{}'.format(self.ref_without_flash, self.pinout_hash).lower()
+        return '{}~{}'.format(
+            self.ref_without_flash,
+            self.gpio_version.replace('-', '~') if self.gpio_version else 'any',
+        ).lower()
 
     @property
     def component_description(self) -> str:
@@ -367,18 +370,6 @@ class MCU:
             description += 'Temperature range: {}\\n'.format(self.temperature)
         description += '\\nGenerated with {}'.format(generator)
         return description
-
-    @property
-    def pinout_hash(self) -> str:
-        """
-        Return a hash of the pinout.
-
-        Before hashing, the pins are sorted *alphanumerically* by pin type
-        followed by pin name (io_pa15 comes before io_pa2).
-
-        """
-        pinout = ','.join(sorted('{}_{}'.format(pin.pin_type, pin.name) for pin in self.pins)).lower()
-        return hashlib.sha1(pinout.encode('ascii')).hexdigest()
 
     def generate_placement_data(self, debug: bool = False) -> Tuple[SymbolPinPlacement, Dict[str, str]]:
         """
@@ -741,29 +732,6 @@ def generate(data: Dict[str, MCU], base_lib_path: str, debug: bool = False) -> N
         generate_cmp(name, mcus[0], symbol_map, debug)
     for mcu in data.values():
         generate_dev(mcu, symbol_map, base_lib_path, debug)
-
-    # Check for duplicates
-    print()
-    d = defaultdict(int)  # type: Dict[str, int]
-    for mcus in components.values():
-        d[mcus[0].ref_without_flash] += 1
-    # Sometimes parts have the same pin names, but different writings (e.g.
-    # `PC14 / OSC32_IN` vs `PC14-OSC32_IN`). These differences should be
-    # filtered out by the cleanup function.
-    #
-    # Whitelist contains parts that actually have different variants, verified
-    # manually by comparing pinout files.
-    #
-    # To compare more easily:
-    # for f in data/STM32F302V*T*.json; do cat $f | jq -c '.pinout[] | del(.signals)' > cmp/$(basename $f); done
-    whitelist = [
-        'STM32F302VxTx', 'STM32F303RxTx', 'STM32F303VxYx', 'STM32F302RxTx', 'STM32L151QxHx',
-        'STM32L152QxHx', 'STM32L010KxTx', 'STM32F030CxTx', 'STM32F303VxTx', 'STM32F030RxTx',
-        'STM32L010RxTx', 'STM8AL31E8xTx', 'STM8AL3LE8xTx',
-    ]
-    for kk, vv in d.items():
-        if vv > 1 and kk not in whitelist:
-            print('WARNING: MCU {} has {} pinout variants'.format(kk, vv))
 
 
 if __name__ == '__main__':
