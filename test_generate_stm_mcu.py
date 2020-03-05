@@ -2,7 +2,7 @@ from typing import Any, Dict
 
 import pytest
 
-from generate_stm_mcu import MCU, signal_name
+from generate_stm_mcu import MCU
 
 
 def _make_empty_info() -> Dict[str, Any]:
@@ -43,27 +43,21 @@ def test_mcu_ref_for_flash_variants_single():
 
 
 @pytest.mark.parametrize(['pin_name', 'expected'], [
+    # Oscillator normalization
     ('PC14OSC32_IN', 'PC14-OSC32_IN'),
     ('PC3 / OSC', 'PC3-OSC'),
     ('PC3/ OSC', 'PC3-OSC'),
+    # Everything after a space is stripped out
+    ('PH3-BOOT0 (BOOT0)', 'PH3-BOOT0'),
+    ('PC15-OSC32_OUT (OSC32_OUT)', 'PC15-OSC32_OUT'),
+    ('PA13 (JTMS/SWDIO)', 'PA13'),
 ])
 def test_cleanup_pin_name(pin_name, expected):
     mcu = MCU(ref='STM32L071KBTx', info=_make_empty_info(), pins=[])
     assert mcu._cleanup_pin_name(pin_name) == expected
 
 
-@pytest.mark.parametrize(['name', 'expected'], [
-    # Everything after a space is stripped out
-    ('PH3-BOOT0 (BOOT0)', 'PH3-BOOT0'),
-    ('PC15-OSC32_OUT (OSC32_OUT)', 'PC15-OSC32_OUT'),
-    ('PA13 (JTMS/SWDIO)', 'PA13'),
-    # Pin remappings are converted to slashes
-    ('PA9 [PA11]', 'PA9/PA11'),
-])
-def test_cleanup_signal_name(name, expected):
-    assert signal_name(name) == expected
-
-
 def test_signal_name_validation():
+    mcu = MCU(ref='STM32L071KBTx', info=_make_empty_info(), pins=[])
     with pytest.raises(AssertionError):
-        signal_name('Hel(lo world')
+        mcu._cleanup_pin_name('Hel(lo world')

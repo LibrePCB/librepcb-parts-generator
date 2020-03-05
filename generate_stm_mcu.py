@@ -79,24 +79,6 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
-def signal_name(val: str) -> str:
-    """
-    Create a valid signal name from a string.
-
-    - Strip everything after a space
-
-    """
-    # Convert "PA9 [PA11]" (pin remapping variant) to "PA9/PA11"
-    val = re.sub(r' \[([^\]]+)\]', r'/\1', val)
-    # Remove everything after the first space
-    val = val.split(' ')[0]
-    # Validate according to LibrePCB signal name rules
-    # (libs/librepcb/common/circuitidentifier.h)
-    assert re.match(r'^[-a-zA-Z0-9_+/!?@#$]*$', val), \
-        'Invalid signal name: {}'.format(val)
-    return val
-
-
 class Pin:
     """
     Data class for a MCU pin.
@@ -208,29 +190,62 @@ class MCU:
 
     @staticmethod
     def _cleanup_pin_name(pin_name: str) -> str:
-        # WARNING: Changing this has an effect on the pinout hash!
+        """
+        WARNING: Changing this has an effect on the component identifier!
+        """
+        val = pin_name
+
+        # Oscillator pins sometimes have variations between different MCUs, even though
+        # the rest of the pinout is identical. Therefore, normalize those pin names.
         if 'OSC' in pin_name:
-            # Oscillator pins sometimes have variations between different MCUs, even though
-            # the rest of the pinout is identical. Therefore, normalize those pin names.
-            val = pin_name
             val = re.sub(r'\s*-\s*OSC', r'-OSC', val)
             val = re.sub(r'\s*/\s*OSC', r'-OSC', val)
             val = re.sub(r'([0-9])OSC', r'\1-OSC', val)
-            return val
-        return pin_name
+
+        # Remove everything after the first space
+        val = val.split(' ')[0]
+
+        # Validate according to LibrePCB signal name rules
+        # (libs/librepcb/common/circuitidentifier.h)
+        assert re.match(r'^[-a-zA-Z0-9_+/!?@#$]*$', val), \
+            'Invalid signal name: {}'.format(val)
+
+        return val
 
     @classmethod
     def from_json(cls, ref: str, info: Dict[str, Any]) -> 'MCU':
-        pins = []
+        # Collect pins, grouped by number
+        pin_map = defaultdict(list)  # type: Dict[str, List[Pin]]
         for entry in info['pinout']:
-            if entry['variant'] is None:
-                # Ignore pin variants (e.g. due to remapping)
-                pin = Pin(
-                    number=entry['position'],
-                    name=cls._cleanup_pin_name(entry['name']),
-                    pin_type=cls._cleanup_type(entry['type']),
-                )
-                pins.append(pin)
+            if entry['type'] == 'NC' and len(entry['signals']) == 0:
+                # Skip non-connected pins without signals
+                continue
+            pin = Pin(
+                number=entry['position'],
+                name=cls._cleanup_pin_name(entry['name']),
+                pin_type=cls._cleanup_type(entry['type']),
+            )
+            pin_map[entry['position']].append(pin)
+
+        # Merge pins into a flat list
+        pins = []  # type: List[Pin]
+        for group in pin_map.values():
+            # Merge signal names
+            merged_name = '/'.join(sorted(pin.name for pin in group))
+
+            # Ensure that all merged signals have the same pin type
+            types = {pin.pin_type for pin in group}
+            if 'MonoIO' in types and 'IO' in types:
+                # Merge MonoIO into IO
+                types.remove('MonoIO')
+                types.add('IO')
+            assert len(types) == 1, (types, info)
+
+            # Update the first pin
+            pin = group[0]
+            pin.name = merged_name
+            pins.append(pin)
+
         return MCU(ref, info, pins)
 
     def pin_types(self) -> Set[str]:
@@ -584,21 +599,15 @@ def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = 
         Prefix('U'),
     )
 
-    # Signal names are based on pin names
-    signals = {pin.name for pin in mcu.pins}
-
-    # Cleanup sanity check
-    cleaned_signals = {signal_name(signal) for signal in signals}
-    assert len(signals) == len(cleaned_signals), (signals, cleaned_signals)
-
     # Add signals
+    signals = {pin.name for pin in mcu.pins}
     for signal in signals:
         component.add_signal(Signal(
             # Use original signal name, so that changing the cleanup function
             # does not influence the identifier.
             uuid('cmp', mcu.component_identifier, 'signal-{}'.format(signal)),
             # Use cleaned up signal name for name
-            Name(signal_name(signal)),
+            Name(signal),
             Role.PASSIVE,
             Required(False),
             Negated(False),
