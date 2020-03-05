@@ -7,7 +7,7 @@ import os.path
 import re
 from datetime import datetime
 
-from typing import Dict, Iterable, List, Union
+from typing import Any, Dict, Iterable, List, Union
 
 # Commonly used dimensions
 COURTYARD_LINE_WIDTH = 0.1
@@ -137,3 +137,14 @@ def get_pad_uuids(base_lib_path: str, pkg_uuid: str) -> Dict[str, str]:
         mapping[name] = uuid
     assert len(matches) == len(mapping)
     return mapping
+
+
+def human_sort_key(key: str) -> List[Any]:
+    """
+    Function that can be used for natural sorting, where "PB2" comes before
+    "PB10" and after "PA3".
+    """
+    def _convert(text: str) -> Union[int, str]:
+        return int(text) if text.isdigit() else text
+
+    return [_convert(x) for x in re.split(r'(\d+)', key) if x]

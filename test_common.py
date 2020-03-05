@@ -1,7 +1,7 @@
 import pytest
 
 from common import format_float as ff
-from common import format_ipc_dimension, sign
+from common import format_ipc_dimension, human_sort_key, sign
 
 
 @pytest.mark.parametrize(['inval', 'outval'], [
@@ -36,3 +36,18 @@ def test_format_ipc_dimension(inval: float, outval: str):
 ])
 def test_sign(inval: float, outval: str):
     assert sign(inval) == outval
+
+
+@pytest.mark.parametrize(['inval', 'outval'], [
+    ('123', [123]),
+    ('PA10-PB1', ['PA', 10, '-PB', 1]),
+])
+def test_human_sort_key(inval, outval):
+    assert human_sort_key(inval) == outval
+
+
+@pytest.mark.parametrize(['inlist', 'sortedlist'], [
+    (['PA5', 'PA10', 'PA4', 'PB12'], ['PA4', 'PA5', 'PA10', 'PB12']),
+])
+def test_human_sort_key_list(inlist, sortedlist):
+    assert sorted(inlist, key=human_sort_key) == sortedlist

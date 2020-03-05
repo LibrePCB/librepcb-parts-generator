@@ -33,7 +33,7 @@ from uuid import uuid4
 from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
 import common
-from common import init_cache, save_cache
+from common import human_sort_key, init_cache, save_cache
 from entities.common import (
     Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GrabArea, Height, Keywords, Layer, Length,
     Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
@@ -231,7 +231,7 @@ class MCU:
         pins = []  # type: List[Pin]
         for group in pin_map.values():
             # Merge signal names
-            merged_name = '/'.join(sorted(pin.name for pin in group))
+            merged_name = '/'.join(sorted((pin.name for pin in group), key=human_sort_key))
 
             # Ensure that all merged signals have the same pin type
             types = {pin.pin_type for pin in group}
@@ -259,7 +259,7 @@ class MCU:
         Return all pins of that type, sorted.
         """
         pins = [p for p in self.pins if p.pin_type == pin_type]
-        pins.sort(key=lambda p: (p.name, p.number))
+        pins.sort(key=lambda p: (human_sort_key(p.name), p.number))
         return pins
 
     def get_pin_names_by_type(self, pin_type: str) -> List[PinName]:
