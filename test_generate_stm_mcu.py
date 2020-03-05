@@ -1,13 +1,13 @@
 import hashlib
 
-from typing import Dict
+from typing import Any, Dict
 
 import pytest
 
-from generate_stm_mcu import MCU, Pin
+from generate_stm_mcu import MCU, Pin, signal_name
 
 
-def _make_empty_info() -> Dict[str, str]:
+def _make_empty_info() -> Dict[str, Any]:
     return {
         'names': {
             'name': 'STM32F3xxxx',
@@ -62,3 +62,20 @@ def test_mcu_ref_for_flash_variants_single():
 def test_cleanup_pin_name(pin_name, expected):
     mcu = MCU(ref='STM32L071KBTx', info=_make_empty_info(), pins=[])
     assert mcu._cleanup_pin_name(pin_name) == expected
+
+
+@pytest.mark.parametrize(['name', 'expected'], [
+    # Everything after a space is stripped out
+    ('PH3-BOOT0 (BOOT0)', 'PH3-BOOT0'),
+    ('PC15-OSC32_OUT (OSC32_OUT)', 'PC15-OSC32_OUT'),
+    ('PA13 (JTMS/SWDIO)', 'PA13'),
+    # Pin remappings are converted to slashes
+    ('PA9 [PA11]', 'PA9/PA11'),
+])
+def test_cleanup_signal_name(name, expected):
+    assert signal_name(name) == expected
+
+
+def test_signal_name_validation():
+    with pytest.raises(AssertionError):
+        signal_name('Hel(lo world')

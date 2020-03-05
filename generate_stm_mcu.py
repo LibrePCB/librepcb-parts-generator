@@ -80,6 +80,24 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
+def signal_name(val: str) -> str:
+    """
+    Create a valid signal name from a string.
+
+    - Strip everything after a space
+
+    """
+    # Convert "PA9 [PA11]" (pin remapping variant) to "PA9/PA11"
+    val = re.sub(r' \[([^\]]+)\]', r'/\1', val)
+    # Remove everything after the first space
+    val = val.split(' ')[0]
+    # Validate according to LibrePCB signal name rules
+    # (libs/librepcb/common/circuitidentifier.h)
+    assert re.match(r'^[-a-zA-Z0-9_+/!?@#$]*$', val), \
+        'Invalid signal name: {}'.format(val)
+    return val
+
+
 class Pin:
     """
     Data class for a MCU pin.
@@ -205,12 +223,14 @@ class MCU:
     def from_json(cls, ref: str, info: Dict[str, Any]) -> 'MCU':
         pins = []
         for entry in info['pinout']:
-            pin = Pin(
-                number=entry['position'],
-                name=cls._cleanup_pin_name(entry['name']),
-                pin_type=cls._cleanup_type(entry['type']),
-            )
-            pins.append(pin)
+            if entry['variant'] is None:
+                # Ignore pin variants (e.g. due to remapping)
+                pin = Pin(
+                    number=entry['position'],
+                    name=cls._cleanup_pin_name(entry['name']),
+                    pin_type=cls._cleanup_type(entry['type']),
+                )
+                pins.append(pin)
         return MCU(ref, info, pins)
 
     def pin_types(self) -> Set[str]:
@@ -452,11 +472,6 @@ class MCU:
         return '<MCU {} ({} pins, {})>'.format(self.ref, len(self.pins), self.package)
 
 
-def _make(dirpath: str) -> None:
-    if not (path.exists(dirpath) and path.isdir(dirpath)):
-        makedirs(dirpath)
-
-
 def generate_sym(mcu: MCU, symbol_map: Dict[str, str], debug: bool = False) -> None:
     assert mcu.symbol_identifier not in symbol_map
 
@@ -578,12 +593,21 @@ def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = 
         Prefix('U'),
     )
 
-    # Add signals
+    # Signal names are based on pin names
     signals = {pin.name for pin in mcu.pins}
+
+    # Cleanup sanity check
+    cleaned_signals = {signal_name(signal) for signal in signals}
+    assert len(signals) == len(cleaned_signals), (signals, cleaned_signals)
+
+    # Add signals
     for signal in signals:
         component.add_signal(Signal(
+            # Use original signal name, so that changing the cleanup function
+            # does not influence the identifier.
             uuid('cmp', mcu.component_identifier, 'signal-{}'.format(signal)),
-            Name(signal),
+            # Use cleaned up signal name for name
+            Name(signal_name(signal)),
             Role.PASSIVE,
             Required(False),
             Negated(False),
@@ -675,6 +699,11 @@ def generate_dev(mcu: MCU, symbol_map: Dict[str, str], base_lib_path: str, debug
 
 
 def generate(data: Dict[str, MCU], base_lib_path: str, debug: bool = False) -> None:
+
+    def _make(dirpath: str) -> None:
+        if not (path.exists(dirpath) and path.isdir(dirpath)):
+            makedirs(dirpath)
+
     _make('out')
     _make('out/stm_mcu')
     _make('out/stm_mcu/sym')
