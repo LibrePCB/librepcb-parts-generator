@@ -1,0 +1,11 @@
+rm -r out/Logic
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND2_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND2_dm_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NOR2_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NOR2_dm_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND2_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND2_dm_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  OR2_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  OR2_dm_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  XOR_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  XNOR_4
