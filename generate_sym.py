@@ -33,7 +33,7 @@ cvs_raw_data = []
 
 """
 
-generator = 'librepcb-parts-generator (generate_logic_sym.py)'
+generator = 'librepcb-parts-generator (generate_sym.py)'
 
 
 def uuid(category: str, kind: str, identifier: str) -> str:
@@ -203,13 +203,13 @@ def generate_sym(
         pin_posx = pad_posx[p - 1]
         pin_posy = pad_posy[p - 1]
         pin_orient = pad_orientation[p - 1]
-        pin_length = pad_length[p - 1]
+
         pin = SymbolPin(
             uuid_pins[p - 1],
             Name( pin_name),
             Position(pin_posx, pin_posy),
             Rotation(pin_orient),
-            Length(pin_length)
+            Length(0.0)
         )
 
         symbol.add_pin(pin)
