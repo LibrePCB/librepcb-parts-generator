@@ -1,4 +1,4 @@
-rm -r out/Logic
+rm -r out
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND2_4
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND2_dm_4
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND3_4
@@ -16,3 +16,10 @@ python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  INV_4
 python3.7 ../generate_logic_sym.py   --group buffer  --directory  ./Logic/    --design  BUFFER_4
 python3.7 ../generate_logic_sym.py   --group flipflop --directory ./Logic/    --design QQN_RNPN_4
+python3.7 ../generate_logic_sym.py   --group flipflop --directory ./Logic/    --design DFF_RNPN_4
+python3.7 ../generate_logic_sym.py   --group flipflop --directory ./Logic/    --design DFF_RN_4
+python3.7 ../generate_logic_sym.py   --group flipflop --directory ./Logic/    --design DFF_PN_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND2_6
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND2_8
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND2_dm_8
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND3_8

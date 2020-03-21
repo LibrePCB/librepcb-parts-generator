@@ -132,7 +132,6 @@ def generate_sym(
     create_date: Optional[str],
 ) -> None:
     category = 'sym'
-    scale = 1
     pad_type = []
     pad_name = []
     pad_posx = []
@@ -145,10 +144,14 @@ def generate_sym(
     low_y = 0
     high_x = 0
     high_y = 0
-
+    scale = 1.000
+    
     for row in cvs_raw_data[:num_of_rows]:
         # parsing each column of a row
         row_type = row[0]
+
+        if row_type == "SCALE":
+            scale = float(row[1])
 
         if row_type == "DEF":
             def_name = row[1]
@@ -167,10 +170,10 @@ def generate_sym(
 
             pad_name.append(row[1])
             pad_type.append(row[2])
-            pad_posx.append(float(row[3]) / scale)
-            pad_posy.append(float(row[4]) / scale)
-            pad_length.append(float(row[5]) / scale)
-            uuid_pins.append(uuid('sym', def_name, 'pin-{}_{}'.format(row[1], row[3])))
+            pad_posx.append(float(row[3]))
+            pad_posy.append(float(row[4]))
+            pad_length.append(float(row[5]))
+            uuid_pins.append(uuid('sym', def_name, 'pin-{}'.format(row[1])))
             num_of_pins = num_of_pins + 1
 
     uuid_sym = uuid('sym', '{}'.format(def_name), 'sym')
@@ -219,6 +222,7 @@ def generate_sym(
         # parsing each column of a row
         row_type = row[0]
         if row_type == "POLY":
+            line_width = float(row[1])
             fill = row[2]
             fill_str = "False"
             if fill == "F":
@@ -232,6 +236,8 @@ def generate_sym(
                 GrabArea(fill_str)
             )
 
+
+            
         if row_type == "POLYPT":
             print('POLYPT  {} {} {}'.format( row[1], row[2], row[3]))
             poly_x = float(row[1]) / scale
@@ -264,9 +270,10 @@ def generate_sym(
             symbol.add_polygon(polygon)
 
         if row_type == "CIRC":
-            pos_x = float(row[1]) / scale
-            pos_y = float(row[2]) / scale
-            dia = float(row[3]) / scale
+            line_width = float(row[1]) / scale
+            pos_x = float(row[2]) / scale
+            pos_y = float(row[3]) / scale
+            dia = float(row[4]) / scale
 
             print('Circle ')
             circle = Circle(
@@ -274,7 +281,7 @@ def generate_sym(
                 Layer('sym_outlines'),
                 Width(line_width),
                 Fill(False),
-                GrabArea(True),
+                GrabArea(False),
                 Diameter(dia),
                 Position(pos_x, pos_y)
             )
