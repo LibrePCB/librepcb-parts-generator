@@ -145,7 +145,7 @@ def generate_sym(
     high_x = 0
     high_y = 0
     scale = 1.000
-    
+
     for row in cvs_raw_data[:num_of_rows]:
         # parsing each column of a row
         row_type = row[0]
@@ -236,8 +236,6 @@ def generate_sym(
                 GrabArea(fill_str)
             )
 
-
-            
         if row_type == "POLYPT":
             print('POLYPT  {} {} {}'.format( row[1], row[2], row[3]))
             poly_x = float(row[1]) / scale
