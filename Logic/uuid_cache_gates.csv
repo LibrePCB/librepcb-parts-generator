@@ -62,6 +62,13 @@ sym-nand2_4-polygon-contour,16278946-3ca9-4868-9dac-c963ab9fd17b
 sym-nand2_4-sym,dba50be9-299e-434a-979b-ad6e99a96be0
 sym-nand2_4-text-name,28d08756-5a37-40fe-ae15-91c2bcb6f11f
 sym-nand2_4-text-value,83acd99e-93af-442e-a228-9af054fe3859
+sym-nand2_8-pin-a,a85f484c-8f8c-4035-aa1b-4d4139ae334e
+sym-nand2_8-pin-b,4069c8f8-2709-4295-ade2-6c5ead1b02a1
+sym-nand2_8-pin-out,4016f10a-3ea6-4ada-bccd-fcb82eec1347
+sym-nand2_8-polygon-contour,a6202f6d-7848-47b1-8b0f-86040cb5fd3b
+sym-nand2_8-sym,ce347ad6-691b-4a35-82a6-e540733830d5
+sym-nand2_8-text-name,d31e54a8-4ba7-44a6-899e-de9faa3e3b49
+sym-nand2_8-text-value,2028972a-bdea-4fbb-8103-894bf3c5a9c4
 sym-nand2_dm_4-pin-a,d7132dbe-c67d-4208-a3db-6667cc7f0257
 sym-nand2_dm_4-pin-b,d52ef654-c361-4002-8b89-eac215b3da24
 sym-nand2_dm_4-pin-out,27f9da2b-3555-4042-b242-1da6a3c7ed23
