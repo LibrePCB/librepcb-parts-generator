@@ -53,7 +53,7 @@ def uuid(category: str, kind: str, identifier: str) -> str:
         uuid_cache[key] = str(uuid4())
     return uuid_cache[key]
 
-
+unit = 2.54
 width = 2.54
 line_width = 0.25
 pkg_text_height = 1.0
@@ -170,9 +170,9 @@ def generate_sym(
 
             pad_name.append(row[1])
             pad_type.append(row[2])
-            pad_posx.append(float(row[3]))
-            pad_posy.append(float(row[4]))
-            pad_length.append(float(row[5]))
+            pad_posx.append(float(row[3]) * unit )
+            pad_posy.append(float(row[4]) * unit )
+            pad_length.append(float(row[5]) * unit )
             uuid_pins.append(uuid('sym', def_name, 'pin-{}'.format(row[1])))
             num_of_pins = num_of_pins + 1
 
@@ -222,7 +222,7 @@ def generate_sym(
         # parsing each column of a row
         row_type = row[0]
         if row_type == "POLY":
-            line_width = float(row[1])
+            line_width = float(row[1]) * unit
             fill = row[2]
             fill_str = "False"
             if fill == "F":
@@ -238,8 +238,8 @@ def generate_sym(
 
         if row_type == "POLYPT":
             print('POLYPT  {} {} {}'.format( row[1], row[2], row[3]))
-            poly_x = float(row[1]) / scale
-            poly_y = float(row[2]) / scale
+            poly_x = float(row[1]) * unit / scale
+            poly_y = float(row[2]) * unit / scale
             poly_angle = float(row[3])
             polygon.add_vertex(Vertex(Position(poly_x, poly_y), Angle(poly_angle)))
 
@@ -248,10 +248,10 @@ def generate_sym(
             symbol.add_polygon(polygon)
 
         if row_type == "RECT":
-            low_x = float(row[1]) / scale
-            low_y = float(row[2]) / scale
-            high_x = float(row[3]) / scale
-            high_y = float(row[4]) / scale
+            low_x = float(row[1]) * unit / scale
+            low_y = float(row[2]) * unit / scale
+            high_x = float(row[3]) * unit / scale
+            high_y = float(row[4]) * unit / scale
             print('Rectangle ')
             polygon = Polygon(
                 uuid_polygon,
@@ -268,10 +268,10 @@ def generate_sym(
             symbol.add_polygon(polygon)
 
         if row_type == "CIRC":
-            line_width = float(row[1]) / scale
-            pos_x = float(row[2]) / scale
-            pos_y = float(row[3]) / scale
-            dia = float(row[4]) / scale
+            line_width = float(row[1]) * unit / scale
+            pos_x = float(row[2]) * unit / scale
+            pos_y = float(row[3]) * unit / scale
+            dia = float(row[4]) * unit / scale
 
             print('Circle ')
             circle = Circle(
@@ -286,8 +286,8 @@ def generate_sym(
             symbol.add_circle(circle)
 
         if row_type == "TEXT":
-            pos_x = float(row[1]) / scale
-            pos_y = float(row[2]) / scale
+            pos_x = float(row[1]) * unit / scale
+            pos_y = float(row[2]) * unit / scale
             textfield = row[3]
             if textfield == "NAME":
                 text = Text(uuid_text_name, Layer('sym_names'), Value('{{NAME}}'), Align('center bottom'), Height(sym_text_height), Position(pos_x, pos_y), Rotation(0.0))
