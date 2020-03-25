@@ -53,6 +53,7 @@ def uuid(category: str, kind: str, identifier: str) -> str:
         uuid_cache[key] = str(uuid4())
     return uuid_cache[key]
 
+
 unit = 2.54
 width = 2.54
 line_width = 0.25
@@ -170,9 +171,9 @@ def generate_sym(
 
             pad_name.append(row[1])
             pad_type.append(row[2])
-            pad_posx.append(float(row[3]) * unit )
-            pad_posy.append(float(row[4]) * unit )
-            pad_length.append(float(row[5]) * unit )
+            pad_posx.append(float(row[3]) * unit)
+            pad_posy.append(float(row[4]) * unit)
+            pad_length.append(float(row[5]) * unit)
             uuid_pins.append(uuid('sym', def_name, 'pin-{}'.format(row[1])))
             num_of_pins = num_of_pins + 1
 
