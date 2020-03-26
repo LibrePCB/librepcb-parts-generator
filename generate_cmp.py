@@ -236,7 +236,7 @@ def generate_cmp(
     component.add_variant(variant)
     uuid_symbol_variant = uuid('sym', '{}_{}'.format(def_name, variant_name), 'sym')
     uuid_variant_variant = _uuid('variant-{}'.format(variant_name))
-
+    print('default {}  variant {}'.format(uuid_symbol_default, uuid_symbol_variant))
     if uuid_symbol_default != uuid_symbol_variant:
 
         iunits = int(units)
@@ -262,9 +262,10 @@ def generate_cmp(
                 if u == int(pad_unit[p - 1]):
                     gate.add_pin_signal_map(PinSignalMap(uuid_pins[p - 1], SignalUUID(uuid_signals[p - 1]), TextDesignator.SYMBOL_PIN_NAME,))
 
-    variant.add_gate(gate)
+            variant.add_gate(gate)
 
-    component.add_variant(variant)
+        component.add_variant(variant)
+
     component.serialize(dirpath)
 
     cmp_dir_path = path.join(dirpath, uuid_cmp)
@@ -276,7 +277,7 @@ def generate_cmp(
         f.write(str(component))
         f.write('\n')
 
-    print('                          :Wrote component {} {}'.format(def_name, uuid_cmp))
+    print('                          :Wrote component {} {} {}'.format(def_name, uuid_cmp, uuid_dev))
 
 
 if __name__ == '__main__':
