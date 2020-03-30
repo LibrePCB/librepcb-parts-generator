@@ -4,9 +4,11 @@ python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND2_dm_4
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND3_4
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND3_dm_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND3_dm_8
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND4_4
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND4_8
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND4_dm_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND4_dm_8
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND6_4
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NAND8_4
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  NOR2_4
@@ -19,9 +21,11 @@ python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND2_dm_4
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND3_4
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND3_dm_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND3_dm_8
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND4_4
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND4_8
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND4_dm_4
+python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND4_dm_8
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND6_4
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  AND8_4
 python3.7 ../generate_logic_sym.py   --group gates   --directory  ./Logic/    --design  OR2_4
