@@ -59,7 +59,7 @@ width = 2.54
 line_width = 0.25
 pkg_text_height = 1.0
 sym_text_height = 2.54
-
+descr = ""
 boilerplate_cvs_file = 'Boilerplate_{}.csv'.format(group_name)
 
 with open(boilerplate_cvs_file, 'r') as CSVBfile:
@@ -112,6 +112,8 @@ for row in cvs_raw_data[:num_of_rows]:
         keywords = '{},{}'.format(keywords, row[1])
     if row_type == "DEF":
         def_name = row[1]
+    if row_type == "DESCR":
+        descr = row[1]
 
 uuid_cmpcat_file = 'uuid_cache_{}_cmpcat.csv'.format(group_name)
 uuid_cache = init_cache(uuid_cmpcat_file)
@@ -128,6 +130,7 @@ def generate_sym(
     dirpath: str,
     author: str,
     keywords: str,
+    descr: str,
     version: str,
     cmpcat: str,
     create_date: Optional[str],
@@ -191,8 +194,8 @@ def generate_sym(
     symbol = Symbol(
         uuid_sym,
         Name('{}'.format(sym_name)),
-        Description('created from file---  {}.\\n'
-                    'Generated with {}'.format(cvs_file, generator)),
+        Description('{}\\ncreated from file---  {}.\\n'
+                    'Generated with {}'.format(descr, cvs_file, generator)),
         Keywords('{}'.format( keywords)),
         Author(author),
         Version(version),
@@ -322,6 +325,7 @@ if __name__ == '__main__':
         author=author,
         version=version,
         keywords=keywords,
+        descr=descr,
         cmpcat=cmpcat,
         create_date=create_date,
     )
