@@ -184,8 +184,7 @@ def generate_sym(
 
     def _uuid(identifier: str) -> str:
         return uuid(category, def_name, identifier)
-
-    uuid_polygon = _uuid('polygon-contour')
+    polygon_cnt = 1
     uuid_text_name = _uuid('text-name')
     uuid_text_value = _uuid('text-value')
     sym_name = '{}'.format(def_name)
@@ -228,17 +227,27 @@ def generate_sym(
         if row_type == "POLY":
             line_width = float(row[1]) * unit
             fill = row[2]
-            fill_str = "False"
             if fill == "F":
                 fill_str = "True"
-            print('POLY {} '.format( row[1]))
-            polygon = Polygon(
-                uuid_polygon,
-                Layer('sym_outlines'),
-                Width(line_width),
-                Fill(False),
-                GrabArea(fill_str)
-            )
+                uuid_polygon = _uuid('polygon-contour')
+                polygon = Polygon(
+                    uuid_polygon,
+                    Layer('sym_outlines'),
+                    Width(line_width),
+                    Fill(False),
+                    GrabArea(fill_str)
+                )
+            else:
+                fill_str = "False"
+                uuid_polygon = uuid('sym', '{}-polygon-{}'.format(def_name, polygon_cnt), 'sym')
+                polygon_cnt = polygon_cnt + 1
+                polygon = Polygon(
+                    uuid_polygon,
+                    Layer('sym_outlines'),
+                    Width(line_width),
+                    Fill(False),
+                    GrabArea(fill_str)
+                )
 
         if row_type == "POLYPT":
             print('POLYPT  {} {} {}'.format( row[1], row[2], row[3]))
@@ -257,6 +266,8 @@ def generate_sym(
             high_x = float(row[3]) * unit / scale
             high_y = float(row[4]) * unit / scale
             print('Rectangle ')
+            uuid_polygon = uuid('sym', '{}-polygon-{}'.format(def_name, polygon_cnt), 'sym')
+            polygon_cnt = polygon_cnt + 1
             polygon = Polygon(
                 uuid_polygon,
                 Layer('sym_outlines'),
@@ -276,7 +287,8 @@ def generate_sym(
             pos_x = float(row[2]) * unit / scale
             pos_y = float(row[3]) * unit / scale
             dia = float(row[4]) * unit / scale
-
+            uuid_polygon = uuid('sym', '{}-polygon-{}'.format(def_name, polygon_cnt), 'sym')
+            polygon_cnt = polygon_cnt + 1
             print('Circle ')
             circle = Circle(
                 uuid_polygon,
