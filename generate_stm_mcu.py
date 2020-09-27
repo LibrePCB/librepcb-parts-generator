@@ -47,7 +47,9 @@ from entities.symbol import Pin as SymbolPin
 from entities.symbol import Symbol
 
 grid = 2.54  # Grid size in mm
-width = 10  # Symbol width in grid units
+width_regular = 10  # Symbol width in grid units
+width_wide = 16  # Symbol width in grid units (used for symbols with very long pin names)
+width_wide_threshold = 15  # Use wide symbol for pin names >= threshold characters long
 line_width = 0.25  # Line width in mm
 text_height = 2.5  # Name / value text height
 generator = 'librepcb-parts-generator (generate_stm_mcu.py)'
@@ -514,9 +516,17 @@ def generate_sym(mcu: MCU, symbol_map: Dict[str, str], debug: bool = False) -> N
 
     sym_version = '0.1'
 
+    # Generate pin placement data
     (placement, pin_mapping) = mcu.generate_placement_data(debug)
     if debug:
         print(pin_mapping)
+
+    # Determine symbol width
+    max_pin_name_length = max(map(len, pin_mapping.values()))
+    if max_pin_name_length >= width_wide_threshold:
+        width = width_wide
+    else:
+        width = width_regular
 
     uuid_sym = uuid('sym', mcu.symbol_identifier, 'sym')
     symbol = Symbol(
