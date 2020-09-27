@@ -30,7 +30,7 @@ from collections import defaultdict
 from os import listdir, makedirs, path
 from uuid import uuid4
 
-from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
+from typing import Any, Dict, Iterable, Iterator, List, Optional, Set, Tuple
 
 import common
 from common import human_sort_key, init_cache, save_cache
@@ -408,6 +408,8 @@ class MCU:
         | NC           |
         +--------------+
 
+        Power pins will be spaced 2 grid steps apart.
+
         Returned data: A tuple with the abstract pin placement info, as well as
         a mapping from abstract name to real name.
 
@@ -416,14 +418,40 @@ class MCU:
         unknown_pin_types = self.pin_types() - {'Reset', 'Power', 'MonoIO', 'Boot', 'NC', 'IO'}
         assert len(unknown_pin_types) == 0, 'Unknown pin types: {}'.format(unknown_pin_types)
 
+        class PinGroup:
+            def __init__(self, name: str, pins: List[PinName]):
+                self.name = name
+                self.pins = pins
+
+            def __len__(self) -> int:
+                return len(self.pins)
+
+            def __iter__(self) -> Iterator[PinName]:
+                return iter(self.pins)
+
         # Determine number of pins on both sides
-        left_pins = [self.get_pin_names_by_type(t) for t in ['Reset', 'Power', 'MonoIO', 'Boot', 'NC']]
+        left_pins = [
+            PinGroup(t, self.get_pin_names_by_type(t))
+            for t in ['Reset', 'Power', 'MonoIO', 'Boot', 'NC']
+        ]
         left_pins = [group for group in left_pins if len(group) > 0]
         left_count = sum(len(group) for group in left_pins)
-        right_pins = [self.get_pin_names_by_type(t) for t in ['IO']]
+        right_pins = [
+            PinGroup(t, self.get_pin_names_by_type(t))
+            for t in ['IO']
+        ]
         right_pins = [group for group in right_pins if len(group) > 0]
         right_count = sum(len(group) for group in right_pins)
-        height = max([left_count + len(left_pins) - 1, right_count + len(right_pins) - 1])
+
+        # Calculate total height of the symbol. For this, take the number of
+        # pins and add `number_of_groups - 1` to account for the spaces between
+        # the groups. Finally, add some height for double spacing of power
+        # pins. Do this calculation for both sides, and use the highest side.
+        power_pin_spacing = max(len(self.get_pin_names_by_type('Power')) - 1, 0)
+        height = max([
+            left_count + len(left_pins) - 1 + power_pin_spacing,
+            right_count + len(right_pins) - 1,
+        ])
         max_y = math.ceil(height / 2)
         if debug:
             print('Placement info:')
@@ -444,7 +472,10 @@ class MCU:
             if i > 0:
                 # Put a space between groups
                 y -= 1
-            for pin_name in group:
+            for j, pin_name in enumerate(group):
+                # Put a space between power pins
+                if group.name == 'Power' and j > 0:
+                    y -= 1
                 placement.add_left_pin(pin_name.generic, y)
                 y -= 1
         y = max_y
