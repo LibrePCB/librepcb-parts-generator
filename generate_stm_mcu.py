@@ -641,7 +641,7 @@ def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = 
     )
 
     # Add signals
-    signals = {pin.name for pin in mcu.pins}
+    signals = sorted({pin.name for pin in mcu.pins}, key=human_sort_key)
     for signal in signals:
         component.add_signal(Signal(
             # Use original signal name, so that changing the cleanup function
