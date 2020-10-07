@@ -5,7 +5,7 @@ import pytest
 from generate_stm_mcu import MCU
 
 
-def _make_empty_info() -> Dict[str, Any]:
+def _make_empty_info(flash_size: int = 0) -> Dict[str, Any]:
     return {
         'names': {
             'name': 'STM32F3xxxx',
@@ -15,7 +15,7 @@ def _make_empty_info() -> Dict[str, Any]:
         'package': '',
         'gpio_version': '',
         'info': {
-            'flash': '',
+            'flash': flash_size,
             'ram': '',
             'io': '',
             'frequency': '',
@@ -23,12 +23,13 @@ def _make_empty_info() -> Dict[str, Any]:
     }
 
 
-@pytest.mark.parametrize(['mcu_ref', 'expected'], [
-    ('STM32F429NEHx', 'STM32F429NxHx'),
-    ('STM32L552CETxP', 'STM32L552CxTxP'),
+@pytest.mark.parametrize(['mcu_ref', 'expected', 'flash_size'], [
+    ('STM32F429NEHx', 'STM32F429NxHx', 512),
+    ('STM32L552CETxP', 'STM32L552CxTxP', 512),
+    ('STM32MP153CADx', 'STM32MP153CADx', 0),
 ])
-def test_mcu_ref_without_flash(mcu_ref, expected):
-    mcu = MCU(ref=mcu_ref, info=_make_empty_info(), pins=[])
+def test_mcu_ref_without_flash(mcu_ref, expected, flash_size):
+    mcu = MCU(ref=mcu_ref, info=_make_empty_info(flash_size), pins=[])
     assert mcu.ref_without_flash == expected
 
 

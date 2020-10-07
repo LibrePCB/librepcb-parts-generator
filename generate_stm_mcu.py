@@ -1,5 +1,5 @@
 """
-Generate STM8 / STM32 microcontroller symbols, components and devices.
+Generate STM32 microcontroller symbols, components and devices.
 
 Data source: https://github.com/LibrePCB/stm-pinout
 
@@ -85,6 +85,7 @@ class Pin:
     """
     Data class for a MCU pin.
     """
+
     def __init__(
         self,
         number: str,
@@ -136,6 +137,7 @@ class PinName:
     """
     This class holds a generic pin name (like IO7) and a concrete pin name (like PB3).
     """
+
     def __init__(self, generic: str, concrete: str):
         self.generic = generic
         self.concrete = concrete
@@ -148,6 +150,7 @@ class MCU:
     """
     Data class for a MCU.
     """
+
     def __init__(self, ref: str, info: Dict[str, Any], pins: Iterable[Pin]):
         # Note: Don't use this directly, use `from_json` instead
         self.ref = ref
@@ -283,10 +286,25 @@ class MCU:
             i += 1
         return result
 
+    @staticmethod
+    def flash_size_offset(ref: str) -> Optional[int]:
+        # Determine offset of the flash size in the ref name. For most STM32
+        # MCUs it's the 11th character, with some exceptions. For STM8 MCUs,
+        # unfortunately there doesn't seem to be a consistent system for
+        # finding the flash size in the ref name, so don't handle them for now.
+        if ref.startswith('STM32MP'):
+            return None  # No flash
+        elif ref.startswith('STM32'):
+            return 10
+        else:
+            assert False, 'Unknown ref subfamily: {}'.format(ref)
+
     @property
     def ref_without_flash(self) -> str:
         """
         Return the ref with the flash size replaced with an 'x'.
+
+        See https://ziutek.github.io/2018/05/07/stm32_naming_scheme.html.
 
         Example:
 
@@ -294,7 +312,34 @@ class MCU:
         - STM32L552CETxP -> STM32L552CxTxP
 
         """
-        return self.ref[:10] + 'x' + self.ref[11:]
+        offset = MCU.flash_size_offset(self.ref)
+        if offset is None:
+            return self.ref
+
+        # Sanity check for the flash size
+        size = self.ref[offset]
+        flash_sizes = {
+            '2': 4,
+            '3': 8,
+            '4': 16,
+            '6': 32,
+            '8': 64,
+            'A': 128,
+            'B': 128,
+            'Z': 192,
+            'C': 256,
+            'D': 384,
+            'E': 512,
+            'F': 768,
+            'G': 1024,
+            'H': 1536,
+            'I': 2048,
+        }
+        assert size in flash_sizes, \
+            "{}: Flash size {} doesn't look valid".format(self.ref, size)
+
+        # Replace flash size character with 'x'
+        return self.ref[:offset] + 'x' + self.ref[offset + 1:]
 
     def ref_for_flash_variants(self, variants: List[str]) -> str:
         """
@@ -309,12 +354,24 @@ class MCU:
         - STM32F429IEHx + STM32F429IGHx + STM32F429IIHx = STM32F429I[EGI]Hx.
 
         """
+        # Handle MCUs without flash
+        offset = MCU.flash_size_offset(self.ref)
+        if offset is None:
+            return self.ref
+
+        # Ensure the offset is correct
         for variant in variants:
-            assert variant[:10] == self.ref[:10]
-            assert variant[11:] == self.ref[11:]
-        flash_variants = sorted([ref[10] for ref in variants])
+            assert variant[:offset] == self.ref[:offset]
+            assert variant[(offset + 1):] == self.ref[(offset + 1):]
+
+        # Return merged name
+        flash_variants = sorted([ref[offset] for ref in variants])
         if len(flash_variants) > 1:
-            return '{}[{}]{}'.format(self.ref[:10], ''.join(flash_variants), self.ref[11:])
+            return '{}[{}]{}'.format(
+                self.ref[:offset],
+                ''.join(flash_variants),
+                self.ref[(offset + 1):],
+            )
         else:
             return self.ref
 
@@ -369,9 +426,7 @@ class MCU:
         Get a description of the component.
         """
         description = 'A {} MCU by ST Microelectronics.\\n\\n'.format(self.ref_without_flash)
-        description += 'Package: {}\\nI/Os: {}\\nFrequency: {}\\n'.format(
-            self.package, self.io_count, self.frequency,
-        )
+        description += 'I/Os: {}\\n'.format(self.io_count)
         description += '\\nGenerated with {}'.format(generator)
         return description
 
@@ -804,7 +859,9 @@ if __name__ == '__main__':
     # Load and parse all data
     data = {}  # type: Dict[str, MCU]
     for filename in listdir(args.data_dir):
-        match = re.match(r'(STM.*)\.json$', filename)
+        # Note: Only process STM32 files for now, because the STM8 ref naming scheme is inconsistent.
+        # See https://github.com/LibrePCB-Libraries/STMicroelectronics.lplib/pull/5 for details.
+        match = re.match(r'(STM32.*)\.json$', filename)
         if match:
             mcu_ref = match.group(1)
             info_path = path.join(args.data_dir, '{}.json'.format(mcu_ref))
