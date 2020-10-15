@@ -1,7 +1,7 @@
 from typing import List
 
 from .common import (
-    Author, Category, Created, Deprecated, Description, Keywords, Length, Name, Polygon, Position, Rotation, Text,
+    Author, Category, Circle, Created, Deprecated, Description, Keywords, Length, Name, Polygon, Position, Rotation, Text,
     Version
 )
 from .helper import indent_entities
@@ -37,6 +37,7 @@ class Symbol:
         self.category = category
         self.pins = []  # type: List[Pin]
         self.polygons = []  # type: List[Polygon]
+        self.circles = []  # type: List[Circle]
         self.texts = []  # type: List[Text]
 
     def add_pin(self, pin: Pin) -> None:
@@ -47,6 +48,9 @@ class Symbol:
 
     def add_text(self, text: Text) -> None:
         self.texts.append(text)
+
+    def add_circle(self, circle: Circle) -> None:
+        self.circles.append(circle)
 
     def __str__(self) -> str:
         ret = '(librepcb_symbol {}\n'.format(self.uuid) +\
@@ -60,6 +64,7 @@ class Symbol:
             ' {}\n'.format(self.category)
         ret += indent_entities(self.pins)
         ret += indent_entities(self.polygons)
+        ret += indent_entities(self.circles)
         ret += indent_entities(self.texts)
         ret += ')'
         return ret

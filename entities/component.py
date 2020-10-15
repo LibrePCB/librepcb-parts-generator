@@ -2,8 +2,6 @@ from os import makedirs, path
 
 from typing import List
 
-from common import indent
-
 from .common import (
     Author, BoolValue, Category, Created, Deprecated, Description, EnumValue, Keywords, Name, Position, Rotation,
     StringValue, UUIDValue, Version
@@ -141,19 +139,24 @@ class Norm(EnumValue):
 
 
 class Variant:
-    def __init__(self, uuid: str, norm: Norm, name: Name, description: Description,
-                 gate: Gate, ):
+    def __init__(self, uuid: str, norm: Norm, name: Name, description: Description):
         self.uuid = uuid
         self.norm = norm
         self.name = name
         self.description = description
-        self.gate = gate
+        self.gates = []  # type: List[Gate]
+
+    def add_gate(self, gate_map: Gate) -> None:
+        self.gates.append(gate_map)
 
     def __str__(self) -> str:
         ret = '(variant {} {}\n'.format(self.uuid, self.norm) +\
             ' {}\n'.format(self.name) +\
             ' {}\n'.format(self.description)
-        ret += '\n'.join(indent(1, str(self.gate).splitlines()))
+        gate_lines = []
+        for gate in self.gates:
+            gate_lines.append(' {}'.format(gate))
+        ret += '\n'.join(sorted(gate_lines))
         ret += '\n)'
         return ret
 
