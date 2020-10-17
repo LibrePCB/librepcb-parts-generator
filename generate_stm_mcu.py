@@ -132,6 +132,12 @@ class SymbolPinPlacement:
             (min(self.left[-1][1], self.right[-1][1]) - 1) * grid,
         )
 
+    def __repr__(self) -> str:
+        return 'SymbolPinPlacement(left={!r}, right={!r})'.format(
+            self.left,
+            self.right,
+        )
+
 
 class PinName:
     """
@@ -656,14 +662,19 @@ def generate_sym(mcu: MCU, symbol_map: Dict[str, str], debug: bool = False) -> N
     print('Wrote sym {}'.format(mcu.symbol_name))
 
 
-def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = False) -> None:
+def generate_cmp(
+    name: str,
+    mcus: List[MCU],
+    symbol_map: Dict[str, str],
+    debug: bool = False,
+) -> None:
     """
     When generating components, to reduce the number of components, they are
     merged as follows:
 
     - For every MCU, the "ref without flash" is calculated by replacing the
-      11th character in the ref name with an `x` and cutting off everything after
-      the package character.
+      11th character in the ref name with an `x` and cutting off everything
+      after the package character.
     - MCUs that share the same pinout will be merged if their ref names without
       flash are the same
     - The name of the component will be generated as follows: STM32F429IEHx +
@@ -676,7 +687,13 @@ def generate_cmp(name: str, mcu: MCU, symbol_map: Dict[str, str], debug: bool = 
     analyzed manually.
 
     """
-    (placement, pin_mapping) = mcu.generate_placement_data(debug)
+    # To verify that the grouping of components is being done correctly,
+    # assert that all MCUs in the group result in the same placement data.
+    placement_data_list = [mcu.generate_placement_data(debug) for mcu in mcus]
+    assert len({repr(pd) for pd in placement_data_list}) == 1, \
+        'Not all MCUs in the MCU group {} have identical placement data: {!r}'.format(name, placement_data_list)
+    (placement, pin_mapping) = placement_data_list[0]
+    mcu = mcus[0]
 
     cmp_version = '0.1'
 
@@ -834,7 +851,7 @@ def generate(data: Dict[str, MCU], base_lib_path: str, debug: bool = False) -> N
     for mcus in symbols.values():
         generate_sym(mcus[0], symbol_map, debug)
     for name, mcus in components.items():
-        generate_cmp(name, mcus[0], symbol_map, debug)
+        generate_cmp(name, mcus, symbol_map, debug)
     for mcu in data.values():
         generate_dev(mcu, symbol_map, base_lib_path, debug)
 
