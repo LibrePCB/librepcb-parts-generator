@@ -572,94 +572,101 @@ class MCU:
         return '<MCU {} ({} pins, {})>'.format(self.ref, len(self.pins), self.package)
 
 
-def generate_sym(mcu: MCU, symbol_map: Dict[str, str], debug: bool = False) -> None:
-    assert mcu.symbol_identifier not in symbol_map
+def generate_sym(mcus: List[MCU], symbol_map: Dict[str, str], debug: bool = False) -> None:
+    symbols = []
+    for mcu in mcus:
+        assert mcu.symbol_identifier not in symbol_map
 
-    sym_version = '0.1'
+        sym_version = '0.1'
 
-    # Generate pin placement data
-    (placement, pin_mapping) = mcu.generate_placement_data(debug)
-    if debug:
-        print(pin_mapping)
+        # Generate pin placement data
+        (placement, pin_mapping) = mcu.generate_placement_data(debug)
+        if debug:
+            print(pin_mapping)
 
-    # Determine symbol width
-    max_pin_name_length = max(map(len, pin_mapping.values()))
-    if max_pin_name_length >= width_wide_threshold:
-        width = width_wide
-    else:
-        width = width_regular
+        # Determine symbol width
+        max_pin_name_length = max(map(len, pin_mapping.values()))
+        if max_pin_name_length >= width_wide_threshold:
+            width = width_wide
+        else:
+            width = width_regular
 
-    uuid_sym = uuid('sym', mcu.symbol_identifier, 'sym')
-    symbol = Symbol(
-        uuid_sym,
-        Name(mcu.symbol_name),
-        Description(mcu.symbol_description),
-        mcu.keywords,
-        author,
-        Version(sym_version),
-        Created('2020-01-30T20:55:23Z'),
-        cmpcat,
-    )
-    placement_pins = placement.pins(width, grid)
-    placement_pins.sort(key=lambda x: (x[1].x, x[1].y))
-    for pin_name, position, rotation in placement.pins(width, grid):
-        symbol.add_pin(SymbolPin(
-            uuid('sym', mcu.symbol_identifier, 'pin-{}'.format(pin_name)),
-            Name(pin_name),
-            position,
-            rotation,
-            Length(grid),
-        ))
-    polygon = Polygon(
-        uuid('sym', mcu.symbol_identifier, 'polygon'),
-        Layer('sym_outlines'),
-        Width(line_width),
-        Fill(False),
-        GrabArea(True),
-    )
-    (max_y, min_y) = placement.maxmin_y(grid)
-    dx = width * grid / 2
-    polygon.add_vertex(Vertex(Position(-dx, max_y), Angle(0.0)))
-    polygon.add_vertex(Vertex(Position( dx, max_y), Angle(0.0)))
-    polygon.add_vertex(Vertex(Position( dx, min_y), Angle(0.0)))
-    polygon.add_vertex(Vertex(Position(-dx, min_y), Angle(0.0)))
-    polygon.add_vertex(Vertex(Position(-dx, max_y), Angle(0.0)))
-    symbol.add_polygon(polygon)
+        uuid_sym = uuid('sym', mcu.symbol_identifier, 'sym')
+        symbol = Symbol(
+            uuid_sym,
+            Name(mcu.symbol_name),
+            Description(mcu.symbol_description),
+            mcu.keywords,
+            author,
+            Version(sym_version),
+            Created('2020-01-30T20:55:23Z'),
+            cmpcat,
+        )
+        placement_pins = placement.pins(width, grid)
+        placement_pins.sort(key=lambda x: (x[1].x, x[1].y))
+        for pin_name, position, rotation in placement.pins(width, grid):
+            symbol.add_pin(SymbolPin(
+                uuid('sym', mcu.symbol_identifier, 'pin-{}'.format(pin_name)),
+                Name(pin_name),
+                position,
+                rotation,
+                Length(grid),
+            ))
+        polygon = Polygon(
+            uuid('sym', mcu.symbol_identifier, 'polygon'),
+            Layer('sym_outlines'),
+            Width(line_width),
+            Fill(False),
+            GrabArea(True),
+        )
+        (max_y, min_y) = placement.maxmin_y(grid)
+        dx = width * grid / 2
+        polygon.add_vertex(Vertex(Position(-dx, max_y), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position( dx, max_y), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position( dx, min_y), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-dx, min_y), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-dx, max_y), Angle(0.0)))
+        symbol.add_polygon(polygon)
 
-    text_name = Text(
-        uuid('sym', mcu.symbol_identifier, 'text-name'),
-        Layer('sym_names'),
-        Value('{{NAME}}'),
-        Align('left bottom'),
-        Height(text_height),
-        Position(-dx, max_y),
-        Rotation(0.0),
-    )
-    text_value = Text(
-        uuid('sym', mcu.symbol_identifier, 'text-value'),
-        Layer('sym_values'),
-        Value('{{VALUE}}'),
-        Align('left top'),
-        Height(text_height),
-        Position(-dx, min_y),
-        Rotation(0.0),
-    )
-    symbol.add_text(text_name)
-    symbol.add_text(text_value)
+        text_name = Text(
+            uuid('sym', mcu.symbol_identifier, 'text-name'),
+            Layer('sym_names'),
+            Value('{{NAME}}'),
+            Align('left bottom'),
+            Height(text_height),
+            Position(-dx, max_y),
+            Rotation(0.0),
+        )
+        text_value = Text(
+            uuid('sym', mcu.symbol_identifier, 'text-value'),
+            Layer('sym_values'),
+            Value('{{VALUE}}'),
+            Align('left top'),
+            Height(text_height),
+            Position(-dx, min_y),
+            Rotation(0.0),
+        )
+        symbol.add_text(text_name)
+        symbol.add_text(text_value)
+
+        symbols.append(symbol)
+
+    # Make sure all grouped symbols are identical
+    assert len(set([str(s) for s in symbols])) == 1
 
     dirpath = 'out/stm_mcu/sym'
-    sym_dir_path = path.join(dirpath, uuid_sym)
+    sym_dir_path = path.join(dirpath, symbols[0].uuid)
     if not (path.exists(sym_dir_path) and path.isdir(sym_dir_path)):
         makedirs(sym_dir_path)
     with open(path.join(sym_dir_path, '.librepcb-sym'), 'w') as f:
         f.write('0.1\n')
     with open(path.join(sym_dir_path, 'symbol.lp'), 'w') as f:
-        f.write(str(symbol))
+        f.write(str(symbols[0]))
         f.write('\n')
 
-    symbol_map[mcu.symbol_identifier] = uuid_sym
+    symbol_map[mcus[0].symbol_identifier] = symbols[0].uuid
 
-    print('Wrote sym {}'.format(mcu.symbol_name))
+    print('Wrote sym {}'.format(symbols[0].name))
 
 
 def generate_cmp(
@@ -687,71 +694,71 @@ def generate_cmp(
     analyzed manually.
 
     """
-    # To verify that the grouping of components is being done correctly,
-    # assert that all MCUs in the group result in the same placement data.
-    placement_data_list = [mcu.generate_placement_data(debug) for mcu in mcus]
-    assert len({repr(pd) for pd in placement_data_list}) == 1, \
-        'Not all MCUs in the MCU group {} have identical placement data: {!r}'.format(name, placement_data_list)
-    (placement, pin_mapping) = placement_data_list[0]
-    mcu = mcus[0]
+    components = []
+    for mcu in mcus:
+        (placement, pin_mapping) = mcu.generate_placement_data(debug)
 
-    cmp_version = '0.1'
+        cmp_version = '0.1'
 
-    component = Component(
-        uuid('cmp', mcu.component_identifier, 'cmp'),
-        Name(name),
-        Description(mcu.component_description),
-        mcu.keywords,
-        author,
-        Version(cmp_version),
-        Created('2020-01-30T20:55:23Z'),
-        Deprecated(False),
-        cmpcat,
-        SchematicOnly(False),
-        DefaultValue('{{PARTNUMBER or DEVICE or COMPONENT}}'),
-        Prefix('U'),
-    )
+        component = Component(
+            uuid('cmp', mcu.component_identifier, 'cmp'),
+            Name(name),
+            Description(mcu.component_description),
+            mcu.keywords,
+            author,
+            Version(cmp_version),
+            Created('2020-01-30T20:55:23Z'),
+            Deprecated(False),
+            cmpcat,
+            SchematicOnly(False),
+            DefaultValue('{{PARTNUMBER or DEVICE or COMPONENT}}'),
+            Prefix('U'),
+        )
 
-    # Add signals
-    signals = sorted({pin.name for pin in mcu.pins}, key=human_sort_key)
-    for signal in signals:
-        component.add_signal(Signal(
-            # Use original signal name, so that changing the cleanup function
-            # does not influence the identifier.
-            uuid('cmp', mcu.component_identifier, 'signal-{}'.format(signal)),
-            # Use cleaned up signal name for name
-            Name(signal),
-            Role.PASSIVE,
-            Required(False),
-            Negated(False),
-            Clock(False),
-            ForcedNet(''),
+        # Add signals
+        signals = sorted({pin.name for pin in mcu.pins}, key=human_sort_key)
+        for signal in signals:
+            component.add_signal(Signal(
+                # Use original signal name, so that changing the cleanup function
+                # does not influence the identifier.
+                uuid('cmp', mcu.component_identifier, 'signal-{}'.format(signal)),
+                # Use cleaned up signal name for name
+                Name(signal),
+                Role.PASSIVE,
+                Required(False),
+                Negated(False),
+                Clock(False),
+                ForcedNet(''),
+            ))
+
+        # Add symbol variant
+        gate = Gate(
+            uuid('cmp', mcu.component_identifier, 'variant-single-gate1'),
+            SymbolUUID(uuid('sym', mcu.symbol_identifier, 'sym')),
+            Position(0, 0),
+            Rotation(0.0),
+            Required(True),
+            Suffix(''),
+        )
+        for generic, concrete in pin_mapping.items():
+            gate.add_pin_signal_map(PinSignalMap(
+                uuid('sym', mcu.symbol_identifier, 'pin-{}'.format(generic)),
+                SignalUUID(uuid('cmp', mcu.component_identifier, 'signal-{}'.format(concrete))),
+                TextDesignator.SIGNAL_NAME,
+            ))
+        component.add_variant(Variant(
+            uuid('cmp', mcu.component_identifier, 'variant-single'),
+            Norm.EMPTY,
+            Name('single'),
+            Description('Symbol with all MCU pins'),
+            gate,
         ))
+        components.append(component)
 
-    # Add symbol variant
-    gate = Gate(
-        uuid('cmp', mcu.component_identifier, 'variant-single-gate1'),
-        SymbolUUID(uuid('sym', mcu.symbol_identifier, 'sym')),
-        Position(0, 0),
-        Rotation(0.0),
-        Required(True),
-        Suffix(''),
-    )
-    for generic, concrete in pin_mapping.items():
-        gate.add_pin_signal_map(PinSignalMap(
-            uuid('sym', mcu.symbol_identifier, 'pin-{}'.format(generic)),
-            SignalUUID(uuid('cmp', mcu.component_identifier, 'signal-{}'.format(concrete))),
-            TextDesignator.SIGNAL_NAME,
-        ))
-    component.add_variant(Variant(
-        uuid('cmp', mcu.component_identifier, 'variant-single'),
-        Norm.EMPTY,
-        Name('single'),
-        Description('Symbol with all MCU pins'),
-        gate,
-    ))
+    # Make sure all grouped components are identical
+    assert len(set([str(c) for c in components])) == 1
 
-    component.serialize('out/stm_mcu/cmp')
+    components[0].serialize('out/stm_mcu/cmp')
 
     print('Wrote cmp {}'.format(name))
 
@@ -849,7 +856,7 @@ def generate(data: Dict[str, MCU], base_lib_path: str, debug: bool = False) -> N
     # Generate
     print()
     for mcus in symbols.values():
-        generate_sym(mcus[0], symbol_map, debug)
+        generate_sym(mcus, symbol_map, debug)
     for name, mcus in components.items():
         generate_cmp(name, mcus, symbol_map, debug)
     for mcu in data.values():
