@@ -573,6 +573,11 @@ class MCU:
 
 
 def generate_sym(mcus: List[MCU], symbol_map: Dict[str, str], debug: bool = False) -> None:
+    # Determine symbol width
+    pin_mappings = [mcu.generate_placement_data()[1].values() for mcu in mcus]
+    max_pin_name_len = max([max(map(len, pin_map)) for pin_map in pin_mappings])
+    width = width_wide if max_pin_name_len >= width_wide_threshold else width_regular
+
     symbols = []
     for mcu in mcus:
         assert mcu.symbol_identifier not in symbol_map
@@ -583,13 +588,6 @@ def generate_sym(mcus: List[MCU], symbol_map: Dict[str, str], debug: bool = Fals
         (placement, pin_mapping) = mcu.generate_placement_data(debug)
         if debug:
             print(pin_mapping)
-
-        # Determine symbol width
-        max_pin_name_length = max(map(len, pin_mapping.values()))
-        if max_pin_name_length >= width_wide_threshold:
-            width = width_wide
-        else:
-            width = width_regular
 
         uuid_sym = uuid('sym', mcu.symbol_identifier, 'sym')
         symbol = Symbol(
