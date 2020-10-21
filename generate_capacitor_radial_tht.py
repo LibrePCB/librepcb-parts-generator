@@ -297,11 +297,11 @@ def generate_dev(
         package_uuid=PackageUUID(uuid('pkg', variant, 'pkg')),
     )
     device.add_pad(ComponentPad(
-        uuid=uuid('pkg', variant, 'pad-plus'),
+        pad_uuid=uuid('pkg', variant, 'pad-plus'),
         signal=SignalUUID('e010ecbb-6210-4da3-9270-ebd58656dbf0'),
     ))
     device.add_pad(ComponentPad(
-        uuid=uuid('pkg', variant, 'pad-minus'),
+        pad_uuid=uuid('pkg', variant, 'pad-minus'),
         signal=SignalUUID('af3ffca8-0085-4edb-a775-fcb759f63411'),
     ))
 
