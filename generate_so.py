@@ -4,7 +4,7 @@ Generate the following SO packages:
 - SOIC (both EIAJ and JEDEC)
 - TSSOP (JEDEC MO-153)
 - SSOP (JEDEC MO-150 and MO-152)
-- TSOP (JEDEC TBD)
+- TSOP (JEDEC MS-024)
 
 """
 from os import makedirs, path
@@ -660,7 +660,7 @@ if __name__ == '__main__':
         # Name extrapolated from IPC7351C
         name='TSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
         description='{pin_count}-pin Thin Small Outline Package (TSOP), '
-                    'Type II (pins on longer side).\\n\\n'
+                    'standardized by JEDEC (MS-024), Type II (pins on longer side).\\n\\n'
                     'Pitch: {pitch:.2f} mm\\nBody length: {body_length:.2f} mm\\n'
                     'Body width: {body_width:.2f} mm\\nLead span: {lead_span:.2f} mm\\n'
                     'Height: {height:.2f} mm\\n'
@@ -668,7 +668,7 @@ if __name__ == '__main__':
         configs=[
             # pin count, pitch, body length, body width, total width, height
 
-            # Symbols based on JEDEC TBD:
+            # Symbols based on JEDEC MS-024:
             #        N    e     D      E1     E      A
             SoConfig(66,  0.65, 22.22, 10.16, 11.76, 1.2),
         ],
