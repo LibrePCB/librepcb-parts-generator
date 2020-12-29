@@ -1,7 +1,5 @@
 # LibrePCB Library Parts Generator Scripts
 
-[![Travis Build Status](https://travis-ci.org/LibrePCB/librepcb-parts-generator.svg?branch=master)](https://travis-ci.org/LibrePCB/librepcb-parts-generator)
-
 This is a collection of Python 3 based scripts to generate parts for the
 [LibrePCB](https://librepcb.org) default library.
 
@@ -15,7 +13,7 @@ This is a collection of Python 3 based scripts to generate parts for the
 ## Introduction / Concepts
 
 While it's easy to create a one-off script to generate LibrePCB library
-elements, you quickly run into some issues: 
+elements, you quickly run into some issues:
 
 - If your output format does not match the canonical format used in LibrePCB,
   your elements will be reformatted when opening them in the LibrePCB library
