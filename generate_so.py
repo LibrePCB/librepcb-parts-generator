@@ -4,6 +4,7 @@ Generate the following SO packages:
 - SOIC (both EIAJ and JEDEC)
 - TSSOP (JEDEC MO-153)
 - SSOP (JEDEC MO-150 and MO-152)
+- TSOP (JEDEC MS-024)
 
 """
 from os import makedirs, path
@@ -648,5 +649,51 @@ if __name__ == '__main__':
         keywords='so,sop,ssop,small outline package,smd,jedec,mo-150',
         version='0.1',
         create_date='2019-07-21T12:55:20Z',
+    )
+
+    # TSOP
+
+    _make('out/tsop/pkg')
+    generate_pkg(
+        dirpath='out/tsop/pkg',
+        author='Tubbles',
+        # Name extrapolated from IPC7351C
+        name='TSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
+        description='{pin_count}-pin Thin Small Outline Package (TSOP), '
+                    'standardized by JEDEC (MS-024), Type II (pins on longer side), variation {variation}.\\n\\n'
+                    'Pitch: {pitch:.2f} mm\\nBody length: {body_length:.2f} mm\\n'
+                    'Body width: {body_width:.2f} mm\\nLead span: {lead_span:.2f} mm\\n'
+                    'Height: {height:.2f} mm\\n'
+                    'Lead length: {lead_length:.2f} mm\\nLead width: {lead_width:.2f} mm',
+        configs=[
+            # pin count, pitch, body length, body width, total width, height
+
+            # Symbols based on JEDEC MS-024:
+            #        N    e     D      E1     E      A
+            SoConfig(28,  1.27, 18.41, 10.16, 11.76, 1.2, 'AA'),
+            SoConfig(32,  1.27, 20.95, 10.16, 11.76, 1.2, 'BA'),
+            SoConfig(50,  0.80, 20.95, 10.16, 11.76, 1.2, 'BC'),
+            SoConfig(80,  0.50, 20.95, 10.16, 11.76, 1.2, 'BD'),
+            SoConfig(36,  1.27, 23.49, 10.16, 11.76, 1.2, 'CA'),
+            SoConfig(70,  0.65, 23.49, 10.16, 11.76, 1.2, 'CB'),
+            SoConfig(40,  1.27, 26.03, 10.16, 11.76, 1.2, 'DA'),
+            SoConfig(70,  0.80, 28.57, 10.16, 11.76, 1.2, 'EA'),
+            SoConfig(54,  0.80, 22.22, 10.16, 11.76, 1.2, 'FA'),
+            SoConfig(86,  0.50, 22.22, 10.16, 11.76, 1.2, 'FB'),
+            SoConfig(66,  0.65, 22.22, 10.16, 11.76, 1.2, 'FC'),
+            SoConfig(54,  0.40, 11.20, 10.16, 11.76, 1.2, 'GA'),
+        ],
+        lead_width_lookup={
+            0.40: 0.18,
+            0.50: 0.22,
+            0.65: 0.30,
+            0.80: 0.375,
+            1.27: 0.41,
+        },
+        lead_contact_length=0.5,
+        pkgcat='7993abb0-fb0a-4157-8f83-1db890755836',
+        keywords='so,sop,tsop,small outline package,smd',
+        version='0.1',
+        create_date='2020-12-26T16:14:30Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
