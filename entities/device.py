@@ -58,7 +58,7 @@ class Device():
             ' {}\n'.format(self.category) +\
             ' {}\n'.format(self.component_uuid) +\
             ' {}\n'.format(self.package_uuid)
-        ret += indent_entities(sorted(self.pads, key=lambda x: x.pad_uuid))
+        ret += indent_entities(sorted(self.pads, key=lambda x: str(x.pad_uuid)))
         ret += ')'
         return ret
 
