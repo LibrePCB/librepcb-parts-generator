@@ -1,5 +1,5 @@
-pytest~=4.6.3
-flake8~=3.7.7
-mypy==0.720
+pytest~=6.2.5
+flake8~=4.0.1
+mypy==0.910
 git+https://github.com/numpy/numpy-stubs
-isort==4.3.21
+isort~=5.10.1
