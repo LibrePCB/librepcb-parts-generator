@@ -1,6 +1,6 @@
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GrabArea, Height, Keywords, Layer, Length,
-    Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
+    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GrabArea, Height,
+    Keywords, Layer, Length, Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
 )
 from entities.component import (
     Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
@@ -88,6 +88,7 @@ def test_symbol() -> None:
     polygon.add_vertex(Vertex(Position(-2.54, -25.4), Angle(0.0)))
     polygon.add_vertex(Vertex(Position(-2.54, 22.86), Angle(0.0)))
     symbol.add_polygon(polygon)
+    symbol.add_circle(Circle('b5599e68-ff6a-464b-9a40-c6ba8ef8daf5', Layer('sym_outlines'), Width(0.254), Fill(False), GrabArea(False), Diameter(1.27), Position(5.715, 0.0)))
     symbol.add_text(Text('b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e', Layer('sym_names'), Value('{{NAME}}'), Align('center bottom'), Height(2.54), Position(0.0, 22.86), Rotation(0.0)))
 
     assert str(symbol) == """(librepcb_symbol 01b03c10-7334-4bd5-b2bc-942c18325d2b
@@ -107,6 +108,9 @@ def test_symbol() -> None:
   (vertex (position -2.54 22.86) (angle 0.0))
   (vertex (position -2.54 -25.4) (angle 0.0))
   (vertex (position -2.54 22.86) (angle 0.0))
+ )
+ (circle b5599e68-ff6a-464b-9a40-c6ba8ef8daf5 (layer sym_outlines)
+  (width 0.254) (fill false) (grab_area false) (diameter 1.27) (position 5.715 0.0)
  )
  (text b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e (layer sym_names) (value "{{NAME}}")
   (align center bottom) (height 2.54) (position 0.0 22.86) (rotation 0.0)
