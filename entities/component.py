@@ -2,8 +2,6 @@ from os import makedirs, path
 
 from typing import List
 
-from common import indent
-
 from .common import (
     Author, BoolValue, Category, Created, Deprecated, Description, EnumValue, Keywords, Name, Position, Rotation,
     StringValue, UUIDValue, Version
@@ -146,14 +144,17 @@ class Variant:
         self.norm = norm
         self.name = name
         self.description = description
-        self.gate = gate
+        self.gates = [gate]  # type: List[Gate]
+
+    def add_gate(self, gate_map: Gate) -> None:
+        self.gates.append(gate_map)
 
     def __str__(self) -> str:
         ret = '(variant {} {}\n'.format(self.uuid, self.norm) +\
             ' {}\n'.format(self.name) +\
             ' {}\n'.format(self.description)
-        ret += '\n'.join(indent(1, str(self.gate).splitlines()))
-        ret += '\n)'
+        ret += indent_entities(sorted(self.gates, key=lambda x: str(x.uuid)))
+        ret += ')'
         return ret
 
 
