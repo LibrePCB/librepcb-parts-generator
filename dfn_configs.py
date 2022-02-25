@@ -334,5 +334,17 @@ THIRD_CONFIGS = [
     ),
 
     # Microchip
-    DfnConfig(2.0, 3.0, 0.5, 8, 0.90, 1.00, 0.40, 1.75, 1.45, '', no_exp=False),
+    DfnConfig(
+        length=2.0,
+        width=3.0,
+        pitch=0.5,
+        pin_count=8,
+        height_nominal=0.90,
+        height_max=1.00,
+        lead_length=0.40,
+        exposed_width=1.45,
+        exposed_length=1.75,
+        keywords='microchip mc',
+        no_exp=False,
+    ),
 ]
