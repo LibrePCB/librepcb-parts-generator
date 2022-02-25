@@ -420,6 +420,29 @@ if __name__ == '__main__':
         version='0.2.1',
         create_date='2018-11-10T20:32:03Z',
     )
+    configs = []
+    for pin_count in [14, 16, 18, 20, 24, 28]:
+        pitch = 1.27
+        height = 2.65
+        body_length = (pin_count / 2 - 1) * pitch + 1.6
+        body_width = 7.5
+        total_width = 10.3
+        configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
+    generate_pkg(
+        dirpath='out/soic/pkg',
+        author='U. Bruhin',
+        name='SOIC{pitch}P1030X{height}-{pin_count}',
+        description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
+                    'standardized by JEDEC (MS-013F).\\n\\n'
+                    'Pitch: {pitch:.2f} mm\\nNominal width: 10.30mm\\nHeight: {height:.2f}mm',
+        configs=configs,
+        lead_width_lookup={1.27: 0.45},
+        lead_contact_length=0.835,
+        pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
+        keywords='so,soic,small outline,smd,jedec,ms-013f',
+        version='0.1',
+        create_date='2020-09-15T20:46:13Z',
+    )
 
     # TSSOP
 
