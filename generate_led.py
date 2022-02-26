@@ -1,7 +1,7 @@
 """
 Generate THT LED packages.
 """
-import math
+from math import acos, asin, degrees, sqrt
 from os import makedirs, path
 from uuid import uuid4
 
@@ -173,13 +173,13 @@ def generate_pkg(
                 return
 
             # To calculate the y offset of the flat side, use Pythagoras
-            y = math.sqrt(outer_radius ** 2 - inner_radius ** 2)
+            y = sqrt(outer_radius ** 2 - inner_radius ** 2)
 
             # Now we can calculate the angle of the circle segment
             if reduced:
-                angle = math.asin(inner_radius / outer_radius) / math.pi * 360
+                angle = degrees(2 * asin(inner_radius / outer_radius))
             else:
-                angle = 360 - math.asin(y / outer_radius) / math.pi * 360
+                angle = 180 - degrees(acos(inner_radius / outer_radius))
 
             # Generate polygon
             if not reduced:
@@ -192,6 +192,7 @@ def generate_pkg(
                     grab_area=GrabArea(False),
                 )
                 polygon.add_vertex(Vertex(Position(-inner_radius, -y), Angle(angle)))
+                polygon.add_vertex(Vertex(Position(outer_radius, 0), Angle(angle)))
                 polygon.add_vertex(Vertex(Position(-inner_radius, y), Angle(0)))
                 polygon.add_vertex(Vertex(Position(-inner_radius, -y), Angle(0)))
                 footprint.add_polygon(polygon)
