@@ -10,8 +10,8 @@ from typing import Iterable, List, Optional
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GrabArea, Height, Keywords, Layer, Name,
-    Polygon, Position, Rotation, Value, Version, Vertex, Width
+    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GrabArea, Height,
+    Keywords, Layer, Name, Polygon, Position, Rotation, Value, Version, Vertex, Width
 )
 from entities.package import (
     AutoRotate, Drill, Footprint, FootprintPad, LetterSpacing, LineSpacing, Mirror, Package, PackagePad, Shape, Side,
@@ -79,6 +79,8 @@ def generate_pkg(
         lead_spacing = config.lead_spacing
         height = config.height
 
+        is_small = top_diameter < 5  # Small LEDs need adjusted footprints
+
         full_name = name.format(
             top_diameter=fd(top_diameter),
             height=fd(height),
@@ -121,6 +123,8 @@ def generate_pkg(
         )
 
         # Footprint pads
+        pad_drill = 0.8
+        pad_min_size = 1.4 if is_small else 1.3
         for pad, factor in [('a', 1), ('c', -1)]:
             footprint.add_pad(FootprintPad(
                 uuid=_uuid('pad-{}'.format(pad)),
@@ -128,59 +132,110 @@ def generate_pkg(
                 shape=Shape.ROUND,
                 position=Position(lead_spacing / 2 * factor, 0),
                 rotation=Rotation(90),
-                size=Size(2.5, 1.3),
-                drill=Drill(0.8),
+                size=(
+                    Size(pad_min_size, pad_min_size)
+                    if is_small
+                    else Size(2.5, pad_min_size)
+                ),
+                drill=Drill(pad_drill),
             ))
 
         # Now the interesting part: The circles with the flattened side.
         # For this, we use a polygon with a circle segment.
-        def _generate_flattened_circle(
+        def _add_flattened_circle(
+            footprint: Footprint,
             identifier: str,
             layer: str,
             outer_radius: float,
             inner_radius: float,
-        ) -> Polygon:
+            reduced: bool = False,
+        ) -> None:
             """
             Generate a flattened circle. The flat side will be on the left.
+
+            If outer_radius == inner_radius, then a circle will be created instead.
+
+            If `reduced` is true, then a reduced version (only top and bottom
+            circle segments) will be generated.
+
             """
-            polygon = Polygon(
-                uuid=_uuid(identifier),
-                layer=Layer(layer),
-                width=Width(line_width),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-            )
+            # Special case: If outer_radius == inner_radius, return a full circle.
+            if outer_radius == inner_radius:
+                footprint.add_circle(Circle(
+                    uuid=_uuid(identifier),
+                    layer=Layer(layer),
+                    width=Width(line_width),
+                    position=Position(0, 0),
+                    diameter=Diameter(outer_radius * 2),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                ))
+                return
 
             # To calculate the y offset of the flat side, use Pythagoras
             y = math.sqrt(outer_radius ** 2 - inner_radius ** 2)
 
             # Now we can calculate the angle of the circle segment
-            angle = 360 - math.asin(y / outer_radius) / math.pi * 360
+            if reduced:
+                angle = math.asin(inner_radius / outer_radius) / math.pi * 360
+            else:
+                angle = 360 - math.asin(y / outer_radius) / math.pi * 360
 
-            polygon.add_vertex(Vertex(Position(-inner_radius, -y), Angle(angle)))
-            polygon.add_vertex(Vertex(Position(-inner_radius, y), Angle(0)))
-            polygon.add_vertex(Vertex(Position(-inner_radius, -y), Angle(0)))
-            return polygon
+            # Generate polygon
+            if not reduced:
+                # Regular polygon with flattened side
+                polygon = Polygon(
+                    uuid=_uuid(identifier),
+                    layer=Layer(layer),
+                    width=Width(line_width),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                )
+                polygon.add_vertex(Vertex(Position(-inner_radius, -y), Angle(angle)))
+                polygon.add_vertex(Vertex(Position(-inner_radius, y), Angle(0)))
+                polygon.add_vertex(Vertex(Position(-inner_radius, -y), Angle(0)))
+                footprint.add_polygon(polygon)
+            else:
+                # Reduced two-part polygon
+                for y, suffix in [(y, '-top'), (-y, '-bot')]:
+                    polygon = Polygon(
+                        uuid=_uuid(identifier + suffix),
+                        layer=Layer(layer),
+                        width=Width(line_width),
+                        fill=Fill(False),
+                        grab_area=GrabArea(False),
+                    )
+                    polygon.add_vertex(Vertex(Position(inner_radius, y), Angle(angle if y > 0 else -angle)))
+                    polygon.add_vertex(Vertex(Position(-inner_radius, y), Angle(0)))
+                    polygon.add_vertex(Vertex(Position(-inner_radius, y * 0.75), Angle(0)))
+                    footprint.add_polygon(polygon)
 
-        courtyard_offset = (1.0 if bot_diameter >= 10.0 else 0.8) / 2
-        footprint.add_polygon(_generate_flattened_circle(
+        _add_flattened_circle(
+            footprint,
             identifier='polygon-doc',
             layer='top_documentation',
             outer_radius=bot_diameter / 2 - line_width / 2,
             inner_radius=top_diameter / 2 - line_width / 2,
-        ))
-        footprint.add_polygon(_generate_flattened_circle(
+        )
+        _add_flattened_circle(
+            footprint,
             identifier='polygon-placement',
             layer='top_placement',
             outer_radius=bot_diameter / 2 + line_width / 2,
             inner_radius=top_diameter / 2 + line_width / 2,
-        ))
-        footprint.add_polygon(_generate_flattened_circle(
+            reduced=is_small,
+        )
+
+        # Courtyard
+        courtyard_offset = (1.0 if bot_diameter >= 10.0 else 0.8) / 2
+        pad_ring_x_bounds = lead_spacing / 2 + pad_min_size / 2
+        _add_flattened_circle(
+            footprint,
             identifier='polygon-courtyard',
             layer='top_courtyard',
-            outer_radius=bot_diameter / 2 + courtyard_offset,
-            inner_radius=top_diameter / 2 + courtyard_offset,
-        ))
+            outer_radius=max(bot_diameter / 2, pad_ring_x_bounds) + courtyard_offset,
+            inner_radius=max(top_diameter / 2, pad_ring_x_bounds) + courtyard_offset,
+        )
 
         # Text
         footprint.add_text(StrokeText(
@@ -234,10 +289,17 @@ if __name__ == '__main__':
 
     # 5 mm LEDs
     #
-    # Note: Common heights determined by looking at the 500 most popular 5mm
+    # Note: Common heights determined by looking at the 500 most popular 5 mm
     #       THT LEDs on Digikey and plotting a histogram of the heights...
     for height in [8.9, 10.3, 13.3]:
         configs.append(LedConfig(5.00, 5.80, 2.54, height))
+
+    # 3 mm LEDs
+    #
+    # Note: Common heights determined by looking at the 500 most popular 3 mm
+    #       THT LEDs on Digikey and plotting a histogram of the heights...
+    for height in [4.5, 5.5, 6.1, 7.0]:
+        configs.append(LedConfig(3.00, 3.80, 2.54, height))
 
     _make('out/led/pkg')
     generate_pkg(
