@@ -129,7 +129,7 @@ def generate_pkg(
             footprint.add_pad(FootprintPad(
                 uuid=_uuid('pad-{}'.format(pad)),
                 side=Side.THT,
-                shape=Shape.ROUND,
+                shape=Shape.RECT if pad == 'c' else Shape.ROUND,
                 position=Position(lead_spacing / 2 * factor, 0),
                 rotation=Rotation(90),
                 size=(
@@ -208,7 +208,7 @@ def generate_pkg(
                     )
                     polygon.add_vertex(Vertex(Position(inner_radius, y), Angle(angle if y > 0 else -angle)))
                     polygon.add_vertex(Vertex(Position(-inner_radius, y), Angle(0)))
-                    polygon.add_vertex(Vertex(Position(-inner_radius, y * 0.75), Angle(0)))
+                    polygon.add_vertex(Vertex(Position(-inner_radius, y * 0.80), Angle(0)))
                     footprint.add_polygon(polygon)
 
         _add_flattened_circle(
