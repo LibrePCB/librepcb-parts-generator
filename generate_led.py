@@ -18,7 +18,7 @@ from entities.package import (
     Size, StrokeText, StrokeWidth
 )
 
-generator = 'librepcb-parts-generator (generate_led.py)'
+GENERATOR_NAME = 'librepcb-parts-generator (generate_led.py)'
 
 line_width = 0.2
 pkg_text_height = 1.0
@@ -89,7 +89,7 @@ def generate_pkg(
             top_diameter=top_diameter,
             height=height,
             lead_spacing=lead_spacing,
-        )
+        ) + '\\n\\nGenerated with {}'.format(GENERATOR_NAME)
 
         def _uuid(identifier: str) -> str:
             return uuid(category, full_name, identifier)
