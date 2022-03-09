@@ -306,7 +306,7 @@ if __name__ == '__main__':
     generate_pkg(
         dirpath='out/led/pkg',
         author='Danilo B.',
-        name='LED_THT_D{top_diameter}H{height}_CLEAR_WHITE',
+        name='LED-THT-D{top_diameter}H{height}-CLEAR-WHITE',
         description='Generic through-hole LED with {top_diameter:.2f} mm'
                     ' body diameter.\\n\\n'
                     'Height: {height:.2f} mm.\\n'
