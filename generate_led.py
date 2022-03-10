@@ -313,7 +313,7 @@ if __name__ == '__main__':
                     'Lead spacing: {lead_spacing:.2f} mm.\\n'
                     'Color: Clear White.',
         configs=configs,
-        pkgcat='0a8e9c33-0a23-47e0-a4a5-b1a6c1c7fa2e',
+        pkgcat='9c36c4be-3582-4f27-ae00-4c1229f1e870',
         keywords='led,tht',
         version='0.1',
         create_date='2022-02-26T00:06:03Z',
