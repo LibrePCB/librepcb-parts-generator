@@ -57,7 +57,7 @@ class StringValue():
         self.value = value
 
     def __str__(self) -> str:
-        return '({} "{}")'.format(self.name, self.value)
+        return '({} "{}")'.format(self.name, self.value.replace('"', '\\"'))
 
 
 class FloatValue():

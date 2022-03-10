@@ -21,8 +21,8 @@ def test_name() -> None:
 
 
 def test_description() -> None:
-    description = str(Description("My Description\\nWith two lines"))
-    assert description == '(description "My Description\\nWith two lines")'
+    description = str(Description("My Description\\nWith two \" lines"))
+    assert description == '(description "My Description\\nWith two \\" lines")'
 
 
 def test_position() -> None:
