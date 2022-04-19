@@ -325,7 +325,7 @@ def generate_pkg(
             )
 
             # Pads
-            pad_x_offset = float(config.lead_span) / 2
+            pad_x_offset = float(config.body_width) / 2
             for p in range(1, pin_count // 2 + 1):
                 # Down on the left
                 y = get_y(p, pin_count // 2, pitch, False)
