@@ -32,4 +32,4 @@ jobs:
       - name: Run flake8
         run: flake8
       - name: Run isort
-        run: isort *.py --check-only
+        run: isort --check --diff .

@@ -1,8 +1,8 @@
 from typing import List
 
 from .common import (
-    Author, Category, Circle, Created, Deprecated, Description, Keywords, Length, Name, Polygon, Position, Rotation, Text,
-    Version
+    Author, Category, Circle, Created, Deprecated, Description, Keywords, Length, Name, Polygon, Position, Rotation,
+    Text, Version
 )
 from .helper import indent_entities
 
