@@ -22,8 +22,9 @@ from typing import Callable, Iterable, Optional, Tuple
 
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
-    Layer, Length, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Text, Value, Version, Vertex, Width
+    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
+    Height, Keywords, Layer, Length, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Text, Value, Version,
+    Vertex, Width
 )
 from entities.component import (
     Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
@@ -52,6 +53,7 @@ courtyard_offset = 0.5  # Rather large because packages are generic (i.e. not ex
 KIND_HEADER = 'pinheader'
 KIND_SOCKET = 'pinsocket'
 KIND_WIRE_CONNECTOR = 'wireconnector'
+KIND_SCREW_TERMINAL = 'screwterminal'
 
 
 # Initialize UUID cache
@@ -485,6 +487,10 @@ def generate_sym(
     for i in range(min_pads, max_pads + 1, rows):
         per_row = i // rows
         w = width * rows  # Make double-row symbols wider!
+        if kind == KIND_SCREW_TERMINAL:
+            w_offset = 1.27  # Make screw terminals wider on the left
+        else:
+            w_offset = 0
 
         variant = '{}x{}'.format(rows, per_row)
 
@@ -495,6 +501,8 @@ def generate_sym(
         uuid_pins = [_uuid('pin-{}'.format(p)) for p in range(i)]
         uuid_polygon = _uuid('polygon-contour')
         uuid_decoration = _uuid('polygon-decoration')
+        uuid_decoration_2 = _uuid('polygon-decoration-2')
+        uuid_decoration_3 = _uuid('polygon-decoration-3')
         uuid_text_name = _uuid('text-name')
         uuid_text_value = _uuid('text-value')
 
@@ -537,11 +545,11 @@ def generate_sym(
             Fill(False),
             GrabArea(True)
         )
-        polygon.add_vertex(Vertex(Position(-w, y_max), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-w - w_offset, y_max), Angle(0.0)))
         polygon.add_vertex(Vertex(Position(w, y_max), Angle(0.0)))
         polygon.add_vertex(Vertex(Position(w, y_min), Angle(0.0)))
-        polygon.add_vertex(Vertex(Position(-w, y_min), Angle(0.0)))
-        polygon.add_vertex(Vertex(Position(-w, y_max), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-w - w_offset, y_min), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-w - w_offset, y_max), Angle(0.0)))
         symbol.add_polygon(polygon)
 
         # Decorations
@@ -583,6 +591,45 @@ def generate_sym(
                 polygon.add_vertex(Vertex(Position(x_offset, y - dy), Angle(x_sign * 135.0)))
                 polygon.add_vertex(Vertex(Position(x_offset, y + dy), Angle(0.0)))
                 symbol.add_polygon(polygon)
+        elif kind == KIND_SCREW_TERMINAL:
+            # Screw terminals: Screw circle
+            for p in range(1, i + 1):
+                y = get_y(p, i, rows, spacing, True)
+                dy = spacing / 4 * 0.75
+                diam = 1.6
+                x_offset = -w - w_offset + (diam / 2) + 0.6
+                pos = Position(x_offset, y)
+                symbol.add_circle(Circle(
+                    uuid_decoration,
+                    Layer('sym_outlines'),
+                    Width(line_width * 0.75),
+                    Fill(False),
+                    GrabArea(False),
+                    Diameter(diam),
+                    pos,
+                ))
+                line_dx = (diam / 2) * math.cos(math.pi / 4 - math.pi / 16)
+                line_dy = (diam / 2) * math.sin(math.pi / 4 - math.pi / 16)
+                line1 = Polygon(
+                    uuid_decoration_2,
+                    Layer('sym_outlines'),
+                    Width(line_width * .5),
+                    Fill(False),
+                    GrabArea(False),
+                )
+                line1.add_vertex(Vertex(Position(pos.x + line_dx, pos.y + line_dy), Angle(0.0)))
+                line1.add_vertex(Vertex(Position(pos.x - line_dy, pos.y - line_dx), Angle(0.0)))
+                symbol.add_polygon(line1)
+                line2 = Polygon(
+                    uuid_decoration_3,
+                    Layer('sym_outlines'),
+                    Width(line_width * .5),
+                    Fill(False),
+                    GrabArea(False),
+                )
+                line2.add_vertex(Vertex(Position(pos.x + line_dy, pos.y + line_dx), Angle(0.0)))
+                line2.add_vertex(Vertex(Position(pos.x - line_dx, pos.y - line_dy), Angle(0.0)))
+                symbol.add_polygon(line2)
 
         # Text
         y_max, y_min = get_rectangle_bounds(i, rows, spacing, spacing, True)
@@ -1012,6 +1059,37 @@ if __name__ == '__main__':
         max_pads=80,
         pad_drills=[0.9, 1.0, 1.1],
         create_date='2019-10-12T23:40:41Z',
+    )
+
+    # Screw terminal
+    generate_sym(
+        library='LibrePCB_Connectors.lplib',
+        author='Danilo B.',
+        name='Screw Terminal',
+        name_lower='screw terminal',
+        kind=KIND_SCREW_TERMINAL,
+        cmpcat='f9db4ef5-2220-462a-adff-deac8402ecf0',  # Terminal Blocks
+        keywords='screw terminal, terminal block',
+        rows=1,
+        min_pads=1,
+        max_pads=40,
+        version='0.1',
+        create_date='2022-07-16T21:23:20Z',
+    )
+    generate_cmp(
+        library='LibrePCB_Connectors.lplib',
+        author='Danilo B.',
+        name='Screw Terminal',
+        name_lower='screw terminal',
+        kind=KIND_SCREW_TERMINAL,
+        cmpcat='f9db4ef5-2220-462a-adff-deac8402ecf0',  # Terminal Blocks
+        keywords='screw terminal, terminal block',
+        default_value='{{MPN}}',
+        rows=1,
+        min_pads=1,
+        max_pads=40,
+        version='0.1',
+        create_date='2022-07-16T21:23:20Z',
     )
 
     # Generic connector
