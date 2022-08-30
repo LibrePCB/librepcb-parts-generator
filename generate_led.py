@@ -53,12 +53,16 @@ class LedConfig:
         top_diameter: float,
         bot_diameter: float,
         lead_spacing: float,
-        height: float,
+        body_height: float,
+        standoff: float,
+        standoff_in_name: bool,
     ):
         self.top_diameter = top_diameter
         self.bot_diameter = bot_diameter
         self.lead_spacing = lead_spacing
-        self.height = height
+        self.body_height = body_height
+        self.standoff = standoff
+        self.standoff_in_name = standoff_in_name
 
 
 def generate_pkg(
@@ -77,18 +81,23 @@ def generate_pkg(
         top_diameter = config.top_diameter
         bot_diameter = config.bot_diameter
         lead_spacing = config.lead_spacing
-        height = config.height
+        body_height = config.body_height
+        standoff = config.standoff
+        standoff_in_name = config.standoff_in_name
 
         is_small = top_diameter < 5  # Small LEDs need adjusted footprints
 
         full_name = name.format(
             top_diameter=fd(top_diameter),
-            height=fd(height),
+            body_height=fd(body_height),
+            lead_spacing=fd(lead_spacing),
+            standoff_option=('S' + fd(standoff)) if standoff_in_name else '',
         )
         full_description = description.format(
             top_diameter=top_diameter,
-            height=height,
+            body_height=body_height,
             lead_spacing=lead_spacing,
+            standoff=standoff,
         ) + '\\n\\nGenerated with {}'.format(GENERATOR_NAME)
 
         def _uuid(identifier: str) -> str:
@@ -288,30 +297,33 @@ if __name__ == '__main__':
 
     configs = []  # type: List[LedConfig]
 
-    # 5 mm LEDs
+    # Generic LEDs
     #
-    # Note: Common heights determined by looking at the 500 most popular 5 mm
-    #       THT LEDs on Digikey and plotting a histogram of the heights...
-    for height in [8.9, 10.3, 13.3]:
-        configs.append(LedConfig(5.00, 5.80, 2.54, height))
-
-    # 3 mm LEDs
+    # Commonly used LED dimensions were determined by looking at various LED
+    # datasheets. The bottom diameter, body height and standoff height vary
+    # between the many different LEDs since there's no standard and because
+    # the the specified tolerances are huge (>1mm). However, for these generic
+    # packages we just use some average dimensions for simplicity. For exact
+    # dimensions, a separate package needs to be created for each LED model.
     #
-    # Note: Common heights determined by looking at the 500 most popular 3 mm
-    #       THT LEDs on Digikey and plotting a histogram of the heights...
-    for height in [4.5, 5.5, 6.1, 7.0]:
-        configs.append(LedConfig(3.00, 3.80, 2.54, height))
+    # Note: The standoff specifies the distance between the bottom of the
+    #       LED body and the surface of the PCB.
+    configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 1.0, False))
+    configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 5.0, True))
+    configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 1.0, False))
+    configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 5.0, True))
 
     _make('out/led/pkg')
     generate_pkg(
         dirpath='out/led/pkg',
         author='Danilo B.',
-        name='LED-THT-D{top_diameter}H{height}-CLEAR',
+        name='LED-THT-P{lead_spacing}D{top_diameter}H{body_height}{standoff_option}-CLEAR',
         description='Generic through-hole LED with {top_diameter:.2f} mm'
                     ' body diameter.\\n\\n'
-                    'Height: {height:.2f} mm.\\n'
+                    'Body height: {body_height:.2f} mm.\\n'
                     'Lead spacing: {lead_spacing:.2f} mm.\\n'
-                    'Color: Clear.',
+                    'Standoff: {standoff:.2f} mm.\\n'
+                    'Body color: Clear.',
         configs=configs,
         pkgcat='9c36c4be-3582-4f27-ae00-4c1229f1e870',
         keywords='led,tht',
