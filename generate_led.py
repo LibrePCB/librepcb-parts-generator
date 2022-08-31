@@ -13,6 +13,8 @@ from entities.common import (
     Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GrabArea, Height,
     Keywords, Layer, Name, Polygon, Position, Rotation, Value, Version, Vertex, Width
 )
+from entities.component import SignalUUID
+from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.package import (
     AutoRotate, Drill, Footprint, FootprintPad, LetterSpacing, LineSpacing, Mirror, Package, PackagePad, Shape, Side,
     Size, StrokeText, StrokeWidth
@@ -90,6 +92,15 @@ class LedConfig:
                 body_color=body_color,
                 generator=GENERATOR_NAME,
             )
+
+        self.dev_name = 'LED ⌀{top_diameter}x{body_height}{standoff_option}/{lead_spacing}mm {body_color}'.format(
+            top_diameter=top_diameter,
+            body_height=body_height,
+            lead_spacing=lead_spacing,
+            standoff_option=('+' + str(standoff)) if standoff_in_name else '',
+            body_color=body_color,
+        )
+        self.dev_description = self.pkg_description
 
 
 def generate_pkg(
@@ -515,6 +526,56 @@ def generate_pkg(
             f.write('\n')
 
 
+def generate_dev(
+    dirpath: str,
+    author: str,
+    configs: Iterable[LedConfig],
+    cmpcat: str,
+    keywords: str,
+    version: str,
+    create_date: Optional[str],
+) -> None:
+    category = 'dev'
+    for config in configs:
+        def _uuid(identifier: str) -> str:
+            return uuid(category, config.dev_name, identifier)
+
+        uuid_dev = _uuid('dev')
+
+        print('Generating {}: {}'.format(config.dev_name, uuid_dev))
+
+        device = Device(
+            uuid=uuid_dev,
+            name=Name(config.dev_name),
+            description=Description(config.dev_description),
+            keywords=Keywords(keywords),
+            author=Author(author),
+            version=Version(version),
+            created=Created(create_date or now()),
+            deprecated=Deprecated(False),
+            category=Category(cmpcat),
+            component_uuid=ComponentUUID('2b24b18d-bd95-4fb4-8fe6-bce1d020ead4'),
+            package_uuid=PackageUUID(uuid('pkg', config.pkg_name, 'pkg')),
+        )
+        device.add_pad(ComponentPad(
+            pad_uuid=uuid('pkg', config.pkg_name, 'pad-a'),
+            signal=SignalUUID('f1467b5c-cc7d-44b4-8076-d729f35b3a6a'),
+        ))
+        device.add_pad(ComponentPad(
+            pad_uuid=uuid('pkg', config.pkg_name, 'pad-c'),
+            signal=SignalUUID('7b023430-b68f-403a-80b8-c7deb12e7a0c'),
+        ))
+
+        dev_dir_path = path.join(dirpath, device.uuid)
+        if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
+            makedirs(dev_dir_path)
+        with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
+            f.write('0.1\n')
+        with open(path.join(dev_dir_path, 'device.lp'), 'w') as f:
+            f.write(str(device))
+            f.write('\n')
+
+
 if __name__ == '__main__':
     def _make(dirpath: str) -> None:
         if not (path.exists(dirpath) and path.isdir(dirpath)):
@@ -547,6 +608,15 @@ if __name__ == '__main__':
         keywords='led,tht',
         version='0.1',
         create_date='2022-02-26T00:06:03Z',
+    )
+    generate_dev(
+        dirpath='out/led/dev',
+        author='U. Bruhin',
+        configs=configs,
+        cmpcat='70421345-ae1d-4fed-aa60-e7619524b97f',
+        keywords='led,tht',
+        version='0.1',
+        create_date='2022-08-31T11:18:33Z',
     )
 
     save_cache(uuid_cache_file, uuid_cache)
