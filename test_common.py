@@ -9,6 +9,7 @@ from common import format_ipc_dimension, human_sort_key, sign
     (-7.0, '-7.0'),
     (0.4, '0.4'),
     (-0.0, '0.0'),
+    (-0.0001, '0.0'),  # Unsigned zero, due to rounding to 3 decimals
 ])
 def test_format_float(inval: float, outval: str):
     assert ff(inval) == outval
