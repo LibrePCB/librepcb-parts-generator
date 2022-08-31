@@ -58,6 +58,7 @@ class LedConfig:
         body_height: float,
         standoff: float,
         standoff_in_name: bool,
+        body_color: str,
     ):
         self.top_diameter = top_diameter
         self.bot_diameter = bot_diameter
@@ -65,13 +66,35 @@ class LedConfig:
         self.body_height = body_height
         self.standoff = standoff
         self.standoff_in_name = standoff_in_name
+        self.body_color = body_color
+
+        self.pkg_name = 'LED-THT-P{lead_spacing}D{top_diameter}H{body_height}{standoff_option}-{body_color}'.format(
+            top_diameter=fd(top_diameter),
+            body_height=fd(body_height),
+            lead_spacing=fd(lead_spacing),
+            standoff_option=('S' + fd(standoff)) if standoff_in_name else '',
+            body_color=body_color.upper(),
+        )
+        self.pkg_description = \
+            'Generic through-hole LED with {top_diameter:.2f} mm' \
+            ' body diameter.\\n\\n' \
+            'Body height: {body_height:.2f} mm.\\n' \
+            'Lead spacing: {lead_spacing:.2f} mm.\\n' \
+            'Standoff: {standoff:.2f} mm.\\n' \
+            'Body color: {body_color}.' \
+            '\\n\\nGenerated with {generator}'.format(
+                top_diameter=top_diameter,
+                body_height=body_height,
+                lead_spacing=lead_spacing,
+                standoff=standoff,
+                body_color=body_color,
+                generator=GENERATOR_NAME,
+            )
 
 
 def generate_pkg(
     dirpath: str,
     author: str,
-    name: str,
-    description: str,
     configs: Iterable[LedConfig],
     pkgcat: str,
     keywords: str,
@@ -80,40 +103,20 @@ def generate_pkg(
 ) -> None:
     category = 'pkg'
     for config in configs:
-        top_diameter = config.top_diameter
-        bot_diameter = config.bot_diameter
-        lead_spacing = config.lead_spacing
-        body_height = config.body_height
-        standoff = config.standoff
-        standoff_in_name = config.standoff_in_name
-
-        is_small = top_diameter < 5  # Small LEDs need adjusted footprints
-
-        full_name = name.format(
-            top_diameter=fd(top_diameter),
-            body_height=fd(body_height),
-            lead_spacing=fd(lead_spacing),
-            standoff_option=('S' + fd(standoff)) if standoff_in_name else '',
-        )
-        full_description = description.format(
-            top_diameter=top_diameter,
-            body_height=body_height,
-            lead_spacing=lead_spacing,
-            standoff=standoff,
-        ) + '\\n\\nGenerated with {}'.format(GENERATOR_NAME)
+        is_small = config.top_diameter < 5  # Small LEDs need adjusted footprints
 
         def _uuid(identifier: str) -> str:
-            return uuid(category, full_name, identifier)
+            return uuid(category, config.pkg_name, identifier)
 
         uuid_pkg = _uuid('pkg')
 
-        print('Generating {}: {}'.format(full_name, uuid_pkg))
+        print('Generating {}: {}'.format(config.pkg_name, uuid_pkg))
 
         # Package
         package = Package(
             uuid=uuid_pkg,
-            name=Name(full_name),
-            description=Description(full_description),
+            name=Name(config.pkg_name),
+            description=Description(config.pkg_description),
             keywords=Keywords(keywords),
             author=Author(author),
             version=Version(version),
@@ -146,7 +149,7 @@ def generate_pkg(
                     uuid=_uuid('pad-{}'.format(pad)),
                     side=Side.THT,
                     shape=Shape.RECT if pad == 'c' else Shape.ROUND,
-                    position=Position(lead_spacing / 2 * factor, 0),
+                    position=Position(config.lead_spacing / 2 * factor, 0),
                     rotation=Rotation(90),
                     size=pad_size,
                     drill=Drill(pad_drill),
@@ -242,27 +245,27 @@ def generate_pkg(
                 footprint,
                 identifier='polygon-doc' + identifier_suffix,
                 layer='top_documentation',
-                outer_radius=bot_diameter / 2 - line_width / 2,
-                inner_radius=top_diameter / 2 - line_width / 2,
+                outer_radius=config.bot_diameter / 2 - line_width / 2,
+                inner_radius=config.top_diameter / 2 - line_width / 2,
             )
             _add_flattened_circle(
                 footprint,
                 identifier='polygon-placement' + identifier_suffix,
                 layer='top_placement',
-                outer_radius=bot_diameter / 2 + line_width / 2,
-                inner_radius=top_diameter / 2 + line_width / 2,
+                outer_radius=config.bot_diameter / 2 + line_width / 2,
+                inner_radius=config.top_diameter / 2 + line_width / 2,
                 reduced=is_small,
             )
 
             # Courtyard
-            courtyard_offset = (1.0 if bot_diameter >= 10.0 else 0.8) / 2
-            pad_ring_x_bounds = lead_spacing / 2 + pad_size.height / 2
+            courtyard_offset = (1.0 if config.bot_diameter >= 10.0 else 0.8) / 2
+            pad_ring_x_bounds = config.lead_spacing / 2 + pad_size.height / 2
             _add_flattened_circle(
                 footprint,
                 identifier='polygon-courtyard' + identifier_suffix,
                 layer='top_courtyard',
-                outer_radius=max(bot_diameter / 2, pad_ring_x_bounds) + courtyard_offset,
-                inner_radius=max(top_diameter / 2, pad_ring_x_bounds) + courtyard_offset,
+                outer_radius=max(config.bot_diameter / 2, pad_ring_x_bounds) + courtyard_offset,
+                inner_radius=max(config.top_diameter / 2, pad_ring_x_bounds) + courtyard_offset,
             )
 
             # Text
@@ -274,7 +277,7 @@ def generate_pkg(
                 letter_spacing=LetterSpacing.AUTO,
                 line_spacing=LineSpacing.AUTO,
                 align=Align('center bottom'),
-                position=Position(0.0, (bot_diameter / 2) + 0.8),
+                position=Position(0.0, (config.bot_diameter / 2) + 0.8),
                 rotation=Rotation(0.0),
                 auto_rotate=AutoRotate(True),
                 mirror=Mirror(False),
@@ -288,7 +291,7 @@ def generate_pkg(
                 letter_spacing=LetterSpacing.AUTO,
                 line_spacing=LineSpacing.AUTO,
                 align=Align('center top'),
-                position=Position(0.0, -(bot_diameter / 2) - 0.8),
+                position=Position(0.0, -(config.bot_diameter / 2) - 0.8),
                 rotation=Rotation(0.0),
                 auto_rotate=AutoRotate(True),
                 mirror=Mirror(False),
@@ -318,8 +321,8 @@ def generate_pkg(
                 fill=Fill(False),
                 grab_area=GrabArea(False),
             )
-            inner_radius = top_diameter / 2 - line_width / 2
-            outer_radius = bot_diameter / 2 - line_width / 2
+            inner_radius = config.top_diameter / 2 - line_width / 2
+            outer_radius = config.bot_diameter / 2 - line_width / 2
             body_bottom_y = body_offset + line_width / 2
             body_middle_y = body_bottom_y + 1.0 - line_width
             body_top_y = body_bottom_y + body_height - inner_radius - line_width
@@ -343,8 +346,8 @@ def generate_pkg(
                     fill=Fill(True),
                     grab_area=GrabArea(False),
                 )
-                x0 = min((lead_spacing / 2 + lead_width / 2), top_diameter / 2) * factor
-                x1 = (2 * (lead_spacing / 2) - x0 * factor) * factor
+                x0 = min((config.lead_spacing / 2 + lead_width / 2), config.top_diameter / 2) * factor
+                x1 = (2 * (config.lead_spacing / 2) - x0 * factor) * factor
                 polygon.add_vertex(Vertex(Position(x0, body_offset), Angle(0)))
                 polygon.add_vertex(Vertex(Position(x1, body_offset), Angle(0)))
                 polygon.add_vertex(Vertex(Position(x1, -lead_width / 2), Angle(0)))
@@ -366,7 +369,7 @@ def generate_pkg(
                     fill=Fill(False),
                     grab_area=GrabArea(False),
                 )
-                placement_x = lead_spacing / 2 - pad_placement_clearance
+                placement_x = config.lead_spacing / 2 - pad_placement_clearance
                 polygon.add_vertex(Vertex(Position(-placement_x, body_bottom_y), Angle(0)))
                 polygon.add_vertex(Vertex(Position(placement_x, body_bottom_y), Angle(0)))
                 footprint.add_polygon(polygon)
@@ -379,9 +382,9 @@ def generate_pkg(
                 fill=Fill(False),
                 grab_area=GrabArea(False),
             )
-            inner_radius = top_diameter / 2 + line_width / 2
-            outer_radius = bot_diameter / 2 + line_width / 2
-            body_bottom_silkscreen_x = lead_spacing / 2 + pad_placement_clearance
+            inner_radius = config.top_diameter / 2 + line_width / 2
+            outer_radius = config.bot_diameter / 2 + line_width / 2
+            body_bottom_silkscreen_x = config.lead_spacing / 2 + pad_placement_clearance
             body_bottom_silkscreen_y = max(body_bottom_y, pad_placement_clearance)
             body_middle_y += line_width
             if split_placement is False:
@@ -406,7 +409,7 @@ def generate_pkg(
             footprint.add_polygon(polygon)
 
             # Courtyard
-            courtyard_offset = (1.0 if bot_diameter >= 10.0 else 0.8) / 2
+            courtyard_offset = (1.0 if config.bot_diameter >= 10.0 else 0.8) / 2
             polygon = Polygon(
                 uuid=_uuid('polygon-courtyard' + identifier_suffix),
                 layer=Layer('top_courtyard'),
@@ -418,7 +421,7 @@ def generate_pkg(
             outer_radius += courtyard_offset
             body_middle_y += courtyard_offset
             body_bottom_y -= courtyard_offset
-            courtyard_bottom_x = min(lead_spacing / 2 + pad_drill / 2 + courtyard_offset + 0.2, inner_radius)
+            courtyard_bottom_x = min(config.lead_spacing / 2 + pad_drill / 2 + courtyard_offset + 0.2, inner_radius)
             courtyard_bottom_y = -pad_drill / 2 - courtyard_offset - 0.2
             polygon.add_vertex(Vertex(Position(-inner_radius, body_bottom_y), Angle(0)))
             polygon.add_vertex(Vertex(Position(-inner_radius, body_top_y), Angle(-180)))
@@ -482,7 +485,7 @@ def generate_pkg(
             name=Name('Horizontal, 0.5 mm Offset'),
             identifier_suffix='-h050',
             pad_size=Size(1.4, 1.4),
-            body_height=body_height,
+            body_height=config.body_height,
             body_offset=0.5,
         )
         _add_horizontal_footprint(
@@ -490,7 +493,7 @@ def generate_pkg(
             name=Name('Horizontal, 2.54 mm Offset'),
             identifier_suffix='-h254',
             pad_size=Size(1.4, 1.4),
-            body_height=body_height,
+            body_height=config.body_height,
             body_offset=2.54,
         )
         _add_horizontal_footprint(
@@ -498,7 +501,7 @@ def generate_pkg(
             name=Name('Horizontal, 7.62 mm Offset'),
             identifier_suffix='-h762',
             pad_size=Size(1.4, 1.4),
-            body_height=body_height,
+            body_height=config.body_height,
             body_offset=7.62,
         )
 
@@ -530,22 +533,15 @@ if __name__ == '__main__':
     #
     # Note: The standoff specifies the distance between the bottom of the
     #       LED body and the surface of the PCB.
-    configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 1.0, False))
-    configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 5.0, True))
-    configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 1.0, False))
-    configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 5.0, True))
+    configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 1.0, False, 'Clear'))
+    configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 5.0, True, 'Clear'))
+    configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 1.0, False, 'Clear'))
+    configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 5.0, True, 'Clear'))
 
     _make('out/led/pkg')
     generate_pkg(
         dirpath='out/led/pkg',
         author='Danilo B.',
-        name='LED-THT-P{lead_spacing}D{top_diameter}H{body_height}{standoff_option}-CLEAR',
-        description='Generic through-hole LED with {top_diameter:.2f} mm'
-                    ' body diameter.\\n\\n'
-                    'Body height: {body_height:.2f} mm.\\n'
-                    'Lead spacing: {lead_spacing:.2f} mm.\\n'
-                    'Standoff: {standoff:.2f} mm.\\n'
-                    'Body color: Clear.',
         configs=configs,
         pkgcat='9c36c4be-3582-4f27-ae00-4c1229f1e870',
         keywords='led,tht',
