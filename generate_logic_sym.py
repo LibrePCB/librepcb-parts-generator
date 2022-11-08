@@ -306,9 +306,9 @@ def generate_sym(
             pos_y = float(row[2]) * unit / scale
             textfield = row[3]
             if textfield == "NAME":
-                text = Text(uuid_text_name, Layer('sym_names'), Value('{{NAME}}'), Align('left bottom'), Height(sym_text_height), Position(pos_x, pos_y), Rotation(0.0))
+                text = Text(uuid_text_name, Layer('sym_names'), Value('{{NAME}}'), Align('right bottom'), Height(sym_text_height), Position(pos_x, pos_y), Rotation(0.0))
             if textfield == "VALUE":
-                text = Text(uuid_text_value, Layer('sym_values'), Value('{{VALUE}}'), Align('left top'), Height(sym_text_height), Position(pos_x, pos_y), Rotation(0.0))
+                text = Text(uuid_text_value, Layer('sym_values'), Value('{{VALUE}}'), Align('right top'), Height(sym_text_height), Position(pos_x, pos_y), Rotation(0.0))
             symbol.add_text(text)
 
     sym_dir_path = path.join(dirpath, uuid_sym)
