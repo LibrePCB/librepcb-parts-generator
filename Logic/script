@@ -80,4 +80,32 @@ python3.9 ../generate_logic_sym.py   --group multiplexor   --directory  ./Logic/
 python3.9 ../generate_logic_sym.py   --group Logic    --directory  ./Logic/    --design  HALF_ADDER_4
 python3.9 ../generate_logic_sym.py   --group Logic    --directory  ./Logic/    --design  FULL_ADDER_4
 python3.9 ../generate_logic_sym.py   --group Logic    --directory  ./Logic/    --design  BARREL_SHIFTER4_4
+<<<<<<< HEAD
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC4_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC4_6
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC4_8
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC5_VA_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC5_VA_6
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC5_VA_8
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC5_VB_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC5_VB_6
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC5_VB_8
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC6_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC6_6
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC6_8
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC8_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC8_6
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC8_8
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC12_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC12_VA_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC12_VB_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC12_VC_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC9_VA_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC10_VA_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC10_VB_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC11_VA_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC14_VA_4
+python3.9 ../generate_logic_sym.py   --group Generic    --directory  ./Logic/    --design  GENERIC14_VB_4
+=======
 
+>>>>>>> df2045bf9b0238bc9a1daa9c91bef6185fee8b68

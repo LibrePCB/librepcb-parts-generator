@@ -1,0 +1,17 @@
+SCALE,1.000
+DEF,Generic IC 5-Pin (Variant B) 1/6 Scale 6x4
+DESCR,Generic 5-pin integrated circuit. three pins on right
+POLY,.100,F
+POLYPT,-3.00,2.00,0
+POLYPT,3.00,2.00,0
+POLYPT,3.00,-2.00,0
+POLYPT,-3.00,-2.00,0
+POLYPT,-3.00,2.00,0
+POLYST
+PIN,1,R,-4.00,1.00,1.00
+PIN,2,R,-4.00,-1.00,1.00
+PIN,3,L,4.00,-1.00,1.00
+PIN,4,L,4.00,0.00,1.00
+PIN,5,L,4.00,1.00,1.00
+TEXT,-3.00,2.00,NAME
+TEXT,-3.00,-2.00,VALUE
