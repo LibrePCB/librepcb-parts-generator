@@ -539,8 +539,8 @@ if __name__ == '__main__':
         lead_contact_length=0.6,
         pkgcat='241d9d5d-8f74-4740-8901-3cf51cf50091',
         keywords='so,sop,tssop,small outline package,smd',
-        version='0.1',
-        create_date='2019-07-21T12:15:54Z',
+        version='0.2',
+        create_date='2019-06-16T12:46:54Z',
     )
 
     # SSOP
