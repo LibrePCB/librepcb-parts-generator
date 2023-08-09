@@ -114,7 +114,7 @@ def get_rectangle_bounds(
 
 
 def generate_pkg(
-    dirpath: str,
+    library: str,
     author: str,
     name: str,
     name_lower: str,
@@ -206,7 +206,7 @@ def generate_pkg(
             lines.append(' )')
             lines.append(')')
 
-            pkg_dir_path = path.join(dirpath, uuid_pkg)
+            pkg_dir_path = path.join('out', library, category, uuid_pkg)
             if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
                 makedirs(pkg_dir_path)
             with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
@@ -285,7 +285,7 @@ def generate_silkscreen_male(
 
 
 def generate_sym(
-    dirpath: str,
+    library: str,
     author: str,
     name: str,
     name_lower: str,
@@ -404,7 +404,7 @@ def generate_sym(
         text = Text(uuid_text_value, Layer('sym_values'), Value('{{VALUE}}'), Align('center top'), Height(sym_text_height), Position(0.0, y_min), Rotation(0.0))
         symbol.add_text(text)
 
-        sym_dir_path = path.join(dirpath, uuid_sym)
+        sym_dir_path = path.join('out', library, category, uuid_sym)
         if not (path.exists(sym_dir_path) and path.isdir(sym_dir_path)):
             makedirs(sym_dir_path)
         with open(path.join(sym_dir_path, '.librepcb-sym'), 'w') as f:
@@ -417,7 +417,7 @@ def generate_sym(
 
 
 def generate_cmp(
-    dirpath: str,
+    library: str,
     author: str,
     name: str,
     name_lower: str,
@@ -492,13 +492,13 @@ def generate_cmp(
 
         component.add_variant(Variant(uuid_variant, Norm.EMPTY, Name('default'), Description(''), gate))
 
-        component.serialize(dirpath)
+        component.serialize(path.join('out', library, category))
 
         print('{}x{} {}: Wrote component {}'.format(rows, per_row, kind, uuid_cmp))
 
 
 def generate_dev(
-    dirpath: str,
+    library: str,
     author: str,
     name: str,
     name_lower: str,
@@ -550,7 +550,7 @@ def generate_dev(
             lines.extend(sorted(signalmappings))
             lines.append(')')
 
-            dev_dir_path = path.join(dirpath, uuid_dev)
+            dev_dir_path = path.join('out', library, category, uuid_dev)
             if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
                 makedirs(dev_dir_path)
             with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
@@ -563,17 +563,9 @@ def generate_dev(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str) -> None:
-        if not (path.exists(dirpath) and path.isdir(dirpath)):
-            makedirs(dirpath)
-    _make('out')
-    _make('out/connectors')
-    _make('out/connectors/pkg')
-    _make('out/connectors/sym')
-
     # Male pin headers
     generate_sym(
-        dirpath='out/connectors/sym',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Pin Header',
         name_lower='male pin header',
@@ -587,7 +579,7 @@ if __name__ == '__main__':
         create_date='2018-10-17T19:13:41Z',
     )
     generate_sym(
-        dirpath='out/connectors/sym',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Pin Header',
         name_lower='male pin header',
@@ -601,7 +593,7 @@ if __name__ == '__main__':
         create_date='2019-09-10T21:02:02Z',
     )
     generate_cmp(
-        dirpath='out/connectors/cmp',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Pin Header',
         name_lower='male pin header',
@@ -616,7 +608,7 @@ if __name__ == '__main__':
         create_date='2018-10-17T19:13:41Z',
     )
     generate_cmp(
-        dirpath='out/connectors/cmp',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Pin Header',
         name_lower='male pin header',
@@ -631,7 +623,7 @@ if __name__ == '__main__':
         create_date='2019-09-11T19:13:41Z',
     )
     generate_pkg(
-        dirpath='out/connectors/pkg',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Pin Header 2.54mm',
         name_lower='male pin header',
@@ -647,7 +639,7 @@ if __name__ == '__main__':
         create_date='2018-10-17T19:13:41Z',
     )
     generate_pkg(
-        dirpath='out/connectors/pkg',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Pin Header 2.54mm',
         name_lower='male pin header',
@@ -663,7 +655,7 @@ if __name__ == '__main__':
         create_date='2019-09-17T20:00:41Z',
     )
     generate_dev(
-        dirpath='out/connectors/dev',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Generic Pin Header 2.54mm',
         name_lower='generic male pin header',
@@ -677,7 +669,7 @@ if __name__ == '__main__':
         create_date='2018-10-17T19:13:41Z',
     )
     generate_dev(
-        dirpath='out/connectors/dev',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Generic Pin Header 2.54mm',
         name_lower='generic male pin header',
@@ -693,7 +685,7 @@ if __name__ == '__main__':
 
     # Female pin sockets
     generate_sym(
-        dirpath='out/connectors/sym',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Pin Socket',
         name_lower='female pin socket',
@@ -707,7 +699,7 @@ if __name__ == '__main__':
         create_date='2018-10-17T19:13:41Z',
     )
     generate_sym(
-        dirpath='out/connectors/sym',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Pin Socket',
         name_lower='female pin socket',
@@ -721,7 +713,7 @@ if __name__ == '__main__':
         create_date='2019-09-10T21:02:02Z',
     )
     generate_cmp(
-        dirpath='out/connectors/cmp',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Pin Socket',
         name_lower='female pin socket',
@@ -736,7 +728,7 @@ if __name__ == '__main__':
         create_date='2018-10-17T19:13:41Z',
     )
     generate_cmp(
-        dirpath='out/connectors/cmp',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Pin Socket',
         name_lower='female pin socket',
@@ -751,7 +743,7 @@ if __name__ == '__main__':
         create_date='2019-09-11T19:13:41Z',
     )
     generate_pkg(
-        dirpath='out/connectors/pkg',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Pin Socket 2.54mm',
         name_lower='female pin socket',
@@ -767,7 +759,7 @@ if __name__ == '__main__':
         create_date='2018-10-17T19:13:41Z',
     )
     generate_pkg(
-        dirpath='out/connectors/pkg',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Pin Socket 2.54mm',
         name_lower='female pin socket',
@@ -783,7 +775,7 @@ if __name__ == '__main__':
         create_date='2019-09-17T20:00:41Z',
     )
     generate_dev(
-        dirpath='out/connectors/dev',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Generic Pin Socket 2.54mm',
         name_lower='generic female pin socket',
@@ -797,7 +789,7 @@ if __name__ == '__main__':
         create_date='2018-10-17T19:13:41Z',
     )
     generate_dev(
-        dirpath='out/connectors/dev',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Generic Pin Socket 2.54mm',
         name_lower='generic female pin socket',
@@ -813,7 +805,7 @@ if __name__ == '__main__':
 
     # Generic connector
     generate_sym(
-        dirpath='out/connectors/sym',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Connector',
         name_lower='connector',
@@ -829,7 +821,7 @@ if __name__ == '__main__':
 
     # Soldered wire connector
     generate_cmp(
-        dirpath='out/connectors/cmp',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Soldered Wire Connector',
         name_lower='soldered wire connector',
@@ -844,7 +836,7 @@ if __name__ == '__main__':
         create_date='2018-10-17T19:13:41Z',
     )
     generate_pkg(
-        dirpath='out/connectors/pkg',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Soldered Wire Connector',
         name_lower='soldered wire connector',
@@ -860,7 +852,7 @@ if __name__ == '__main__':
         create_date='2018-10-17T19:13:41Z',
     )
     generate_dev(
-        dirpath='out/connectors/dev',
+        library='LibrePCB_Connectors.lplib',
         author='Danilo B.',
         name='Soldered Wire Connector 2.54mm',
         name_lower='generic soldered wire connector',

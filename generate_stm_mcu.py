@@ -57,6 +57,7 @@ keywords_stm32 = Keywords('stm32, stm, st, mcu, microcontroller, arm, cortex')
 keywords_stm8 = Keywords('stm8, stm, st, mcu, microcontroller, 8bit')
 author = Author('Danilo Bargen, John Eaton')
 cmpcat = Category('22151601-c2d9-419a-87bc-266f9c7c3459')
+outdir = path.join('out', 'STMicroelectronics.lplib')
 
 # Initialize UUID cache
 uuid_cache_file = 'uuid_cache_stm_mcu.csv'
@@ -652,8 +653,7 @@ def generate_sym(mcus: List[MCU], symbol_map: Dict[str, str], debug: bool = Fals
     # Make sure all grouped symbols are identical
     assert len(set([str(s) for s in symbols])) == 1
 
-    dirpath = 'out/stm_mcu/sym'
-    sym_dir_path = path.join(dirpath, symbols[0].uuid)
+    sym_dir_path = path.join(outdir, 'sym', symbols[0].uuid)
     if not (path.exists(sym_dir_path) and path.isdir(sym_dir_path)):
         makedirs(sym_dir_path)
     with open(path.join(sym_dir_path, '.librepcb-sym'), 'w') as f:
@@ -756,7 +756,7 @@ def generate_cmp(
     # Make sure all grouped components are identical
     assert len(set([str(c) for c in components])) == 1
 
-    components[0].serialize('out/stm_mcu/cmp')
+    components[0].serialize(path.join(outdir, 'cmp'))
 
     print('Wrote cmp {}'.format(name))
 
@@ -811,22 +811,12 @@ def generate_dev(mcu: MCU, symbol_map: Dict[str, str], base_lib_path: str, debug
             SignalUUID(uuid('cmp', mcu.component_identifier, 'signal-{}'.format(pin.name))),
         ))
 
-    device.serialize('out/stm_mcu/dev')
+    device.serialize(path.join(outdir, 'dev'))
 
     print('Wrote dev {}'.format(name))
 
 
 def generate(data: Dict[str, MCU], base_lib_path: str, debug: bool = False) -> None:
-
-    def _make(dirpath: str) -> None:
-        if not (path.exists(dirpath) and path.isdir(dirpath)):
-            makedirs(dirpath)
-
-    _make('out')
-    _make('out/stm_mcu')
-    _make('out/stm_mcu/sym')
-    _make('out/stm_mcu/cmp')
-
     # A map mapping symbol names to UUIDs
     symbol_map = {}  # type: Dict[str, str]
 

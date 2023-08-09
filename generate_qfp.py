@@ -323,7 +323,7 @@ def get_pad_coords(
 
 
 def generate_pkg(
-    dirpath: str,
+    library: str,
     author: str,
     configs: Iterable[QfpConfig],
     pkgcat: str,
@@ -540,7 +540,7 @@ def generate_pkg(
 
         lines.append(')')
 
-        pkg_dir_path = path.join(dirpath, uuid_pkg)
+        pkg_dir_path = path.join('out', library, category, uuid_pkg)
         if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
             makedirs(pkg_dir_path)
         with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
@@ -551,15 +551,9 @@ def generate_pkg(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str) -> None:
-        if not (path.exists(dirpath) and path.isdir(dirpath)):
-            makedirs(dirpath)
-    _make('out')
-    _make('out/qfp')
-    _make('out/qfp/pkg')
     configs = list(chain.from_iterable(c.get_configs() for c in JEDEC_CONFIGS))
     generate_pkg(
-        dirpath='out/qfp/pkg',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         configs=configs,
         pkgcat='3363b8b1-6fa8-4041-962e-5f839cfd86b7',

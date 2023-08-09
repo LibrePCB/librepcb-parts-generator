@@ -49,6 +49,7 @@ class DfnConfig:
                  lead_width: Optional[float] = None,
                  name: Optional[str] = None,
                  create_date: Optional[str] = None,
+                 library: Optional[str] = None,
                  pin1_corner_dx_dy: Optional[float] = None,  # Some parts have a triangular pin1 marking
                  extended_doc_fn: Optional[Callable[['DfnConfig', Callable[[str], str], List[str]], None]] = None,
                  ):
@@ -79,6 +80,7 @@ class DfnConfig:
         self.keywords = keywords
         self.name = name
         self.create_date = create_date
+        self.library = library or "LibrePCB_Base.lplib"
 
         self.extended_doc_fn = extended_doc_fn
 
@@ -294,6 +296,7 @@ THIRD_CONFIGS = [
         keywords='sensirion,sht,shtcx,shtc1,shtc3',
         name='SENSIRION_SHTCx',
         create_date='2019-01-24T21:50:44Z',
+        library="Sensirion.lplib",
         no_exp=False,
         pin1_corner_dx_dy=0.2,
         extended_doc_fn=draw_circle(diameter=0.9),
@@ -312,6 +315,7 @@ THIRD_CONFIGS = [
         keywords='sensirion,sht,sht2x,sht20,sht21,sht25',
         name='SENSIRION_SHT2x',
         create_date='2019-01-24T22:13:46Z',
+        library="Sensirion.lplib",
         no_exp=False,
         pin1_corner_dx_dy=0.2,
     ),
@@ -328,6 +332,7 @@ THIRD_CONFIGS = [
         exposed_length=1.25,
         keywords='sensirion,sgp,sgp30,sgpc3',
         name='SENSIRION_SGPxx',
+        library="Sensirion.lplib",
         no_exp=False,
         pin1_corner_dx_dy=0.3,
         extended_doc_fn=draw_circle(diameter=1.1),
