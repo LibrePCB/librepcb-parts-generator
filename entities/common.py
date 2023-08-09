@@ -6,7 +6,7 @@ from enum import Enum
 
 from typing import List
 
-from common import format_float
+from common import escape_string, format_float
 
 from .helper import indent_entities
 
@@ -57,7 +57,7 @@ class StringValue():
         self.value = value
 
     def __str__(self) -> str:
-        return '({} "{}")'.format(self.name, self.value.replace('"', '\\"'))
+        return '({} "{}")'.format(self.name, escape_string(self.value))
 
 
 class FloatValue():

@@ -1,7 +1,16 @@
 import pytest
 
-from common import format_float as ff
-from common import format_ipc_dimension, human_sort_key, sign
+from common import escape_string, format_float, format_ipc_dimension, human_sort_key, sign
+
+
+@pytest.mark.parametrize(['inval', 'outval'], [
+    ('', ''),
+    ('"', '\\"'),
+    ('\n', '\\n'),
+    ('\\', '\\\\'),
+])
+def test_escape_string(inval: str, outval: str):
+    assert escape_string(inval) == outval
 
 
 @pytest.mark.parametrize(['inval', 'outval'], [
@@ -12,7 +21,7 @@ from common import format_ipc_dimension, human_sort_key, sign
     (-0.0001, '0.0'),  # Unsigned zero, due to rounding to 3 decimals
 ])
 def test_format_float(inval: float, outval: str):
-    assert ff(inval) == outval
+    assert format_float(inval) == outval
 
 
 @pytest.mark.parametrize(['inval', 'outval'], [

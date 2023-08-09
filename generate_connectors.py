@@ -320,7 +320,7 @@ def generate_sym(
         symbol = Symbol(
             uuid_sym,
             Name('{} {}x{:02d}'.format(name, rows, per_row)),
-            Description('A {}x{} {}.\\n\\n'
+            Description('A {}x{} {}.\n\n'
                         'Generated with {}'.format(rows, per_row, name_lower, generator)),
             Keywords('connector, {}x{}, {}'.format(rows, per_row, keywords)),
             Author(author),
@@ -451,7 +451,7 @@ def generate_cmp(
         component = Component(
             uuid_cmp,
             Name('{} {}x{:02d}'.format(name, rows, per_row)),
-            Description('A {}x{} {}.\\n\\n'
+            Description('A {}x{} {}.\n\n'
                         'Generated with {}'.format(rows, per_row, name_lower, generator)),
             Keywords('connector, {}x{}, {}'.format(rows, per_row, keywords)),
             Author(author),
