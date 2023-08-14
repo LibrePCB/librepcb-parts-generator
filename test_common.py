@@ -24,15 +24,18 @@ def test_format_float(inval: float, outval: str):
     assert format_float(inval) == outval
 
 
-@pytest.mark.parametrize(['inval', 'outval'], [
-    (3.14456, '314'),
-    (75.0, '7500'),
-    (0.4, '40'),
-    (0.75, '75'),
-    (30.0, '3000'),
+@pytest.mark.parametrize(['inval', 'decimals', 'outval'], [
+    (3.14456, 1, '31'),
+    (3.14456, 2, '314'),
+    (75.0, 2, '7500'),
+    (0.4, 2, '40'),
+    (0.75, 2, '75'),
+    (30.0, 2, '3000'),
+    (0.7999999999, 2, '80'),
+    (0.809, 2, '80'),
 ])
-def test_format_ipc_dimension(inval: float, outval: str):
-    assert format_ipc_dimension(inval) == outval
+def test_format_ipc_dimension(inval: float, decimals: int, outval: str):
+    assert format_ipc_dimension(inval, decimals) == outval
 
 
 @pytest.mark.parametrize(['inval', 'outval'], [

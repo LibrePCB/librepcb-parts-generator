@@ -80,10 +80,17 @@ def format_float(number: float) -> str:
 def format_ipc_dimension(number: float, decimal_places: int = 2) -> str:
     """
     Format a dimension (e.g. lead span or height) according to IPC rules.
+
+    Note: Unfortunately the IPC naming conventions do not specify whether
+          decimals shall be rounded or truncated. But it seems usually they
+          are truncated, even in the "Footprint Expert" software from
+          https://www.pcblibraries.com/. So let's do it the same way to
+          get consistent names.
     """
-    formatted = '{:.2f}'.format(number)
-    stripped = re.sub(r'^0\.', '', formatted)
-    return stripped.replace('.', '')
+    number *= pow(10, decimal_places)
+    # Note: Round to 1nm before truncating to avoid wrong results due to
+    # inaccurate calculations leading in numbers like 0.79999999999999.
+    return str(int(round(number, 6 - decimal_places)))
 
 
 def indent(level: int, lines: Iterable[str]) -> List[str]:
