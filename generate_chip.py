@@ -2,6 +2,7 @@
 Generate the following packages:
 
 - Chip resistors SMT
+- Chip capacitors SMT
 
 """
 from os import makedirs, path
@@ -149,7 +150,7 @@ class ChipConfig:
 
     def size_metric(self) -> str:
         return str(int(self.body.length * 10)).rjust(2, '0') + \
-            str(int(self.body.width * 10)).rjust(2, '0')
+            str(int(self.body.width * 10 if self.body.width < 10 else self.body.width)).rjust(2, '0')
 
     def size_imperial(self) -> str:
         return self._size_imperial
@@ -593,6 +594,45 @@ if __name__ == '__main__':
         version='0.3.2',
         create_date='2019-01-04T23:06:17Z',
     )
+    # Chip capacitors (CAPC)
+    generate_pkg(
+        library='LibrePCB_Base.lplib',
+        author='murray',
+        name='CAPC{size_metric} ({size_imperial})',
+        description='Generic chip capacitor {size_metric} (imperial {size_imperial}).\\n\\n'
+                    'Length: {length}mm\\nWidth: {width}mm',
+        polarization=None,
+        configs=[
+            # C0402
+            ChipConfig('01005', BodyDimensions(0.4, 0.2, 0.2), gap=0.14),
+            # C0603
+            ChipConfig('0201', BodyDimensions(0.6, 0.3, 0.3), gap=0.2),
+            # C1005
+            ChipConfig('0402', BodyDimensions(1.0, 0.5, 0.5), gap=0.4),
+            # C1608
+            ChipConfig('0603', BodyDimensions(1.6, 0.8, 0.8), gap=0.6),
+            # C2012
+            ChipConfig('0805', BodyDimensions(2.0, 1.25, 1.25), gap=0.8),
+            # C3216
+            ChipConfig('1206', BodyDimensions(3.2, 1.6, 1.6), gap=1.8),
+            # C3225
+            ChipConfig('1210', BodyDimensions(3.2, 2.5, 2.5), gap=2.2),
+            # C4520
+            ChipConfig('1808', BodyDimensions(4.5, 2.0, 2.0), gap=3.0),
+            # C4532
+            ChipConfig('1812', BodyDimensions(4.5, 3.2, 3.2), gap=3.0),
+            # C4564
+            ChipConfig('1825', BodyDimensions(4.5, 6.4, 3.2), gap=3.0),
+            # C5750
+            ChipConfig('2220', BodyDimensions(5.7, 5.0, 2.8), gap=4.3),
+            # C9210
+            ChipConfig('3640', BodyDimensions(9.2, 10.0, 2.8), gap=6.4),
+        ],
+        pkgcat='414f873f-4099-47fd-8526-bdd8419de581',
+        keywords='c,capacitor,chip,generic',
+        version='0.1',
+        create_date='2023-08-14T11:00:00Z',
+    )
     # Molded polarized capacitors (CAPPM)
     # Based on the table "Common Molded Body Tantalum Capacitors" in the IPC7351C draft
     # and KEMET documentation: https://content.kemet.com/datasheets/KEM_T2005_T491.pdf
@@ -702,5 +742,35 @@ if __name__ == '__main__':
         keywords='r,resistor,resistance,smd,smt',
         version='0.3',
         create_date='2019-01-29T19:47:42Z',
+    )
+    generate_dev(
+        library='LibrePCB_Base.lplib',
+        author='murray',
+        name='Capacitor {size_metric} ({size_imperial})',
+        description='Generic SMD capacitor {size_metric} (imperial {size_imperial}).',
+        packages=[
+            # Metric, Imperial, Name
+            ('0402', '01005', 'CAPC0402 (01005)'),
+            ('0603', '0201', 'CAPC0603 (0201)'),
+            ('1005', '0402', 'CAPC1005 (0402)'),
+            ('1608', '0603', 'CAPC1608 (0603)'),
+            ('2012', '0805', 'CAPC2012 (0805)'),
+            ('3216', '1206', 'CAPC3216 (1206)'),
+            ('3225', '1210', 'CAPC3225 (1210)'),
+            ('4520', '1808', 'CAPC4520 (1808)'),
+            ('4532', '1812', 'CAPC4532 (1812)'),
+            ('4564', '1825', 'CAPC4564 (1825)'),
+            ('5750', '2220', 'CAPC5750 (2220)'),
+            ('9210', '3640', 'CAPC9210 (3640)'),
+        ],
+        cmp='d167e0e3-6a92-4b76-b013-77b9c230e5f1',
+        cat='c011cc6b-b762-498e-8494-d1994f3043cf',
+        signals=[
+            '1c1c7abc-7b40-4f92-b533-f65604644db7',
+            '6d776f4d-2a7c-4128-a98a-dbb1dd861411',
+        ],
+        keywords='c,capacitor,capacitance,smd,smt',
+        version='0.1',
+        create_date='2023-08-14T11:00:00Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
