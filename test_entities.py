@@ -21,7 +21,7 @@ def test_name() -> None:
 
 
 def test_description() -> None:
-    description = str(Description("My Description\\nWith two \" lines"))
+    description = str(Description("My Description\nWith two \" lines"))
     assert description == '(description "My Description\\nWith two \\" lines")'
 
 
@@ -81,7 +81,7 @@ def test_text() -> None:
 
 
 def test_symbol() -> None:
-    symbol = Symbol('01b03c10-7334-4bd5-b2bc-942c18325d2b', Name('Sym name'), Description(r'A multiline description.\n\nDescription'), Keywords('my, keywords'), Author('Test'), Version('0.2'), Created('2018-10-17T19:13:41Z'), Category('d0618c29-0436-42da-a388-fdadf7b23892'))
+    symbol = Symbol('01b03c10-7334-4bd5-b2bc-942c18325d2b', Name('Sym name'), Description('A multiline description.\n\nDescription'), Keywords('my, keywords'), Author('Test'), Version('0.2'), Created('2018-10-17T19:13:41Z'), Category('d0618c29-0436-42da-a388-fdadf7b23892'))
     symbol.add_pin(SymbolPin('6da06b2b-7806-4e68-bd0c-e9f18eb2f9d8', Name('1'), Position(5.08, 20.32), Rotation(180.0), Length(3.81)))
     polygon = Polygon('743dbf3d-98e8-46f0-9a32-00e00d0e811f', Layer('sym_outlines'), Width(0.25), Fill(False), GrabArea(True))
     polygon.add_vertex(Vertex(Position(-2.54, 22.86), Angle(0.0)))
@@ -163,7 +163,7 @@ def test_component_variant() -> None:
 
 
 def test_component() -> None:
-    component = Component('00c36da8-e22b-43a1-9a87-c3a67e863f49', Name('Generic Connector 1x27'), Description(r'A 1x27 soldered wire connector.\n\nNext line'), Keywords('connector, 1x27'), Author('Test R.'), Version('0.2'), Created('2018-10-17T19:13:41Z'), Deprecated(False), Category('d0618c29-0436-42da-a388-fdadf7b23892'), SchematicOnly(False), DefaultValue(''), Prefix('J'))
+    component = Component('00c36da8-e22b-43a1-9a87-c3a67e863f49', Name('Generic Connector 1x27'), Description('A 1x27 soldered wire connector.\n\nNext line'), Keywords('connector, 1x27'), Author('Test R.'), Version('0.2'), Created('2018-10-17T19:13:41Z'), Deprecated(False), Category('d0618c29-0436-42da-a388-fdadf7b23892'), SchematicOnly(False), DefaultValue(''), Prefix('J'))
     component.add_signal(Signal('f46a4643-fc68-4593-a889-3d987bfe3544', Name('1'), Role.PASSIVE, Required(False), Negated(False), Clock(False), ForcedNet('')))
 
     gate = Gate('c1e4b542-a1b1-44d5-bec3-070776143a29', SymbolUUID('8f1a97f2-4cdf-43da-b38d-b3787c47b5ad'), Position(0.0, 0.0), Rotation(0.0), Required(True), Suffix(''))
@@ -272,7 +272,7 @@ def test_package() -> None:
     package.add_footprint(create_footprint())
     assert str(package) == """(librepcb_package 009e35ef-1f50-4bf3-ab58-11eb85bf5503
  (name "Soldered Wire Connector 1x19 ⌀1.0mm")
- (description "A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\n\nGenerated with librepcb-parts-generator (generate_connectors.py)")
+ (description "A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\\n\\nGenerated with librepcb-parts-generator (generate_connectors.py)")
  (keywords "connector, 1x19, d1.0, connector, soldering, generic")
  (author "Danilo B.")
  (version "0.1")

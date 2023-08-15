@@ -227,11 +227,11 @@ def generate_pkg(
         uuid=_pkg_uuid('pkg'),
         name=Name(name),
         description=Description(
-            'Polarized radial electrolytic capacitor.\\n\\n' +
-            'Diameter: {} mm\\n'.format(diameter) +
-            'Height: {} mm\\n'.format(height) +
-            'Lead Spacing: {} mm\\n'.format(pitch) +
-            'Max. Lead Diameter: {} mm\\n\\n'.format(lead_width) +
+            'Polarized radial electrolytic capacitor.\n\n' +
+            'Diameter: {} mm\n'.format(diameter) +
+            'Height: {} mm\n'.format(height) +
+            'Lead Spacing: {} mm\n'.format(pitch) +
+            'Max. Lead Diameter: {} mm\n\n'.format(lead_width) +
             'Generated with {}'.format(generator)
         ),
         keywords=Keywords('electrolytic,capacitor,polarized,radial,c,cap,cpol'),
@@ -280,11 +280,11 @@ def generate_dev(
         uuid=_uuid('dev'),
         name=Name(name),
         description=Description(
-            'Generic polarized radial electrolytic capacitor.\\n\\n' +
-            'Diameter: {} mm\\n'.format(diameter) +
-            'Height: {} mm\\n'.format(height) +
-            'Lead Spacing: {} mm\\n'.format(pitch) +
-            'Max. Lead Diameter: {} mm\\n\\n'.format(lead_width) +
+            'Generic polarized radial electrolytic capacitor.\n\n' +
+            'Diameter: {} mm\n'.format(diameter) +
+            'Height: {} mm\n'.format(height) +
+            'Lead Spacing: {} mm\n'.format(pitch) +
+            'Max. Lead Diameter: {} mm\n\n'.format(lead_width) +
             'Generated with {}'.format(generator)
         ),
         keywords=Keywords('electrolytic,capacitor,polarized,radial,c,cap,cpol'),

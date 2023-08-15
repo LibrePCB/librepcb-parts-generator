@@ -9,6 +9,18 @@ from datetime import datetime
 
 from typing import Any, Dict, Iterable, List, Union
 
+# String escape sequences
+STRING_ESCAPE_SEQUENCES = (
+    ('\\', '\\\\'),  # Must be the first one to avoid recursion!
+    ('\b', '\\b'),
+    ('\f', '\\f'),
+    ('\n', '\\n'),
+    ('\r', '\\r'),
+    ('\t', '\\t'),
+    ('\v', '\\v'),
+    ('"',  '\\"'),
+)
+
 # Commonly used dimensions
 COURTYARD_LINE_WIDTH = 0.1
 
@@ -40,6 +52,15 @@ def now() -> str:
     Return current timestamp as string.
     """
     return datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
+
+
+def escape_string(string: str) -> str:
+    """
+    Escape a string according to LibrePCB S-Expression escaping rules.
+    """
+    for search, replacement in STRING_ESCAPE_SEQUENCES:
+        string = string.replace(search, replacement)
+    return string
 
 
 def format_float(number: float) -> str:

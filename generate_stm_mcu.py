@@ -409,11 +409,11 @@ class MCU:
         """
         Get a description of the symbol.
         """
-        description = 'A {} MCU by ST Microelectronics with the following pins:\\n\\n'.format(self.family)
+        description = 'A {} MCU by ST Microelectronics with the following pins:\n\n'.format(self.family)
         for pin_type in sorted(self.pin_types()):
             count = len(self.get_pin_names_by_type(pin_type))
-            description += '- {} {} pins\\n'.format(count, pin_type)
-        description += '\\nGenerated with {}'.format(generator)
+            description += '- {} {} pins\n'.format(count, pin_type)
+        description += '\nGenerated with {}'.format(generator)
         return description
 
     @property
@@ -432,22 +432,22 @@ class MCU:
         """
         Get a description of the component.
         """
-        description = 'A {} MCU by ST Microelectronics.\\n\\n'.format(self.ref_without_flash)
-        description += 'I/Os: {}\\n'.format(self.io_count)
-        description += '\\nGenerated with {}'.format(generator)
+        description = 'A {} MCU by ST Microelectronics.\n\n'.format(self.ref_without_flash)
+        description += 'I/Os: {}\n'.format(self.io_count)
+        description += '\nGenerated with {}'.format(generator)
         return description
 
     @property
     def description(self) -> str:
-        description = 'A {} MCU by ST Microelectronics.\\n\\n'.format(self.name)
-        description += 'Package: {}\\nFlash: {}\\nRAM: {}\\nI/Os: {}\\nFrequency: {}\\n'.format(
+        description = 'A {} MCU by ST Microelectronics.\n\n'.format(self.name)
+        description += 'Package: {}\nFlash: {}\nRAM: {}\nI/Os: {}\nFrequency: {}\n'.format(
             self.package, self.flash, self.ram, self.io_count, self.frequency,
         )
         if self.voltage:
-            description += 'Voltage: {}\\n'.format(self.voltage)
+            description += 'Voltage: {}\n'.format(self.voltage)
         if self.temperature:
-            description += 'Temperature range: {}\\n'.format(self.temperature)
-        description += '\\nGenerated with {}'.format(generator)
+            description += 'Temperature range: {}\n'.format(self.temperature)
+        description += '\nGenerated with {}'.format(generator)
         return description
 
     def generate_placement_data(self, debug: bool = False) -> Tuple[SymbolPinPlacement, Dict[str, str]]:

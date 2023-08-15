@@ -79,12 +79,12 @@ class LedConfig:
         )
         self.pkg_description = \
             'Generic through-hole LED with {top_diameter:.2f} mm' \
-            ' body diameter.\\n\\n' \
-            'Body height: {body_height:.2f} mm.\\n' \
-            'Lead spacing: {lead_spacing:.2f} mm.\\n' \
-            'Standoff: {standoff:.2f} mm.\\n' \
+            ' body diameter.\n\n' \
+            'Body height: {body_height:.2f} mm.\n' \
+            'Lead spacing: {lead_spacing:.2f} mm.\n' \
+            'Standoff: {standoff:.2f} mm.\n' \
             'Body color: {body_color}.' \
-            '\\n\\nGenerated with {generator}'.format(
+            '\n\nGenerated with {generator}'.format(
                 top_diameter=top_diameter,
                 body_height=body_height,
                 lead_spacing=lead_spacing,
