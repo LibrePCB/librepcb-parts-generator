@@ -350,7 +350,7 @@ def generate_pkg(
         # General info
         lines.append('(librepcb_package {}'.format(uuid_pkg))
         lines.append(' (name "{}")'.format(full_name))
-        lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_description, generator))
+        lines.append(' (description "{}")'.format(full_description))
         lines.append(' (keywords "{}")'.format(config.keywords))
         lines.append(' (author "{}")'.format(author))
         lines.append(' (version "{}")'.format(version))
