@@ -110,7 +110,7 @@ class SoConfig:
 
 
 def generate_pkg(
-    dirpath: str,
+    library: str,
     author: str,
     name: str,
     description: str,
@@ -333,7 +333,7 @@ def generate_pkg(
 
         lines.append(')')
 
-        pkg_dir_path = path.join(dirpath, uuid_pkg)
+        pkg_dir_path = path.join('out', library, category, uuid_pkg)
         if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
             makedirs(pkg_dir_path)
         with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
@@ -344,13 +344,7 @@ def generate_pkg(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str) -> None:
-        if not (path.exists(dirpath) and path.isdir(dirpath)):
-            makedirs(dirpath)
-
     # SOIC
-
-    _make('out/soic/pkg')
     configs = []  # type: List[SoConfig]
     for pin_count in [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32]:
         for height in [1.2, 1.4, 1.7, 2.7]:
@@ -360,7 +354,7 @@ if __name__ == '__main__':
             total_width = 8.42  # effective, not nominal (7.62)
             configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
     generate_pkg(
-        dirpath='out/soic/pkg',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='SOIC{pitch}P762X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
@@ -383,7 +377,7 @@ if __name__ == '__main__':
             total_width = 16.04  # effective, not nominal (15.42)
             configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
     generate_pkg(
-        dirpath='out/soic/pkg',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='SOIC{pitch}P1524X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
@@ -406,7 +400,7 @@ if __name__ == '__main__':
         total_width = 6.0
         configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
     generate_pkg(
-        dirpath='out/soic/pkg',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='SOIC{pitch}P600X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
@@ -429,7 +423,7 @@ if __name__ == '__main__':
         total_width = 10.3
         configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
     generate_pkg(
-        dirpath='out/soic/pkg',
+        library='LibrePCB_Base.lplib',
         author='U. Bruhin',
         name='SOIC{pitch}P1030X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
@@ -445,10 +439,8 @@ if __name__ == '__main__':
     )
 
     # TSSOP
-
-    _make('out/tssop/pkg')
     generate_pkg(
-        dirpath='out/tssop/pkg',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         # Name according to IPC7351C
         name='TSSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
@@ -544,10 +536,8 @@ if __name__ == '__main__':
     )
 
     # SSOP
-
-    _make('out/ssop/pkg')
     generate_pkg(
-        dirpath='out/ssop/pkg',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         # Name according to IPC7351C
         name='SSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
@@ -637,7 +627,7 @@ if __name__ == '__main__':
         create_date='2019-07-21T12:55:20Z',
     )
     generate_pkg(
-        dirpath='out/ssop/pkg',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         # Name according to IPC7351C
         name='SSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
@@ -675,10 +665,8 @@ if __name__ == '__main__':
     )
 
     # TSOP
-
-    _make('out/tsop/pkg')
     generate_pkg(
-        dirpath='out/tsop/pkg',
+        library='LibrePCB_Base.lplib',
         author='Tubbles',
         # Name extrapolated from IPC7351C
         name='TSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',

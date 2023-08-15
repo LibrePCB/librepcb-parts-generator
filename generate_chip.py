@@ -171,7 +171,7 @@ class PolarizationConfig:
 
 
 def generate_pkg(
-    dirpath: str,
+    library: str,
     author: str,
     name: str,
     description: str,
@@ -480,7 +480,7 @@ def generate_pkg(
 
         lines.append(')')
 
-        pkg_dir_path = path.join(dirpath, uuid_pkg)
+        pkg_dir_path = path.join('out', library, category, uuid_pkg)
         if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
             makedirs(pkg_dir_path)
         with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
@@ -491,7 +491,7 @@ def generate_pkg(
 
 
 def generate_dev(
-    dirpath: str,
+    library: str,
     author: str,
     name: str,
     description: str,
@@ -540,7 +540,7 @@ def generate_dev(
             lines.append(' (pad {} (signal {}))'.format(pad, signal))
         lines.append(')')
 
-        dev_dir_path = path.join(dirpath, uuid_dev)
+        dev_dir_path = path.join('out', library, category, uuid_dev)
         if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
             makedirs(dev_dir_path)
         with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
@@ -551,15 +551,9 @@ def generate_dev(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str) -> None:
-        if not (path.exists(dirpath) and path.isdir(dirpath)):
-            makedirs(dirpath)
-    _make('out')
-    _make('out/chip')
-    _make('out/chip/pkg')
     # Chip resistors (RESC)
     generate_pkg(
-        dirpath='out/chip/pkg',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='RESC{size_metric} ({size_imperial})',
         description='Generic chip resistor {size_metric} (imperial {size_imperial}).\\n\\n'
@@ -585,7 +579,7 @@ if __name__ == '__main__':
     )
     # J-Lead resistors (RESJ)
     generate_pkg(
-        dirpath='out/chip/pkg',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='RESJ{size_metric} ({size_imperial})',
         description='Generic J-lead resistor {size_metric} (imperial {size_imperial}).\\n\\n'
@@ -604,7 +598,7 @@ if __name__ == '__main__':
     # and KEMET documentation: https://content.kemet.com/datasheets/KEM_T2005_T491.pdf
     # (see Table 2: Land Dimensions / Courtyard)
     generate_pkg(
-        dirpath='out/chip/pkg',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='CAPPM{length}X{width}X{height}L{lead_length}X{lead_width}',
         description='Generic polarized molded inward-L capacitor (EIA {meta[eia]}).\\n\\n'
@@ -680,9 +674,8 @@ if __name__ == '__main__':
         create_date='2019-11-18T21:56:00Z',
     )
     # Generic devices
-    _make('out/chip/dev')
     generate_dev(
-        dirpath='out/chip/dev',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='Resistor {size_metric} ({size_imperial})',
         description='Generic SMD resistor {size_metric} (imperial {size_imperial}).',

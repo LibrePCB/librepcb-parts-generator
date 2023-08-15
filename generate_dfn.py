@@ -67,7 +67,6 @@ def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> 
 
 
 def generate_pkg(
-    dirpath: str,
     author: str,
     name: str,
     description: str,
@@ -367,7 +366,7 @@ def generate_pkg(
     lines.append(')')
 
     # Save package
-    pkg_dir_path = path.join(dirpath, uuid_pkg)
+    pkg_dir_path = path.join('out', config.library, category, uuid_pkg)
     if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
         makedirs(pkg_dir_path)
     with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
@@ -380,13 +379,6 @@ def generate_pkg(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str) -> None:
-        if not (path.exists(dirpath) and path.isdir(dirpath)):
-            makedirs(dirpath)
-    _make('out')
-    _make('out/dfn')
-    _make('out/dfn/pkg')
-
     generated_packages = []  # type: List[str]
 
     for config in JEDEC_CONFIGS:
@@ -401,7 +393,6 @@ if __name__ == '__main__':
 
         for make_exposed in exposed_settings:
             name = generate_pkg(
-                dirpath='out/dfn/pkg',
                 author='Hannes Badertscher',
                 name='DFN{pitch}P{length}X{width}X{height}-{pin_count}',
                 description='{pin_count}-pin Dual Flat No-Lead package (DFN), '
@@ -421,9 +412,6 @@ if __name__ == '__main__':
             else:
                 print("Duplicate name found: {}".format(name))
 
-    _make('out/3rd_party')
-    _make('out/3rd_party/pkg')
-
     for config in THIRD_CONFIGS:
         # Find out which configs to create
         if config.exposed_width > 0.0 and config.exposed_length > 0.0:
@@ -436,7 +424,6 @@ if __name__ == '__main__':
 
         for make_exposed in exposed_settings:
             name = generate_pkg(
-                dirpath='out/3rd_party/pkg',
                 author='Hannes Badertscher',
                 name='DFN{pitch}P{length}X{width}X{height}-{pin_count}',
                 description='{pin_count}-pin Dual Flat No-Lead package (DFN), '

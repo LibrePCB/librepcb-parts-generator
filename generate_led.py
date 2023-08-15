@@ -104,7 +104,7 @@ class LedConfig:
 
 
 def generate_pkg(
-    dirpath: str,
+    library: str,
     author: str,
     configs: Iterable[LedConfig],
     pkgcat: str,
@@ -516,7 +516,7 @@ def generate_pkg(
             body_offset=7.62,
         )
 
-        pkg_dir_path = path.join(dirpath, uuid_pkg)
+        pkg_dir_path = path.join('out', library, category, uuid_pkg)
         if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
             makedirs(pkg_dir_path)
         with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
@@ -527,7 +527,7 @@ def generate_pkg(
 
 
 def generate_dev(
-    dirpath: str,
+    library: str,
     author: str,
     configs: Iterable[LedConfig],
     cmpcat: str,
@@ -566,7 +566,7 @@ def generate_dev(
             signal=SignalUUID('7b023430-b68f-403a-80b8-c7deb12e7a0c'),
         ))
 
-        dev_dir_path = path.join(dirpath, device.uuid)
+        dev_dir_path = path.join('out', library, category, device.uuid)
         if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
             makedirs(dev_dir_path)
         with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
@@ -577,10 +577,6 @@ def generate_dev(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str) -> None:
-        if not (path.exists(dirpath) and path.isdir(dirpath)):
-            makedirs(dirpath)
-
     configs = []  # type: List[LedConfig]
 
     # Generic LEDs
@@ -599,9 +595,8 @@ if __name__ == '__main__':
     configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 1.0, False, 'Clear'))
     configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 5.0, True, 'Clear'))
 
-    _make('out/led/pkg')
     generate_pkg(
-        dirpath='out/led/pkg',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         configs=configs,
         pkgcat='9c36c4be-3582-4f27-ae00-4c1229f1e870',
@@ -610,7 +605,7 @@ if __name__ == '__main__':
         create_date='2022-02-26T00:06:03Z',
     )
     generate_dev(
-        dirpath='out/led/dev',
+        library='LibrePCB_Base.lplib',
         author='U. Bruhin',
         configs=configs,
         cmpcat='70421345-ae1d-4fed-aa60-e7619524b97f',

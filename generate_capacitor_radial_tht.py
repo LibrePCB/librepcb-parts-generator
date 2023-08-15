@@ -62,7 +62,7 @@ def get_variant(
 
 
 def generate_pkg(
-    dirpath: str,
+    library: str,
     diameter: float,
     height: float,
     pitch: float,
@@ -249,7 +249,7 @@ def generate_pkg(
     ))
 
     # write files
-    pkg_dir_path = path.join(dirpath, package.uuid)
+    pkg_dir_path = path.join('out', library, 'pkg', package.uuid)
     if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
         makedirs(pkg_dir_path)
     with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
@@ -261,7 +261,7 @@ def generate_pkg(
 
 
 def generate_dev(
-    dirpath: str,
+    library: str,
     diameter: float,
     height: float,
     pitch: float,
@@ -306,7 +306,7 @@ def generate_dev(
     ))
 
     # write files
-    pkg_dir_path = path.join(dirpath, device.uuid)
+    pkg_dir_path = path.join('out', library, 'dev', device.uuid)
     if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
         makedirs(pkg_dir_path)
     with open(path.join(pkg_dir_path, '.librepcb-dev'), 'w') as f:
@@ -349,7 +349,7 @@ if __name__ == '__main__':
 
     for config in CONFIGS:
         generate_pkg(
-            dirpath='out/capacitors_radial_tht/pkg',
+            library='LibrePCB_Base.lplib',
             diameter=config['diameter'],
             height=config['height'],
             pitch=config['pitch'],
@@ -359,7 +359,7 @@ if __name__ == '__main__':
             create_date='2019-12-29T14:14:11Z',
         )
         generate_dev(
-            dirpath='out/capacitors_radial_tht/dev',
+            library='LibrePCB_Base.lplib',
             diameter=config['diameter'],
             height=config['height'],
             pitch=config['pitch'],

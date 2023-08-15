@@ -102,7 +102,7 @@ def get_coords(pin_number: int, pin_count: int, row_count: int, pitch: float, ro
 
 
 def generate_pkg(
-    dirpath: str,
+    library: str,
     author: str,
     name: str,
     description: str,
@@ -300,7 +300,7 @@ def generate_pkg(
         lines.append(' )')
         lines.append(')')
 
-        pkg_dir_path = path.join(dirpath, uuid_pkg)
+        pkg_dir_path = path.join('out', library, category, uuid_pkg)
         if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
             makedirs(pkg_dir_path)
         with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
@@ -313,14 +313,8 @@ def generate_pkg(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str) -> None:
-        if not (path.exists(dirpath) and path.isdir(dirpath)):
-            makedirs(dirpath)
-    _make('out')
-    _make('out/idc')
-    _make('out/idc/pkg')
     generate_pkg(
-        dirpath='out/idc/pkg',
+        library='CNC_Tech.lplib',
         author='Danilo Bargen',
         name='CNCTECH_3220-{pin_count}-0300-XX',
         description='{pin_count}-pin 1.27mm pitch SMD IDC box header by CNC Tech.',
@@ -340,7 +334,7 @@ if __name__ == '__main__':
         create_date='2019-07-09T21:31:21Z',
     )
     generate_pkg(
-        dirpath='out/idc/pkg',
+        library='CNC_Tech.lplib',
         author='Danilo Bargen',
         name='CNCTECH_3120-{pin_count}-0300-XX',
         description='{pin_count}-pin 2.00mm pitch SMD IDC box header by CNC Tech.',
@@ -360,7 +354,7 @@ if __name__ == '__main__':
         create_date='2019-07-09T21:31:21Z',
     )
     generate_pkg(
-        dirpath='out/idc/pkg',
+        library='CNC_Tech.lplib',
         author='Danilo Bargen',
         name='CNCTECH_3020-{pin_count}-0300-XX',
         description='{pin_count}-pin 2.54mm pitch SMD IDC box header by CNC Tech.',

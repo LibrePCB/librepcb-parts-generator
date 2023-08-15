@@ -99,7 +99,7 @@ class FetConfig:
 
 
 def generate_dev(
-    dirpath: str,
+    library: str,
     name: str,
     author: str,
     description: str,
@@ -160,7 +160,7 @@ def generate_dev(
         lines.extend(sorted(pad_signal_mappings))
         lines.append(')')
 
-        dev_dir_path = path.join(dirpath, uuid_dev)
+        dev_dir_path = path.join('out', library, 'dev', uuid_dev)
         if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
             makedirs(dev_dir_path)
         with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
@@ -171,16 +171,9 @@ def generate_dev(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str) -> None:
-        if not (path.exists(dirpath) and path.isdir(dirpath)):
-            makedirs(dirpath)
-    _make('out')
-    _make('out/mosfet_dual')
-    _make('out/mosfet_dual/diodes_inc')
-    _make('out/mosfet_dual/diodes_inc/dev')
     # Diodes Incorporated
     generate_dev(
-        dirpath='out/mosfet_dual/diodes_inc/dev',
+        library='Diodes_Incorporated.lplib',
         name='{name}',
         author='Danilo B.',
         description='Diodes Incorporated {name} Dual MOSFET N/P-Channel {max_voltage}V.',

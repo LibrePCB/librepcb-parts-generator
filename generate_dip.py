@@ -81,7 +81,7 @@ def get_rectangle_bounds(
 
 
 def generate_pkg(
-    dirpath: str,
+    library: str,
     author: str,
     name: str,
     name_lower: str,
@@ -224,7 +224,7 @@ def generate_pkg(
 
         lines.append(')')
 
-        pkg_dir_path = path.join(dirpath, uuid_pkg)
+        pkg_dir_path = path.join('out', library, category, uuid_pkg)
         if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
             makedirs(pkg_dir_path)
         with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
@@ -237,14 +237,8 @@ def generate_pkg(
 
 
 if __name__ == '__main__':
-    def _make(dirpath: str) -> None:
-        if not (path.exists(dirpath) and path.isdir(dirpath)):
-            makedirs(dirpath)
-    _make('out')
-    _make('out/dip')
-    _make('out/dip/pkg')
     generate_pkg(
-        dirpath='out/dip/pkg',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='DIP',
         name_lower='Dual Inline Package',
@@ -256,7 +250,7 @@ if __name__ == '__main__':
         create_date='2018-11-04T23:13:00Z',
     )
     generate_pkg(
-        dirpath='out/dip/pkg',
+        library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='DIP',
         name_lower='Dual Inline Package',
