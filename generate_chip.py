@@ -630,8 +630,8 @@ if __name__ == '__main__':
         ],
         pkgcat='414f873f-4099-47fd-8526-bdd8419de581',
         keywords='c,capacitor,chip,generic',
-        version='0.1',
-        create_date='2023-08-14T11:00:00Z',
+        version='0.3',
+        create_date='2015-06-21T12:37:34Z',
     )
     # Molded polarized capacitors (CAPPM)
     # Based on the table "Common Molded Body Tantalum Capacitors" in the IPC7351C draft
@@ -770,7 +770,7 @@ if __name__ == '__main__':
             '6d776f4d-2a7c-4128-a98a-dbb1dd861411',
         ],
         keywords='c,capacitor,capacitance,smd,smt',
-        version='0.1',
-        create_date='2023-08-14T11:00:00Z',
+        version='0.3',
+        create_date='2015-08-13T20:22:31Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
