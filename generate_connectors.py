@@ -20,13 +20,14 @@ from typing import Callable, Iterable, List, Optional, Tuple
 from common import format_float as ff
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GrabArea, Height, Keywords, Layer, Length,
-    Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
+    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
+    Layer, Length, Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
 )
 from entities.component import (
     Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
     Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
 )
+from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation
 from entities.symbol import Pin as SymbolPin
 from entities.symbol import Symbol
 
@@ -326,6 +327,8 @@ def generate_sym(
             Author(author),
             Version(version),
             Created(create_date or now()),
+            Deprecated(False),
+            GeneratedBy(''),
             Category(cmpcat),
         )
 
@@ -336,7 +339,11 @@ def generate_sym(
                 Name(str(p)),
                 Position((w + 2.54) * x_sign, get_y(p, i, rows, spacing, True)),
                 Rotation(180.0 if p % rows == 0 else 0),
-                Length(3.81)
+                Length(3.81),
+                NamePosition(5.08, 0.0),
+                NameRotation(0.0),
+                NameHeight(2.5),
+                NameAlign('left center'),
             )
             symbol.add_pin(pin)
 
@@ -404,15 +411,7 @@ def generate_sym(
         text = Text(uuid_text_value, Layer('sym_values'), Value('{{VALUE}}'), Align('center top'), Height(sym_text_height), Position(0.0, y_min), Rotation(0.0))
         symbol.add_text(text)
 
-        sym_dir_path = path.join('out', library, category, uuid_sym)
-        if not (path.exists(sym_dir_path) and path.isdir(sym_dir_path)):
-            makedirs(sym_dir_path)
-        with open(path.join(sym_dir_path, '.librepcb-sym'), 'w') as f:
-            f.write('0.1\n')
-        with open(path.join(sym_dir_path, 'symbol.lp'), 'w') as f:
-            f.write(str(symbol))
-            f.write('\n')
-
+        symbol.serialize(path.join('out', library, category))
         print('{}x{} {}: Wrote symbol {}'.format(rows, per_row, kind, uuid_sym))
 
 
@@ -458,6 +457,7 @@ def generate_cmp(
             Version(version),
             Created(create_date or now()),
             Deprecated(False),
+            GeneratedBy(''),
             Category(cmpcat),
             SchematicOnly(False),
             DefaultValue(default_value),
@@ -493,7 +493,6 @@ def generate_cmp(
         component.add_variant(Variant(uuid_variant, Norm.EMPTY, Name('default'), Description(''), gate))
 
         component.serialize(path.join('out', library, category))
-
         print('{}x{} {}: Wrote component {}'.format(rows, per_row, kind, uuid_cmp))
 
 
@@ -600,7 +599,7 @@ if __name__ == '__main__':
         kind=KIND_HEADER,
         cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
         keywords='pin header, male header',
-        default_value='{{PARTNUMBER}}',
+        default_value='{{MPN}}',
         rows=1,
         min_pads=1,
         max_pads=40,
@@ -615,7 +614,7 @@ if __name__ == '__main__':
         kind=KIND_HEADER,
         cmpcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',
         keywords='pin header, male header',
-        default_value='{{PARTNUMBER}}',
+        default_value='{{MPN}}',
         rows=2,
         min_pads=4,
         max_pads=80,
@@ -720,7 +719,7 @@ if __name__ == '__main__':
         kind=KIND_SOCKET,
         cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
         keywords='pin socket, female header',
-        default_value='{{PARTNUMBER}}',
+        default_value='{{MPN}}',
         rows=1,
         min_pads=1,
         max_pads=40,
@@ -735,7 +734,7 @@ if __name__ == '__main__':
         kind=KIND_SOCKET,
         cmpcat='ade6d8ff-3c4f-4dac-a939-cc540c87c280',
         keywords='pin socket, female header',
-        default_value='{{PARTNUMBER}}',
+        default_value='{{MPN}}',
         rows=2,
         min_pads=4,
         max_pads=80,

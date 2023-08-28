@@ -3,8 +3,8 @@ from os import makedirs, path
 from typing import List
 
 from .common import (
-    Author, BoolValue, Category, Created, Deprecated, Description, EnumValue, Keywords, Name, Position, Rotation,
-    StringValue, UUIDValue, Version
+    Author, BoolValue, Category, Created, Deprecated, Description, EnumValue, GeneratedBy, Keywords, Name, Position,
+    Rotation, StringValue, UUIDValue, Version
 )
 from .helper import indent_entities
 
@@ -161,7 +161,8 @@ class Variant:
 class Component:
     def __init__(self, uuid: str, name: Name, description: Description,
                  keywords: Keywords, author: Author, version: Version,
-                 created: Created, deprecated: Deprecated, category: Category,
+                 created: Created, deprecated: Deprecated,
+                 generated_by: GeneratedBy, category: Category,
                  schematic_only: SchematicOnly,
                  default_value: DefaultValue, prefix: Prefix):
         self.uuid = uuid
@@ -172,6 +173,7 @@ class Component:
         self.version = version
         self.created = created
         self.deprecated = deprecated
+        self.generated_by = generated_by
         self.category = category
         self.schematic_only = schematic_only
         self.default_value = default_value
@@ -188,6 +190,7 @@ class Component:
             ' {}\n'.format(self.version) +\
             ' {}\n'.format(self.created) +\
             ' {}\n'.format(self.deprecated) +\
+            ' {}\n'.format(self.generated_by) +\
             ' {}\n'.format(self.category) +\
             ' {}\n'.format(self.schematic_only) +\
             ' {}\n'.format(self.default_value) +\
@@ -204,11 +207,11 @@ class Component:
         self.variants.append(variant)
 
     def serialize(self, output_directory: str) -> None:
-        cmp_dir_path = path.join(output_directory, self.uuid)
-        if not (path.exists(cmp_dir_path) and path.isdir(cmp_dir_path)):
-            makedirs(cmp_dir_path)
-        with open(path.join(cmp_dir_path, '.librepcb-cmp'), 'w') as f:
-            f.write('0.1\n')
-        with open(path.join(cmp_dir_path, 'component.lp'), 'w') as f:
+        dir_path = path.join(output_directory, self.uuid)
+        if not (path.exists(dir_path) and path.isdir(dir_path)):
+            makedirs(dir_path)
+        with open(path.join(dir_path, '.librepcb-cmp'), 'w') as f:
+            f.write('1\n')
+        with open(path.join(dir_path, 'component.lp'), 'w') as f:
             f.write(str(self))
             f.write('\n')

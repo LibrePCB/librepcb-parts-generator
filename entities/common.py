@@ -105,6 +105,11 @@ class Deprecated(BoolValue):
         super().__init__('deprecated', deprecated)
 
 
+class GeneratedBy(StringValue):
+    def __init__(self, generated_by: str):
+        super().__init__('generated_by', generated_by)
+
+
 class Category(UUIDValue):
     def __init__(self, category: str):
         super().__init__('category', category)
@@ -119,9 +124,29 @@ class Position():
         return '(position {} {})'.format(format_float(self.x), format_float(self.y))
 
 
+class Position3D():
+    def __init__(self, x: float, y: float, z: float):
+        self.x = x
+        self.y = y
+        self.z = z
+
+    def __str__(self) -> str:
+        return '(3d_position {} {} {})'.format(format_float(self.x), format_float(self.y), format_float(self.z))
+
+
 class Rotation(FloatValue):
     def __init__(self, rotation: float):
         super().__init__('rotation', rotation)
+
+
+class Rotation3D():
+    def __init__(self, x: float, y: float, z: float):
+        self.x = x
+        self.y = y
+        self.z = z
+
+    def __str__(self) -> str:
+        return '(3d_rotation {} {} {})'.format(format_float(self.x), format_float(self.y), format_float(self.z))
 
 
 class Length(FloatValue):

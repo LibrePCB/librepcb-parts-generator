@@ -1,21 +1,22 @@
 """
 Generate THT polarized radial electrolytic capacitors (CAPPRD).
 """
-from os import makedirs, path
+from os import path
 from uuid import uuid4
 
 from typing import Optional
 
 from common import format_ipc_dimension, init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GrabArea, Height,
-    Keywords, Layer, Name, Polygon, Position, Rotation, Value, Version, Vertex, Width
+    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
+    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
 )
 from entities.component import SignalUUID
 from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.package import (
-    AutoRotate, Drill, Footprint, FootprintPad, LetterSpacing, LineSpacing, Mirror, Package, PackagePad, Shape, Side,
-    Size, StrokeText, StrokeWidth
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, FootprintPad, LetterSpacing,
+    LineSpacing, Mirror, Package, PackagePad, PackagePadUuid, PadFunction, PadHole, Shape, ShapeRadius, Size,
+    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
 
 generator = 'librepcb-parts-generator (generate_capacitor_radial_tht.py)'
@@ -130,30 +131,47 @@ def generate_pkg(
             uuid=_fpt_uuid('footprint'),
             name=Name(name),
             description=Description(''),
+            position_3d=Position3D(0.0, 0.0, 0.0),
+            rotation_3d=Rotation3D(0.0, 0.0, 0.0),
         )
+        pad_hole_path = [Vertex(Position(0.0, 0.0), Angle(0.0))]
+        uuid_plus = _pkg_uuid('pad-plus')
         footprint.add_pad(FootprintPad(
-            uuid=_pkg_uuid('pad-plus'),
-            side=Side.THT,
-            shape=Shape.RECT,
+            uuid=uuid_plus,
+            side=ComponentSide.TOP,
+            shape=Shape.ROUNDED_RECT,
             position=Position(-pitch / 2, 0),
             rotation=Rotation(0),
             size=Size(pad_diameter, pad_diameter),
-            drill=Drill(drill),
+            radius=ShapeRadius(0.0),
+            stop_mask=StopMaskConfig.AUTO,
+            solder_paste=SolderPasteConfig.OFF,
+            copper_clearance=CopperClearance(0),
+            function=PadFunction.UNSPECIFIED,
+            package_pad=PackagePadUuid(uuid_plus),
+            holes=[PadHole(uuid_plus, DrillDiameter(drill), pad_hole_path)],
         ))
+        uuid_minus = _pkg_uuid('pad-minus')
         footprint.add_pad(FootprintPad(
-            uuid=_pkg_uuid('pad-minus'),
-            side=Side.THT,
-            shape=Shape.ROUND,
+            uuid=uuid_minus,
+            side=ComponentSide.TOP,
+            shape=Shape.ROUNDED_RECT,
             position=Position(pitch / 2, 0),
             rotation=Rotation(0),
             size=Size(pad_diameter, pad_diameter),
-            drill=Drill(drill),
+            radius=ShapeRadius(1.0),
+            stop_mask=StopMaskConfig.AUTO,
+            solder_paste=SolderPasteConfig.OFF,
+            copper_clearance=CopperClearance(0),
+            function=PadFunction.UNSPECIFIED,
+            package_pad=PackagePadUuid(uuid_minus),
+            holes=[PadHole(uuid_minus, DrillDiameter(drill), pad_hole_path)],
         ))
 
         # placement
         footprint.add_circle(Circle(
             uuid=_fpt_uuid('circle-placement'),
-            layer=Layer('top_placement'),
+            layer=Layer('top_legend'),
             width=Width(0.2),
             fill=Fill(False),
             grab_area=GrabArea(False),
@@ -162,7 +180,7 @@ def generate_pkg(
         ))
         footprint.add_polygon(_generate_fill_polygon(
             identifier='polygon-placement-fill',
-            layer='top_placement',
+            layer='top_legend',
         ))
 
         # documentation
@@ -184,7 +202,7 @@ def generate_pkg(
         footprint.add_circle(Circle(
             uuid=_fpt_uuid('circle-courtyard'),
             layer=Layer('top_courtyard'),
-            width=Width(0.2),
+            width=Width(0.0),
             fill=Fill(False),
             grab_area=GrabArea(False),
             diameter=Diameter(courtyard_diameter),
@@ -239,7 +257,9 @@ def generate_pkg(
         version=Version(version),
         created=Created(create_date or now()),
         deprecated=Deprecated(False),
+        generated_by=GeneratedBy(''),
         category=Category('ee75e31d-f231-41d9-8a3b-bea5114f41e3'),
+        assembly_type=AssemblyType.AUTO,
     )
     package.add_pad(PackagePad(uuid=_pkg_uuid('pad-plus'), name=Name('+')))
     package.add_pad(PackagePad(uuid=_pkg_uuid('pad-minus'), name=Name('-')))
@@ -249,14 +269,7 @@ def generate_pkg(
     ))
 
     # write files
-    pkg_dir_path = path.join('out', library, 'pkg', package.uuid)
-    if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-        makedirs(pkg_dir_path)
-    with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-        f.write('0.1\n')
-    with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
-        f.write(str(package))
-        f.write('\n')
+    package.serialize(path.join('out', library, 'pkg'))
     print('Wrote package {}'.format(name))
 
 
@@ -292,6 +305,7 @@ def generate_dev(
         version=Version(version),
         created=Created(create_date or now()),
         deprecated=Deprecated(False),
+        generated_by=GeneratedBy(''),
         category=Category('c011cc6b-b762-498e-8494-d1994f3043cf'),
         component_uuid=ComponentUUID('c54375c5-7149-4ded-95c5-7462f7301ee7'),
         package_uuid=PackageUUID(uuid('pkg', variant, 'pkg')),
@@ -306,14 +320,7 @@ def generate_dev(
     ))
 
     # write files
-    pkg_dir_path = path.join('out', library, 'dev', device.uuid)
-    if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-        makedirs(pkg_dir_path)
-    with open(path.join(pkg_dir_path, '.librepcb-dev'), 'w') as f:
-        f.write('0.1\n')
-    with open(path.join(pkg_dir_path, 'device.lp'), 'w') as f:
-        f.write(str(device))
-        f.write('\n')
+    device.serialize(path.join('out', library, 'dev'))
     print('Wrote device {}'.format(name))
 
 

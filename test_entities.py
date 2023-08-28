@@ -1,6 +1,7 @@
 from entities.common import (
-    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GrabArea, Height,
-    Keywords, Layer, Length, Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
+    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
+    Height, Keywords, Layer, Length, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Text, Value, Version,
+    Vertex, Width
 )
 from entities.component import (
     Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
@@ -8,9 +9,11 @@ from entities.component import (
 )
 from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.package import (
-    AutoRotate, Drill, Footprint, FootprintPad, LetterSpacing, LineSpacing, Mirror, Package, PackagePad, Shape, Side,
-    Size, StrokeText, StrokeWidth
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, FootprintPad, LetterSpacing,
+    LineSpacing, Mirror, Package, PackagePad, PackagePadUuid, PadFunction, PadHole, Shape, ShapeRadius, Size,
+    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
+from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation
 from entities.symbol import Pin as SymbolPin
 from entities.symbol import Symbol
 
@@ -41,10 +44,22 @@ def test_length() -> None:
 
 
 def test_symbol_pin() -> None:
-    symbol_pin_s_exp = str(SymbolPin('my_uuid', Name('foo'), Position(1.0, 2.0), Rotation(180.0), Length(3.81)))
+    symbol_pin_s_exp = str(SymbolPin(
+        'my_uuid',
+        Name('foo'),
+        Position(1.0, 2.0),
+        Rotation(180.0),
+        Length(3.81),
+        NamePosition(3.0, 4.0),
+        NameRotation(270.0),
+        NameHeight(2.5),
+        NameAlign('left center'),
+    ))
 
     assert symbol_pin_s_exp == '(pin my_uuid (name "foo")\n' + \
         ' (position 1.0 2.0) (rotation 180.0) (length 3.81)\n' + \
+        ' (name_position 3.0 4.0) (name_rotation 270.0) (name_height 2.5)\n' + \
+        ' (name_align left center)\n' + \
         ')'
 
 
@@ -81,8 +96,29 @@ def test_text() -> None:
 
 
 def test_symbol() -> None:
-    symbol = Symbol('01b03c10-7334-4bd5-b2bc-942c18325d2b', Name('Sym name'), Description('A multiline description.\n\nDescription'), Keywords('my, keywords'), Author('Test'), Version('0.2'), Created('2018-10-17T19:13:41Z'), Category('d0618c29-0436-42da-a388-fdadf7b23892'))
-    symbol.add_pin(SymbolPin('6da06b2b-7806-4e68-bd0c-e9f18eb2f9d8', Name('1'), Position(5.08, 20.32), Rotation(180.0), Length(3.81)))
+    symbol = Symbol(
+        '01b03c10-7334-4bd5-b2bc-942c18325d2b',
+        Name('Sym name'),
+        Description('A multiline description.\n\nDescription'),
+        Keywords('my, keywords'),
+        Author('Test'),
+        Version('0.2'),
+        Created('2018-10-17T19:13:41Z'),
+        Deprecated(False),
+        GeneratedBy('black magic'),
+        Category('d0618c29-0436-42da-a388-fdadf7b23892'),
+    )
+    symbol.add_pin(SymbolPin(
+        '6da06b2b-7806-4e68-bd0c-e9f18eb2f9d8',
+        Name('1'),
+        Position(5.08, 20.32),
+        Rotation(180.0),
+        Length(3.81),
+        NamePosition(1.0, 2.0),
+        NameRotation(270.0),
+        NameHeight(2.5),
+        NameAlign('left center'),
+    ))
     polygon = Polygon('743dbf3d-98e8-46f0-9a32-00e00d0e811f', Layer('sym_outlines'), Width(0.25), Fill(False), GrabArea(True))
     polygon.add_vertex(Vertex(Position(-2.54, 22.86), Angle(0.0)))
     polygon.add_vertex(Vertex(Position(-2.54, -25.4), Angle(0.0)))
@@ -99,9 +135,12 @@ def test_symbol() -> None:
  (version "0.2")
  (created 2018-10-17T19:13:41Z)
  (deprecated false)
+ (generated_by "black magic")
  (category d0618c29-0436-42da-a388-fdadf7b23892)
  (pin 6da06b2b-7806-4e68-bd0c-e9f18eb2f9d8 (name "1")
   (position 5.08 20.32) (rotation 180.0) (length 3.81)
+  (name_position 1.0 2.0) (name_rotation 270.0) (name_height 2.5)
+  (name_align left center)
  )
  (polygon 743dbf3d-98e8-46f0-9a32-00e00d0e811f (layer sym_outlines)
   (width 0.25) (fill false) (grab_area true)
@@ -163,7 +202,21 @@ def test_component_variant() -> None:
 
 
 def test_component() -> None:
-    component = Component('00c36da8-e22b-43a1-9a87-c3a67e863f49', Name('Generic Connector 1x27'), Description('A 1x27 soldered wire connector.\n\nNext line'), Keywords('connector, 1x27'), Author('Test R.'), Version('0.2'), Created('2018-10-17T19:13:41Z'), Deprecated(False), Category('d0618c29-0436-42da-a388-fdadf7b23892'), SchematicOnly(False), DefaultValue(''), Prefix('J'))
+    component = Component(
+        '00c36da8-e22b-43a1-9a87-c3a67e863f49',
+        Name('Generic Connector 1x27'),
+        Description('A 1x27 soldered wire connector.\n\nNext line'),
+        Keywords('connector, 1x27'),
+        Author('Test R.'),
+        Version('0.2'),
+        Created('2018-10-17T19:13:41Z'),
+        Deprecated(False),
+        GeneratedBy('black magic'),
+        Category('d0618c29-0436-42da-a388-fdadf7b23892'),
+        SchematicOnly(False),
+        DefaultValue(''),
+        Prefix('J'),
+    )
     component.add_signal(Signal('f46a4643-fc68-4593-a889-3d987bfe3544', Name('1'), Role.PASSIVE, Required(False), Negated(False), Clock(False), ForcedNet('')))
 
     gate = Gate('c1e4b542-a1b1-44d5-bec3-070776143a29', SymbolUUID('8f1a97f2-4cdf-43da-b38d-b3787c47b5ad'), Position(0.0, 0.0), Rotation(0.0), Required(True), Suffix(''))
@@ -180,6 +233,7 @@ def test_component() -> None:
  (version "0.2")
  (created 2018-10-17T19:13:41Z)
  (deprecated false)
+ (generated_by "black magic")
  (category d0618c29-0436-42da-a388-fdadf7b23892)
  (schematic_only false)
  (default_value "")
@@ -205,9 +259,34 @@ def test_package_pad() -> None:
 
 
 def test_footprint_pad() -> None:
-    footprint_pad = FootprintPad('5c4d39d3-35cc-4836-a082-693143ee9135', Side.THT, Shape.RECT, Position(0.0, 22.86), Rotation(0.0), Size(2.54, 1.5875), Drill(1.0))
-    assert str(footprint_pad) == """(pad 5c4d39d3-35cc-4836-a082-693143ee9135 (side tht) (shape rect)
- (position 0.0 22.86) (rotation 0.0) (size 2.54 1.587) (drill 1.0)
+    footprint_pad = FootprintPad(
+        '5c4d39d3-35cc-4836-a082-693143ee9135',
+        ComponentSide.TOP,
+        Shape.ROUNDED_RECT,
+        Position(0.0, 22.86),
+        Rotation(0.0),
+        Size(2.54, 1.5875),
+        ShapeRadius(0.5),
+        StopMaskConfig.AUTO,
+        SolderPasteConfig.OFF,
+        CopperClearance(0.1),
+        PadFunction.UNSPECIFIED,
+        PackagePadUuid('5c4d39d3-35cc-4836-a082-693143ee9135'),
+        [
+            PadHole(
+                '5c4d39d3-35cc-4836-a082-693143ee9135',
+                DrillDiameter(1.0),
+                [Vertex(Position(0.0, 0.0), Angle(0.0))]
+            ),
+        ],
+    )
+    assert str(footprint_pad) == """(pad 5c4d39d3-35cc-4836-a082-693143ee9135 (side top) (shape roundrect)
+ (position 0.0 22.86) (rotation 0.0) (size 2.54 1.587) (radius 0.5)
+ (stop_mask auto) (solder_paste off) (clearance 0.1) (function unspecified)
+ (package_pad 5c4d39d3-35cc-4836-a082-693143ee9135)
+ (hole 5c4d39d3-35cc-4836-a082-693143ee9135 (diameter 1.0)
+  (vertex (position 0.0 0.0) (angle 0.0))
+ )
 )"""
 
 
@@ -221,9 +300,55 @@ def test_stroke_text() -> None:
 
 
 def create_footprint() -> Footprint:
-    footprint = Footprint('17b9f232-2b15-4281-a07d-ad0db5213f92', Name('default'), Description(''))
-    footprint.add_pad(FootprintPad('5c4d39d3-35cc-4836-a082-693143ee9135', Side.THT, Shape.RECT, Position(0.0, 22.86), Rotation(0.0), Size(2.54, 1.5875), Drill(1.0)))
-    footprint.add_pad(FootprintPad('6100dd55-d3b3-4139-9085-d5a75e783c37', Side.THT, Shape.ROUND, Position(0.0, 20.32), Rotation(0.0), Size(2.54, 1.5875), Drill(1.0)))
+    footprint = Footprint(
+        '17b9f232-2b15-4281-a07d-ad0db5213f92',
+        Name('default'),
+        Description(''),
+        Position3D(1.0, 2.0, 3.0),
+        Rotation3D(10.0, 20.0, 30.0),
+    )
+    footprint.add_pad(FootprintPad(
+        '5c4d39d3-35cc-4836-a082-693143ee9135',
+        ComponentSide.TOP,
+        Shape.ROUNDED_RECT,
+        Position(0.0, 22.86),
+        Rotation(0.0),
+        Size(2.54, 1.5875),
+        ShapeRadius(0.5),
+        StopMaskConfig.AUTO,
+        SolderPasteConfig.OFF,
+        CopperClearance(0.1),
+        PadFunction.UNSPECIFIED,
+        PackagePadUuid('5c4d39d3-35cc-4836-a082-693143ee9135'),
+        [
+            PadHole(
+                '5c4d39d3-35cc-4836-a082-693143ee9135',
+                DrillDiameter(1.0),
+                [Vertex(Position(0.0, 0.0), Angle(0.0))]
+            ),
+        ],
+    ))
+    footprint.add_pad(FootprintPad(
+        '6100dd55-d3b3-4139-9085-d5a75e783c37',
+        ComponentSide.TOP,
+        Shape.ROUNDED_RECT,
+        Position(0.0, 20.32),
+        Rotation(0.0),
+        Size(2.54, 1.5875),
+        ShapeRadius(0.5),
+        StopMaskConfig.AUTO,
+        SolderPasteConfig.OFF,
+        CopperClearance(0.1),
+        PadFunction.UNSPECIFIED,
+        PackagePadUuid('6100dd55-d3b3-4139-9085-d5a75e783c37'),
+        [
+            PadHole(
+                '6100dd55-d3b3-4139-9085-d5a75e783c37',
+                DrillDiameter(1.0),
+                [Vertex(Position(0.0, 0.0), Angle(0.0))]
+            ),
+        ],
+    ))
     polygon = Polygon('5e18e4ea-5667-42b3-b60f-fcc91b0461d3', Layer('top_placement'), Width(0.25), Fill(False), GrabArea(True))
     polygon.add_vertex(Vertex(Position(-1.27, +24.36), Angle(0.0)))
     polygon.add_vertex(Vertex(Position(+1.27, +24.36), Angle(0.0)))
@@ -241,11 +366,22 @@ def test_footprint() -> None:
     assert str(footprint) == """(footprint 17b9f232-2b15-4281-a07d-ad0db5213f92
  (name "default")
  (description "")
- (pad 5c4d39d3-35cc-4836-a082-693143ee9135 (side tht) (shape rect)
-  (position 0.0 22.86) (rotation 0.0) (size 2.54 1.587) (drill 1.0)
+ (3d_position 1.0 2.0 3.0) (3d_rotation 10.0 20.0 30.0)
+ (pad 5c4d39d3-35cc-4836-a082-693143ee9135 (side top) (shape roundrect)
+  (position 0.0 22.86) (rotation 0.0) (size 2.54 1.587) (radius 0.5)
+  (stop_mask auto) (solder_paste off) (clearance 0.1) (function unspecified)
+  (package_pad 5c4d39d3-35cc-4836-a082-693143ee9135)
+  (hole 5c4d39d3-35cc-4836-a082-693143ee9135 (diameter 1.0)
+   (vertex (position 0.0 0.0) (angle 0.0))
+  )
  )
- (pad 6100dd55-d3b3-4139-9085-d5a75e783c37 (side tht) (shape round)
-  (position 0.0 20.32) (rotation 0.0) (size 2.54 1.587) (drill 1.0)
+ (pad 6100dd55-d3b3-4139-9085-d5a75e783c37 (side top) (shape roundrect)
+  (position 0.0 20.32) (rotation 0.0) (size 2.54 1.587) (radius 0.5)
+  (stop_mask auto) (solder_paste off) (clearance 0.1) (function unspecified)
+  (package_pad 6100dd55-d3b3-4139-9085-d5a75e783c37)
+  (hole 6100dd55-d3b3-4139-9085-d5a75e783c37 (diameter 1.0)
+   (vertex (position 0.0 0.0) (angle 0.0))
+  )
  )
  (polygon 5e18e4ea-5667-42b3-b60f-fcc91b0461d3 (layer top_placement)
   (width 0.25) (fill false) (grab_area true)
@@ -264,7 +400,19 @@ def test_footprint() -> None:
 
 
 def test_package() -> None:
-    package = Package('009e35ef-1f50-4bf3-ab58-11eb85bf5503', Name('Soldered Wire Connector 1x19 ⌀1.0mm'), Description('A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\n\nGenerated with librepcb-parts-generator (generate_connectors.py)'), Keywords('connector, 1x19, d1.0, connector, soldering, generic'), Author('Danilo B.'), Version('0.1'), Created('2018-10-17T19:13:41Z'), Deprecated(False), Category('56a5773f-eeb4-4b39-8cb9-274f3da26f4f'))
+    package = Package(
+        '009e35ef-1f50-4bf3-ab58-11eb85bf5503',
+        Name('Soldered Wire Connector 1x19 ⌀1.0mm'),
+        Description('A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\n\nGenerated with librepcb-parts-generator (generate_connectors.py)'),
+        Keywords('connector, 1x19, d1.0, connector, soldering, generic'),
+        Author('Danilo B.'),
+        Version('0.1'),
+        Created('2018-10-17T19:13:41Z'),
+        Deprecated(False),
+        GeneratedBy('black magic'),
+        Category('56a5773f-eeb4-4b39-8cb9-274f3da26f4f'),
+        AssemblyType.THT,
+    )
 
     package.add_pad(PackagePad('5c4d39d3-35cc-4836-a082-693143ee9135', Name('1')))
     package.add_pad(PackagePad('6100dd55-d3b3-4139-9085-d5a75e783c37', Name('2')))
@@ -278,17 +426,30 @@ def test_package() -> None:
  (version "0.1")
  (created 2018-10-17T19:13:41Z)
  (deprecated false)
+ (generated_by "black magic")
  (category 56a5773f-eeb4-4b39-8cb9-274f3da26f4f)
+ (assembly_type tht)
  (pad 5c4d39d3-35cc-4836-a082-693143ee9135 (name "1"))
  (pad 6100dd55-d3b3-4139-9085-d5a75e783c37 (name "2"))
  (footprint 17b9f232-2b15-4281-a07d-ad0db5213f92
   (name "default")
   (description "")
-  (pad 5c4d39d3-35cc-4836-a082-693143ee9135 (side tht) (shape rect)
-   (position 0.0 22.86) (rotation 0.0) (size 2.54 1.587) (drill 1.0)
+  (3d_position 1.0 2.0 3.0) (3d_rotation 10.0 20.0 30.0)
+  (pad 5c4d39d3-35cc-4836-a082-693143ee9135 (side top) (shape roundrect)
+   (position 0.0 22.86) (rotation 0.0) (size 2.54 1.587) (radius 0.5)
+   (stop_mask auto) (solder_paste off) (clearance 0.1) (function unspecified)
+   (package_pad 5c4d39d3-35cc-4836-a082-693143ee9135)
+   (hole 5c4d39d3-35cc-4836-a082-693143ee9135 (diameter 1.0)
+    (vertex (position 0.0 0.0) (angle 0.0))
+   )
   )
-  (pad 6100dd55-d3b3-4139-9085-d5a75e783c37 (side tht) (shape round)
-   (position 0.0 20.32) (rotation 0.0) (size 2.54 1.587) (drill 1.0)
+  (pad 6100dd55-d3b3-4139-9085-d5a75e783c37 (side top) (shape roundrect)
+   (position 0.0 20.32) (rotation 0.0) (size 2.54 1.587) (radius 0.5)
+   (stop_mask auto) (solder_paste off) (clearance 0.1) (function unspecified)
+   (package_pad 6100dd55-d3b3-4139-9085-d5a75e783c37)
+   (hole 6100dd55-d3b3-4139-9085-d5a75e783c37 (diameter 1.0)
+    (vertex (position 0.0 0.0) (angle 0.0))
+   )
   )
   (polygon 5e18e4ea-5667-42b3-b60f-fcc91b0461d3 (layer top_placement)
    (width 0.25) (fill false) (grab_area true)
@@ -314,9 +475,15 @@ def test_component_pad() -> None:
 
 def test_device() -> None:
     device = Device(
-        '00652f30-9f89-4027-91f5-7bd684eee751', Name('Foo'), Description('Bar'),
-        Keywords('foo, bar'), Author('J. Rando'), Version('0.1'),
-        Created('2018-10-17T19:13:41Z'), Deprecated(False),
+        '00652f30-9f89-4027-91f5-7bd684eee751',
+        Name('Foo'),
+        Description('Bar'),
+        Keywords('foo, bar'),
+        Author('J. Rando'),
+        Version('0.1'),
+        Created('2018-10-17T19:13:41Z'),
+        Deprecated(False),
+        GeneratedBy('black magic'),
         Category('ade6d8ff-3c4f-4dac-a939-cc540c87c280'),
         ComponentUUID('bc911fcc-8b5c-4728-b596-d644797c55da'),
         PackageUUID('b4e92c64-18c4-44a6-aa39-d1be3e8c29bd'),
@@ -331,6 +498,7 @@ def test_device() -> None:
  (version "0.1")
  (created 2018-10-17T19:13:41Z)
  (deprecated false)
+ (generated_by "black magic")
  (category ade6d8ff-3c4f-4dac-a939-cc540c87c280)
  (component bc911fcc-8b5c-4728-b596-d644797c55da)
  (package b4e92c64-18c4-44a6-aa39-d1be3e8c29bd)

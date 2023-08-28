@@ -16,7 +16,6 @@ from uuid import uuid4
 
 from typing import Iterable, List, Optional
 
-from common import COURTYARD_LINE_WIDTH
 from common import format_float as ff
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache, sign
@@ -510,7 +509,7 @@ def generate_pkg(
                 (-x_min,  y_max),
             ]
             lines.append('  (polygon {} (layer {})'.format(uuid_courtyard, 'top_courtyard'))
-            lines.append('   (width {}) (fill false) (grab_area false)'.format(COURTYARD_LINE_WIDTH))
+            lines.append('   (width {}) (fill false) (grab_area false)'.format(0.0))
             for (x, y) in vertices:
                 xx = ff(x + sign(x) * excess.courtyard)
                 yy = ff(y + sign(y) * excess.courtyard)

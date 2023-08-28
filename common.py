@@ -21,9 +21,6 @@ STRING_ESCAPE_SEQUENCES = (
     ('"',  '\\"'),
 )
 
-# Commonly used dimensions
-COURTYARD_LINE_WIDTH = 0.1
-
 
 def init_cache(uuid_cache_file: str) -> Dict[str, str]:
     print('Loading cache: {}'.format(uuid_cache_file))
@@ -127,7 +124,7 @@ def generate_courtyard(
     dy = format_float(max_y + excess_y)
     return [
         '(polygon {} (layer {})'.format(uuid, 'top_courtyard'),
-        ' (width {}) (fill false) (grab_area false)'.format(COURTYARD_LINE_WIDTH),
+        ' (width {}) (fill false) (grab_area false)'.format(0.0),
         ' (vertex (position -{} {}) (angle 0.0))'.format(dx, dy),  # NW
         ' (vertex (position {} {}) (angle 0.0))'.format(dx, dy),  # NE
         ' (vertex (position {} -{}) (angle 0.0))'.format(dx, dy),  # SE

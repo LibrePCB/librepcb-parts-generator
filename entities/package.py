@@ -1,12 +1,27 @@
+from os import makedirs, path
+
 from typing import List
 
 from common import format_float
 
 from .common import (
-    Align, Author, BoolValue, Category, Circle, Created, Deprecated, Description, EnumValue, FloatValue, Height,
-    Keywords, Layer, Name, Polygon, Position, Rotation, Value, Version
+    Align, Author, BoolValue, Category, Circle, Created, Deprecated, Description, EnumValue, FloatValue, GeneratedBy,
+    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, UUIDValue, Value, Version,
+    Vertex
 )
 from .helper import indent_entities
+
+
+class AssemblyType(EnumValue):
+    NONE = 'none'
+    THT = 'tht'
+    SMT = 'smt'
+    MIXED = 'mixed'
+    OTHER = 'other'
+    AUTO = 'auto'
+
+    def get_name(self) -> str:
+        return 'assembly_type'
 
 
 class PackagePad():
@@ -74,22 +89,26 @@ class StrokeText():
         return ret
 
 
-class Side(EnumValue):
+class ComponentSide(EnumValue):
     TOP = 'top'
     BOTTOM = 'bottom'
-    THT = 'tht'
 
     def get_name(self) -> str:
         return 'side'
 
 
 class Shape(EnumValue):
-    ROUND = 'round'
-    RECT = 'rect'
-    OCTAGON = 'octagon'
+    ROUNDED_RECT = 'roundrect'
+    ROUNDED_OCTAGON = 'octagon'
+    CUSTOM = 'custom'
 
     def get_name(self) -> str:
         return 'shape'
+
+
+class ShapeRadius(FloatValue):
+    def __init__(self, radius_normalized: float):
+        super().__init__('radius', radius_normalized)
 
 
 class Size():
@@ -101,33 +120,105 @@ class Size():
         return '(size {} {})'.format(format_float(self.width), format_float(self.height))
 
 
-class Drill(FloatValue):
-    def __init__(self, drill: float):
-        super().__init__('drill', drill)
+class StopMaskConfig(EnumValue):
+    AUTO = 'auto'
+    OFF = 'off'
+
+    def get_name(self) -> str:
+        return 'stop_mask'
+
+
+class SolderPasteConfig(EnumValue):
+    AUTO = 'auto'
+    OFF = 'off'
+
+    def get_name(self) -> str:
+        return 'solder_paste'
+
+
+class CopperClearance(FloatValue):
+    def __init__(self, clearance: float):
+        super().__init__('clearance', clearance)
+
+
+class PackagePadUuid(UUIDValue):
+    def __init__(self, package_pad: str):
+        super().__init__('package_pad', package_pad)
+
+
+class PadFunction(EnumValue):
+    UNSPECIFIED = 'unspecified'
+    STANDARD_PAD = 'standard'
+    PRESSFIT_PAD = 'pressfit'
+    THERMAL_PAD = 'thermal'
+    BGA_PAD = 'bga'
+    EDGE_CONNECTOR_PAD = 'edge_connector'
+    TEST_PAD = 'test'
+    LOCAL_FIDUCIAL = 'local_fiducial'
+    GLOBAL_FIDUCIAL = 'global_fiducial'
+
+    def get_name(self) -> str:
+        return 'function'
+
+
+class DrillDiameter(FloatValue):
+    def __init__(self, diameter: float):
+        super().__init__('diameter', diameter)
+
+
+class PadHole():
+    def __init__(self, uuid: str, diameter: DrillDiameter,
+                 vertices: List[Vertex]):
+        self.uuid = uuid
+        self.diameter = diameter
+        self.vertices = vertices
+
+    def __str__(self) -> str:
+        ret = '(hole {} {}\n'.format(self.uuid, self.diameter)
+        ret += indent_entities(self.vertices)
+        ret += ')'
+        return ret
 
 
 class FootprintPad():
-    def __init__(self, uuid: str, side: Side, shape: Shape, position: Position,
-                 rotation: Rotation, size: Size, drill: Drill):
+    def __init__(self, uuid: str, side: ComponentSide, shape: Shape,
+                 position: Position, rotation: Rotation, size: Size,
+                 radius: ShapeRadius, stop_mask: StopMaskConfig,
+                 solder_paste: SolderPasteConfig,
+                 copper_clearance: CopperClearance, function: PadFunction,
+                 package_pad: PackagePadUuid, holes: List[PadHole]):
         self.uuid = uuid
         self.side = side
         self.shape = shape
         self.position = position
         self.rotation = rotation
         self.size = size
-        self.drill = drill
+        self.radius = radius
+        self.stop_mask = stop_mask
+        self.solder_paste = solder_paste
+        self.copper_clearance = copper_clearance
+        self.function = function
+        self.package_pad = package_pad
+        self.holes = holes
 
     def __str__(self) -> str:
         ret = '(pad {} {} {}\n'.format(self.uuid, self.side, self.shape) +\
-            ' {} {} {} {}\n)'.format(self.position, self.rotation, self.size, self.drill)
+            ' {} {} {} {}\n'.format(self.position, self.rotation, self.size, self.radius) +\
+            ' {} {} {} {}\n'.format(self.stop_mask, self.solder_paste, self.copper_clearance, self.function) +\
+            ' {}\n'.format(self.package_pad)
+        ret += indent_entities(self.holes)
+        ret += ')'
         return ret
 
 
 class Footprint():
-    def __init__(self, uuid: str, name: Name, description: Description):
+    def __init__(self, uuid: str, name: Name, description: Description,
+                 position_3d: Position3D, rotation_3d: Rotation3D):
         self.uuid = uuid
         self.name = name
         self.description = description
+        self.position_3d = position_3d
+        self.rotation_3d = rotation_3d
         self.pads = []  # type: List[FootprintPad]
         self.polygons = []  # type: List[Polygon]
         self.circles = []  # type: List[Circle]
@@ -148,7 +239,8 @@ class Footprint():
     def __str__(self) -> str:
         ret = '(footprint {}\n'.format(self.uuid) +\
             ' {}\n'.format(self.name) +\
-            ' {}\n'.format(self.description)
+            ' {}\n'.format(self.description) +\
+            ' {} {}\n'.format(self.position_3d, self.rotation_3d)
         ret += indent_entities(self.pads)
         ret += indent_entities(self.polygons)
         ret += indent_entities(self.circles)
@@ -160,7 +252,9 @@ class Footprint():
 class Package:
     def __init__(self, uuid: str, name: Name, description: Description,
                  keywords: Keywords, author: Author, version: Version,
-                 created: Created, deprecated: Deprecated, category: Category):
+                 created: Created, deprecated: Deprecated,
+                 generated_by: GeneratedBy, category: Category,
+                 assembly_type: AssemblyType):
         self.uuid = uuid
         self.name = name
         self.description = description
@@ -169,7 +263,9 @@ class Package:
         self.version = version
         self.created = created
         self.deprecated = deprecated
+        self.generated_by = generated_by
         self.category = category
+        self.assembly_type = assembly_type
         self.pads = []  # type: List[PackagePad]
         self.footprints = []  # type: List[Footprint]
 
@@ -188,8 +284,20 @@ class Package:
             ' {}\n'.format(self.version) +\
             ' {}\n'.format(self.created) +\
             ' {}\n'.format(self.deprecated) +\
-            ' {}\n'.format(self.category)
+            ' {}\n'.format(self.generated_by) +\
+            ' {}\n'.format(self.category) +\
+            ' {}\n'.format(self.assembly_type)
         ret += indent_entities(self.pads)
         ret += indent_entities(self.footprints)
         ret += ')'
         return ret
+
+    def serialize(self, output_directory: str) -> None:
+        dir_path = path.join(output_directory, self.uuid)
+        if not (path.exists(dir_path) and path.isdir(dir_path)):
+            makedirs(dir_path)
+        with open(path.join(dir_path, '.librepcb-pkg'), 'w') as f:
+            f.write('1\n')
+        with open(path.join(dir_path, 'package.lp'), 'w') as f:
+            f.write(str(self))
+            f.write('\n')
