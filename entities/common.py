@@ -217,6 +217,46 @@ class Polygon():
         return ret
 
 
+def generate_courtyard(
+    uuid: str,
+    max_x: float,
+    max_y: float,
+    excess_x: float,
+    excess_y: float,
+) -> Polygon:
+    """
+    Generate a rectangular courtyard polygon.
+
+    Args:
+        uuid:
+            The polygon UUID
+        max_x:
+            The half width (x) of the maximum boundary
+        max_y:
+            The half height (y) of the maximum boundary
+        excess_x:
+            Courtyard excess in x direction
+        excess_y:
+            Courtyard excess in y direction
+    """
+    dx = max_x + excess_x
+    dy = max_y + excess_y
+    return Polygon(
+        uuid=uuid,
+        layer=Layer('top_courtyard'),
+        width=Width(0),
+        fill=Fill(False),
+        grab_area=GrabArea(False),
+        vertices=[
+            Vertex(Position(-dx, dy), Angle(0)),  # NW
+            Vertex(Position(dx, dy), Angle(0)),  # NE
+            Vertex(Position(dx, -dy), Angle(0)),  # SE
+            Vertex(Position(-dx, -dy), Angle(0)),  # SW
+            Vertex(Position(-dx, dy), Angle(0)),  # NW
+        ],
+    )
+
+
 class Diameter(FloatValue):
     def __init__(self, diameter: float):
         super().__init__('diameter', diameter)

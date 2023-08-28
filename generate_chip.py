@@ -5,14 +5,24 @@ Generate the following packages:
 - Chip capacitors SMT
 
 """
-from os import makedirs, path
+from os import path
 from uuid import uuid4
 
 from typing import Any, Dict, Iterable, Optional, Tuple
 
-from common import format_float as ff
 from common import format_ipc_dimension as fd
-from common import generate_courtyard, indent, init_cache, now, save_cache
+from common import init_cache, now, save_cache
+from entities.common import (
+    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
+    Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width, generate_courtyard
+)
+from entities.component import SignalUUID
+from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
+from entities.package import (
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
+    Mirror, Package, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size, SolderPasteConfig,
+    StopMaskConfig, StrokeText, StrokeWidth
+)
 
 generator = 'librepcb-parts-generator (generate_chip.py)'
 
@@ -185,8 +195,6 @@ def generate_pkg(
 ) -> None:
     category = 'pkg'
     for config in configs:
-        lines = []
-
         fmt_params = {
             'size_metric': config.size_metric(),
             'size_imperial': config.size_imperial(),
@@ -207,8 +215,12 @@ def generate_pkg(
             'meta': config.meta,
         }
         full_name = name.format(**fmt_params_name)
-        full_desc = description.format(**fmt_params_desc)
-        full_keywords = keywords.format(**fmt_params_desc).lower()
+        full_desc = description.format(**fmt_params_desc) + \
+            "\n\nGenerated with {}".format(generator)
+        full_keywords = ",".join(filter(None, [
+            config.size_metric(), config.size_imperial(),
+            keywords.format(**fmt_params_desc).lower(),
+        ]))
 
         def _uuid(identifier: str) -> str:
             return uuid(category, full_name, identifier)
@@ -225,24 +237,22 @@ def generate_pkg(
 
         print('Generating pkg "{}": {}'.format(full_name, uuid_pkg))
 
-        # General info
-        lines.append('(librepcb_package {}'.format(uuid_pkg))
-        lines.append(' (name "{}")'.format(full_name))
-        lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_desc, generator))
-        lines.append(' (keywords "{}")'.format(','.join(filter(None, [
-            config.size_metric(), config.size_imperial(), full_keywords,
-        ]))))
-        lines.append(' (author "{}")'.format(author))
-        lines.append(' (version "{}")'.format(version))
-        lines.append(' (created {})'.format(create_date or now()))
-        lines.append(' (deprecated false)')
-        lines.append(' (category {})'.format(pkgcat))
-        if polarization:
-            lines.append(' (pad {} (name "{}"))'.format(uuid_pads[0], polarization.name_marked))
-            lines.append(' (pad {} (name "{}"))'.format(uuid_pads[1], polarization.name_unmarked))
-        else:
-            lines.append(' (pad {} (name "1"))'.format(uuid_pads[0]))
-            lines.append(' (pad {} (name "2"))'.format(uuid_pads[1]))
+        package = Package(
+            uuid=uuid_pkg,
+            name=Name(full_name),
+            description=Description(full_desc),
+            keywords=Keywords(full_keywords),
+            author=Author(author),
+            version=Version(version),
+            created=Created(create_date or now()),
+            deprecated=Deprecated(False),
+            generated_by=GeneratedBy(''),
+            categories=[Category(pkgcat)],
+            assembly_type=AssemblyType.AUTO,
+        )
+
+        package.add_pad(PackagePad(uuid_pads[0], Name(polarization.name_marked if polarization else '1')))
+        package.add_pad(PackagePad(uuid_pads[1], Name(polarization.name_unmarked if polarization else '2')))
 
         def add_footprint_variant(
             key: str,
@@ -250,16 +260,16 @@ def generate_pkg(
             density_level: str,
             *,
             gap: Optional[float] = None,
-            footprint: Optional[FootprintDimensions] = None
+            dimensions: Optional[FootprintDimensions] = None
         ) -> None:
             """
             Generate a footprint variant.
 
             Note: Either the toe extension or footprint dimensions must be set.
             """
-            if gap is not None and footprint is not None:
+            if gap is not None and dimensions is not None:
                 raise ValueError('Only toe extension or footprint may be set')
-            if gap is None and footprint is None:
+            if gap is None and dimensions is None:
                 raise ValueError('Either toe extension or footprint must be set')
             uuid_footprint = _uuid('footprint-{}'.format(key))
             uuid_text_name = _uuid('text-name-{}'.format(key))
@@ -289,15 +299,20 @@ def generate_pkg(
                 silk_lw = line_width_thin
                 doc_lw = line_width_thinner
 
-            lines.append(' (footprint {}'.format(uuid_footprint))
-            lines.append('  (name "{}")'.format(name))
-            lines.append('  (description "")')
+            footprint = Footprint(
+                uuid=uuid_footprint,
+                name=Name(name),
+                description=Description(''),
+                position_3d=Position3D(0.0, 0.0, 0.0),
+                rotation_3d=Rotation3D(0.0, 0.0, 0.0),
+            )
+            package.add_footprint(footprint)
 
             # Pads
-            if footprint is not None:
-                pad_width = footprint.pad_width
-                pad_length = footprint.pad_length
-                pad_gap = footprint.pad_gap
+            if dimensions is not None:
+                pad_width = dimensions.pad_width
+                pad_length = dimensions.pad_length
+                pad_gap = dimensions.pad_gap
                 pad_dx = (pad_gap / 2 + pad_length / 2)  # x offset (delta-x)
             elif gap is not None:
                 pad_gap = gap
@@ -306,162 +321,249 @@ def generate_pkg(
                 pad_length = (config.body.length - gap) / 2 + pad_toe
                 pad_dx = (gap / 2 + pad_length / 2)  # x offset (delta-x)
             else:
-                raise ValueError('Either footprint or gap must be set')
+                raise ValueError('Either dimensions or gap must be set')
             for p in [0, 1]:
                 pad_uuid = uuid_pads[p - 1]
                 sign = -1 if p == 1 else 1
-                lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
-                lines.append('   (position {} 0.0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                    ff(sign * pad_dx),
-                    ff(pad_length),
-                    ff(pad_width),
+                footprint.add_pad(FootprintPad(
+                    uuid=pad_uuid,
+                    side=ComponentSide.TOP,
+                    shape=Shape.ROUNDED_RECT,
+                    position=Position(sign * pad_dx, 0),
+                    rotation=Rotation(0),
+                    size=Size(pad_length, pad_width),
+                    radius=ShapeRadius(0),
+                    stop_mask=StopMaskConfig.AUTO,
+                    solder_paste=SolderPasteConfig.AUTO,
+                    copper_clearance=CopperClearance(0.0),
+                    function=PadFunction.UNSPECIFIED,
+                    package_pad=PackagePadUuid(pad_uuid),
+                    holes=[],
                 ))
                 max_x = max(max_x, pad_length / 2 + sign * pad_dx)
-                lines.append('  )')
             max_y = max(max_y, config.body.width / 2)
             max_y = max(max_y, pad_width / 2)
 
             # Documentation
-            half_gap_raw = (config.body.gap or pad_gap) / 2
-            half_gap = ff(half_gap_raw)
-            if footprint is None:
+            half_gap = (config.body.gap or pad_gap) / 2
+            if dimensions is None:
                 # We assume that leads are across the entire width of the part (e.g. MLCC)
-                dx = ff(config.body.length / 2)
-                dy = ff(config.body.width / 2)
-                lines.append('  (polygon {} (layer {})'.format(uuid_outline_left, 'top_documentation'))
-                lines.append('   (width 0.0) (fill true) (grab_area false)')
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))  # NW
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(half_gap, dy))  # NE
-                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(half_gap, dy))  # SE
-                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy))  # SW
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))  # NW
-                lines.append('  )')
-                lines.append('  (polygon {} (layer {})'.format(uuid_outline_right, 'top_documentation'))
-                lines.append('   (width 0.0) (fill true) (grab_area false)')
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))  # NE
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(half_gap, dy))  # NW
-                lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))  # SW
-                lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))  # SE
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))  # NE
-                lines.append('  )')
-                dy = ff(config.body.width / 2 - doc_lw / 2)
-                lines.append('  (polygon {} (layer {})'.format(uuid_outline_top, 'top_documentation'))
-                lines.append('   (width {}) (fill false) (grab_area false)'.format(doc_lw))
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(half_gap, dy))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(half_gap, dy))
-                lines.append('  )')
-                lines.append('  (polygon {} (layer {})'.format(uuid_outline_bot, 'top_documentation'))
-                lines.append('   (width {}) (fill false) (grab_area false)'.format(doc_lw))
-                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(half_gap, dy))
-                lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))
-                lines.append('  )')
+                dx = config.body.length / 2
+                dy = config.body.width / 2
+                footprint.add_polygon(Polygon(
+                    uuid=uuid_outline_left,
+                    layer=Layer('top_documentation'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(-dx, dy), Angle(0)),  # NW
+                        Vertex(Position(-half_gap, dy), Angle(0)),  # NE
+                        Vertex(Position(-half_gap, -dy), Angle(0)),  # SE
+                        Vertex(Position(-dx, -dy), Angle(0)),  # SW
+                        Vertex(Position(-dx, dy), Angle(0)),  # NW
+                    ],
+                ))
+                footprint.add_polygon(Polygon(
+                    uuid=uuid_outline_right,
+                    layer=Layer('top_documentation'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(dx, dy), Angle(0)),  # NE
+                        Vertex(Position(half_gap, dy), Angle(0)),  # NW
+                        Vertex(Position(half_gap, -dy), Angle(0)),  # SW
+                        Vertex(Position(dx, -dy), Angle(0)),  # SE
+                        Vertex(Position(dx, dy), Angle(0)),  # NE
+                    ],
+                ))
+                dy = config.body.width / 2 - doc_lw / 2
+                footprint.add_polygon(Polygon(
+                    uuid=uuid_outline_top,
+                    layer=Layer('top_documentation'),
+                    width=Width(doc_lw),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(-half_gap, dy), Angle(0)),
+                        Vertex(Position(half_gap, dy), Angle(0)),
+                    ],
+                ))
+                footprint.add_polygon(Polygon(
+                    uuid=uuid_outline_bot,
+                    layer=Layer('top_documentation'),
+                    width=Width(doc_lw),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(-half_gap, -dy), Angle(0)),
+                        Vertex(Position(half_gap, -dy), Angle(0)),
+                    ],
+                ))
             else:
                 # We have more precise information about the lead (e.g. molded
                 # packages where leads are not the full width of the package).
-                dx = ff(config.body.length / 2 - doc_lw / 2)
-                dy = ff(config.body.width / 2 - doc_lw / 2)
-                lines.append('  (polygon {} (layer {})'.format(uuid_outline_around, 'top_documentation'))
-                lines.append('   (width {}) (fill false) (grab_area false)'.format(doc_lw))
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))
-                lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))
-                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy))
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))
-                lines.append('  )')
-                dx = ff(config.body.length / 2)
-                dy = ff((config.body.lead_width or footprint.pad_width) / 2)
-                lines.append('  (polygon {} (layer {})'.format(uuid_outline_left, 'top_documentation'))
-                lines.append('   (width 0.0) (fill true) (grab_area false)')
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(half_gap, dy))
-                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(half_gap, dy))
-                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy))
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))
-                lines.append('  )')
-                lines.append('  (polygon {} (layer {})'.format(uuid_outline_right, 'top_documentation'))
-                lines.append('   (width 0.0) (fill true) (grab_area false)')
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(half_gap, dy))
-                lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(half_gap, dy))
-                lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))
-                lines.append('  )')
+                dx = config.body.length / 2 - doc_lw / 2
+                dy = config.body.width / 2 - doc_lw / 2
+                footprint.add_polygon(Polygon(
+                    uuid=uuid_outline_around,
+                    layer=Layer('top_documentation'),
+                    width=Width(doc_lw),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(-dx, dy), Angle(0)),
+                        Vertex(Position(dx, dy), Angle(0)),
+                        Vertex(Position(dx, -dy), Angle(0)),
+                        Vertex(Position(-dx, -dy), Angle(0)),
+                        Vertex(Position(-dx, dy), Angle(0)),
+                    ],
+                ))
+                dx = config.body.length / 2
+                dy = (config.body.lead_width or dimensions.pad_width) / 2
+                footprint.add_polygon(Polygon(
+                    uuid=uuid_outline_left,
+                    layer=Layer('top_documentation'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(-dx, dy), Angle(0)),
+                        Vertex(Position(-half_gap, dy), Angle(0)),
+                        Vertex(Position(-half_gap, -dy), Angle(0)),
+                        Vertex(Position(-dx, -dy), Angle(0)),
+                        Vertex(Position(-dx, dy), Angle(0)),
+                    ],
+                ))
+                footprint.add_polygon(Polygon(
+                    uuid=uuid_outline_right,
+                    layer=Layer('top_documentation'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(dx, dy), Angle(0)),
+                        Vertex(Position(half_gap, dy), Angle(0)),
+                        Vertex(Position(half_gap, -dy), Angle(0)),
+                        Vertex(Position(dx, -dy), Angle(0)),
+                        Vertex(Position(dx, dy), Angle(0)),
+                    ],
+                ))
             if polarization:
                 polarization_mark_width = config.body.width / 8
-                dx_outer = ff(half_gap_raw - polarization_mark_width / 2)
-                dx_inner = ff(half_gap_raw - polarization_mark_width * 1.5)
-                dy = ff(config.body.width / 2 - doc_lw)
-                lines.append('  (polygon {} (layer {})'.format(uuid_polarization_mark, 'top_documentation'))
-                lines.append('   (width 0.0) (fill true) (grab_area true)')
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx_outer, dy))
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx_inner, dy))
-                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx_inner, dy))
-                lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx_outer, dy))
-                lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx_outer, dy))
-                lines.append('  )')
+                dx_outer = half_gap - polarization_mark_width / 2
+                dx_inner = half_gap - polarization_mark_width * 1.5
+                dy = config.body.width / 2 - doc_lw
+                footprint.add_polygon(Polygon(
+                    uuid=uuid_polarization_mark,
+                    layer=Layer('top_documentation'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(True),
+                    vertices=[
+                        Vertex(Position(-dx_outer, dy), Angle(0)),
+                        Vertex(Position(-dx_inner, dy), Angle(0)),
+                        Vertex(Position(-dx_inner, -dy), Angle(0)),
+                        Vertex(Position(-dx_outer, -dy), Angle(0)),
+                        Vertex(Position(-dx_outer, dy), Angle(0)),
+                    ],
+                ))
 
             # Silkscreen
             if config.body.length > 1.0:
                 if polarization:
                     dx_unmarked = pad_dx + pad_length / 2
                     dx_marked = dx_unmarked + silk_lw / 2 + silkscreen_clearance
-                    dy = ff(max(
+                    dy = max(
                         config.body.width / 2 + silk_lw / 2,  # Based on body width
                         pad_width / 2 + silk_lw / 2 + silkscreen_clearance,  # Based on pad width
+                    )
+                    footprint.add_polygon(Polygon(
+                        uuid=uuid_silkscreen_top,
+                        layer=Layer('top_legend'),
+                        width=Width(silk_lw),
+                        fill=Fill(False),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(dx_unmarked, dy), Angle(0)),
+                            Vertex(Position(-dx_marked, dy), Angle(0)),
+                            Vertex(Position(-dx_marked, -dy), Angle(0)),
+                            Vertex(Position(dx_unmarked, -dy), Angle(0)),
+                        ],
                     ))
-                    lines.append('  (polygon {} (layer {})'.format(uuid_silkscreen_top, 'top_placement'))
-                    lines.append('   (width {}) (fill false) (grab_area false)'.format(silk_lw))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(dx_unmarked), dy))
-                    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(dx_marked), dy))
-                    lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(ff(dx_marked), dy))
-                    lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(ff(dx_unmarked), dy))
-                    lines.append('  )')
                 else:
                     assert gap is not None, \
                         "Support for non-polarized packages with irregular pads not yet fully implemented"
-                    dx = ff(gap / 2 - silk_lw / 2 - silkscreen_clearance)
-                    dy = ff(config.body.width / 2 + silk_lw / 2)
-                    lines.append('  (polygon {} (layer {})'.format(uuid_silkscreen_top, 'top_placement'))
-                    lines.append('   (width {}) (fill false) (grab_area false)'.format(silk_lw))
-                    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(dx, dy))
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))
-                    lines.append('  )')
-                    lines.append('  (polygon {} (layer {})'.format(uuid_silkscreen_bot, 'top_placement'))
-                    lines.append('   (width {}) (fill false) (grab_area false)'.format(silk_lw))
-                    lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy))
-                    lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(dx, dy))
-                    lines.append('  )')
+                    dx = gap / 2 - silk_lw / 2 - silkscreen_clearance
+                    dy = config.body.width / 2 + silk_lw / 2
+                    footprint.add_polygon(Polygon(
+                        uuid=uuid_silkscreen_top,
+                        layer=Layer('top_legend'),
+                        width=Width(silk_lw),
+                        fill=Fill(False),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(-dx, dy), Angle(0)),
+                            Vertex(Position(dx, dy), Angle(0)),
+                        ],
+                    ))
+                    footprint.add_polygon(Polygon(
+                        uuid=uuid_silkscreen_bot,
+                        layer=Layer('top_legend'),
+                        width=Width(silk_lw),
+                        fill=Fill(False),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(-dx, -dy), Angle(0)),
+                            Vertex(Position(dx, -dy), Angle(0)),
+                        ],
+                    ))
 
             # Courtyard
             courtyard_excess = get_by_density(config.body.length, density_level, 'courtyard')
-            lines.extend(indent(2, generate_courtyard(
+            footprint.add_polygon(generate_courtyard(
                 uuid=uuid_courtyard,
                 max_x=max_x,
                 max_y=max_y,
                 excess_x=courtyard_excess,
                 excess_y=courtyard_excess,
-            )))
+            ))
 
             # Labels
             if config.body.width < 2.0:
                 offset = label_offset_thin
             else:
                 offset = label_offset
-            dy = ff(config.body.width / 2 + offset)  # y offset (delta-y)
-            text_attrs = '(height {}) (stroke_width 0.2) ' \
-                         '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
-            lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
-            lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(dy))
-            lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
-            lines.append('  )')
-            lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
-            lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center top) (position 0.0 -{}) (rotation 0.0)'.format(dy))
-            lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
-            lines.append('  )')
-
-            lines.append(' )')
+            dy = config.body.width / 2 + offset  # y offset (delta-y)
+            footprint.add_text(StrokeText(
+                uuid=uuid_text_name,
+                layer=Layer('top_names'),
+                height=Height(pkg_text_height),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center bottom'),
+                position=Position(0.0, dy),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(True),
+                mirror=Mirror(False),
+                value=Value('{{NAME}}'),
+            ))
+            footprint.add_text(StrokeText(
+                uuid=uuid_text_value,
+                layer=Layer('top_values'),
+                height=Height(pkg_text_height),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center top'),
+                position=Position(0.0, -dy),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(True),
+                mirror=Mirror(False),
+                value=Value('{{VALUE}}'),
+            ))
 
         if config.gap:
             add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B', gap=config.gap)
@@ -471,24 +573,15 @@ def generate_pkg(
             b = config.footprints.get('B')
             c = config.footprints.get('C')
             if b:
-                add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B', footprint=b)
+                add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B', dimensions=b)
             if a:
-                add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A', footprint=a)
+                add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A', dimensions=a)
             if c:
-                add_footprint_variant('density~c', 'Density Level C (min protrusion)', 'C', footprint=c)
+                add_footprint_variant('density~c', 'Density Level C (min protrusion)', 'C', dimensions=c)
         else:
             raise ValueError('Either gap or footprints must be set')
 
-        lines.append(')')
-
-        pkg_dir_path = path.join('out', library, category, uuid_pkg)
-        if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-            makedirs(pkg_dir_path)
-        with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-            f.write('0.1\n')
-        with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
-            f.write('\n'.join(lines))
-            f.write('\n')
+        package.serialize(path.join('out', library, category))
 
 
 def generate_dev(
@@ -506,14 +599,14 @@ def generate_dev(
 ) -> None:
     category = 'dev'
     for (size_metric, size_imperial, pkg_name) in packages:
-        lines = []
-
         fmt_params = {
             'size_metric': size_metric,
             'size_imperial': size_imperial,
         }  # type: Dict[str, Any]
         full_name = name.format(**fmt_params)
-        full_desc = description.format(**fmt_params)
+        full_desc = description.format(**fmt_params) + \
+            "\n\nGenerated with {}".format(generator)
+        full_keywords = "{},{},{}".format(size_metric, size_imperial, keywords)
 
         def _uuid(identifier: str) -> str:
             return uuid(category, full_name, identifier)
@@ -525,30 +618,25 @@ def generate_dev(
 
         print('Generating dev "{}": {}'.format(full_name, uuid_dev))
 
-        # General info
-        lines.append('(librepcb_device {}'.format(uuid_dev))
-        lines.append(' (name "{}")'.format(full_name))
-        lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_desc, generator))
-        lines.append(' (keywords "{},{},{}")'.format(size_metric, size_imperial, keywords))
-        lines.append(' (author "{}")'.format(author))
-        lines.append(' (version "{}")'.format(version))
-        lines.append(' (created {})'.format(create_date or now()))
-        lines.append(' (deprecated false)')
-        lines.append(' (category {})'.format(cat))
-        lines.append(' (component {})'.format(cmp))
-        lines.append(' (package {})'.format(pkg))
-        for (pad, signal) in sorted(zip(pads, signals)):
-            lines.append(' (pad {} (signal {}))'.format(pad, signal))
-        lines.append(')')
+        device = Device(
+            uuid=uuid_dev,
+            name=Name(full_name),
+            description=Description(full_desc),
+            keywords=Keywords(full_keywords),
+            author=Author(author),
+            version=Version(version),
+            created=Created(create_date or now()),
+            deprecated=Deprecated(False),
+            generated_by=GeneratedBy(''),
+            categories=[Category(cat)],
+            component_uuid=ComponentUUID(cmp),
+            package_uuid=PackageUUID(pkg),
+        )
 
-        dev_dir_path = path.join('out', library, category, uuid_dev)
-        if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
-            makedirs(dev_dir_path)
-        with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
-            f.write('0.1\n')
-        with open(path.join(dev_dir_path, 'device.lp'), 'w') as f:
-            f.write('\n'.join(lines))
-            f.write('\n')
+        for (pad, signal) in sorted(zip(pads, signals)):
+            device.add_pad(ComponentPad(pad_uuid=pad, signal=SignalUUID(signal)))
+
+        device.serialize(path.join('out', library, category))
 
 
 if __name__ == '__main__':
@@ -557,8 +645,8 @@ if __name__ == '__main__':
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='RESC{size_metric} ({size_imperial})',
-        description='Generic chip resistor {size_metric} (imperial {size_imperial}).\\n\\n'
-                    'Length: {length}mm\\nWidth: {width}mm',
+        description='Generic chip resistor {size_metric} (imperial {size_imperial}).\n\n'
+                    'Length: {length}mm\nWidth: {width}mm',
         polarization=None,
         configs=[
             # Configuration: Values taken from Samsung specs.
@@ -583,8 +671,8 @@ if __name__ == '__main__':
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='RESJ{size_metric} ({size_imperial})',
-        description='Generic J-lead resistor {size_metric} (imperial {size_imperial}).\\n\\n'
-                    'Length: {length}mm\\nWidth: {width}mm',
+        description='Generic J-lead resistor {size_metric} (imperial {size_imperial}).\n\n'
+                    'Length: {length}mm\nWidth: {width}mm',
         polarization=None,
         configs=[
             ChipConfig('4527', BodyDimensions(11.56, 6.98, 5.84), gap=5.2),
@@ -599,8 +687,8 @@ if __name__ == '__main__':
         library='LibrePCB_Base.lplib',
         author='murray',
         name='CAPC{size_metric} ({size_imperial})',
-        description='Generic chip capacitor {size_metric} (imperial {size_imperial}).\\n\\n'
-                    'Length: {length}mm\\nWidth: {width}mm',
+        description='Generic chip capacitor {size_metric} (imperial {size_imperial}).\n\n'
+                    'Length: {length}mm\nWidth: {width}mm',
         polarization=None,
         configs=[
             # C0402
@@ -641,10 +729,10 @@ if __name__ == '__main__':
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='CAPPM{length}X{width}X{height}L{lead_length}X{lead_width}',
-        description='Generic polarized molded inward-L capacitor (EIA {meta[eia]}).\\n\\n'
-                    'Length: {length}mm\\nWidth: {width}mm\\nMax height: {height}mm\\n\\n'
-                    'EIA Size Code: {meta[eia]}\\n'
-                    'KEMET Case Code: {meta[kemet]}\\nAVX Case Code: {meta[avx]}',
+        description='Generic polarized molded inward-L capacitor (EIA {meta[eia]}).\n\n'
+                    'Length: {length}mm\nWidth: {width}mm\nMax height: {height}mm\n\n'
+                    'EIA Size Code: {meta[eia]}\n'
+                    'KEMET Case Code: {meta[kemet]}\nAVX Case Code: {meta[avx]}',
         polarization=PolarizationConfig(
             name_marked='+',
             id_marked='p',
