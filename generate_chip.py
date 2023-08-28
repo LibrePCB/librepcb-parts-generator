@@ -604,7 +604,7 @@ if __name__ == '__main__':
         polarization=None,
         configs=[
             # C0402
-            ChipConfig('01005', BodyDimensions(0.4, 0.2, 0.2), gap=0.14),
+            ChipConfig('01005', BodyDimensions(0.4, 0.2, 0.2), gap=0.15),
             # C0603
             ChipConfig('0201', BodyDimensions(0.6, 0.3, 0.3), gap=0.2),
             # C1005
@@ -616,17 +616,17 @@ if __name__ == '__main__':
             # C3216
             ChipConfig('1206', BodyDimensions(3.2, 1.6, 1.6), gap=1.8),
             # C3225
-            ChipConfig('1210', BodyDimensions(3.2, 2.5, 2.5), gap=2.2),
+            ChipConfig('1210', BodyDimensions(3.2, 2.5, 2.5), gap=1.8),
             # C4520
-            ChipConfig('1808', BodyDimensions(4.5, 2.0, 2.0), gap=3.0),
+            ChipConfig('1808', BodyDimensions(4.5, 2.0, 2.0), gap=2.8),
             # C4532
-            ChipConfig('1812', BodyDimensions(4.5, 3.2, 3.2), gap=3.0),
+            ChipConfig('1812', BodyDimensions(4.5, 3.2, 3.2), gap=2.8),
             # C4564
-            ChipConfig('1825', BodyDimensions(4.5, 6.4, 3.2), gap=3.0),
+            ChipConfig('1825', BodyDimensions(4.5, 6.4, 3.2), gap=2.8),
             # C5750
             ChipConfig('2220', BodyDimensions(5.7, 5.0, 2.8), gap=4.3),
             # C9210
-            ChipConfig('3640', BodyDimensions(9.2, 10.0, 2.8), gap=6.4),
+            ChipConfig('3640', BodyDimensions(9.2, 10.16, 2.8), gap=6.4),
         ],
         pkgcat='414f873f-4099-47fd-8526-bdd8419de581',
         keywords='c,capacitor,chip,generic',
