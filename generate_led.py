@@ -135,7 +135,7 @@ def generate_pkg(
             created=Created(create_date or now()),
             deprecated=Deprecated(False),
             generated_by=GeneratedBy(''),
-            category=Category(pkgcat),
+            categories=[Category(pkgcat)],
             assembly_type=AssemblyType.AUTO,
         )
 
@@ -564,7 +564,7 @@ def generate_dev(
             created=Created(create_date or now()),
             deprecated=Deprecated(False),
             generated_by=GeneratedBy(''),
-            category=Category(cmpcat),
+            categories=[Category(cmpcat)],
             component_uuid=ComponentUUID('2b24b18d-bd95-4fb4-8fe6-bce1d020ead4'),
             package_uuid=PackageUUID(uuid('pkg', config.pkg_name, 'pkg')),
         )

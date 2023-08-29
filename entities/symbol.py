@@ -1,6 +1,6 @@
 from os import makedirs, path
 
-from typing import List
+from typing import Iterable, List
 
 from common import format_float
 
@@ -65,7 +65,7 @@ class Symbol:
     def __init__(self, uuid: str, name: Name, description: Description,
                  keywords: Keywords, author: Author, version: Version,
                  created: Created, deprecated: Deprecated,
-                 generated_by: GeneratedBy, category: Category,):
+                 generated_by: GeneratedBy, categories: Iterable[Category]):
         self.uuid = uuid
         self.name = name
         self.description = description
@@ -75,7 +75,7 @@ class Symbol:
         self.created = created
         self.deprecated = deprecated
         self.generated_by = generated_by
-        self.category = category
+        self.categories = categories
         self.pins = []  # type: List[Pin]
         self.polygons = []  # type: List[Polygon]
         self.circles = []  # type: List[Circle]
@@ -103,7 +103,7 @@ class Symbol:
             ' {}\n'.format(self.created) +\
             ' {}\n'.format(self.deprecated) +\
             ' {}\n'.format(self.generated_by) +\
-            ' {}\n'.format(self.category)
+            ''.join([' {}\n'.format(cat) for cat in self.categories])
         ret += indent_entities(self.pins)
         ret += indent_entities(self.polygons)
         ret += indent_entities(self.circles)

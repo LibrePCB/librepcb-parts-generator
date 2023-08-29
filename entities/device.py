@@ -1,6 +1,6 @@
 from os import makedirs, path
 
-from typing import List
+from typing import Iterable, List
 
 from .common import Author, Category, Created, Deprecated, Description, GeneratedBy, Keywords, Name, UUIDValue, Version
 from .component import SignalUUID
@@ -30,7 +30,7 @@ class Device():
     def __init__(self, uuid: str, name: Name, description: Description,
                  keywords: Keywords, author: Author, version: Version,
                  created: Created, deprecated: Deprecated,
-                 generated_by: GeneratedBy, category: Category,
+                 generated_by: GeneratedBy, categories: Iterable[Category],
                  component_uuid: ComponentUUID, package_uuid: PackageUUID):
         self.uuid = uuid
         self.name = name
@@ -41,7 +41,7 @@ class Device():
         self.created = created
         self.deprecated = deprecated
         self.generated_by = generated_by
-        self.category = category
+        self.categories = categories
         self.component_uuid = component_uuid
         self.package_uuid = package_uuid
         self.pads = []  # type: List[ComponentPad]
@@ -59,7 +59,7 @@ class Device():
             ' {}\n'.format(self.created) +\
             ' {}\n'.format(self.deprecated) +\
             ' {}\n'.format(self.generated_by) +\
-            ' {}\n'.format(self.category) +\
+            ''.join([' {}\n'.format(cat) for cat in self.categories]) +\
             ' {}\n'.format(self.component_uuid) +\
             ' {}\n'.format(self.package_uuid)
         ret += indent_entities(sorted(self.pads, key=lambda x: str(x.pad_uuid)))

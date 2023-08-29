@@ -1,6 +1,6 @@
 from os import makedirs, path
 
-from typing import List
+from typing import Iterable, List
 
 from .common import (
     Author, BoolValue, Category, Created, Deprecated, Description, EnumValue, GeneratedBy, Keywords, Name, Position,
@@ -162,7 +162,7 @@ class Component:
     def __init__(self, uuid: str, name: Name, description: Description,
                  keywords: Keywords, author: Author, version: Version,
                  created: Created, deprecated: Deprecated,
-                 generated_by: GeneratedBy, category: Category,
+                 generated_by: GeneratedBy, categories: Iterable[Category],
                  schematic_only: SchematicOnly,
                  default_value: DefaultValue, prefix: Prefix):
         self.uuid = uuid
@@ -174,7 +174,7 @@ class Component:
         self.created = created
         self.deprecated = deprecated
         self.generated_by = generated_by
-        self.category = category
+        self.categories = categories
         self.schematic_only = schematic_only
         self.default_value = default_value
         self.prefix = prefix
@@ -191,7 +191,7 @@ class Component:
             ' {}\n'.format(self.created) +\
             ' {}\n'.format(self.deprecated) +\
             ' {}\n'.format(self.generated_by) +\
-            ' {}\n'.format(self.category) +\
+            ''.join([' {}\n'.format(cat) for cat in self.categories]) +\
             ' {}\n'.format(self.schematic_only) +\
             ' {}\n'.format(self.default_value) +\
             ' {}\n'.format(self.prefix)

@@ -258,7 +258,7 @@ def generate_pkg(
         created=Created(create_date or now()),
         deprecated=Deprecated(False),
         generated_by=GeneratedBy(''),
-        category=Category('ee75e31d-f231-41d9-8a3b-bea5114f41e3'),
+        categories=[Category('ee75e31d-f231-41d9-8a3b-bea5114f41e3')],
         assembly_type=AssemblyType.AUTO,
     )
     package.add_pad(PackagePad(uuid=_pkg_uuid('pad-plus'), name=Name('+')))
@@ -306,7 +306,7 @@ def generate_dev(
         created=Created(create_date or now()),
         deprecated=Deprecated(False),
         generated_by=GeneratedBy(''),
-        category=Category('c011cc6b-b762-498e-8494-d1994f3043cf'),
+        categories=[Category('c011cc6b-b762-498e-8494-d1994f3043cf')],
         component_uuid=ComponentUUID('c54375c5-7149-4ded-95c5-7462f7301ee7'),
         package_uuid=PackageUUID(uuid('pkg', variant, 'pkg')),
     )

@@ -1,6 +1,6 @@
 from os import makedirs, path
 
-from typing import List
+from typing import Iterable, List
 
 from common import format_float
 
@@ -253,7 +253,7 @@ class Package:
     def __init__(self, uuid: str, name: Name, description: Description,
                  keywords: Keywords, author: Author, version: Version,
                  created: Created, deprecated: Deprecated,
-                 generated_by: GeneratedBy, category: Category,
+                 generated_by: GeneratedBy, categories: Iterable[Category],
                  assembly_type: AssemblyType):
         self.uuid = uuid
         self.name = name
@@ -264,7 +264,7 @@ class Package:
         self.created = created
         self.deprecated = deprecated
         self.generated_by = generated_by
-        self.category = category
+        self.categories = categories
         self.assembly_type = assembly_type
         self.pads = []  # type: List[PackagePad]
         self.footprints = []  # type: List[Footprint]
@@ -285,7 +285,7 @@ class Package:
             ' {}\n'.format(self.created) +\
             ' {}\n'.format(self.deprecated) +\
             ' {}\n'.format(self.generated_by) +\
-            ' {}\n'.format(self.category) +\
+            ''.join([' {}\n'.format(cat) for cat in self.categories]) +\
             ' {}\n'.format(self.assembly_type)
         ret += indent_entities(self.pads)
         ret += indent_entities(self.footprints)

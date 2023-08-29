@@ -329,7 +329,7 @@ def generate_sym(
             Created(create_date or now()),
             Deprecated(False),
             GeneratedBy(''),
-            Category(cmpcat),
+            [Category(cmpcat)],
         )
 
         for p in range(1, i + 1):
@@ -458,7 +458,7 @@ def generate_cmp(
             Created(create_date or now()),
             Deprecated(False),
             GeneratedBy(''),
-            Category(cmpcat),
+            [Category(cmpcat)],
             SchematicOnly(False),
             DefaultValue(default_value),
             Prefix('J'),

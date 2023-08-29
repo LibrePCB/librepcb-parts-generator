@@ -106,7 +106,7 @@ def test_symbol() -> None:
         Created('2018-10-17T19:13:41Z'),
         Deprecated(False),
         GeneratedBy('black magic'),
-        Category('d0618c29-0436-42da-a388-fdadf7b23892'),
+        [Category('d0618c29-0436-42da-a388-fdadf7b23892')],
     )
     symbol.add_pin(SymbolPin(
         '6da06b2b-7806-4e68-bd0c-e9f18eb2f9d8',
@@ -212,7 +212,7 @@ def test_component() -> None:
         Created('2018-10-17T19:13:41Z'),
         Deprecated(False),
         GeneratedBy('black magic'),
-        Category('d0618c29-0436-42da-a388-fdadf7b23892'),
+        [Category('d0618c29-0436-42da-a388-fdadf7b23892')],
         SchematicOnly(False),
         DefaultValue(''),
         Prefix('J'),
@@ -410,7 +410,7 @@ def test_package() -> None:
         Created('2018-10-17T19:13:41Z'),
         Deprecated(False),
         GeneratedBy('black magic'),
-        Category('56a5773f-eeb4-4b39-8cb9-274f3da26f4f'),
+        [Category('56a5773f-eeb4-4b39-8cb9-274f3da26f4f')],
         AssemblyType.THT,
     )
 
@@ -484,7 +484,7 @@ def test_device() -> None:
         Created('2018-10-17T19:13:41Z'),
         Deprecated(False),
         GeneratedBy('black magic'),
-        Category('ade6d8ff-3c4f-4dac-a939-cc540c87c280'),
+        [Category('ade6d8ff-3c4f-4dac-a939-cc540c87c280')],
         ComponentUUID('bc911fcc-8b5c-4728-b596-d644797c55da'),
         PackageUUID('b4e92c64-18c4-44a6-aa39-d1be3e8c29bd'),
     )

@@ -111,7 +111,7 @@ Generated with {GENERATOR_NAME}
         created=Created(create_date or now()),
         deprecated=Deprecated(False),
         generated_by=GeneratedBy(''),
-        category=Category(pkgcat),
+        categories=[Category(pkgcat)],
         assembly_type=AssemblyType.AUTO,
     )
 

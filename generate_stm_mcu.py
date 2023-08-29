@@ -57,7 +57,7 @@ generator = 'librepcb-parts-generator (generate_stm_mcu.py)'
 keywords_stm32 = Keywords('stm32, stm, st, mcu, microcontroller, arm, cortex')
 keywords_stm8 = Keywords('stm8, stm, st, mcu, microcontroller, 8bit')
 author = Author('Danilo Bargen, John Eaton')
-cmpcat = Category('22151601-c2d9-419a-87bc-266f9c7c3459')
+cmpcat = [Category('22151601-c2d9-419a-87bc-266f9c7c3459')]
 outdir = path.join('out', 'STMicroelectronics.lplib')
 
 # Initialize UUID cache
