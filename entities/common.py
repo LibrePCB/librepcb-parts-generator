@@ -4,7 +4,7 @@ LibrePCB S-expression entities
 
 from enum import Enum
 
-from typing import List
+from typing import List, Optional
 
 from common import escape_string, format_float
 
@@ -197,13 +197,14 @@ class Layer():
 
 
 class Polygon():
-    def __init__(self, uuid: str, layer: Layer, width: Width, fill: Fill, grab_area: GrabArea):
+    def __init__(self, uuid: str, layer: Layer, width: Width, fill: Fill,
+                 grab_area: GrabArea, vertices: Optional[List[Vertex]] = None):
         self.uuid = uuid
         self.layer = layer
         self.width = width
         self.fill = fill
         self.grab_area = grab_area
-        self.vertices = []  # type: List[Vertex]
+        self.vertices = vertices or []
 
     def add_vertex(self, vertex: Vertex) -> None:
         self.vertices.append(vertex)
