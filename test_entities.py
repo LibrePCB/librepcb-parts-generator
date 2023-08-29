@@ -126,6 +126,8 @@ def test_symbol() -> None:
     symbol.add_polygon(polygon)
     symbol.add_circle(Circle('b5599e68-ff6a-464b-9a40-c6ba8ef8daf5', Layer('sym_outlines'), Width(0.254), Fill(False), GrabArea(False), Diameter(1.27), Position(5.715, 0.0)))
     symbol.add_text(Text('b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e', Layer('sym_names'), Value('{{NAME}}'), Align('center bottom'), Height(2.54), Position(0.0, 22.86), Rotation(0.0)))
+    symbol.add_approval('(approval foo)')
+    symbol.add_approval('(approval bar)')
 
     assert str(symbol) == """(librepcb_symbol 01b03c10-7334-4bd5-b2bc-942c18325d2b
  (name "Sym name")
@@ -154,6 +156,8 @@ def test_symbol() -> None:
  (text b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e (layer sym_names) (value "{{NAME}}")
   (align center bottom) (height 2.54) (position 0.0 22.86) (rotation 0.0)
  )
+ (approval bar)
+ (approval foo)
 )"""
 
 
@@ -222,8 +226,10 @@ def test_component() -> None:
     gate = Gate('c1e4b542-a1b1-44d5-bec3-070776143a29', SymbolUUID('8f1a97f2-4cdf-43da-b38d-b3787c47b5ad'), Position(0.0, 0.0), Rotation(0.0), Required(True), Suffix(''))
     gate.add_pin_signal_map(PinSignalMap('0189aafc-f88a-4e65-8fb4-09a047a3e334', SignalUUID('46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c'), TextDesignator.SYMBOL_PIN_NAME))
     variant = Variant('abeeeed0-6e9a-4fdc-bc2b-e2c5b06bbe3a', Norm.EMPTY, Name('default'), Description(''), gate)
-
     component.add_variant(variant)
+
+    component.add_approval('(approval foo)')
+    component.add_approval('(approval bar)')
 
     assert str(component) == """(librepcb_component 00c36da8-e22b-43a1-9a87-c3a67e863f49
  (name "Generic Connector 1x27")
@@ -250,6 +256,8 @@ def test_component() -> None:
    (pin 0189aafc-f88a-4e65-8fb4-09a047a3e334 (signal 46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c) (text pin))
   )
  )
+ (approval bar)
+ (approval foo)
 )"""
 
 
@@ -418,6 +426,10 @@ def test_package() -> None:
     package.add_pad(PackagePad('6100dd55-d3b3-4139-9085-d5a75e783c37', Name('2')))
 
     package.add_footprint(create_footprint())
+
+    package.add_approval('(approval foo)')
+    package.add_approval('(approval bar)')
+
     assert str(package) == """(librepcb_package 009e35ef-1f50-4bf3-ab58-11eb85bf5503
  (name "Soldered Wire Connector 1x19 ⌀1.0mm")
  (description "A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\\n\\nGenerated with librepcb-parts-generator (generate_connectors.py)")
@@ -465,6 +477,8 @@ def test_package() -> None:
    (auto_rotate true) (mirror false) (value "{{NAME}}")
   )
  )
+ (approval bar)
+ (approval foo)
 )"""
 
 
@@ -490,6 +504,10 @@ def test_device() -> None:
     )
     device.add_pad(ComponentPad('aec3f475-28c4-4508-ab4f-e1b618a0d77d', SignalUUID('726fd1ce-a01b-4287-bb61-e3ff165a0644')))
     device.add_pad(ComponentPad('67a7b034-b30b-4644-b8d3-d7a99606efdc', SignalUUID('9bccea5e-e23f-4b88-9de1-4be00dc0c12a')))
+
+    device.add_approval('(approval foo)')
+    device.add_approval('(approval bar)')
+
     assert str(device) == """(librepcb_device 00652f30-9f89-4027-91f5-7bd684eee751
  (name "Foo")
  (description "Bar")
@@ -504,4 +522,6 @@ def test_device() -> None:
  (package b4e92c64-18c4-44a6-aa39-d1be3e8c29bd)
  (pad 67a7b034-b30b-4644-b8d3-d7a99606efdc (signal 9bccea5e-e23f-4b88-9de1-4be00dc0c12a))
  (pad aec3f475-28c4-4508-ab4f-e1b618a0d77d (signal 726fd1ce-a01b-4287-bb61-e3ff165a0644))
+ (approval bar)
+ (approval foo)
 )"""

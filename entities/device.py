@@ -45,9 +45,13 @@ class Device():
         self.component_uuid = component_uuid
         self.package_uuid = package_uuid
         self.pads = []  # type: List[ComponentPad]
+        self.approvals = []  # type: List[str]
 
     def add_pad(self, pad: ComponentPad) -> None:
         self.pads.append(pad)
+
+    def add_approval(self, approval: str) -> None:
+        self.approvals.append(approval)
 
     def __str__(self) -> str:
         ret = '(librepcb_device {}\n'.format(self.uuid) +\
@@ -63,6 +67,7 @@ class Device():
             ' {}\n'.format(self.component_uuid) +\
             ' {}\n'.format(self.package_uuid)
         ret += indent_entities(sorted(self.pads, key=lambda x: str(x.pad_uuid)))
+        ret += indent_entities(sorted(self.approvals))
         ret += ')'
         return ret
 

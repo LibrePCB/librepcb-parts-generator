@@ -80,6 +80,7 @@ class Symbol:
         self.polygons = []  # type: List[Polygon]
         self.circles = []  # type: List[Circle]
         self.texts = []  # type: List[Text]
+        self.approvals = []  # type: List[str]
 
     def add_pin(self, pin: Pin) -> None:
         self.pins.append(pin)
@@ -92,6 +93,9 @@ class Symbol:
 
     def add_text(self, text: Text) -> None:
         self.texts.append(text)
+
+    def add_approval(self, approval: str) -> None:
+        self.approvals.append(approval)
 
     def __str__(self) -> str:
         ret = '(librepcb_symbol {}\n'.format(self.uuid) +\
@@ -108,6 +112,7 @@ class Symbol:
         ret += indent_entities(self.polygons)
         ret += indent_entities(self.circles)
         ret += indent_entities(self.texts)
+        ret += indent_entities(sorted(self.approvals))
         ret += ')'
         return ret
 

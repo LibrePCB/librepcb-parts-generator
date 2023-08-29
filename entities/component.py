@@ -180,6 +180,10 @@ class Component:
         self.prefix = prefix
         self.signals = []  # type: List[Signal]
         self.variants = []  # type: List[Variant]
+        self.approvals = []  # type: List[str]
+
+    def add_approval(self, approval: str) -> None:
+        self.approvals.append(approval)
 
     def __str__(self) -> str:
         ret = '(librepcb_component {}\n'.format(self.uuid) +\
@@ -197,6 +201,7 @@ class Component:
             ' {}\n'.format(self.prefix)
         ret += indent_entities(self.signals)
         ret += indent_entities(self.variants)
+        ret += indent_entities(sorted(self.approvals))
         ret += ')'
         return ret
 

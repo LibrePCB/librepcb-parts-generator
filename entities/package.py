@@ -268,12 +268,16 @@ class Package:
         self.assembly_type = assembly_type
         self.pads = []  # type: List[PackagePad]
         self.footprints = []  # type: List[Footprint]
+        self.approvals = []  # type: List[str]
 
     def add_pad(self, pad: PackagePad) -> None:
         self.pads.append(pad)
 
     def add_footprint(self, footprint: Footprint) -> None:
         self.footprints.append(footprint)
+
+    def add_approval(self, approval: str) -> None:
+        self.approvals.append(approval)
 
     def __str__(self) -> str:
         ret = '(librepcb_package {}\n'.format(self.uuid) +\
@@ -289,6 +293,7 @@ class Package:
             ' {}\n'.format(self.assembly_type)
         ret += indent_entities(self.pads)
         ret += indent_entities(self.footprints)
+        ret += indent_entities(sorted(self.approvals))
         ret += ')'
         return ret
 
