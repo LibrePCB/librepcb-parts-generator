@@ -9,6 +9,8 @@ pkg-cnctech_3020-06-0300-xx-6-lead-2,fea1b09e-6206-468b-8223-2fdcb6e6b65a
 pkg-cnctech_3020-06-0300-xx-6-lead-3,a8d746f8-48fa-4a7b-9267-61d33d458ee3
 pkg-cnctech_3020-06-0300-xx-6-lead-4,a9cb687a-b04e-460b-83ac-42a31a78924e
 pkg-cnctech_3020-06-0300-xx-6-lead-5,e40097af-4d89-4a7d-91ca-535f551acae9
+pkg-cnctech_3020-06-0300-xx-6-legend-north,d427b4e7-352e-420f-96c7-7ec0f388b2c8
+pkg-cnctech_3020-06-0300-xx-6-legend-south,d557148a-5cd9-43fe-b6f6-734ddd3e07fe
 pkg-cnctech_3020-06-0300-xx-6-pad-0,a0e50c07-a69a-45cd-a0e5-9725ddd35fe3
 pkg-cnctech_3020-06-0300-xx-6-pad-1,a6922d13-fcb0-4381-8289-0cf2ba53c687
 pkg-cnctech_3020-06-0300-xx-6-pad-2,80bcf40d-d435-48fa-99ee-07a01e761b3b
@@ -16,8 +18,6 @@ pkg-cnctech_3020-06-0300-xx-6-pad-3,7b989f9c-0ea9-4fb8-9654-ad35c01b0939
 pkg-cnctech_3020-06-0300-xx-6-pad-4,9ace67b7-597d-4992-bc42-0a1404177d7c
 pkg-cnctech_3020-06-0300-xx-6-pad-5,6ae965d7-943b-48a1-964a-e20aa603aafb
 pkg-cnctech_3020-06-0300-xx-6-pkg,e5531e76-6142-4135-bda1-55c731876168
-pkg-cnctech_3020-06-0300-xx-6-placement-north,d427b4e7-352e-420f-96c7-7ec0f388b2c8
-pkg-cnctech_3020-06-0300-xx-6-placement-south,d557148a-5cd9-43fe-b6f6-734ddd3e07fe
 pkg-cnctech_3020-06-0300-xx-6-text-name,5c7d5234-5399-4865-ad9d-71c9fbde145d
 pkg-cnctech_3020-06-0300-xx-6-text-value,fe244ef6-f057-4d97-bead-dd0665dc27de
 pkg-cnctech_3020-08-0300-xx-8-courtyard,c4fee059-67f7-4004-be23-5c65eded606c
@@ -33,6 +33,8 @@ pkg-cnctech_3020-08-0300-xx-8-lead-4,b553b8b3-b574-4fe2-a22e-411c32932ad5
 pkg-cnctech_3020-08-0300-xx-8-lead-5,e30da95b-ff88-4680-95a5-9fd833b9b488
 pkg-cnctech_3020-08-0300-xx-8-lead-6,5c14d4cc-12da-42e4-ae45-5de8b92d918f
 pkg-cnctech_3020-08-0300-xx-8-lead-7,f6faa67b-337d-4a92-996e-658c76d99fbf
+pkg-cnctech_3020-08-0300-xx-8-legend-north,68ab1ca8-aa38-442c-a6d1-0c00a95f0a2f
+pkg-cnctech_3020-08-0300-xx-8-legend-south,8c2bcbfa-e1fa-4e1b-9a8d-75a3e7c1cbdb
 pkg-cnctech_3020-08-0300-xx-8-pad-0,330b4399-3ab4-45f8-a487-be37fe380f25
 pkg-cnctech_3020-08-0300-xx-8-pad-1,115027e2-6cc8-465b-b61f-0cf35069c7a1
 pkg-cnctech_3020-08-0300-xx-8-pad-2,142413c5-2fc8-4594-9b29-041c1b6c746b
@@ -42,8 +44,6 @@ pkg-cnctech_3020-08-0300-xx-8-pad-5,37fc2ce3-fe80-4a6a-8473-673b3625a687
 pkg-cnctech_3020-08-0300-xx-8-pad-6,16f50dca-2b69-4776-8a1c-a1703cb9de19
 pkg-cnctech_3020-08-0300-xx-8-pad-7,21d29c73-bc0e-4a86-8fb1-02263d6ce9ec
 pkg-cnctech_3020-08-0300-xx-8-pkg,1e6b718a-c74b-4257-b128-d8826d886b99
-pkg-cnctech_3020-08-0300-xx-8-placement-north,68ab1ca8-aa38-442c-a6d1-0c00a95f0a2f
-pkg-cnctech_3020-08-0300-xx-8-placement-south,8c2bcbfa-e1fa-4e1b-9a8d-75a3e7c1cbdb
 pkg-cnctech_3020-08-0300-xx-8-text-name,85eb91e8-2ecb-4c3a-b32e-4c69ff7c79a9
 pkg-cnctech_3020-08-0300-xx-8-text-value,82b88cb4-39f0-4f03-b497-ec3582b08566
 pkg-cnctech_3020-10-0300-xx-10-courtyard,bf38c9e2-262c-4991-9c11-cb177f23c6b6
@@ -61,6 +61,8 @@ pkg-cnctech_3020-10-0300-xx-10-lead-6,1c8c41e0-907a-4a7e-be76-e3e8810872a7
 pkg-cnctech_3020-10-0300-xx-10-lead-7,e69fad95-40be-4dd6-85a7-db1ca32d6e5a
 pkg-cnctech_3020-10-0300-xx-10-lead-8,0b3c6ba3-c5e4-49df-ba8e-8a27c6aa8bd3
 pkg-cnctech_3020-10-0300-xx-10-lead-9,a5da4d9c-22e8-498b-9f8c-6a8e78e58336
+pkg-cnctech_3020-10-0300-xx-10-legend-north,8aca9c55-5e8b-4c18-8e90-bb9533ddd1f1
+pkg-cnctech_3020-10-0300-xx-10-legend-south,d3d01c78-777c-43a2-b078-074a4b2d528b
 pkg-cnctech_3020-10-0300-xx-10-pad-0,c674e298-c73e-4c8d-b8ed-dae8a2e38c87
 pkg-cnctech_3020-10-0300-xx-10-pad-1,60e59ca8-fb0d-4338-a15b-ccffe6be9069
 pkg-cnctech_3020-10-0300-xx-10-pad-2,34cd1510-596d-4abd-868c-ec190e4a20bd
@@ -72,8 +74,6 @@ pkg-cnctech_3020-10-0300-xx-10-pad-7,6ceab799-dcc1-447b-bf9f-062915174274
 pkg-cnctech_3020-10-0300-xx-10-pad-8,3b425359-d781-4939-aa2d-02cc7a29aff5
 pkg-cnctech_3020-10-0300-xx-10-pad-9,2898def3-65db-4b79-baa8-913227dd93c7
 pkg-cnctech_3020-10-0300-xx-10-pkg,80a908ad-e76c-49bf-929b-f76d85f899ce
-pkg-cnctech_3020-10-0300-xx-10-placement-north,8aca9c55-5e8b-4c18-8e90-bb9533ddd1f1
-pkg-cnctech_3020-10-0300-xx-10-placement-south,d3d01c78-777c-43a2-b078-074a4b2d528b
 pkg-cnctech_3020-10-0300-xx-10-text-name,960c7012-433b-4435-a45e-331dd7a28f63
 pkg-cnctech_3020-10-0300-xx-10-text-value,08ff9edf-79e1-4680-9074-92b64cc2e1b8
 pkg-cnctech_3020-12-0300-xx-12-courtyard,451b902b-ace2-44c2-8776-b147a63a40fa
@@ -93,6 +93,8 @@ pkg-cnctech_3020-12-0300-xx-12-lead-6,34881e6b-99da-41ae-a90d-840261ccd2b5
 pkg-cnctech_3020-12-0300-xx-12-lead-7,0dfe844c-36e4-4e3a-9275-ffd867a301fa
 pkg-cnctech_3020-12-0300-xx-12-lead-8,e5a9a9eb-8a76-4241-839c-e79799111d1a
 pkg-cnctech_3020-12-0300-xx-12-lead-9,305e735a-f303-402d-ba2b-12e054d1d261
+pkg-cnctech_3020-12-0300-xx-12-legend-north,26bb6e75-ad84-47e6-9360-9baf90a0a93b
+pkg-cnctech_3020-12-0300-xx-12-legend-south,fe154a9c-aec5-4323-8393-4337fef480fb
 pkg-cnctech_3020-12-0300-xx-12-pad-0,520b8ddd-439f-4f84-b3e6-d843c7aab670
 pkg-cnctech_3020-12-0300-xx-12-pad-1,80807f1b-fb07-4011-bf32-f9847d7550ae
 pkg-cnctech_3020-12-0300-xx-12-pad-10,dbea0110-9281-40fe-9772-78bf2cdf0c27
@@ -106,8 +108,6 @@ pkg-cnctech_3020-12-0300-xx-12-pad-7,e6a2aa65-21a3-4cab-bc69-1f44d02d0419
 pkg-cnctech_3020-12-0300-xx-12-pad-8,f7501890-f7da-4dee-8e5c-c6558ddb6bb5
 pkg-cnctech_3020-12-0300-xx-12-pad-9,1ef114fd-6fe3-4890-932e-3dc3b21f4b8b
 pkg-cnctech_3020-12-0300-xx-12-pkg,2c146f15-5daa-4927-a547-f82f98c96588
-pkg-cnctech_3020-12-0300-xx-12-placement-north,26bb6e75-ad84-47e6-9360-9baf90a0a93b
-pkg-cnctech_3020-12-0300-xx-12-placement-south,fe154a9c-aec5-4323-8393-4337fef480fb
 pkg-cnctech_3020-12-0300-xx-12-text-name,d97f1e75-38b0-4738-8739-7f2fa63736a5
 pkg-cnctech_3020-12-0300-xx-12-text-value,b2014c80-a642-4671-b4e5-d7f0ea6e87e5
 pkg-cnctech_3020-14-0300-xx-14-courtyard,c8ec99e2-82be-4228-883b-efce9c5c6a57
@@ -129,6 +129,8 @@ pkg-cnctech_3020-14-0300-xx-14-lead-6,32d06db4-971d-42c8-a8c1-87113caaf0e2
 pkg-cnctech_3020-14-0300-xx-14-lead-7,a60c6d5c-a910-4fea-944f-c1db9a184698
 pkg-cnctech_3020-14-0300-xx-14-lead-8,90aa27e1-1f91-49e5-8ebb-0961a951ecd2
 pkg-cnctech_3020-14-0300-xx-14-lead-9,44e0c251-177c-43f5-bf7f-3f0cc25d9aa1
+pkg-cnctech_3020-14-0300-xx-14-legend-north,de6ca30e-8805-4c4e-ac67-023d92bc3fa5
+pkg-cnctech_3020-14-0300-xx-14-legend-south,d76931f0-8932-47b3-8a77-2d2de71ef773
 pkg-cnctech_3020-14-0300-xx-14-pad-0,6a38a472-cca1-41da-8915-b7dfe5724e17
 pkg-cnctech_3020-14-0300-xx-14-pad-1,642c8307-aa1f-48f0-aa99-2b2a7d49a3f2
 pkg-cnctech_3020-14-0300-xx-14-pad-10,4bf2c3c0-370b-41f2-9a6a-a57c73d2ca7e
@@ -144,8 +146,6 @@ pkg-cnctech_3020-14-0300-xx-14-pad-7,89c63cff-5e09-45e0-bb7c-bc02f5fc656a
 pkg-cnctech_3020-14-0300-xx-14-pad-8,4bc41c8a-fb89-4ee4-b2bd-17593b67d9a4
 pkg-cnctech_3020-14-0300-xx-14-pad-9,aad7c693-7c09-4f51-a5c9-af1fe7fd3d33
 pkg-cnctech_3020-14-0300-xx-14-pkg,459cbb04-f226-4f96-8e97-b29ad7ec2098
-pkg-cnctech_3020-14-0300-xx-14-placement-north,de6ca30e-8805-4c4e-ac67-023d92bc3fa5
-pkg-cnctech_3020-14-0300-xx-14-placement-south,d76931f0-8932-47b3-8a77-2d2de71ef773
 pkg-cnctech_3020-14-0300-xx-14-text-name,e6b80b67-cfd4-4187-8318-3512c66f18d8
 pkg-cnctech_3020-14-0300-xx-14-text-value,97342b34-96be-414d-966a-7bd83e996aa3
 pkg-cnctech_3020-16-0300-xx-16-courtyard,f43b9953-b462-4651-861b-cef4d6e850c0
@@ -169,6 +169,8 @@ pkg-cnctech_3020-16-0300-xx-16-lead-6,60fa2d84-0fec-4134-a03d-a7765841e68d
 pkg-cnctech_3020-16-0300-xx-16-lead-7,ea5dd415-8d7b-4a79-95fc-c0847b5c210a
 pkg-cnctech_3020-16-0300-xx-16-lead-8,834de5c9-5e76-4406-bd44-499ac51d90a7
 pkg-cnctech_3020-16-0300-xx-16-lead-9,d74ae267-8844-4970-a4ed-5b98f20f9db3
+pkg-cnctech_3020-16-0300-xx-16-legend-north,1c207524-9951-4c79-b05c-b1160dbd43c2
+pkg-cnctech_3020-16-0300-xx-16-legend-south,c9f28d5a-c9cc-4951-92f5-c834f732c6fe
 pkg-cnctech_3020-16-0300-xx-16-pad-0,27e51669-f03f-4388-b61b-6afc94b6e660
 pkg-cnctech_3020-16-0300-xx-16-pad-1,0f8faae1-9b0d-4735-9e2e-a78003eaddee
 pkg-cnctech_3020-16-0300-xx-16-pad-10,7597eee5-4f95-4f52-b3a6-047dc5a85c8c
@@ -186,8 +188,6 @@ pkg-cnctech_3020-16-0300-xx-16-pad-7,c43de542-5580-4100-9bb4-f9a57715488e
 pkg-cnctech_3020-16-0300-xx-16-pad-8,1d2ae1cd-1253-4449-9127-5b2b040d27d2
 pkg-cnctech_3020-16-0300-xx-16-pad-9,f7354a52-32ba-4544-aba0-997c6276ef3b
 pkg-cnctech_3020-16-0300-xx-16-pkg,e7aab3c2-bfd1-47f9-a110-3b67685ec738
-pkg-cnctech_3020-16-0300-xx-16-placement-north,1c207524-9951-4c79-b05c-b1160dbd43c2
-pkg-cnctech_3020-16-0300-xx-16-placement-south,c9f28d5a-c9cc-4951-92f5-c834f732c6fe
 pkg-cnctech_3020-16-0300-xx-16-text-name,8038de2d-455d-44e3-8038-40bddc2e7ef2
 pkg-cnctech_3020-16-0300-xx-16-text-value,53e65937-4c36-4c3c-a214-361b2dc367d0
 pkg-cnctech_3020-18-0300-xx-18-courtyard,9db3abd6-d899-4274-b1ef-9a496c2b1c80
@@ -213,6 +213,8 @@ pkg-cnctech_3020-18-0300-xx-18-lead-6,292acd36-49c3-4e83-bbb0-aaddd8c0d069
 pkg-cnctech_3020-18-0300-xx-18-lead-7,bb234968-2b9f-416f-99aa-9a1bf8406a4b
 pkg-cnctech_3020-18-0300-xx-18-lead-8,1781c652-984d-480c-8094-d817863db66d
 pkg-cnctech_3020-18-0300-xx-18-lead-9,5ebfe05b-1d6c-4248-a9d8-b0dff333e69e
+pkg-cnctech_3020-18-0300-xx-18-legend-north,5a804ab2-a1fc-43d7-a015-e646f6480810
+pkg-cnctech_3020-18-0300-xx-18-legend-south,7ddfcea2-ce92-4181-8553-3d1a7291857e
 pkg-cnctech_3020-18-0300-xx-18-pad-0,0ccfe642-bec5-4139-a816-175f457c27d7
 pkg-cnctech_3020-18-0300-xx-18-pad-1,36eeff75-b263-466f-937d-1459c9af8e41
 pkg-cnctech_3020-18-0300-xx-18-pad-10,693dfdf8-37a0-4f9d-a63d-e579c85c5481
@@ -232,8 +234,6 @@ pkg-cnctech_3020-18-0300-xx-18-pad-7,5374526e-d270-4786-aa29-c46909ed5c4a
 pkg-cnctech_3020-18-0300-xx-18-pad-8,10549b3c-e866-46b0-a9a2-6883df92e8a2
 pkg-cnctech_3020-18-0300-xx-18-pad-9,09484f24-52e2-4dfd-9c57-6d5756ef4294
 pkg-cnctech_3020-18-0300-xx-18-pkg,48a16331-5fa0-416f-aa4d-5d20aa2bf698
-pkg-cnctech_3020-18-0300-xx-18-placement-north,5a804ab2-a1fc-43d7-a015-e646f6480810
-pkg-cnctech_3020-18-0300-xx-18-placement-south,7ddfcea2-ce92-4181-8553-3d1a7291857e
 pkg-cnctech_3020-18-0300-xx-18-text-name,e31be749-936a-487f-9ee5-a85e7e43a2bb
 pkg-cnctech_3020-18-0300-xx-18-text-value,010e2ae3-39d8-476f-a759-06830ff1ae1c
 pkg-cnctech_3020-20-0300-xx-20-courtyard,f2e71b4b-8daf-4a2f-ab03-8060f0016c43
@@ -261,6 +261,8 @@ pkg-cnctech_3020-20-0300-xx-20-lead-6,19150be3-b29a-4c98-bd84-ac077d113552
 pkg-cnctech_3020-20-0300-xx-20-lead-7,b54b3441-ccbc-4cad-b699-f662b3516a34
 pkg-cnctech_3020-20-0300-xx-20-lead-8,fc9ec9dc-1db5-4e2d-81c4-383eb377081d
 pkg-cnctech_3020-20-0300-xx-20-lead-9,7e25d301-c8ad-40f4-8029-6476c990509b
+pkg-cnctech_3020-20-0300-xx-20-legend-north,a1f4f900-f945-4e68-8146-3cdba49f7a5b
+pkg-cnctech_3020-20-0300-xx-20-legend-south,5556a584-f35f-4058-b204-60256d5cdb6f
 pkg-cnctech_3020-20-0300-xx-20-pad-0,5c228dc7-66de-4d48-ad43-ae78487ffe59
 pkg-cnctech_3020-20-0300-xx-20-pad-1,15a3de2b-8767-4fd6-9541-7ef0a4612cae
 pkg-cnctech_3020-20-0300-xx-20-pad-10,56f71cc6-29e1-4bae-b0d0-1057ec68b9a5
@@ -282,8 +284,6 @@ pkg-cnctech_3020-20-0300-xx-20-pad-7,e802e38d-a671-48c8-b16d-14ca450cb671
 pkg-cnctech_3020-20-0300-xx-20-pad-8,a7d27e07-7f2a-4943-ac12-59aa7d998c41
 pkg-cnctech_3020-20-0300-xx-20-pad-9,00afff0b-4b39-4ee7-a795-59beafe1b7d8
 pkg-cnctech_3020-20-0300-xx-20-pkg,657026d3-3e7a-4c84-8c48-88d7c01361b9
-pkg-cnctech_3020-20-0300-xx-20-placement-north,a1f4f900-f945-4e68-8146-3cdba49f7a5b
-pkg-cnctech_3020-20-0300-xx-20-placement-south,5556a584-f35f-4058-b204-60256d5cdb6f
 pkg-cnctech_3020-20-0300-xx-20-text-name,fa247e79-8149-4975-ac32-fe7386fbb75b
 pkg-cnctech_3020-20-0300-xx-20-text-value,f6722017-359f-4baa-a106-e686f59709c7
 pkg-cnctech_3020-22-0300-xx-22-courtyard,227e04db-2143-4c91-89a9-8e57a95e3356
@@ -313,6 +313,8 @@ pkg-cnctech_3020-22-0300-xx-22-lead-6,b468b32e-df69-457a-83f1-32511c1b683d
 pkg-cnctech_3020-22-0300-xx-22-lead-7,5934a8c7-9a93-4d52-93f9-02e3d5775edd
 pkg-cnctech_3020-22-0300-xx-22-lead-8,19ac11d8-11e3-4376-9832-ec5eed97b614
 pkg-cnctech_3020-22-0300-xx-22-lead-9,417c7701-60b2-4b5a-aa85-227faeec71ae
+pkg-cnctech_3020-22-0300-xx-22-legend-north,5cdd06a6-8cd2-404f-903f-cc5d4c2034ae
+pkg-cnctech_3020-22-0300-xx-22-legend-south,8a24bc12-6969-4b84-8678-d933c8fd6f33
 pkg-cnctech_3020-22-0300-xx-22-pad-0,88341eb2-f982-4029-8ddf-f23ba87c6d7d
 pkg-cnctech_3020-22-0300-xx-22-pad-1,0cc7dda5-9181-42b7-874e-083ab109188b
 pkg-cnctech_3020-22-0300-xx-22-pad-10,bec0bd2d-c2b1-46f3-8a6a-cd1c195d7368
@@ -336,8 +338,6 @@ pkg-cnctech_3020-22-0300-xx-22-pad-7,1da6292c-1887-482d-91b8-ba67a6a565cd
 pkg-cnctech_3020-22-0300-xx-22-pad-8,5faebb99-ff77-4d3d-9143-f71974632032
 pkg-cnctech_3020-22-0300-xx-22-pad-9,6e26a145-b607-4f21-93b2-f22d9179b403
 pkg-cnctech_3020-22-0300-xx-22-pkg,5c8b2089-daa6-430d-87d7-942db4ed0605
-pkg-cnctech_3020-22-0300-xx-22-placement-north,5cdd06a6-8cd2-404f-903f-cc5d4c2034ae
-pkg-cnctech_3020-22-0300-xx-22-placement-south,8a24bc12-6969-4b84-8678-d933c8fd6f33
 pkg-cnctech_3020-22-0300-xx-22-text-name,c0cc4f84-c19e-46a7-92d1-f4029314d1ba
 pkg-cnctech_3020-22-0300-xx-22-text-value,eb825096-3fc5-4b2f-aea7-ac6e7abc66c3
 pkg-cnctech_3020-24-0300-xx-24-courtyard,81652341-b4ab-43c4-8452-6e603b32cc2d
@@ -369,6 +369,8 @@ pkg-cnctech_3020-24-0300-xx-24-lead-6,8df6dc5c-ecb6-428d-b35b-13591a0ea347
 pkg-cnctech_3020-24-0300-xx-24-lead-7,6a06f69b-69d7-406d-bab3-b8620f58c19c
 pkg-cnctech_3020-24-0300-xx-24-lead-8,981baa04-62a4-4c92-a4ab-7db10acd48ac
 pkg-cnctech_3020-24-0300-xx-24-lead-9,f6d763a2-6b67-43de-ba6f-044f11d8f1d9
+pkg-cnctech_3020-24-0300-xx-24-legend-north,8562f70f-3b7c-447a-b1f1-910ef8392245
+pkg-cnctech_3020-24-0300-xx-24-legend-south,c90d2acc-5551-4073-bb86-2ef44c646e91
 pkg-cnctech_3020-24-0300-xx-24-pad-0,958a16b8-d4a4-4ba0-ae42-f0e7118448ae
 pkg-cnctech_3020-24-0300-xx-24-pad-1,162f88ad-ca97-45e7-b833-1d7b6d96c618
 pkg-cnctech_3020-24-0300-xx-24-pad-10,bba9db78-c76d-4fd4-99bd-02d22d96b101
@@ -394,8 +396,6 @@ pkg-cnctech_3020-24-0300-xx-24-pad-7,09e720b2-79a1-4d5f-976a-dcc870ae4ad5
 pkg-cnctech_3020-24-0300-xx-24-pad-8,2e9d6120-9696-4b57-bdec-38ac252942d2
 pkg-cnctech_3020-24-0300-xx-24-pad-9,21c7edee-89e3-4e23-8153-939b08c438f3
 pkg-cnctech_3020-24-0300-xx-24-pkg,6209dca0-0a3c-46fc-b367-7c0b921e74ee
-pkg-cnctech_3020-24-0300-xx-24-placement-north,8562f70f-3b7c-447a-b1f1-910ef8392245
-pkg-cnctech_3020-24-0300-xx-24-placement-south,c90d2acc-5551-4073-bb86-2ef44c646e91
 pkg-cnctech_3020-24-0300-xx-24-text-name,ff1af99f-d467-4e2a-bdb2-a55d2e84f396
 pkg-cnctech_3020-24-0300-xx-24-text-value,53957bca-19e6-49ee-91b5-94da7f52f85e
 pkg-cnctech_3020-26-0300-xx-26-courtyard,85a32168-b6ed-4bfc-8a38-d7ffe7ee9fb4
@@ -429,6 +429,8 @@ pkg-cnctech_3020-26-0300-xx-26-lead-6,7b6b117d-8d9f-427e-9121-0cc6509ba07a
 pkg-cnctech_3020-26-0300-xx-26-lead-7,687846a1-4fd2-4327-9992-a2cab14bc8b0
 pkg-cnctech_3020-26-0300-xx-26-lead-8,7b8eecf7-3e48-438f-bcdb-fca1e914aa5a
 pkg-cnctech_3020-26-0300-xx-26-lead-9,431c3319-7565-4ac7-9364-28aa58aaaecf
+pkg-cnctech_3020-26-0300-xx-26-legend-north,18e83bbf-579f-4abb-b8aa-ec2392e98742
+pkg-cnctech_3020-26-0300-xx-26-legend-south,7f3292c1-1b70-4af0-a51c-e934ee02ef10
 pkg-cnctech_3020-26-0300-xx-26-pad-0,1fbe1a27-2860-4738-aa9c-cff1ec11808a
 pkg-cnctech_3020-26-0300-xx-26-pad-1,02d94d9b-bc63-406b-ae5e-01c661426152
 pkg-cnctech_3020-26-0300-xx-26-pad-10,a1ca905b-3b18-4627-bfcb-7b5283bba83f
@@ -456,8 +458,6 @@ pkg-cnctech_3020-26-0300-xx-26-pad-7,dc37dfe3-d2f4-4bd0-8d78-e63386795e6d
 pkg-cnctech_3020-26-0300-xx-26-pad-8,1266c403-393e-449c-b8d7-8d7c04785f53
 pkg-cnctech_3020-26-0300-xx-26-pad-9,07d2c661-c2af-4eea-a9fb-b20ed13a8b8f
 pkg-cnctech_3020-26-0300-xx-26-pkg,d6651c62-0ac0-49f2-8735-8c6782d711d9
-pkg-cnctech_3020-26-0300-xx-26-placement-north,18e83bbf-579f-4abb-b8aa-ec2392e98742
-pkg-cnctech_3020-26-0300-xx-26-placement-south,7f3292c1-1b70-4af0-a51c-e934ee02ef10
 pkg-cnctech_3020-26-0300-xx-26-text-name,c2e510e7-0934-4976-98df-ddcb1380cb5e
 pkg-cnctech_3020-26-0300-xx-26-text-value,82284e51-d954-45d1-9bc5-9c60e8e097aa
 pkg-cnctech_3020-28-0300-xx-28-courtyard,dc2894f9-75a5-4ded-99a6-c8cd0ed5ea52
@@ -493,6 +493,8 @@ pkg-cnctech_3020-28-0300-xx-28-lead-6,e1bcd505-e39b-4e08-aa9f-b043924ab171
 pkg-cnctech_3020-28-0300-xx-28-lead-7,0af7a3b5-de5b-4889-8021-e727780229b5
 pkg-cnctech_3020-28-0300-xx-28-lead-8,a8379cee-3ee4-468c-92f3-cd8decf7f265
 pkg-cnctech_3020-28-0300-xx-28-lead-9,43de32a9-6d6d-48d5-ba99-93a99932b5f3
+pkg-cnctech_3020-28-0300-xx-28-legend-north,48463455-01ab-4b82-9c0d-f34f4e599ef0
+pkg-cnctech_3020-28-0300-xx-28-legend-south,b4eaffb2-140c-4b3e-8282-18f42074c1c4
 pkg-cnctech_3020-28-0300-xx-28-pad-0,99810111-d3ae-4664-8dfe-52770ffe23f3
 pkg-cnctech_3020-28-0300-xx-28-pad-1,357e3615-d753-40b1-b560-a7c4d09a0f3d
 pkg-cnctech_3020-28-0300-xx-28-pad-10,49a573eb-2d86-4962-874b-219a88a90d1c
@@ -522,8 +524,6 @@ pkg-cnctech_3020-28-0300-xx-28-pad-7,84ca9aaa-6859-4e09-a37c-107469d29ec9
 pkg-cnctech_3020-28-0300-xx-28-pad-8,1cffe21c-719f-4dbb-889f-38b9b719104e
 pkg-cnctech_3020-28-0300-xx-28-pad-9,b5d2baa8-ae2f-4211-a662-02ca0f34eece
 pkg-cnctech_3020-28-0300-xx-28-pkg,a520979e-dd1b-41a1-a5b4-d2b69f2bed3d
-pkg-cnctech_3020-28-0300-xx-28-placement-north,48463455-01ab-4b82-9c0d-f34f4e599ef0
-pkg-cnctech_3020-28-0300-xx-28-placement-south,b4eaffb2-140c-4b3e-8282-18f42074c1c4
 pkg-cnctech_3020-28-0300-xx-28-text-name,8c32feaf-f1c2-4bc0-95bc-1ec36089a397
 pkg-cnctech_3020-28-0300-xx-28-text-value,c3b1bca7-b9ae-4c9f-acec-3d0b3f6d671f
 pkg-cnctech_3020-30-0300-xx-30-courtyard,10d0f63f-c081-4aa5-90d5-91e64ccd9f9e
@@ -561,6 +561,8 @@ pkg-cnctech_3020-30-0300-xx-30-lead-6,d1911082-d145-43f0-8985-643d5b7a7717
 pkg-cnctech_3020-30-0300-xx-30-lead-7,b5ee8a76-f98d-4c3c-9e6b-750563670371
 pkg-cnctech_3020-30-0300-xx-30-lead-8,cf955f71-e280-45e0-9bfe-d40abc3aefe7
 pkg-cnctech_3020-30-0300-xx-30-lead-9,63549c84-4ebd-40ed-a8da-9c514adaf7c1
+pkg-cnctech_3020-30-0300-xx-30-legend-north,6941f8c9-2f78-4d55-b4ce-9c185c9b5603
+pkg-cnctech_3020-30-0300-xx-30-legend-south,0e2e7c23-af94-4530-a011-ee18de4a5387
 pkg-cnctech_3020-30-0300-xx-30-pad-0,29ce2bb2-774e-4fd5-803d-b1eee706100f
 pkg-cnctech_3020-30-0300-xx-30-pad-1,566cb605-61a3-4e0e-a30b-43d70f9fc05e
 pkg-cnctech_3020-30-0300-xx-30-pad-10,a4afb854-1e6e-4cbe-a46e-92de6c5e4320
@@ -592,8 +594,6 @@ pkg-cnctech_3020-30-0300-xx-30-pad-7,dc47f4f6-5660-4241-802d-1b99e61a2d3f
 pkg-cnctech_3020-30-0300-xx-30-pad-8,c495278c-fb5c-483d-86ef-d17fcc593d6b
 pkg-cnctech_3020-30-0300-xx-30-pad-9,53c230ad-1c51-4d40-8e39-cb88593430c5
 pkg-cnctech_3020-30-0300-xx-30-pkg,93e989a8-7f44-48bf-bbdf-a184fcd8c01e
-pkg-cnctech_3020-30-0300-xx-30-placement-north,6941f8c9-2f78-4d55-b4ce-9c185c9b5603
-pkg-cnctech_3020-30-0300-xx-30-placement-south,0e2e7c23-af94-4530-a011-ee18de4a5387
 pkg-cnctech_3020-30-0300-xx-30-text-name,5d7372f5-2bcc-47d2-aa88-a02d178fac26
 pkg-cnctech_3020-30-0300-xx-30-text-value,598227cb-b2ec-457f-88a0-3077d6a55ba9
 pkg-cnctech_3020-32-0300-xx-32-courtyard,4f350dab-0751-4877-81e5-bab97641e583
@@ -633,6 +633,8 @@ pkg-cnctech_3020-32-0300-xx-32-lead-6,b9384523-877a-4931-8bec-5e0192ec465e
 pkg-cnctech_3020-32-0300-xx-32-lead-7,730796ed-658a-45d1-8917-1dcb82a6eaa3
 pkg-cnctech_3020-32-0300-xx-32-lead-8,dd8c3680-92d1-479b-9712-1a02f670ed62
 pkg-cnctech_3020-32-0300-xx-32-lead-9,e297d264-49e9-4dee-a298-25727d3d6aec
+pkg-cnctech_3020-32-0300-xx-32-legend-north,7a5a4dd7-e58f-4d71-82fe-4b98bc924495
+pkg-cnctech_3020-32-0300-xx-32-legend-south,a9ffbc3e-1f00-420d-981f-f1602ab9cd88
 pkg-cnctech_3020-32-0300-xx-32-pad-0,bcbd5c95-2993-4411-b222-88a3dae77446
 pkg-cnctech_3020-32-0300-xx-32-pad-1,80cdbe58-d378-4a93-a80e-43b94f056dc1
 pkg-cnctech_3020-32-0300-xx-32-pad-10,4b7e86f0-91c6-42dd-a9f9-bcb54214f28b
@@ -666,8 +668,6 @@ pkg-cnctech_3020-32-0300-xx-32-pad-7,289639fb-4823-4f7a-91ec-136b2b3c28b5
 pkg-cnctech_3020-32-0300-xx-32-pad-8,5c8ad21e-7623-4c30-8fc0-742d8d535ddb
 pkg-cnctech_3020-32-0300-xx-32-pad-9,3371422f-a62e-4423-9cea-93e4acec74a1
 pkg-cnctech_3020-32-0300-xx-32-pkg,09bb49fd-817c-4acf-9c0c-2475f46b51a9
-pkg-cnctech_3020-32-0300-xx-32-placement-north,7a5a4dd7-e58f-4d71-82fe-4b98bc924495
-pkg-cnctech_3020-32-0300-xx-32-placement-south,a9ffbc3e-1f00-420d-981f-f1602ab9cd88
 pkg-cnctech_3020-32-0300-xx-32-text-name,e4849b88-02c8-4b51-833b-dc099c2f0c9e
 pkg-cnctech_3020-32-0300-xx-32-text-value,62e1c484-b730-4cf7-905b-1524c0ec35e2
 pkg-cnctech_3020-34-0300-xx-34-courtyard,585ab406-b0b8-46cf-987f-6138d0c8212f
@@ -709,6 +709,8 @@ pkg-cnctech_3020-34-0300-xx-34-lead-6,c9c10756-c22a-4292-8b70-712abe87b315
 pkg-cnctech_3020-34-0300-xx-34-lead-7,8eab9b4b-e8d6-4b7b-9067-d1112479c069
 pkg-cnctech_3020-34-0300-xx-34-lead-8,b7d47d60-db49-4300-9fd0-52ac072f446e
 pkg-cnctech_3020-34-0300-xx-34-lead-9,2653e03f-0817-49fa-8701-92f937acfc6f
+pkg-cnctech_3020-34-0300-xx-34-legend-north,3fb6594b-47fa-4727-9372-dedb9866714f
+pkg-cnctech_3020-34-0300-xx-34-legend-south,d0fc1787-c015-449f-bbc6-b7f212234589
 pkg-cnctech_3020-34-0300-xx-34-pad-0,e96e8ef9-dbc9-4ff2-abc4-eb488f432200
 pkg-cnctech_3020-34-0300-xx-34-pad-1,2cc912e8-6739-425a-bc69-d91e7d2b9a13
 pkg-cnctech_3020-34-0300-xx-34-pad-10,93591dfc-eb37-403c-b6af-04209a65cb63
@@ -744,8 +746,6 @@ pkg-cnctech_3020-34-0300-xx-34-pad-7,e569e9d6-426d-48cb-822e-4007d2900b6c
 pkg-cnctech_3020-34-0300-xx-34-pad-8,ca5f79b6-e333-473c-8512-7f86d03988e1
 pkg-cnctech_3020-34-0300-xx-34-pad-9,112f81cc-9fbb-4d36-91d2-a207b8b7c4d2
 pkg-cnctech_3020-34-0300-xx-34-pkg,b0400f2f-6b6e-4719-9f0d-763c0d945438
-pkg-cnctech_3020-34-0300-xx-34-placement-north,3fb6594b-47fa-4727-9372-dedb9866714f
-pkg-cnctech_3020-34-0300-xx-34-placement-south,d0fc1787-c015-449f-bbc6-b7f212234589
 pkg-cnctech_3020-34-0300-xx-34-text-name,e09fe631-2f87-4eda-bf11-1e4058a2e9bc
 pkg-cnctech_3020-34-0300-xx-34-text-value,da377b42-14bf-4d01-9714-0f22ea197a87
 pkg-cnctech_3020-36-0300-xx-36-courtyard,b6b0ea67-78c3-4a78-a1b9-e49ed9a1c25a
@@ -789,6 +789,8 @@ pkg-cnctech_3020-36-0300-xx-36-lead-6,11f29465-624e-4392-b044-178ad5db625b
 pkg-cnctech_3020-36-0300-xx-36-lead-7,6e3cc8e2-4c1b-4282-b590-2ceddbbb33f8
 pkg-cnctech_3020-36-0300-xx-36-lead-8,605d6a16-caf5-4809-9cef-a4447cf0203f
 pkg-cnctech_3020-36-0300-xx-36-lead-9,85473f22-67d7-4b89-aa1e-b6eaa74fa40d
+pkg-cnctech_3020-36-0300-xx-36-legend-north,3d6cfa7b-03fe-46a3-aed9-b3e1b4b5ece5
+pkg-cnctech_3020-36-0300-xx-36-legend-south,49892a66-461a-445f-8783-e0e3e027f2ce
 pkg-cnctech_3020-36-0300-xx-36-pad-0,a5b58de4-bfb9-42c9-bf86-9e2eb0f1ebce
 pkg-cnctech_3020-36-0300-xx-36-pad-1,6a8ba86b-2b7d-4f57-b737-90900c4630c0
 pkg-cnctech_3020-36-0300-xx-36-pad-10,21827067-c577-415b-92e5-ab3e06d14452
@@ -826,8 +828,6 @@ pkg-cnctech_3020-36-0300-xx-36-pad-7,a6f85175-c347-4c95-a7dc-6c97bb3fe746
 pkg-cnctech_3020-36-0300-xx-36-pad-8,52c6634a-115f-4df2-bcef-87874076c3ec
 pkg-cnctech_3020-36-0300-xx-36-pad-9,7ff99ea4-9d3e-446d-a1d7-ca343882f8e1
 pkg-cnctech_3020-36-0300-xx-36-pkg,7448f39a-fe18-4e69-83df-00a37a4f00c0
-pkg-cnctech_3020-36-0300-xx-36-placement-north,3d6cfa7b-03fe-46a3-aed9-b3e1b4b5ece5
-pkg-cnctech_3020-36-0300-xx-36-placement-south,49892a66-461a-445f-8783-e0e3e027f2ce
 pkg-cnctech_3020-36-0300-xx-36-text-name,fbd8113f-355e-4961-93ac-5085a97d5c72
 pkg-cnctech_3020-36-0300-xx-36-text-value,97e53097-46a8-4cc2-938f-a8b60a0c7e6c
 pkg-cnctech_3020-40-0300-xx-40-courtyard,1f2994d5-82a7-4e4c-b8fe-2bd9ded3269c
@@ -875,6 +875,8 @@ pkg-cnctech_3020-40-0300-xx-40-lead-6,aa78d976-3eb4-4f54-acaa-d361fc3f2f21
 pkg-cnctech_3020-40-0300-xx-40-lead-7,afa3175f-591c-40a6-b22e-2c2e1c3c0066
 pkg-cnctech_3020-40-0300-xx-40-lead-8,59660381-39c5-47c9-b9d4-dfe6017e847d
 pkg-cnctech_3020-40-0300-xx-40-lead-9,e1ccebc7-d7c2-4441-8776-18947b977c6b
+pkg-cnctech_3020-40-0300-xx-40-legend-north,c0564340-5765-4ad6-adff-083feb5bbd05
+pkg-cnctech_3020-40-0300-xx-40-legend-south,e778a6c8-f33c-4b2a-aeda-ee9f3d93b549
 pkg-cnctech_3020-40-0300-xx-40-pad-0,05f76dfe-03ed-4188-8d0a-a85f2bee8532
 pkg-cnctech_3020-40-0300-xx-40-pad-1,2a162b29-3d7d-475d-b01d-c2e19da112d7
 pkg-cnctech_3020-40-0300-xx-40-pad-10,58e113c5-a50d-4df7-8945-b2cbe3a333cf
@@ -916,8 +918,6 @@ pkg-cnctech_3020-40-0300-xx-40-pad-7,17c07f7e-f9c1-41d9-94c9-dfacf6c1e873
 pkg-cnctech_3020-40-0300-xx-40-pad-8,11df3f72-b376-45ac-ac27-d1118368ba89
 pkg-cnctech_3020-40-0300-xx-40-pad-9,9ffeb90c-5b10-405c-ad3a-8515ae92d826
 pkg-cnctech_3020-40-0300-xx-40-pkg,f89376b5-8f34-4245-810b-2e734049245c
-pkg-cnctech_3020-40-0300-xx-40-placement-north,c0564340-5765-4ad6-adff-083feb5bbd05
-pkg-cnctech_3020-40-0300-xx-40-placement-south,e778a6c8-f33c-4b2a-aeda-ee9f3d93b549
 pkg-cnctech_3020-40-0300-xx-40-text-name,617ba1da-ee59-4117-a53d-f42808680277
 pkg-cnctech_3020-40-0300-xx-40-text-value,3f7f1876-6633-476e-8d4b-04c43e3af6e3
 pkg-cnctech_3020-44-0300-xx-44-courtyard,707c54cd-cd4e-4409-aa25-37d4a4d7c13b
@@ -969,6 +969,8 @@ pkg-cnctech_3020-44-0300-xx-44-lead-6,685f30db-ee54-40cb-bcec-26b5cd291068
 pkg-cnctech_3020-44-0300-xx-44-lead-7,c39cdec3-d18a-4483-aa0c-36e24db33bae
 pkg-cnctech_3020-44-0300-xx-44-lead-8,682245b8-a6c6-43cb-9b80-62429787b778
 pkg-cnctech_3020-44-0300-xx-44-lead-9,7150a904-f3bc-467c-8827-0a38b9d1fe43
+pkg-cnctech_3020-44-0300-xx-44-legend-north,7bc43d8a-65f4-4067-ae7f-c6d044ae3ada
+pkg-cnctech_3020-44-0300-xx-44-legend-south,5053a33b-daa1-43e8-b6bf-da2f22641839
 pkg-cnctech_3020-44-0300-xx-44-pad-0,8f1e4f2b-85fe-428e-81af-f4b54b710645
 pkg-cnctech_3020-44-0300-xx-44-pad-1,b6f9a7f8-d22e-4d8e-b921-7519a957b92e
 pkg-cnctech_3020-44-0300-xx-44-pad-10,a7abff52-ddb0-4092-bfad-819a1987f417
@@ -1014,8 +1016,6 @@ pkg-cnctech_3020-44-0300-xx-44-pad-7,686cbba2-315d-4b3b-922a-bc809e887db8
 pkg-cnctech_3020-44-0300-xx-44-pad-8,4581560d-3f77-4524-9a21-ea239d5c4403
 pkg-cnctech_3020-44-0300-xx-44-pad-9,914a0407-ba88-499f-a522-133e19e75d79
 pkg-cnctech_3020-44-0300-xx-44-pkg,91252d2f-acda-4dc5-a58f-b9361acdb8b4
-pkg-cnctech_3020-44-0300-xx-44-placement-north,7bc43d8a-65f4-4067-ae7f-c6d044ae3ada
-pkg-cnctech_3020-44-0300-xx-44-placement-south,5053a33b-daa1-43e8-b6bf-da2f22641839
 pkg-cnctech_3020-44-0300-xx-44-text-name,d2b2d45e-95d2-4aa4-9e8f-465db656d855
 pkg-cnctech_3020-44-0300-xx-44-text-value,c8b7a0ff-f731-4035-b556-c1fe63ae1ca0
 pkg-cnctech_3020-50-0300-xx-50-courtyard,f9d48196-7ed8-43d6-b1a8-b6c3fa2cfae3
@@ -1073,6 +1073,8 @@ pkg-cnctech_3020-50-0300-xx-50-lead-6,92958e6a-a7fd-4973-a522-5b068a467e06
 pkg-cnctech_3020-50-0300-xx-50-lead-7,2f3d36d8-3944-425b-af68-076df1e8755d
 pkg-cnctech_3020-50-0300-xx-50-lead-8,7454caff-c518-4322-8bfd-0eb5c9dbbd08
 pkg-cnctech_3020-50-0300-xx-50-lead-9,195730c1-85ad-4aa8-a83c-3ad46eb69794
+pkg-cnctech_3020-50-0300-xx-50-legend-north,b49de65b-65bf-4cd5-8460-264350f2b7d5
+pkg-cnctech_3020-50-0300-xx-50-legend-south,cf4243c7-894e-4fd5-b396-8ef63b889406
 pkg-cnctech_3020-50-0300-xx-50-pad-0,98506c71-7958-46d3-9398-b39387429258
 pkg-cnctech_3020-50-0300-xx-50-pad-1,65182cd8-e2eb-4216-a0ad-2f46a6a20c56
 pkg-cnctech_3020-50-0300-xx-50-pad-10,64dc91ad-4a86-4e3c-9065-802ea8d5962d
@@ -1124,8 +1126,6 @@ pkg-cnctech_3020-50-0300-xx-50-pad-7,5ba05578-1bf9-4bfa-a93f-d0f5f8bb0232
 pkg-cnctech_3020-50-0300-xx-50-pad-8,d81de4de-4f44-466c-ad54-a3cbccde802e
 pkg-cnctech_3020-50-0300-xx-50-pad-9,1bb67a99-ecec-467c-9e0c-d27befe76953
 pkg-cnctech_3020-50-0300-xx-50-pkg,32b89c89-6977-4c1f-924e-7cb7a6cfe80f
-pkg-cnctech_3020-50-0300-xx-50-placement-north,b49de65b-65bf-4cd5-8460-264350f2b7d5
-pkg-cnctech_3020-50-0300-xx-50-placement-south,cf4243c7-894e-4fd5-b396-8ef63b889406
 pkg-cnctech_3020-50-0300-xx-50-text-name,dda721e7-71b6-4ae0-aaaf-3308a6467711
 pkg-cnctech_3020-50-0300-xx-50-text-value,39729e1c-730d-4c91-b3e5-4899f67f2ec8
 pkg-cnctech_3020-60-0300-xx-60-courtyard,116f4dea-d5a4-4c28-a5c7-2eeefbf75748
@@ -1193,6 +1193,8 @@ pkg-cnctech_3020-60-0300-xx-60-lead-6,c5098f69-ecaf-4986-a1ee-3fad95b3d921
 pkg-cnctech_3020-60-0300-xx-60-lead-7,f21b02a5-281e-4bb2-b4f0-e0c8b9f81370
 pkg-cnctech_3020-60-0300-xx-60-lead-8,6d15c623-5fc8-439c-be91-037abf131dea
 pkg-cnctech_3020-60-0300-xx-60-lead-9,63bf2fc0-e8c7-4d0a-9a04-ef7fe9ed9d69
+pkg-cnctech_3020-60-0300-xx-60-legend-north,b738f9b9-8d67-4de8-9d4e-a3da9234c8bb
+pkg-cnctech_3020-60-0300-xx-60-legend-south,52f35bc7-dd67-41ca-b5d6-a8120cd55530
 pkg-cnctech_3020-60-0300-xx-60-pad-0,bed7c297-03f9-4595-9036-9986cb689f4d
 pkg-cnctech_3020-60-0300-xx-60-pad-1,c153a544-141f-4cfa-a5f8-d2593c8cd9bb
 pkg-cnctech_3020-60-0300-xx-60-pad-10,60b2c5ca-5cd5-4517-b0c3-0f5a68181cec
@@ -1254,8 +1256,6 @@ pkg-cnctech_3020-60-0300-xx-60-pad-7,5e18e825-1cf0-48d0-92fd-16a7cdb4b206
 pkg-cnctech_3020-60-0300-xx-60-pad-8,8c6fce69-7ef9-4fcf-8408-ea0e9766415a
 pkg-cnctech_3020-60-0300-xx-60-pad-9,9a5bde60-220a-4cd3-bfc0-67d746b7cb22
 pkg-cnctech_3020-60-0300-xx-60-pkg,a3bc127c-dd9a-4e94-92b0-c6d0611a678a
-pkg-cnctech_3020-60-0300-xx-60-placement-north,b738f9b9-8d67-4de8-9d4e-a3da9234c8bb
-pkg-cnctech_3020-60-0300-xx-60-placement-south,52f35bc7-dd67-41ca-b5d6-a8120cd55530
 pkg-cnctech_3020-60-0300-xx-60-text-name,42d5547f-d469-412b-bf88-4a9a6561050e
 pkg-cnctech_3020-60-0300-xx-60-text-value,c2e4dd25-8988-49df-96e0-bf2e5b8fc357
 pkg-cnctech_3020-64-0300-xx-64-courtyard,6393faa9-7b2a-43a9-a4b8-ace12b441dc8
@@ -1327,6 +1327,8 @@ pkg-cnctech_3020-64-0300-xx-64-lead-63,d03fd655-61d6-4e99-aa5b-59a5be15c521
 pkg-cnctech_3020-64-0300-xx-64-lead-7,301ea382-0e8e-4621-b041-9a67aed34e4c
 pkg-cnctech_3020-64-0300-xx-64-lead-8,b4962b2d-abf3-4cd8-9a4c-f3e2fea81958
 pkg-cnctech_3020-64-0300-xx-64-lead-9,60f8efc2-22df-4419-8699-3ce5f0ee0cab
+pkg-cnctech_3020-64-0300-xx-64-legend-north,a18a0c87-abad-4759-81f8-f8a9bebd56da
+pkg-cnctech_3020-64-0300-xx-64-legend-south,8d4c3878-7b7e-46af-b990-8ed6dd0a2a1a
 pkg-cnctech_3020-64-0300-xx-64-pad-0,9813ab63-9e80-4e64-a23c-224701f66632
 pkg-cnctech_3020-64-0300-xx-64-pad-1,c0cb6b75-e162-4756-b2f5-ee5c19c2e307
 pkg-cnctech_3020-64-0300-xx-64-pad-10,5073f1c8-b279-47d9-bcff-068f2d7c3970
@@ -1392,8 +1394,6 @@ pkg-cnctech_3020-64-0300-xx-64-pad-7,cd7ae288-a1a6-47fb-98d9-94e19ce07039
 pkg-cnctech_3020-64-0300-xx-64-pad-8,4ba68e58-f254-438f-bcc1-7aa9b703495e
 pkg-cnctech_3020-64-0300-xx-64-pad-9,0f986160-d81a-4759-921c-0e18e0731c6e
 pkg-cnctech_3020-64-0300-xx-64-pkg,db1961ff-a16b-49cf-9e8f-56458524ceee
-pkg-cnctech_3020-64-0300-xx-64-placement-north,a18a0c87-abad-4759-81f8-f8a9bebd56da
-pkg-cnctech_3020-64-0300-xx-64-placement-south,8d4c3878-7b7e-46af-b990-8ed6dd0a2a1a
 pkg-cnctech_3020-64-0300-xx-64-text-name,7d4f2dfe-7df1-4261-ab9b-11424913e85c
 pkg-cnctech_3020-64-0300-xx-64-text-value,07639bcf-fea3-4235-b64c-a929649622e1
 pkg-cnctech_3120-06-0300-xx-6-courtyard,3c20e356-9f41-4add-b0ad-795662008d11
@@ -1407,6 +1407,8 @@ pkg-cnctech_3120-06-0300-xx-6-lead-2,27caa7a5-72d6-42b9-8533-e321ec24453e
 pkg-cnctech_3120-06-0300-xx-6-lead-3,a060bf36-114f-4988-89c4-aa9bf9f7fe71
 pkg-cnctech_3120-06-0300-xx-6-lead-4,867eede4-1f47-4aeb-a741-cdba92dc8adc
 pkg-cnctech_3120-06-0300-xx-6-lead-5,445bb32c-841d-4690-8a2b-190f5501719b
+pkg-cnctech_3120-06-0300-xx-6-legend-north,d5c7a4e7-f13d-41f5-84f3-3a9fb1fafe24
+pkg-cnctech_3120-06-0300-xx-6-legend-south,ce5ee68a-5b86-4516-ac8d-fec91d21bc5b
 pkg-cnctech_3120-06-0300-xx-6-pad-0,f3e1f9b0-72f1-4a37-a68a-7e8f8007771a
 pkg-cnctech_3120-06-0300-xx-6-pad-1,7dab515a-c5a2-4d22-b48e-1346d35f0be0
 pkg-cnctech_3120-06-0300-xx-6-pad-2,c414020d-1706-4056-b23e-6202a1994a5c
@@ -1414,8 +1416,6 @@ pkg-cnctech_3120-06-0300-xx-6-pad-3,b2292406-b230-4d27-ba0e-1a4d02718613
 pkg-cnctech_3120-06-0300-xx-6-pad-4,bbe9afc0-793a-4abb-b96f-81fa680b0d15
 pkg-cnctech_3120-06-0300-xx-6-pad-5,cb929baf-eee4-45e8-a5ce-3a66d70b70c5
 pkg-cnctech_3120-06-0300-xx-6-pkg,e2688eb6-8b30-4b69-ae9d-169b3286217f
-pkg-cnctech_3120-06-0300-xx-6-placement-north,d5c7a4e7-f13d-41f5-84f3-3a9fb1fafe24
-pkg-cnctech_3120-06-0300-xx-6-placement-south,ce5ee68a-5b86-4516-ac8d-fec91d21bc5b
 pkg-cnctech_3120-06-0300-xx-6-text-name,911a83af-0106-4276-99e1-f78c6d163444
 pkg-cnctech_3120-06-0300-xx-6-text-value,0959dfd4-921f-42c0-b5fe-987ea196ea2e
 pkg-cnctech_3120-08-0300-xx-8-courtyard,3e63d6f4-654a-43c4-80da-e5affb16c68e
@@ -1431,6 +1431,8 @@ pkg-cnctech_3120-08-0300-xx-8-lead-4,9b11dd83-04cf-4a48-bea0-e68238fb9ec2
 pkg-cnctech_3120-08-0300-xx-8-lead-5,29f4f669-3a49-495f-b358-f10395e7adcd
 pkg-cnctech_3120-08-0300-xx-8-lead-6,236bd80d-9708-4946-b63f-7edbd128eea6
 pkg-cnctech_3120-08-0300-xx-8-lead-7,88a907b3-d06f-4b7b-a905-1398d116aa7f
+pkg-cnctech_3120-08-0300-xx-8-legend-north,6ab23634-d21b-4425-97ef-5d031f77d398
+pkg-cnctech_3120-08-0300-xx-8-legend-south,44cbdcbf-3e1c-42e9-94dd-e5c912dde853
 pkg-cnctech_3120-08-0300-xx-8-pad-0,14da246e-902b-479f-a403-0cce1a9d753f
 pkg-cnctech_3120-08-0300-xx-8-pad-1,306eccdf-6aad-44f7-a763-7191cc3f814d
 pkg-cnctech_3120-08-0300-xx-8-pad-2,4afbe8f1-5ff9-4976-ab50-cfe3c8dbabad
@@ -1440,8 +1442,6 @@ pkg-cnctech_3120-08-0300-xx-8-pad-5,8147663f-78ea-470a-a593-023215fd0fd2
 pkg-cnctech_3120-08-0300-xx-8-pad-6,e00cccce-e0b5-4189-8694-1b4ac75aaf90
 pkg-cnctech_3120-08-0300-xx-8-pad-7,5b88df96-26c9-44ce-a666-0ed934d6040b
 pkg-cnctech_3120-08-0300-xx-8-pkg,89d0bb70-2516-46f2-9960-0d21d070bda0
-pkg-cnctech_3120-08-0300-xx-8-placement-north,6ab23634-d21b-4425-97ef-5d031f77d398
-pkg-cnctech_3120-08-0300-xx-8-placement-south,44cbdcbf-3e1c-42e9-94dd-e5c912dde853
 pkg-cnctech_3120-08-0300-xx-8-text-name,f1249848-9949-46db-abb0-1eda68ec5330
 pkg-cnctech_3120-08-0300-xx-8-text-value,9283d1d7-f87e-4f1a-937c-f8906311b777
 pkg-cnctech_3120-10-0300-xx-10-courtyard,0c0a45c2-4be1-4cce-bdb6-7c5153eed8c2
@@ -1459,6 +1459,8 @@ pkg-cnctech_3120-10-0300-xx-10-lead-6,daedd03e-5eb0-4661-8c08-263faa08573e
 pkg-cnctech_3120-10-0300-xx-10-lead-7,025a3c74-3537-4797-ad8e-9609d0bcf07f
 pkg-cnctech_3120-10-0300-xx-10-lead-8,56d0323a-f1bc-4338-88b2-ad27d8cff20a
 pkg-cnctech_3120-10-0300-xx-10-lead-9,7cec5742-e3c2-4531-9f82-bdfc4b50e96a
+pkg-cnctech_3120-10-0300-xx-10-legend-north,cc8b431f-3add-483d-abc8-694b20c85da1
+pkg-cnctech_3120-10-0300-xx-10-legend-south,7861db2a-3758-4baf-acc7-499f3da9faf3
 pkg-cnctech_3120-10-0300-xx-10-pad-0,a92486cb-6dfb-4088-82f9-c26087884fd0
 pkg-cnctech_3120-10-0300-xx-10-pad-1,0140beaa-7be3-4b03-bb9a-e01f4748df9d
 pkg-cnctech_3120-10-0300-xx-10-pad-2,9b3cdea9-729e-4f52-86cf-df8080643f9f
@@ -1470,8 +1472,6 @@ pkg-cnctech_3120-10-0300-xx-10-pad-7,4bb625cd-e98e-4ffe-9b4d-780ce389298e
 pkg-cnctech_3120-10-0300-xx-10-pad-8,97deb74c-52ee-4a51-b3dc-16d8fa1a752f
 pkg-cnctech_3120-10-0300-xx-10-pad-9,464ff163-4087-4b57-96d8-ebed415e6160
 pkg-cnctech_3120-10-0300-xx-10-pkg,723c17ab-579f-43fe-a501-f53ca2ad665b
-pkg-cnctech_3120-10-0300-xx-10-placement-north,cc8b431f-3add-483d-abc8-694b20c85da1
-pkg-cnctech_3120-10-0300-xx-10-placement-south,7861db2a-3758-4baf-acc7-499f3da9faf3
 pkg-cnctech_3120-10-0300-xx-10-text-name,902a1a7d-e441-4775-a0e6-4409672c4991
 pkg-cnctech_3120-10-0300-xx-10-text-value,1f2b7380-88f1-411d-9493-7c55082964c3
 pkg-cnctech_3120-12-0300-xx-12-courtyard,7c7ee04b-26b4-4e73-95f6-75a8fe103762
@@ -1491,6 +1491,8 @@ pkg-cnctech_3120-12-0300-xx-12-lead-6,aa58afca-c27f-4b78-b34d-09d226c023f2
 pkg-cnctech_3120-12-0300-xx-12-lead-7,1db23380-b4ad-411e-80dd-d12089c31e1f
 pkg-cnctech_3120-12-0300-xx-12-lead-8,7e739abe-4b0d-4edb-bd9f-f27207e52a6b
 pkg-cnctech_3120-12-0300-xx-12-lead-9,49766ccd-8023-4d4c-995b-344f3a10d36c
+pkg-cnctech_3120-12-0300-xx-12-legend-north,6a4f8850-94d2-478e-8db8-9c2e9f612cd3
+pkg-cnctech_3120-12-0300-xx-12-legend-south,63a8a843-6231-4971-954e-bc1c20e5a9e5
 pkg-cnctech_3120-12-0300-xx-12-pad-0,e2845f55-f378-48f9-9fc5-680fd676dd18
 pkg-cnctech_3120-12-0300-xx-12-pad-1,5dca64e8-7919-4f15-8c23-7e9c8e635811
 pkg-cnctech_3120-12-0300-xx-12-pad-10,1a046a32-600f-404a-be87-b8563fa0b9ec
@@ -1504,8 +1506,6 @@ pkg-cnctech_3120-12-0300-xx-12-pad-7,1b2eb9ad-5ce8-45f3-be0c-62551eebac1a
 pkg-cnctech_3120-12-0300-xx-12-pad-8,71fdc4fd-c87f-4e1c-8cd8-47fd818e9428
 pkg-cnctech_3120-12-0300-xx-12-pad-9,6f01ff1d-af0f-40b2-817f-a748102a2d41
 pkg-cnctech_3120-12-0300-xx-12-pkg,a4beee98-5815-45e4-9d46-8a3c15fdd0e0
-pkg-cnctech_3120-12-0300-xx-12-placement-north,6a4f8850-94d2-478e-8db8-9c2e9f612cd3
-pkg-cnctech_3120-12-0300-xx-12-placement-south,63a8a843-6231-4971-954e-bc1c20e5a9e5
 pkg-cnctech_3120-12-0300-xx-12-text-name,ab01a062-5ced-49c1-9f76-ac0fe26c5124
 pkg-cnctech_3120-12-0300-xx-12-text-value,a119ed91-dfd5-4747-b7eb-ecff82d01045
 pkg-cnctech_3120-14-0300-xx-14-courtyard,429272ef-57c1-4d78-b696-90a59316dabe
@@ -1527,6 +1527,8 @@ pkg-cnctech_3120-14-0300-xx-14-lead-6,5e9195a9-963d-4d62-9eb3-352f981c201a
 pkg-cnctech_3120-14-0300-xx-14-lead-7,777b3114-dd36-4519-9d4d-c32f8fc358be
 pkg-cnctech_3120-14-0300-xx-14-lead-8,7967321f-19fa-468e-a55a-5932da162cc2
 pkg-cnctech_3120-14-0300-xx-14-lead-9,06359632-e73e-45d2-bb24-cbe80965dea9
+pkg-cnctech_3120-14-0300-xx-14-legend-north,14455db0-80b2-4dcc-b686-861aad67a575
+pkg-cnctech_3120-14-0300-xx-14-legend-south,1fe16935-5870-45cd-b0a8-4f0051ff13aa
 pkg-cnctech_3120-14-0300-xx-14-pad-0,cbd81b64-d421-4c82-b2c5-87cb2faee94a
 pkg-cnctech_3120-14-0300-xx-14-pad-1,e940ed1a-906d-4328-a176-e853881d03c5
 pkg-cnctech_3120-14-0300-xx-14-pad-10,6ff74a06-5e83-4da2-9284-2110960987d3
@@ -1542,8 +1544,6 @@ pkg-cnctech_3120-14-0300-xx-14-pad-7,ad82777d-8227-4801-98e0-4377beec3db1
 pkg-cnctech_3120-14-0300-xx-14-pad-8,0487eefe-5c68-4868-ad4d-6a46f3b0740a
 pkg-cnctech_3120-14-0300-xx-14-pad-9,f6b96fe2-2aba-4720-b572-bfe8771632a7
 pkg-cnctech_3120-14-0300-xx-14-pkg,d5e22c8d-ada6-461d-968a-ce71a2382dbc
-pkg-cnctech_3120-14-0300-xx-14-placement-north,14455db0-80b2-4dcc-b686-861aad67a575
-pkg-cnctech_3120-14-0300-xx-14-placement-south,1fe16935-5870-45cd-b0a8-4f0051ff13aa
 pkg-cnctech_3120-14-0300-xx-14-text-name,ece29696-0d7e-496e-be6f-804f062a01c8
 pkg-cnctech_3120-14-0300-xx-14-text-value,ba3529aa-db0e-4103-8394-64fafaac0f6f
 pkg-cnctech_3120-16-0300-xx-16-courtyard,2e27c563-f1d1-41df-9c79-0d694ed0a4c0
@@ -1567,6 +1567,8 @@ pkg-cnctech_3120-16-0300-xx-16-lead-6,38b95e6e-afe4-42bf-958b-210c2a55c88e
 pkg-cnctech_3120-16-0300-xx-16-lead-7,fdf7d8c3-7913-4c5b-a13f-8184ef718fba
 pkg-cnctech_3120-16-0300-xx-16-lead-8,0ea5cc4f-5d1e-494c-8427-963e4129f532
 pkg-cnctech_3120-16-0300-xx-16-lead-9,53e5301e-5474-4925-b0ba-eb372d134661
+pkg-cnctech_3120-16-0300-xx-16-legend-north,007ec864-0124-48b1-87c9-a8fa099c4812
+pkg-cnctech_3120-16-0300-xx-16-legend-south,9469bf11-871d-489b-bc71-21fafc7df73d
 pkg-cnctech_3120-16-0300-xx-16-pad-0,31fbf021-31ad-4672-9e22-86ae01186241
 pkg-cnctech_3120-16-0300-xx-16-pad-1,c4b1b5e0-844b-466f-aab0-29f015f37098
 pkg-cnctech_3120-16-0300-xx-16-pad-10,718600a8-f5b6-4167-94e2-12c983810a99
@@ -1584,8 +1586,6 @@ pkg-cnctech_3120-16-0300-xx-16-pad-7,97f02a71-75c6-4646-b8d8-687917ccff5d
 pkg-cnctech_3120-16-0300-xx-16-pad-8,5fa26e23-cd61-48a1-a6dc-40f1a9fe317f
 pkg-cnctech_3120-16-0300-xx-16-pad-9,97b4e4b1-d5f4-4fdf-8335-8c6da9fa4aca
 pkg-cnctech_3120-16-0300-xx-16-pkg,f009023b-5202-448a-b71f-6f31c444bae8
-pkg-cnctech_3120-16-0300-xx-16-placement-north,007ec864-0124-48b1-87c9-a8fa099c4812
-pkg-cnctech_3120-16-0300-xx-16-placement-south,9469bf11-871d-489b-bc71-21fafc7df73d
 pkg-cnctech_3120-16-0300-xx-16-text-name,502925ea-b84c-4d00-ac72-97f148a93cdd
 pkg-cnctech_3120-16-0300-xx-16-text-value,053f8c17-072f-493a-ab11-04494929543f
 pkg-cnctech_3120-18-0300-xx-18-courtyard,4e22b0af-972f-4581-b865-09a076002738
@@ -1611,6 +1611,8 @@ pkg-cnctech_3120-18-0300-xx-18-lead-6,e72a0d46-ef51-4512-840e-cb8ac4f16f25
 pkg-cnctech_3120-18-0300-xx-18-lead-7,9bbc3ff4-5c2f-4e15-8877-1409c32e4a7d
 pkg-cnctech_3120-18-0300-xx-18-lead-8,8f095477-fb0c-43e8-836d-14a243f16e6f
 pkg-cnctech_3120-18-0300-xx-18-lead-9,f62bb0c0-e203-403c-bd10-ed3fab062dbb
+pkg-cnctech_3120-18-0300-xx-18-legend-north,44d05efd-644c-4bb3-9f48-e278b9e7f427
+pkg-cnctech_3120-18-0300-xx-18-legend-south,0908657b-e42a-451f-886a-b9458bb28560
 pkg-cnctech_3120-18-0300-xx-18-pad-0,9c2a9dda-32da-45bb-8930-30ab170480f3
 pkg-cnctech_3120-18-0300-xx-18-pad-1,75c0ebe3-4ff1-4017-9c53-31b5025287d2
 pkg-cnctech_3120-18-0300-xx-18-pad-10,e298a0f4-c5a2-4e18-b40f-2009695bd03d
@@ -1630,8 +1632,6 @@ pkg-cnctech_3120-18-0300-xx-18-pad-7,75ec7840-447e-4762-8aa2-316ed801a377
 pkg-cnctech_3120-18-0300-xx-18-pad-8,231a46d0-61e8-442f-90e3-186e504270a8
 pkg-cnctech_3120-18-0300-xx-18-pad-9,703c5d65-5e6c-444a-aa48-6156e6781108
 pkg-cnctech_3120-18-0300-xx-18-pkg,5462ee69-b5a8-4364-972f-f893aa0f9b6d
-pkg-cnctech_3120-18-0300-xx-18-placement-north,44d05efd-644c-4bb3-9f48-e278b9e7f427
-pkg-cnctech_3120-18-0300-xx-18-placement-south,0908657b-e42a-451f-886a-b9458bb28560
 pkg-cnctech_3120-18-0300-xx-18-text-name,67afa053-3e6f-4c90-bab2-85f7ca22496e
 pkg-cnctech_3120-18-0300-xx-18-text-value,a743f3c4-1d3c-4837-8f7e-6f8bd6bdea56
 pkg-cnctech_3120-20-0300-xx-20-courtyard,aca220cb-c66f-4d9a-a48c-76cbd4b08c74
@@ -1659,6 +1659,8 @@ pkg-cnctech_3120-20-0300-xx-20-lead-6,e2ab84bd-e207-468f-a462-3e42d416ea74
 pkg-cnctech_3120-20-0300-xx-20-lead-7,e022ae75-c8d3-4392-8e1e-7bc83d79e689
 pkg-cnctech_3120-20-0300-xx-20-lead-8,b5ba84e5-dbdc-45f0-bf52-1fc6be6be319
 pkg-cnctech_3120-20-0300-xx-20-lead-9,26c2fabf-6cff-41bd-9400-cb9e9dec90ef
+pkg-cnctech_3120-20-0300-xx-20-legend-north,12d573e0-17e1-49aa-95ba-bfc33f56429a
+pkg-cnctech_3120-20-0300-xx-20-legend-south,ed13cd47-ac18-46bc-aba6-bd011dbf2a4f
 pkg-cnctech_3120-20-0300-xx-20-pad-0,881a6516-a392-434e-9e41-e20728950933
 pkg-cnctech_3120-20-0300-xx-20-pad-1,f224c1ef-9491-4eff-86d5-35e72bf9b777
 pkg-cnctech_3120-20-0300-xx-20-pad-10,0a789fde-f765-45a4-a782-bf0049ffb32b
@@ -1680,8 +1682,6 @@ pkg-cnctech_3120-20-0300-xx-20-pad-7,c9dedb27-dd4f-4e5a-80e9-559d2d15386c
 pkg-cnctech_3120-20-0300-xx-20-pad-8,cd14c0d9-7a84-4c5a-9eb3-3329567dc429
 pkg-cnctech_3120-20-0300-xx-20-pad-9,e790af0f-b545-4725-961c-8378d3305e47
 pkg-cnctech_3120-20-0300-xx-20-pkg,89a7bea3-42d3-412e-8746-a63cd64472fd
-pkg-cnctech_3120-20-0300-xx-20-placement-north,12d573e0-17e1-49aa-95ba-bfc33f56429a
-pkg-cnctech_3120-20-0300-xx-20-placement-south,ed13cd47-ac18-46bc-aba6-bd011dbf2a4f
 pkg-cnctech_3120-20-0300-xx-20-text-name,bab6772d-641f-43cb-b505-d9c588a61ab2
 pkg-cnctech_3120-20-0300-xx-20-text-value,c39beb8f-a866-4218-9593-bec83997a10b
 pkg-cnctech_3120-24-0300-xx-24-courtyard,b7bbe257-0131-41e9-a65a-b23f7594bc12
@@ -1713,6 +1713,8 @@ pkg-cnctech_3120-24-0300-xx-24-lead-6,b0e3b5ee-06d1-4faa-aca7-63ae1445c95c
 pkg-cnctech_3120-24-0300-xx-24-lead-7,9c0e1b22-6c84-4427-a026-1905c46068cc
 pkg-cnctech_3120-24-0300-xx-24-lead-8,6e24d113-275e-45d1-a71f-c8736cd3d650
 pkg-cnctech_3120-24-0300-xx-24-lead-9,ca15d3a5-ee99-445a-9705-726f9745c94a
+pkg-cnctech_3120-24-0300-xx-24-legend-north,c950436b-3307-40f0-8707-9c1e1b78d31a
+pkg-cnctech_3120-24-0300-xx-24-legend-south,a3dbaa54-b4c4-49d2-92c1-57f34f292dae
 pkg-cnctech_3120-24-0300-xx-24-pad-0,10cb0287-3f42-4072-a3de-a6796e26bb28
 pkg-cnctech_3120-24-0300-xx-24-pad-1,9da38fe8-324c-4c71-8f79-4204d7c64bb6
 pkg-cnctech_3120-24-0300-xx-24-pad-10,6458ad8e-446a-4b83-b50a-b76b2169b6a5
@@ -1738,8 +1740,6 @@ pkg-cnctech_3120-24-0300-xx-24-pad-7,83c01172-6d04-4575-a96a-0f80dcf4f3c9
 pkg-cnctech_3120-24-0300-xx-24-pad-8,c3267aed-50e2-4857-ac8b-bc99f21967a0
 pkg-cnctech_3120-24-0300-xx-24-pad-9,63cab359-6fe3-479e-b6e5-14610b6b0165
 pkg-cnctech_3120-24-0300-xx-24-pkg,b6539a0f-5422-486f-a614-9fd332e3ead8
-pkg-cnctech_3120-24-0300-xx-24-placement-north,c950436b-3307-40f0-8707-9c1e1b78d31a
-pkg-cnctech_3120-24-0300-xx-24-placement-south,a3dbaa54-b4c4-49d2-92c1-57f34f292dae
 pkg-cnctech_3120-24-0300-xx-24-text-name,dfd4f001-d5d3-4895-a58a-251517b132fe
 pkg-cnctech_3120-24-0300-xx-24-text-value,5cef4a32-ce64-4e0e-a2d6-0849a1c8a46f
 pkg-cnctech_3120-26-0300-xx-26-courtyard,82444b84-dfb4-4c58-92e4-d84762b4bf22
@@ -1773,6 +1773,8 @@ pkg-cnctech_3120-26-0300-xx-26-lead-6,38af8cc5-ad6b-4718-b39f-d88fb0c4357a
 pkg-cnctech_3120-26-0300-xx-26-lead-7,a89933ab-d06c-4a1a-81d6-3090557f82ee
 pkg-cnctech_3120-26-0300-xx-26-lead-8,c94e9b25-9945-416a-bdd9-cd2512e3ab1a
 pkg-cnctech_3120-26-0300-xx-26-lead-9,219d48bb-9d35-4797-97d9-53914b76a481
+pkg-cnctech_3120-26-0300-xx-26-legend-north,74ec821c-6496-4998-82de-c3f662d5155e
+pkg-cnctech_3120-26-0300-xx-26-legend-south,f4589cd1-b15e-4c90-986d-634f4c7bd7e6
 pkg-cnctech_3120-26-0300-xx-26-pad-0,a1a87747-6aee-430f-95cb-7b7038cdf519
 pkg-cnctech_3120-26-0300-xx-26-pad-1,92f2c11a-1cc7-486c-a73c-7d98e24daec3
 pkg-cnctech_3120-26-0300-xx-26-pad-10,672fef8e-9158-4977-89cb-e85df75ec74a
@@ -1800,8 +1802,6 @@ pkg-cnctech_3120-26-0300-xx-26-pad-7,0afdb8b9-0b5a-4594-94ad-ace194c71a0d
 pkg-cnctech_3120-26-0300-xx-26-pad-8,e66ed17e-d777-4767-9576-204c5a7bbc99
 pkg-cnctech_3120-26-0300-xx-26-pad-9,69654b1b-8fa8-4e9a-a1c2-b288528ea615
 pkg-cnctech_3120-26-0300-xx-26-pkg,3e3fcb87-aca5-4655-8130-c110721dcda2
-pkg-cnctech_3120-26-0300-xx-26-placement-north,74ec821c-6496-4998-82de-c3f662d5155e
-pkg-cnctech_3120-26-0300-xx-26-placement-south,f4589cd1-b15e-4c90-986d-634f4c7bd7e6
 pkg-cnctech_3120-26-0300-xx-26-text-name,40cc3cf4-b0a5-4d97-aeac-443c8512c8c6
 pkg-cnctech_3120-26-0300-xx-26-text-value,c1dfca46-0ab7-43cd-b94a-9519b3c64074
 pkg-cnctech_3120-30-0300-xx-30-courtyard,35cbc54d-46fe-4685-99b7-a81b4c047d59
@@ -1839,6 +1839,8 @@ pkg-cnctech_3120-30-0300-xx-30-lead-6,bd3a9775-00c7-47bf-89dd-9cd44923ef6d
 pkg-cnctech_3120-30-0300-xx-30-lead-7,f8eceda3-9169-45c5-b7c6-054a7eca3a17
 pkg-cnctech_3120-30-0300-xx-30-lead-8,29469b30-e521-44e3-833c-8cb9771d3902
 pkg-cnctech_3120-30-0300-xx-30-lead-9,b013191e-ceaa-447a-b5c2-0227b36effd0
+pkg-cnctech_3120-30-0300-xx-30-legend-north,58a5b0ad-2e77-4dec-a01f-853307e27e56
+pkg-cnctech_3120-30-0300-xx-30-legend-south,0fb59d60-ca25-498c-8c6c-fe4b5bc6c6d2
 pkg-cnctech_3120-30-0300-xx-30-pad-0,c2b48f83-4aa2-458e-a98b-e73eaf269e4b
 pkg-cnctech_3120-30-0300-xx-30-pad-1,834c248a-059e-45f7-bf64-29c6753b6360
 pkg-cnctech_3120-30-0300-xx-30-pad-10,a6a3ccdb-73ef-4415-9753-4a6a6205e9d2
@@ -1870,8 +1872,6 @@ pkg-cnctech_3120-30-0300-xx-30-pad-7,e77a034d-c458-4ff1-90c2-d791da9b0a8a
 pkg-cnctech_3120-30-0300-xx-30-pad-8,d458b103-dfb2-4a87-bffe-a828ea7ec3ce
 pkg-cnctech_3120-30-0300-xx-30-pad-9,ee933453-9fb3-4cc3-a81a-b26b8c218384
 pkg-cnctech_3120-30-0300-xx-30-pkg,5c794ff0-28f2-4b42-8c54-113a10250015
-pkg-cnctech_3120-30-0300-xx-30-placement-north,58a5b0ad-2e77-4dec-a01f-853307e27e56
-pkg-cnctech_3120-30-0300-xx-30-placement-south,0fb59d60-ca25-498c-8c6c-fe4b5bc6c6d2
 pkg-cnctech_3120-30-0300-xx-30-text-name,7d61902f-022b-4b5f-acd7-c4a7b818df10
 pkg-cnctech_3120-30-0300-xx-30-text-value,8299e72c-b09e-497d-8c2a-b7ae71293df0
 pkg-cnctech_3120-34-0300-xx-34-courtyard,f2a23a28-d9c4-4526-8387-8014e1eeea4f
@@ -1913,6 +1913,8 @@ pkg-cnctech_3120-34-0300-xx-34-lead-6,53544a4b-77b1-4231-8dfa-e27ca737affa
 pkg-cnctech_3120-34-0300-xx-34-lead-7,4faf22ed-33ca-48e5-96ad-21b88c335b12
 pkg-cnctech_3120-34-0300-xx-34-lead-8,f2c7868d-3962-41a7-9cc4-8ac0cb67360e
 pkg-cnctech_3120-34-0300-xx-34-lead-9,c2ec4f0b-1fbe-4b7e-b787-38f9de5d5d4e
+pkg-cnctech_3120-34-0300-xx-34-legend-north,6a5a8aa9-7df2-4c7f-a0e0-d164b95238cb
+pkg-cnctech_3120-34-0300-xx-34-legend-south,d0ea4625-8e2b-4e3b-bfa4-a517cb837afa
 pkg-cnctech_3120-34-0300-xx-34-pad-0,d7f92872-54b9-41dc-ab6b-115b1631701f
 pkg-cnctech_3120-34-0300-xx-34-pad-1,273a0429-50f7-46ce-b53c-1472adc4874e
 pkg-cnctech_3120-34-0300-xx-34-pad-10,e4cb7e24-52ad-43df-9e35-45f7f0e7d855
@@ -1948,8 +1950,6 @@ pkg-cnctech_3120-34-0300-xx-34-pad-7,8f69cddc-398f-4eb5-bb65-78b1de2f1d42
 pkg-cnctech_3120-34-0300-xx-34-pad-8,a639e235-42b7-4d75-9766-caeb3ec5d8a1
 pkg-cnctech_3120-34-0300-xx-34-pad-9,5da047e6-c634-4150-b597-41764efa0ce4
 pkg-cnctech_3120-34-0300-xx-34-pkg,1938f4d2-7097-414d-83eb-5e71244108df
-pkg-cnctech_3120-34-0300-xx-34-placement-north,6a5a8aa9-7df2-4c7f-a0e0-d164b95238cb
-pkg-cnctech_3120-34-0300-xx-34-placement-south,d0ea4625-8e2b-4e3b-bfa4-a517cb837afa
 pkg-cnctech_3120-34-0300-xx-34-text-name,942e294e-03f8-4ed1-af33-a7c76f67e151
 pkg-cnctech_3120-34-0300-xx-34-text-value,fbb0cdc4-3053-455c-9f4c-a5625d94062e
 pkg-cnctech_3120-40-0300-xx-40-courtyard,3fa5c159-69ce-4a21-a53b-09e4b26648a3
@@ -1997,6 +1997,8 @@ pkg-cnctech_3120-40-0300-xx-40-lead-6,f4061af2-09a9-435d-8f71-b193f8f4ecd6
 pkg-cnctech_3120-40-0300-xx-40-lead-7,1b1a81ea-90f1-45b7-a975-cb5c6fae22f3
 pkg-cnctech_3120-40-0300-xx-40-lead-8,43f1dbf9-5f2b-4875-a49c-ba3363e50678
 pkg-cnctech_3120-40-0300-xx-40-lead-9,9bcd73e9-f4e1-491b-9b0a-52f042d21316
+pkg-cnctech_3120-40-0300-xx-40-legend-north,d266aebe-e683-49e6-870a-09aa2222d3a6
+pkg-cnctech_3120-40-0300-xx-40-legend-south,ef5ac96e-f679-4743-90a8-d61e0fcd55fc
 pkg-cnctech_3120-40-0300-xx-40-pad-0,8a6d6867-e0f3-4c46-9469-03f417f3f3c7
 pkg-cnctech_3120-40-0300-xx-40-pad-1,720e6656-1da3-4694-b9d1-897c7b30dd51
 pkg-cnctech_3120-40-0300-xx-40-pad-10,29fc3d65-7b5a-4907-ae5e-22914a4284b1
@@ -2038,8 +2040,6 @@ pkg-cnctech_3120-40-0300-xx-40-pad-7,2139807f-09b0-465e-a7ba-d58cb9714c18
 pkg-cnctech_3120-40-0300-xx-40-pad-8,39f1ee9b-4ef5-4386-9052-59ce7e2da82b
 pkg-cnctech_3120-40-0300-xx-40-pad-9,8ba7805c-8a2b-4019-81b9-4bfcf60dd909
 pkg-cnctech_3120-40-0300-xx-40-pkg,0c3e7f6b-6754-4bd4-94f7-0a760c28dfc6
-pkg-cnctech_3120-40-0300-xx-40-placement-north,d266aebe-e683-49e6-870a-09aa2222d3a6
-pkg-cnctech_3120-40-0300-xx-40-placement-south,ef5ac96e-f679-4743-90a8-d61e0fcd55fc
 pkg-cnctech_3120-40-0300-xx-40-text-name,1d7f7ddd-57be-4516-8fbf-00d673ecebd2
 pkg-cnctech_3120-40-0300-xx-40-text-value,4bbfcf2c-b958-45c6-87ba-737df1037299
 pkg-cnctech_3120-44-0300-xx-44-courtyard,bb15dcb2-5eae-4a3e-a06e-e356e94dd8d8
@@ -2091,6 +2091,8 @@ pkg-cnctech_3120-44-0300-xx-44-lead-6,2e453839-e88d-40ff-bd3c-a33b9990f7cc
 pkg-cnctech_3120-44-0300-xx-44-lead-7,911b9032-c18f-44ec-b2e9-2d7aa2673e9f
 pkg-cnctech_3120-44-0300-xx-44-lead-8,b79ed75e-9420-4859-9059-27f359e6bb63
 pkg-cnctech_3120-44-0300-xx-44-lead-9,65a46744-6472-46d0-b722-345d982964b7
+pkg-cnctech_3120-44-0300-xx-44-legend-north,9a696fe3-b313-46cd-95f0-9f73d3e9c13b
+pkg-cnctech_3120-44-0300-xx-44-legend-south,3ed4dcdf-692c-44c9-bc9e-32c74aa1c5b8
 pkg-cnctech_3120-44-0300-xx-44-pad-0,1b6d0998-bc5a-4bba-b16c-589e4398711d
 pkg-cnctech_3120-44-0300-xx-44-pad-1,6c235870-d4ff-441e-a070-a28dae8b8862
 pkg-cnctech_3120-44-0300-xx-44-pad-10,16989d6a-0cbc-4531-9853-8b886b3dc828
@@ -2136,8 +2138,6 @@ pkg-cnctech_3120-44-0300-xx-44-pad-7,7c66c44a-8504-43e8-8e8f-fddd3d127a69
 pkg-cnctech_3120-44-0300-xx-44-pad-8,86acc4a6-b5d7-4971-bdec-5af47666bc12
 pkg-cnctech_3120-44-0300-xx-44-pad-9,16a4288b-eae0-4248-a1fa-97ffba44888e
 pkg-cnctech_3120-44-0300-xx-44-pkg,4acf6b38-714f-411d-8eb6-87a7b76e76a7
-pkg-cnctech_3120-44-0300-xx-44-placement-north,9a696fe3-b313-46cd-95f0-9f73d3e9c13b
-pkg-cnctech_3120-44-0300-xx-44-placement-south,3ed4dcdf-692c-44c9-bc9e-32c74aa1c5b8
 pkg-cnctech_3120-44-0300-xx-44-text-name,4783b4fb-0429-46cc-a9f4-21d6d3e2e7ce
 pkg-cnctech_3120-44-0300-xx-44-text-value,30f24ef2-ad8b-43a4-a5b4-c35f23f8c1d8
 pkg-cnctech_3120-50-0300-xx-50-courtyard,92090cfb-60f0-42d7-b770-3e57ba760c75
@@ -2195,6 +2195,8 @@ pkg-cnctech_3120-50-0300-xx-50-lead-6,796f1524-a2d5-484e-91db-a8ac5106af08
 pkg-cnctech_3120-50-0300-xx-50-lead-7,c6b32c8b-f2ef-4a40-aeac-0c63e564bec7
 pkg-cnctech_3120-50-0300-xx-50-lead-8,2015509d-4ea8-41ae-8d51-e4d32406aec6
 pkg-cnctech_3120-50-0300-xx-50-lead-9,a6f46513-5eca-4178-986c-4f12d28732f9
+pkg-cnctech_3120-50-0300-xx-50-legend-north,fbc96a79-f99e-47ab-bdad-a6ae59e266bd
+pkg-cnctech_3120-50-0300-xx-50-legend-south,be62306f-ef8c-43c8-bae1-67929c8a8992
 pkg-cnctech_3120-50-0300-xx-50-pad-0,6522e049-fcd4-43a2-9f3c-7a560fac4e1d
 pkg-cnctech_3120-50-0300-xx-50-pad-1,c1c98beb-bbcc-4cbb-97b7-91a16146f077
 pkg-cnctech_3120-50-0300-xx-50-pad-10,2c6fde26-75c1-437c-ab9d-d9e108236d87
@@ -2246,8 +2248,6 @@ pkg-cnctech_3120-50-0300-xx-50-pad-7,30e51e43-57cf-4b5f-bb2f-46cb440b67c6
 pkg-cnctech_3120-50-0300-xx-50-pad-8,1361b2bc-71fb-4fdd-bdfe-60a39e6b3a35
 pkg-cnctech_3120-50-0300-xx-50-pad-9,506d4fee-b69d-42d5-a172-593fe8e4008e
 pkg-cnctech_3120-50-0300-xx-50-pkg,c30fd4d9-db42-4150-9556-e6327d677878
-pkg-cnctech_3120-50-0300-xx-50-placement-north,fbc96a79-f99e-47ab-bdad-a6ae59e266bd
-pkg-cnctech_3120-50-0300-xx-50-placement-south,be62306f-ef8c-43c8-bae1-67929c8a8992
 pkg-cnctech_3120-50-0300-xx-50-text-name,df8581d2-c254-407e-a6e8-874eb0a1ae7f
 pkg-cnctech_3120-50-0300-xx-50-text-value,40cf2eba-a268-400b-ace6-da2d8554bc48
 pkg-cnctech_3120-60-0300-xx-60-courtyard,d5ffeb8b-d4a4-46fd-8a9d-5c0b6922c937
@@ -2315,6 +2315,8 @@ pkg-cnctech_3120-60-0300-xx-60-lead-6,43e0b73e-da3c-42fe-9b72-3c3f652a60e1
 pkg-cnctech_3120-60-0300-xx-60-lead-7,30b7d224-9ca5-4006-bbcc-21308d6a766b
 pkg-cnctech_3120-60-0300-xx-60-lead-8,dac41953-062d-454d-b1bf-0baf91adc369
 pkg-cnctech_3120-60-0300-xx-60-lead-9,bee635b0-8fd8-4810-8e14-8b6f6233e1c5
+pkg-cnctech_3120-60-0300-xx-60-legend-north,f884ba88-d57c-4d70-a601-119173480922
+pkg-cnctech_3120-60-0300-xx-60-legend-south,ea77cbc8-112b-4ac8-b4d4-89701782efc9
 pkg-cnctech_3120-60-0300-xx-60-pad-0,6f566652-4892-453f-b254-3aa288137e38
 pkg-cnctech_3120-60-0300-xx-60-pad-1,adc7d1e5-2c34-4725-82d7-d87c9bd9f991
 pkg-cnctech_3120-60-0300-xx-60-pad-10,dd82b2e4-7321-4bb2-ab39-f2a1911658b7
@@ -2376,8 +2378,6 @@ pkg-cnctech_3120-60-0300-xx-60-pad-7,e1b4e533-b56b-490e-889c-978572113844
 pkg-cnctech_3120-60-0300-xx-60-pad-8,aa327c12-87ad-4084-b628-936ad1206684
 pkg-cnctech_3120-60-0300-xx-60-pad-9,ae9f85c8-3fdb-43c6-803a-33e6e0f69cd1
 pkg-cnctech_3120-60-0300-xx-60-pkg,0eb3795e-b283-4f0e-8c85-0fdd22ad7fa9
-pkg-cnctech_3120-60-0300-xx-60-placement-north,f884ba88-d57c-4d70-a601-119173480922
-pkg-cnctech_3120-60-0300-xx-60-placement-south,ea77cbc8-112b-4ac8-b4d4-89701782efc9
 pkg-cnctech_3120-60-0300-xx-60-text-name,f98b353c-858d-4a0e-b965-e7d8a9c1967b
 pkg-cnctech_3120-60-0300-xx-60-text-value,50e48cfd-33c3-432e-ab72-da075422e8c9
 pkg-cnctech_3120-64-0300-xx-64-courtyard,e241c984-7c13-4bc5-a35c-466e00aca438
@@ -2449,6 +2449,8 @@ pkg-cnctech_3120-64-0300-xx-64-lead-63,3424f686-8a8f-430d-bd7c-ca5ee853934b
 pkg-cnctech_3120-64-0300-xx-64-lead-7,42f5402e-d7ca-49c3-abc0-76a3ee5c8563
 pkg-cnctech_3120-64-0300-xx-64-lead-8,bfa3fcd4-f178-4148-8765-b41977393a4d
 pkg-cnctech_3120-64-0300-xx-64-lead-9,3dfdc0c0-b715-4d60-a6a0-45ec71cc7336
+pkg-cnctech_3120-64-0300-xx-64-legend-north,54bfc7c4-aaf0-4d2a-adc7-7f6c3a053aa9
+pkg-cnctech_3120-64-0300-xx-64-legend-south,719a444d-9b15-4f3f-9c22-b7c81b41aa5a
 pkg-cnctech_3120-64-0300-xx-64-pad-0,c60baa8f-999c-4209-920c-e0a348d76c29
 pkg-cnctech_3120-64-0300-xx-64-pad-1,8bcf3937-f8a8-4d04-8afa-abec8a8cc31a
 pkg-cnctech_3120-64-0300-xx-64-pad-10,69b175ae-9bd0-401f-a96c-583cc7e436c1
@@ -2514,8 +2516,6 @@ pkg-cnctech_3120-64-0300-xx-64-pad-7,9ff3a6a9-2bcc-4625-9bb2-347b288272ef
 pkg-cnctech_3120-64-0300-xx-64-pad-8,e01808cd-9782-4491-9d01-488dfac10681
 pkg-cnctech_3120-64-0300-xx-64-pad-9,dc989880-8bfc-4ae9-ba86-127d49ea55d5
 pkg-cnctech_3120-64-0300-xx-64-pkg,f815073d-d38e-4869-b183-43511e06af7b
-pkg-cnctech_3120-64-0300-xx-64-placement-north,54bfc7c4-aaf0-4d2a-adc7-7f6c3a053aa9
-pkg-cnctech_3120-64-0300-xx-64-placement-south,719a444d-9b15-4f3f-9c22-b7c81b41aa5a
 pkg-cnctech_3120-64-0300-xx-64-text-name,79789a0d-d866-47c8-a0aa-a93ab8ce8f80
 pkg-cnctech_3120-64-0300-xx-64-text-value,292907c6-da21-4730-9eba-a3ce11151a7a
 pkg-cnctech_3220-10-0300-xx-10-courtyard,bdf950c6-2d38-4362-bd19-5207e3a2e8f9
@@ -2533,6 +2533,8 @@ pkg-cnctech_3220-10-0300-xx-10-lead-6,1290fe80-dc20-4d61-a771-b490f6241dea
 pkg-cnctech_3220-10-0300-xx-10-lead-7,812e0a0d-72b2-468b-b5cc-792e6ffbc401
 pkg-cnctech_3220-10-0300-xx-10-lead-8,7a19e57e-6bac-4bac-ae09-5dce87f38e8d
 pkg-cnctech_3220-10-0300-xx-10-lead-9,d95fed78-1dbe-4b00-b16f-deb4da4170f8
+pkg-cnctech_3220-10-0300-xx-10-legend-north,90ac0c78-a7f4-46fa-a166-4ea565210d9a
+pkg-cnctech_3220-10-0300-xx-10-legend-south,d8b37c78-a4bf-410c-a9a9-c608071220fb
 pkg-cnctech_3220-10-0300-xx-10-pad-0,0e904dd2-071d-4c4e-8c73-621b8c977806
 pkg-cnctech_3220-10-0300-xx-10-pad-1,a9462ab7-5ef6-486b-9be2-568fcb093a71
 pkg-cnctech_3220-10-0300-xx-10-pad-2,dfb115b4-767f-4478-ab6e-4d06cdcfc79b
@@ -2544,8 +2546,6 @@ pkg-cnctech_3220-10-0300-xx-10-pad-7,7a71c553-cc70-449b-935e-aedaace64eeb
 pkg-cnctech_3220-10-0300-xx-10-pad-8,98cc58e8-44b3-41bb-931b-0980d0de9c69
 pkg-cnctech_3220-10-0300-xx-10-pad-9,7073e8c9-a43a-4bb9-8659-3c557bee5534
 pkg-cnctech_3220-10-0300-xx-10-pkg,223030ff-b905-4811-b32d-b0174d431702
-pkg-cnctech_3220-10-0300-xx-10-placement-north,90ac0c78-a7f4-46fa-a166-4ea565210d9a
-pkg-cnctech_3220-10-0300-xx-10-placement-south,d8b37c78-a4bf-410c-a9a9-c608071220fb
 pkg-cnctech_3220-10-0300-xx-10-text-name,31f3f6dd-7928-4708-9140-3c3c24fcc773
 pkg-cnctech_3220-10-0300-xx-10-text-value,c56be9d1-3d38-4823-8c56-8a8a27c58de6
 pkg-cnctech_3220-14-0300-xx-14-courtyard,dab8ecd8-3c49-433c-bdd6-fa6ca6484d05
@@ -2567,6 +2567,8 @@ pkg-cnctech_3220-14-0300-xx-14-lead-6,c7d63497-dd8c-4cb8-8d9f-b8373252aadd
 pkg-cnctech_3220-14-0300-xx-14-lead-7,e0f60c69-c62e-4f89-923c-ee28be28d16b
 pkg-cnctech_3220-14-0300-xx-14-lead-8,4d23dde8-3ce8-4fe2-a93a-2827c971a293
 pkg-cnctech_3220-14-0300-xx-14-lead-9,3fcb83a2-92b0-43ef-8a48-74fe35cf9a29
+pkg-cnctech_3220-14-0300-xx-14-legend-north,7549c0b0-bb1b-4baf-9d8f-0df2694c65f9
+pkg-cnctech_3220-14-0300-xx-14-legend-south,e28ad6c9-6871-4d30-afa9-053ad0135324
 pkg-cnctech_3220-14-0300-xx-14-pad-0,78a89fd0-3a86-4c40-9dab-bdb3406108b6
 pkg-cnctech_3220-14-0300-xx-14-pad-1,381380d0-c8b0-461d-b2f0-5c338fdbe0ed
 pkg-cnctech_3220-14-0300-xx-14-pad-10,203097e0-655e-4c94-8c7b-3af3a94c7524
@@ -2582,8 +2584,6 @@ pkg-cnctech_3220-14-0300-xx-14-pad-7,c803e165-ab6e-49ad-a748-5dfea3182382
 pkg-cnctech_3220-14-0300-xx-14-pad-8,d02a8329-fc11-490b-a35f-58e6e674e513
 pkg-cnctech_3220-14-0300-xx-14-pad-9,674d78d1-72b9-40e7-979b-9c0b748f965f
 pkg-cnctech_3220-14-0300-xx-14-pkg,9ba99f8e-799f-4980-a9f1-62dc325bcc4a
-pkg-cnctech_3220-14-0300-xx-14-placement-north,7549c0b0-bb1b-4baf-9d8f-0df2694c65f9
-pkg-cnctech_3220-14-0300-xx-14-placement-south,e28ad6c9-6871-4d30-afa9-053ad0135324
 pkg-cnctech_3220-14-0300-xx-14-text-name,f461854a-c4ca-45b7-9a34-dfd0a099cd31
 pkg-cnctech_3220-14-0300-xx-14-text-value,dcfbefbb-3964-47b1-8afc-9b473d028c48
 pkg-cnctech_3220-16-0300-xx-16-courtyard,28c157e1-73a9-4c2c-9875-5fee681d58c7
@@ -2607,6 +2607,8 @@ pkg-cnctech_3220-16-0300-xx-16-lead-6,c33833ab-2bd8-4c48-bc03-076ce99d0887
 pkg-cnctech_3220-16-0300-xx-16-lead-7,8c6f5e25-8e30-40cc-9852-87ed20c15294
 pkg-cnctech_3220-16-0300-xx-16-lead-8,e06c356f-82c8-4424-b8ae-8c207ab9f16d
 pkg-cnctech_3220-16-0300-xx-16-lead-9,b7808336-9839-4dd6-897a-9de1db38fa04
+pkg-cnctech_3220-16-0300-xx-16-legend-north,3c31fb8d-1714-43f6-af30-d0149073c5be
+pkg-cnctech_3220-16-0300-xx-16-legend-south,4770b138-cf35-47b6-bb33-8d5a55fdb5a7
 pkg-cnctech_3220-16-0300-xx-16-pad-0,aea3bfdf-85ac-4cdc-b72d-13eba8a75ec2
 pkg-cnctech_3220-16-0300-xx-16-pad-1,6ca09195-f1b6-4fa6-b666-5d4137eea52d
 pkg-cnctech_3220-16-0300-xx-16-pad-10,89ec1635-bcef-4556-be32-495a6d54e071
@@ -2624,8 +2626,6 @@ pkg-cnctech_3220-16-0300-xx-16-pad-7,af8560b9-7c8a-47f9-ad2f-4149d239dc54
 pkg-cnctech_3220-16-0300-xx-16-pad-8,1bc0fb4c-a8f8-4b0d-b0e1-b625560ea583
 pkg-cnctech_3220-16-0300-xx-16-pad-9,8588108e-d3b6-49c3-a67e-333f8e6062af
 pkg-cnctech_3220-16-0300-xx-16-pkg,db10b42c-4d7d-49d2-8d96-8bff4bf93f92
-pkg-cnctech_3220-16-0300-xx-16-placement-north,3c31fb8d-1714-43f6-af30-d0149073c5be
-pkg-cnctech_3220-16-0300-xx-16-placement-south,4770b138-cf35-47b6-bb33-8d5a55fdb5a7
 pkg-cnctech_3220-16-0300-xx-16-text-name,476209e9-f401-4396-ba8d-a521b563c432
 pkg-cnctech_3220-16-0300-xx-16-text-value,705f99e2-d567-4649-b31d-3b11a30f6bd5
 pkg-cnctech_3220-20-0300-xx-20-courtyard,6ccd5eff-6223-4160-8a64-89a71cbefcd4
@@ -2653,6 +2653,8 @@ pkg-cnctech_3220-20-0300-xx-20-lead-6,a4e0c331-3541-40eb-ae2f-16911e7b8afe
 pkg-cnctech_3220-20-0300-xx-20-lead-7,4aac8d54-4036-4c2d-bf1a-8f463f43e6fe
 pkg-cnctech_3220-20-0300-xx-20-lead-8,c4162c3e-7c7f-4d90-8ed8-725bfe6ca21c
 pkg-cnctech_3220-20-0300-xx-20-lead-9,374dcb5c-c87e-49a5-85bb-c299194fbe9a
+pkg-cnctech_3220-20-0300-xx-20-legend-north,df072341-69cb-45f6-92a4-b9a36186e6fe
+pkg-cnctech_3220-20-0300-xx-20-legend-south,6147b885-a6e3-4d03-9f63-788d8c992888
 pkg-cnctech_3220-20-0300-xx-20-pad-0,5517d08a-7c0f-48ac-9461-c47fa00875f0
 pkg-cnctech_3220-20-0300-xx-20-pad-1,acd8087f-a7e2-4dbe-965e-9e752b652ebd
 pkg-cnctech_3220-20-0300-xx-20-pad-10,401ed749-47cd-4b6d-bee3-33a608cc0e14
@@ -2674,8 +2676,6 @@ pkg-cnctech_3220-20-0300-xx-20-pad-7,9964f162-4452-4b9b-9666-a387562356c5
 pkg-cnctech_3220-20-0300-xx-20-pad-8,900c672d-9b36-4263-9433-0d8e0c29dbe8
 pkg-cnctech_3220-20-0300-xx-20-pad-9,324ebb96-e2b8-4400-9553-06968e62ed80
 pkg-cnctech_3220-20-0300-xx-20-pkg,9b84882e-cb15-49b2-ad4b-c647ee1fc3ff
-pkg-cnctech_3220-20-0300-xx-20-placement-north,df072341-69cb-45f6-92a4-b9a36186e6fe
-pkg-cnctech_3220-20-0300-xx-20-placement-south,6147b885-a6e3-4d03-9f63-788d8c992888
 pkg-cnctech_3220-20-0300-xx-20-text-name,c5d2b17e-9aa5-47dc-a27d-d65101c6aaf8
 pkg-cnctech_3220-20-0300-xx-20-text-value,fd60bdfe-45f3-4a16-b36f-5a0851957177
 pkg-cnctech_3220-26-0300-xx-26-courtyard,ff1d710b-7a13-4051-b53d-aa190de7ffb9
@@ -2709,6 +2709,8 @@ pkg-cnctech_3220-26-0300-xx-26-lead-6,641d1790-53ce-4467-b497-7ee8ce3daadf
 pkg-cnctech_3220-26-0300-xx-26-lead-7,b070a4ef-f93e-4b95-8d23-17a50993921b
 pkg-cnctech_3220-26-0300-xx-26-lead-8,5d5d00c1-5b8b-4c9c-95e2-dd8cc049d4db
 pkg-cnctech_3220-26-0300-xx-26-lead-9,51b2b52c-2d90-4029-be0d-2dceabb67da2
+pkg-cnctech_3220-26-0300-xx-26-legend-north,0ca66fbc-70bb-4026-93d1-e778e6e32137
+pkg-cnctech_3220-26-0300-xx-26-legend-south,8fd53328-0209-43b0-a87e-554ca1076314
 pkg-cnctech_3220-26-0300-xx-26-pad-0,10495444-7193-461a-944e-eec7c19c7801
 pkg-cnctech_3220-26-0300-xx-26-pad-1,6f4b7b10-5ec2-4428-ab58-90748d355eb0
 pkg-cnctech_3220-26-0300-xx-26-pad-10,c87a7e68-9ee3-4e76-8535-d227c2fe9f5a
@@ -2736,8 +2738,6 @@ pkg-cnctech_3220-26-0300-xx-26-pad-7,29ac3e8e-29eb-4cc9-b102-21becebbddf2
 pkg-cnctech_3220-26-0300-xx-26-pad-8,e56d946f-e74c-448f-9eca-31059947ea9d
 pkg-cnctech_3220-26-0300-xx-26-pad-9,89eae1c8-7738-491c-b639-1499d4f32984
 pkg-cnctech_3220-26-0300-xx-26-pkg,3a3f527f-0220-4f48-b2f3-495797dfac85
-pkg-cnctech_3220-26-0300-xx-26-placement-north,0ca66fbc-70bb-4026-93d1-e778e6e32137
-pkg-cnctech_3220-26-0300-xx-26-placement-south,8fd53328-0209-43b0-a87e-554ca1076314
 pkg-cnctech_3220-26-0300-xx-26-text-name,6d61f465-742f-4cd7-8242-8ad435e415be
 pkg-cnctech_3220-26-0300-xx-26-text-value,3ad1ba89-3e54-4cdd-9f00-c74914e9dead
 pkg-cnctech_3220-30-0300-xx-30-courtyard,fd4cd838-b853-4eda-afe4-6e929dfb1b38
@@ -2775,6 +2775,8 @@ pkg-cnctech_3220-30-0300-xx-30-lead-6,207c8428-d97b-4c08-9c0e-c450c17e2de7
 pkg-cnctech_3220-30-0300-xx-30-lead-7,ba08d954-0953-450c-849c-383701af8685
 pkg-cnctech_3220-30-0300-xx-30-lead-8,cc98694f-cf8f-48dc-92db-42a642e4e547
 pkg-cnctech_3220-30-0300-xx-30-lead-9,0a8e7d26-ed0d-4e3a-b1ba-35d3d878e9ea
+pkg-cnctech_3220-30-0300-xx-30-legend-north,96908470-8b30-4aeb-929c-2283352277ec
+pkg-cnctech_3220-30-0300-xx-30-legend-south,a6ac4993-ce18-4b7d-b6c2-05d84e11af3c
 pkg-cnctech_3220-30-0300-xx-30-pad-0,e8b434f3-1897-4cde-96b8-81bda231ddd1
 pkg-cnctech_3220-30-0300-xx-30-pad-1,0f4cd1a2-7595-41fe-9bf4-34a05ab0d45f
 pkg-cnctech_3220-30-0300-xx-30-pad-10,bbef42f5-b19a-4e1b-a624-b0e2ec5ed469
@@ -2806,8 +2808,6 @@ pkg-cnctech_3220-30-0300-xx-30-pad-7,6fce0adc-9f65-4041-8cce-979d41e283be
 pkg-cnctech_3220-30-0300-xx-30-pad-8,db4f4495-21e0-434b-947e-f754cf62ff48
 pkg-cnctech_3220-30-0300-xx-30-pad-9,6a969f94-b804-45f0-afd8-d48848b1c173
 pkg-cnctech_3220-30-0300-xx-30-pkg,9567a77e-2220-4c33-a589-672208af42ca
-pkg-cnctech_3220-30-0300-xx-30-placement-north,96908470-8b30-4aeb-929c-2283352277ec
-pkg-cnctech_3220-30-0300-xx-30-placement-south,a6ac4993-ce18-4b7d-b6c2-05d84e11af3c
 pkg-cnctech_3220-30-0300-xx-30-text-name,67b73f2b-45fb-4abb-b04f-9b690b9b89d7
 pkg-cnctech_3220-30-0300-xx-30-text-value,57de1dd9-9eb8-4b84-bf11-82235a3c53dd
 pkg-cnctech_3220-34-0300-xx-34-courtyard,7051a5ae-e3e7-49fc-bdb5-dd5f66f5c0a7
@@ -2849,6 +2849,8 @@ pkg-cnctech_3220-34-0300-xx-34-lead-6,887125de-9379-49d4-8941-c08029cd61d6
 pkg-cnctech_3220-34-0300-xx-34-lead-7,b32cffe1-5a27-4cf2-8ec8-9ebc3384e34a
 pkg-cnctech_3220-34-0300-xx-34-lead-8,95bf30ec-3885-4e15-ba02-b185d0183f94
 pkg-cnctech_3220-34-0300-xx-34-lead-9,4dfeff86-ddf3-496d-b6fa-807667477726
+pkg-cnctech_3220-34-0300-xx-34-legend-north,669157ad-a35c-472b-83c9-2b5a4cb4ed68
+pkg-cnctech_3220-34-0300-xx-34-legend-south,1da9f0d1-81ed-43d2-b45f-6c54c68a5b32
 pkg-cnctech_3220-34-0300-xx-34-pad-0,c7e0bf08-ffaf-4fdd-b01d-1fb2b64cf63d
 pkg-cnctech_3220-34-0300-xx-34-pad-1,4e48ae30-0585-4174-bfc0-c32c370524e3
 pkg-cnctech_3220-34-0300-xx-34-pad-10,d656a78a-bde3-493d-8727-826a6e713151
@@ -2884,8 +2886,6 @@ pkg-cnctech_3220-34-0300-xx-34-pad-7,096be375-1d63-472c-a922-23bfa7c4a79b
 pkg-cnctech_3220-34-0300-xx-34-pad-8,c4f93fbe-cddb-4b93-86a9-f89b6f2accf1
 pkg-cnctech_3220-34-0300-xx-34-pad-9,0e896f5b-c70c-48b0-b811-33a5a248b678
 pkg-cnctech_3220-34-0300-xx-34-pkg,04fc615a-b68c-40b3-9c6e-7e2baf9a53af
-pkg-cnctech_3220-34-0300-xx-34-placement-north,669157ad-a35c-472b-83c9-2b5a4cb4ed68
-pkg-cnctech_3220-34-0300-xx-34-placement-south,1da9f0d1-81ed-43d2-b45f-6c54c68a5b32
 pkg-cnctech_3220-34-0300-xx-34-text-name,7e0871fe-fd4e-47ca-a8cf-02904b1626b1
 pkg-cnctech_3220-34-0300-xx-34-text-value,b71818fd-7890-4f60-8228-16ff2d0b10a9
 pkg-cnctech_3220-40-0300-xx-40-courtyard,9108def7-72c8-4d3d-bcd8-6aad59234da7
@@ -2933,6 +2933,8 @@ pkg-cnctech_3220-40-0300-xx-40-lead-6,972a04e5-a8d4-4b8f-b37d-0ea2d1229eea
 pkg-cnctech_3220-40-0300-xx-40-lead-7,dd0afb01-90b6-4d0f-a308-b2676a8a3b66
 pkg-cnctech_3220-40-0300-xx-40-lead-8,8b0343d5-aed7-404f-abd5-9a5c7f7e52a9
 pkg-cnctech_3220-40-0300-xx-40-lead-9,d517487d-e300-4606-b090-b27a0799cf2d
+pkg-cnctech_3220-40-0300-xx-40-legend-north,bac1ec15-cd2c-4e20-b909-b1cf612c12ce
+pkg-cnctech_3220-40-0300-xx-40-legend-south,5e362fc4-594b-4cdf-b518-dbb1d6f5c3ba
 pkg-cnctech_3220-40-0300-xx-40-pad-0,38231b30-bfc4-4cfd-b5a9-07dbcfeeb861
 pkg-cnctech_3220-40-0300-xx-40-pad-1,bb467235-0491-4c27-894c-1b4a2e6f55a4
 pkg-cnctech_3220-40-0300-xx-40-pad-10,c17aea82-6f2c-43d0-9984-e91506841aba
@@ -2974,8 +2976,6 @@ pkg-cnctech_3220-40-0300-xx-40-pad-7,da5ed0f8-a67e-49d4-a3b1-2b5be67756ea
 pkg-cnctech_3220-40-0300-xx-40-pad-8,61f6c19d-5903-496e-9064-38a2d5e0ac18
 pkg-cnctech_3220-40-0300-xx-40-pad-9,7f5036cd-7b0c-420e-88f5-43cdde16f368
 pkg-cnctech_3220-40-0300-xx-40-pkg,03c6717e-219d-4e91-a1da-636c886a0786
-pkg-cnctech_3220-40-0300-xx-40-placement-north,bac1ec15-cd2c-4e20-b909-b1cf612c12ce
-pkg-cnctech_3220-40-0300-xx-40-placement-south,5e362fc4-594b-4cdf-b518-dbb1d6f5c3ba
 pkg-cnctech_3220-40-0300-xx-40-text-name,85a104d0-f9cf-405c-ac80-de6a023751a7
 pkg-cnctech_3220-40-0300-xx-40-text-value,d3b9b569-8bc8-4e8c-a979-2dd8b68f3c54
 pkg-cnctech_3220-50-0300-xx-50-courtyard,f4d3e0bf-7c0f-49a4-96e4-4b3c5acf0eb3
@@ -3033,6 +3033,8 @@ pkg-cnctech_3220-50-0300-xx-50-lead-6,c7204ae9-4384-4b7d-a40c-b8d20e0d1bae
 pkg-cnctech_3220-50-0300-xx-50-lead-7,64842b02-f2d0-4b14-a2fb-aab7717134af
 pkg-cnctech_3220-50-0300-xx-50-lead-8,75fdc0e3-e9e3-4025-9d31-26530d71e668
 pkg-cnctech_3220-50-0300-xx-50-lead-9,499cce18-4ab4-4fb9-8c12-08364f77a710
+pkg-cnctech_3220-50-0300-xx-50-legend-north,5e1aa0f9-cc44-4548-9705-c9961b85b6eb
+pkg-cnctech_3220-50-0300-xx-50-legend-south,ef27ef89-dcb2-476c-864e-df0be5979108
 pkg-cnctech_3220-50-0300-xx-50-pad-0,55986b18-162c-434a-bcbe-39d6e626b23b
 pkg-cnctech_3220-50-0300-xx-50-pad-1,cbeca42e-357f-4f79-9bcd-b98b13a22417
 pkg-cnctech_3220-50-0300-xx-50-pad-10,24c20d6c-6b9a-42b5-bbc1-1b2296ca474d
@@ -3084,8 +3086,6 @@ pkg-cnctech_3220-50-0300-xx-50-pad-7,7ce26a65-0a68-45db-aec8-51f07db94056
 pkg-cnctech_3220-50-0300-xx-50-pad-8,7f8271a7-419c-4236-b40a-c4880f2e8e98
 pkg-cnctech_3220-50-0300-xx-50-pad-9,39bac41d-7cad-4ad6-9afc-dd0209fd0618
 pkg-cnctech_3220-50-0300-xx-50-pkg,a51f6b52-d016-4cb8-8440-20da2e5583f2
-pkg-cnctech_3220-50-0300-xx-50-placement-north,5e1aa0f9-cc44-4548-9705-c9961b85b6eb
-pkg-cnctech_3220-50-0300-xx-50-placement-south,ef27ef89-dcb2-476c-864e-df0be5979108
 pkg-cnctech_3220-50-0300-xx-50-text-name,90b6ab9f-4fc5-4983-9882-b434e7c8afb4
 pkg-cnctech_3220-50-0300-xx-50-text-value,7075ddf7-aaee-4052-b6f7-a4d8a5ac7445
 pkg-cnctech_3220-60-0300-xx-60-courtyard,0be6d6d1-4629-477a-826b-5196c476bf6d
@@ -3153,6 +3153,8 @@ pkg-cnctech_3220-60-0300-xx-60-lead-6,681f5936-83f1-4fdd-a161-f28d7665dc47
 pkg-cnctech_3220-60-0300-xx-60-lead-7,60768214-0b20-4143-acd9-bd3789563af0
 pkg-cnctech_3220-60-0300-xx-60-lead-8,cec25d94-35a1-478a-8c2c-6f4b6351770f
 pkg-cnctech_3220-60-0300-xx-60-lead-9,7c4c92dd-9068-42fa-a08d-e5df976baf44
+pkg-cnctech_3220-60-0300-xx-60-legend-north,2a5a4be3-1381-4514-bd95-9b5359533ca4
+pkg-cnctech_3220-60-0300-xx-60-legend-south,33514111-c00b-47a4-93f8-a68118bd88ab
 pkg-cnctech_3220-60-0300-xx-60-pad-0,7dbec7fe-aa32-4ad5-880c-d1e87b523da6
 pkg-cnctech_3220-60-0300-xx-60-pad-1,76bffcb7-2ae5-4906-adb9-df0795180305
 pkg-cnctech_3220-60-0300-xx-60-pad-10,bc5c061e-1c6b-4d05-a2d2-4ae9bee86486
@@ -3214,7 +3216,5 @@ pkg-cnctech_3220-60-0300-xx-60-pad-7,d4e2efdb-5dcb-49a3-84ab-ebb0936df001
 pkg-cnctech_3220-60-0300-xx-60-pad-8,179fd95e-f291-47de-8c7e-7b2bead77c0b
 pkg-cnctech_3220-60-0300-xx-60-pad-9,6042c0a3-6346-44ca-8c25-c917931c4348
 pkg-cnctech_3220-60-0300-xx-60-pkg,2ed343ce-686a-45e9-9759-05b1d7ea741c
-pkg-cnctech_3220-60-0300-xx-60-placement-north,2a5a4be3-1381-4514-bd95-9b5359533ca4
-pkg-cnctech_3220-60-0300-xx-60-placement-south,33514111-c00b-47a4-93f8-a68118bd88ab
 pkg-cnctech_3220-60-0300-xx-60-text-name,9d03059f-4944-4c85-8ffd-9bcad08ae319
 pkg-cnctech_3220-60-0300-xx-60-text-value,3549b56b-d5dc-4647-96e2-174d0a627757

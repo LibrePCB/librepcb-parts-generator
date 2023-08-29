@@ -9,13 +9,21 @@ Implemented so far:
 
 """
 from math import sqrt
-from os import makedirs, path
+from os import path
 from uuid import uuid4
 
 from typing import Iterable, Tuple
 
-from common import format_float as ff
-from common import init_cache, save_cache
+from common import init_cache, now, save_cache
+from entities.common import (
+    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
+    Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
+)
+from entities.package import (
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
+    Mirror, Package, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size, SolderPasteConfig,
+    StopMaskConfig, StrokeText, StrokeWidth
+)
 
 generator = 'librepcb-parts-generator (generate_idc.py)'
 
@@ -123,10 +131,9 @@ def generate_pkg(
 ) -> None:
     category = 'pkg'
     for pin_count in pins:
-        lines = []
-
         formatted_name = name.format(pin_count=str(pin_count).rjust(2, '0'))
-        formatted_desc = description.format(pin_count=pin_count)
+        formatted_desc = description.format(pin_count=pin_count) + \
+            "\n\nGenerated with {}".format(generator)
 
         def _uuid(identifier: str) -> str:
             kind = formatted_name.replace(' ', '-').lower()
@@ -138,43 +145,60 @@ def generate_pkg(
         uuid_footprint = _uuid('footprint-default')
         uuid_text_name = _uuid('text-name')
         uuid_text_value = _uuid('text-value')
-        uuid_placement_north = _uuid('placement-north')
-        uuid_placement_south = _uuid('placement-south')
+        uuid_legend_north = _uuid('legend-north')
+        uuid_legend_south = _uuid('legend-south')
         uuid_doc_contour = _uuid('documentation-contour')
         uuid_doc_triangle = _uuid('documentation-triangle')
         uuid_grab_area = _uuid('grab-area')
         uuid_courtyard = _uuid('courtyard')
 
-        # General info
-        lines.append('(librepcb_package {}'.format(uuid_pkg))
-        lines.append(' (name "{}")'.format(formatted_name))
-        lines.append(' (description "{}\\n\\nGenerated with {}")'.format(formatted_desc, generator))
-        lines.append(' (keywords "{}")'.format(keywords))
-        lines.append(' (author "{}")'.format(author))
-        lines.append(' (version "{}")'.format(version))
-        lines.append(' (created {})'.format(create_date))
-        lines.append(' (deprecated false)')
-        for pkgcat in sorted(pkgcats):
-            lines.append(' (category {})'.format(pkgcat))
+        package = Package(
+            uuid=uuid_pkg,
+            name=Name(formatted_name),
+            description=Description(formatted_desc),
+            keywords=Keywords(keywords),
+            author=Author(author),
+            version=Version(version),
+            created=Created(create_date or now()),
+            deprecated=Deprecated(False),
+            generated_by=GeneratedBy(''),
+            categories=[Category(cat) for cat in sorted(pkgcats)],
+            assembly_type=AssemblyType.AUTO,
+        )
+
         for j in range(1, pin_count + 1):
-            lines.append(' (pad {} (name "{}"))'.format(uuid_pads[j - 1], j))
-        lines.append(' (footprint {}'.format(uuid_footprint))
-        lines.append('  (name "default")')
-        lines.append('  (description "")')
+            package.add_pad(PackagePad(uuid=uuid_pads[j - 1], name=Name(str(j))))
+
+        footprint = Footprint(
+            uuid=uuid_footprint,
+            name=Name('default'),
+            description=Description(''),
+            position_3d=Position3D(0.0, 0.0, 0.0),
+            rotation_3d=Rotation3D(0.0, 0.0, 0.0),
+        )
+        package.add_footprint(footprint)
 
         # Pads
         for i in range(1, pin_count + 1):
             coords = get_coords(i, pin_count, 2, pitch, row_spacing)
             x_offset_abs = pad_size[0] / 2 + pad_x_offset
             x_offset = -x_offset_abs if i % 2 == 1 else x_offset_abs
-            lines.append('  (pad {} (side top) (shape rect)'.format(uuid_pads[i - 1]))
-            lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                ff(coords.x + x_offset), ff(coords.y),
-                ff(pad_size[0]), ff(pad_size[1]),
+            uuid_pad = uuid_pads[i - 1]
+            footprint.add_pad(FootprintPad(
+                uuid=uuid_pad,
+                side=ComponentSide.TOP,
+                shape=Shape.ROUNDED_RECT,
+                position=Position(coords.x + x_offset, coords.y),
+                rotation=Rotation(0),
+                size=Size(pad_size[0], pad_size[1]),
+                radius=ShapeRadius(0.0),
+                stop_mask=StopMaskConfig.AUTO,
+                solder_paste=SolderPasteConfig.AUTO,
+                copper_clearance=CopperClearance(0),
+                function=PadFunction.UNSPECIFIED,
+                package_pad=PackagePadUuid(uuid_pad),
+                holes=[],
             ))
-            lines.append('  )')
-
-        vertex = '   (vertex (position {} {}) (angle 0.0))'
 
         # Legs on documentation layer
         for i in range(1, pin_count + 1):
@@ -182,14 +206,20 @@ def generate_pkg(
             x_offset_abs = pad_size[0] / 2 + pad_x_offset
             x_offset = -x_offset_abs if i % 2 == 1 else x_offset_abs
             sign = 1 if coords.x > 0 else -1
-            lines.append('  (polygon {} (layer top_documentation)'.format(uuid_leads[i - 1]))
-            lines.append('   (width 0.0) (fill true) (grab_area false)')
-            lines.append(vertex.format(ff(coords.x - lead_width / 2 * sign), ff(coords.y + lead_width / 2)))
-            lines.append(vertex.format(ff(coords.x - lead_width / 2 * sign), ff(coords.y - lead_width / 2)))
-            lines.append(vertex.format(ff(lead_span / 2 * sign), ff(coords.y - lead_width / 2)))
-            lines.append(vertex.format(ff(lead_span / 2 * sign), ff(coords.y + lead_width / 2)))
-            lines.append(vertex.format(ff(coords.x - lead_width / 2 * sign), ff(coords.y + lead_width / 2)))
-            lines.append('  )')
+            footprint.add_polygon(Polygon(
+                uuid=uuid_leads[i - 1],
+                layer=Layer('top_documentation'),
+                width=Width(0),
+                fill=Fill(True),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(coords.x - lead_width / 2 * sign, coords.y + lead_width / 2), Angle(0)),
+                    Vertex(Position(coords.x - lead_width / 2 * sign, coords.y - lead_width / 2), Angle(0)),
+                    Vertex(Position(lead_span / 2 * sign, coords.y - lead_width / 2), Angle(0)),
+                    Vertex(Position(lead_span / 2 * sign, coords.y + lead_width / 2), Angle(0)),
+                    Vertex(Position(coords.x - lead_width / 2 * sign, coords.y + lead_width / 2), Angle(0)),
+                ],
+            ))
 
         # Body bounds
         pin1 = get_coords(1, pin_count, 2, pitch, row_spacing)
@@ -206,109 +236,146 @@ def generate_pkg(
         x_mark_pin1 = abs(pin1.x) + pad_size[0] + pad_x_offset - line_width / 2
         y_above_pin1 = pin1.y + pad_size[1] / 2 + silkscreen_offset + line_width / 2
         # North part contains extended line to mark pin 1
-        lines.append('  (polygon {} (layer top_placement)'.format(uuid_placement_north))
-        lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
-        lines.append(vertex.format(ff(-x_mark_pin1), ff(y_above_pin1)))
-        lines.append(vertex.format(ff(-x_outside_body), ff(y_above_pin1)))
-        lines.append(vertex.format(ff(-x_outside_body), ff(y_outside_body)))
-        lines.append(vertex.format(ff(x_outside_body), ff(y_outside_body)))
-        lines.append(vertex.format(ff(x_outside_body), ff(y_above_pin1)))
-        lines.append('  )')
+        footprint.add_polygon(Polygon(
+            uuid=uuid_legend_north,
+            layer=Layer('top_legend'),
+            width=Width(line_width),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(-x_mark_pin1, y_above_pin1), Angle(0)),
+                Vertex(Position(-x_outside_body, y_above_pin1), Angle(0)),
+                Vertex(Position(-x_outside_body, y_outside_body), Angle(0)),
+                Vertex(Position(x_outside_body, y_outside_body), Angle(0)),
+                Vertex(Position(x_outside_body, y_above_pin1), Angle(0)),
+            ],
+        ))
         # South part doesn't contain any pin markings
-        lines.append('  (polygon {} (layer top_placement)'.format(uuid_placement_south))
-        lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
-        lines.append(vertex.format(ff(x_outside_body), ff(-y_above_pin1)))
-        lines.append(vertex.format(ff(x_outside_body), ff(-y_outside_body)))
-        lines.append(vertex.format(ff(-x_outside_body), ff(-y_outside_body)))
-        lines.append(vertex.format(ff(-x_outside_body), ff(-y_above_pin1)))
-        lines.append('  )')
+        footprint.add_polygon(Polygon(
+            uuid=uuid_legend_south,
+            layer=Layer('top_legend'),
+            width=Width(line_width),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(x_outside_body, -y_above_pin1), Angle(0)),
+                Vertex(Position(x_outside_body, -y_outside_body), Angle(0)),
+                Vertex(Position(-x_outside_body, -y_outside_body), Angle(0)),
+                Vertex(Position(-x_outside_body, -y_above_pin1), Angle(0)),
+            ],
+        ))
 
         # Documentation layer
-        lines.append('  (polygon {} (layer top_documentation)'.format(uuid_doc_contour))
-        lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
-        lines.append(vertex.format(ff(-x_inside_body), ff(body_gap / 2)))
-        lines.append(vertex.format(ff(-x_inside_body), ff(y_inside_body)))
-        lines.append(vertex.format(ff(x_inside_body), ff(y_inside_body)))
-        lines.append(vertex.format(ff(x_inside_body), ff(-y_inside_body)))
-        lines.append(vertex.format(ff(-x_inside_body), ff(-y_inside_body)))
-        lines.append(vertex.format(ff(-x_inside_body), ff(-body_gap / 2)))
-        lines.append('  )')
+        footprint.add_polygon(Polygon(
+            uuid=uuid_doc_contour,
+            layer=Layer('top_documentation'),
+            width=Width(line_width),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(-x_inside_body, body_gap / 2), Angle(0)),
+                Vertex(Position(-x_inside_body, y_inside_body), Angle(0)),
+                Vertex(Position(x_inside_body, y_inside_body), Angle(0)),
+                Vertex(Position(x_inside_body, -y_inside_body), Angle(0)),
+                Vertex(Position(-x_inside_body, -y_inside_body), Angle(0)),
+                Vertex(Position(-x_inside_body, -body_gap / 2), Angle(0)),
+            ],
+        ))
 
         # Triangle on doc layer
         triangle_size = 1.0
         triangle_width = sqrt(3) / 2.0 * triangle_size * 0.8
         triangle_offset = triangle_size / 2  # Offset from doc layer
-        lines.append('  (polygon {} (layer top_documentation)'.format(uuid_doc_triangle))
-        lines.append('   (width 0.0) (fill true) (grab_area false)')
-        lines.append(vertex.format(ff(-x_inside_body + triangle_offset), ff(y_inside_body - triangle_offset)))
-        lines.append(vertex.format(ff(-x_inside_body + triangle_offset), ff(y_inside_body - triangle_offset - triangle_size)))
-        lines.append(vertex.format(ff(-x_inside_body + triangle_offset + triangle_width), ff(y_inside_body - triangle_offset - triangle_size / 2)))
-        lines.append(vertex.format(ff(-x_inside_body + triangle_offset), ff(y_inside_body - triangle_offset)))
-        lines.append('  )')
+        footprint.add_polygon(Polygon(
+            uuid=uuid_doc_triangle,
+            layer=Layer('top_documentation'),
+            width=Width(0),
+            fill=Fill(True),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(-x_inside_body + triangle_offset, y_inside_body - triangle_offset), Angle(0)),
+                Vertex(Position(-x_inside_body + triangle_offset, y_inside_body - triangle_offset - triangle_size), Angle(0)),
+                Vertex(Position(-x_inside_body + triangle_offset + triangle_width, y_inside_body - triangle_offset - triangle_size / 2), Angle(0)),
+                Vertex(Position(-x_inside_body + triangle_offset, y_inside_body - triangle_offset), Angle(0)),
+            ],
+        ))
 
         # Grab area
-        lines.append('  (polygon {} (layer top_hidden_grab_areas)'.format(uuid_grab_area))
-        lines.append('   (width 0.0) (fill true) (grab_area true)')
-        lines.append(vertex.format(ff(-body_bounds[0]), ff(body_bounds[1])))
-        lines.append(vertex.format(ff(body_bounds[0]), ff(body_bounds[1])))
-        lines.append(vertex.format(ff(body_bounds[0]), ff(-body_bounds[1])))
-        lines.append(vertex.format(ff(-body_bounds[0]), ff(-body_bounds[1])))
-        lines.append(vertex.format(ff(-body_bounds[0]), ff(body_bounds[1])))
-        lines.append('  )')
+        footprint.add_polygon(Polygon(
+            uuid=uuid_grab_area,
+            layer=Layer('top_hidden_grab_areas'),
+            width=Width(0),
+            fill=Fill(True),
+            grab_area=GrabArea(True),
+            vertices=[
+                Vertex(Position(-body_bounds[0], body_bounds[1]), Angle(0)),
+                Vertex(Position(body_bounds[0], body_bounds[1]), Angle(0)),
+                Vertex(Position(body_bounds[0], -body_bounds[1]), Angle(0)),
+                Vertex(Position(-body_bounds[0], -body_bounds[1]), Angle(0)),
+                Vertex(Position(-body_bounds[0], body_bounds[1]), Angle(0)),
+            ],
+        ))
 
         # Courtyard
         x_courtyard = body_bounds[0] + line_width + courtyard_offset
         x_courtyard_extended = abs(pin1.x) + pad_size[0] + pad_x_offset + courtyard_offset
         y_courtyard = body_bounds[1] + line_width + courtyard_offset
         y_courtyard_extended = y_above_pin1 + line_width / 2 + courtyard_offset
-        lines.append('  (polygon {} (layer top_courtyard)'.format(uuid_courtyard))
-        lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
-        lines.append(vertex.format(ff(-x_courtyard_extended), ff(y_courtyard_extended)))
-        lines.append(vertex.format(ff(-x_courtyard), ff(y_courtyard_extended)))
-        lines.append(vertex.format(ff(-x_courtyard), ff(y_courtyard)))
-        lines.append(vertex.format(ff(x_courtyard), ff(y_courtyard)))
-        lines.append(vertex.format(ff(x_courtyard), ff(y_courtyard_extended)))
-        lines.append(vertex.format(ff(x_courtyard_extended), ff(y_courtyard_extended)))
-        lines.append(vertex.format(ff(x_courtyard_extended), ff(-y_courtyard_extended)))
-        lines.append(vertex.format(ff(x_courtyard), ff(-y_courtyard_extended)))
-        lines.append(vertex.format(ff(x_courtyard), ff(-y_courtyard)))
-        lines.append(vertex.format(ff(-x_courtyard), ff(-y_courtyard)))
-        lines.append(vertex.format(ff(-x_courtyard), ff(-y_courtyard_extended)))
-        lines.append(vertex.format(ff(-x_courtyard_extended), ff(-y_courtyard_extended)))
-        lines.append(vertex.format(ff(-x_courtyard_extended), ff(y_courtyard_extended)))
-        lines.append('  )')
+        footprint.add_polygon(Polygon(
+            uuid=uuid_courtyard,
+            layer=Layer('top_courtyard'),
+            width=Width(0),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(-x_courtyard_extended, y_courtyard_extended), Angle(0)),
+                Vertex(Position(-x_courtyard, y_courtyard_extended), Angle(0)),
+                Vertex(Position(-x_courtyard, y_courtyard), Angle(0)),
+                Vertex(Position(x_courtyard, y_courtyard), Angle(0)),
+                Vertex(Position(x_courtyard, y_courtyard_extended), Angle(0)),
+                Vertex(Position(x_courtyard_extended, y_courtyard_extended), Angle(0)),
+                Vertex(Position(x_courtyard_extended, -y_courtyard_extended), Angle(0)),
+                Vertex(Position(x_courtyard, -y_courtyard_extended), Angle(0)),
+                Vertex(Position(x_courtyard, -y_courtyard), Angle(0)),
+                Vertex(Position(-x_courtyard, -y_courtyard), Angle(0)),
+                Vertex(Position(-x_courtyard, -y_courtyard_extended), Angle(0)),
+                Vertex(Position(-x_courtyard_extended, -y_courtyard_extended), Angle(0)),
+                Vertex(Position(-x_courtyard_extended, y_courtyard_extended), Angle(0)),
+            ],
+        ))
 
         # Labels
         body_y_max = (pin_count / 2 - 1) * pitch / 2 + body_offset_y
-        text_attrs = '(height {}) (stroke_width 0.2) ' \
-                     '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
-        lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
-        lines.append('   {}'.format(text_attrs))
-        lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(
-            ff(body_y_max + 1),
+        footprint.add_text(StrokeText(
+            uuid=uuid_text_name,
+            layer=Layer('top_names'),
+            height=Height(pkg_text_height),
+            stroke_width=StrokeWidth(0.2),
+            letter_spacing=LetterSpacing.AUTO,
+            line_spacing=LineSpacing.AUTO,
+            align=Align('center bottom'),
+            position=Position(0.0, body_y_max + 1),
+            rotation=Rotation(0.0),
+            auto_rotate=AutoRotate(True),
+            mirror=Mirror(False),
+            value=Value('{{NAME}}'),
         ))
-        lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
-        lines.append('  )')
-        lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
-        lines.append('   {}'.format(text_attrs))
-        lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(
-            ff(-body_y_max - 1),
+        footprint.add_text(StrokeText(
+            uuid=uuid_text_value,
+            layer=Layer('top_values'),
+            height=Height(pkg_text_height),
+            stroke_width=StrokeWidth(0.2),
+            letter_spacing=LetterSpacing.AUTO,
+            line_spacing=LineSpacing.AUTO,
+            align=Align('center top'),
+            position=Position(0.0, -body_y_max - 1),
+            rotation=Rotation(0.0),
+            auto_rotate=AutoRotate(True),
+            mirror=Mirror(False),
+            value=Value('{{VALUE}}'),
         ))
-        lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
-        lines.append('  )')
 
-        lines.append(' )')
-        lines.append(')')
-
-        pkg_dir_path = path.join('out', library, category, uuid_pkg)
-        if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-            makedirs(pkg_dir_path)
-        with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-            f.write('0.1\n')
-        with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
-            f.write('\n'.join(lines))
-            f.write('\n')
-
+        package.serialize(path.join('out', library, category))
         print('{}x{} {} mm: Wrote package {}'.format(2, pin_count // 2, pitch, uuid_pkg))
 
 
