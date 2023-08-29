@@ -27,7 +27,7 @@ import json
 import math
 import re
 from collections import defaultdict
-from os import listdir, makedirs, path
+from os import listdir, path
 from uuid import uuid4
 
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Set, Tuple
@@ -35,14 +35,15 @@ from typing import Any, Dict, Iterable, Iterator, List, Optional, Set, Tuple
 import common
 from common import human_sort_key, init_cache, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GrabArea, Height, Keywords, Layer, Length,
-    Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
+    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
+    Layer, Length, Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
 )
 from entities.component import (
     Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
     Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
 )
 from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
+from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation
 from entities.symbol import Pin as SymbolPin
 from entities.symbol import Symbol
 
@@ -56,7 +57,7 @@ generator = 'librepcb-parts-generator (generate_stm_mcu.py)'
 keywords_stm32 = Keywords('stm32, stm, st, mcu, microcontroller, arm, cortex')
 keywords_stm8 = Keywords('stm8, stm, st, mcu, microcontroller, 8bit')
 author = Author('Danilo Bargen, John Eaton')
-cmpcat = Category('22151601-c2d9-419a-87bc-266f9c7c3459')
+cmpcat = [Category('22151601-c2d9-419a-87bc-266f9c7c3459')]
 outdir = path.join('out', 'STMicroelectronics.lplib')
 
 # Initialize UUID cache
@@ -599,6 +600,8 @@ def generate_sym(mcus: List[MCU], symbol_map: Dict[str, str], debug: bool = Fals
             author,
             Version(sym_version),
             Created('2020-01-30T20:55:23Z'),
+            Deprecated(False),
+            GeneratedBy(''),
             cmpcat,
         )
         placement_pins = placement.pins(width, grid)
@@ -610,6 +613,10 @@ def generate_sym(mcus: List[MCU], symbol_map: Dict[str, str], debug: bool = Fals
                 position,
                 rotation,
                 Length(grid),
+                NamePosition(3.81, 0.0),
+                NameRotation(0.0),
+                NameHeight(2.5),
+                NameAlign('left center')
             ))
         polygon = Polygon(
             uuid('sym', mcu.symbol_identifier, 'polygon'),
@@ -652,18 +659,8 @@ def generate_sym(mcus: List[MCU], symbol_map: Dict[str, str], debug: bool = Fals
 
     # Make sure all grouped symbols are identical
     assert len(set([str(s) for s in symbols])) == 1
-
-    sym_dir_path = path.join(outdir, 'sym', symbols[0].uuid)
-    if not (path.exists(sym_dir_path) and path.isdir(sym_dir_path)):
-        makedirs(sym_dir_path)
-    with open(path.join(sym_dir_path, '.librepcb-sym'), 'w') as f:
-        f.write('0.1\n')
-    with open(path.join(sym_dir_path, 'symbol.lp'), 'w') as f:
-        f.write(str(symbols[0]))
-        f.write('\n')
-
+    symbol.serialize(path.join(outdir, 'sym'))
     symbol_map[mcus[0].symbol_identifier] = symbols[0].uuid
-
     print('Wrote sym {}'.format(symbols[0].name))
 
 
@@ -707,9 +704,10 @@ def generate_cmp(
             Version(cmp_version),
             Created('2020-01-30T20:55:23Z'),
             Deprecated(False),
+            GeneratedBy(''),
             cmpcat,
             SchematicOnly(False),
-            DefaultValue('{{PARTNUMBER or DEVICE or COMPONENT}}'),
+            DefaultValue('{{MPN or DEVICE or COMPONENT}}'),
             Prefix('U'),
         )
 
@@ -755,9 +753,7 @@ def generate_cmp(
 
     # Make sure all grouped components are identical
     assert len(set([str(c) for c in components])) == 1
-
     components[0].serialize(path.join(outdir, 'cmp'))
-
     print('Wrote cmp {}'.format(name))
 
 
@@ -800,6 +796,7 @@ def generate_dev(mcu: MCU, symbol_map: Dict[str, str], base_lib_path: str, debug
         Version(dev_version),
         Created('2020-03-01T01:55:20Z'),
         Deprecated(False),
+        GeneratedBy(''),
         cmpcat,
         ComponentUUID(uuid('cmp', mcu.component_identifier, 'cmp')),
         PackageUUID(package_uuid_mapping[mcu.package]),
@@ -812,7 +809,6 @@ def generate_dev(mcu: MCU, symbol_map: Dict[str, str], base_lib_path: str, debug
         ))
 
     device.serialize(path.join(outdir, 'dev'))
-
     print('Wrote dev {}'.format(name))
 
 

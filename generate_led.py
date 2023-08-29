@@ -2,7 +2,7 @@
 Generate THT LED packages.
 """
 from math import acos, asin, degrees, sqrt
-from os import makedirs, path
+from os import path
 from uuid import uuid4
 
 from typing import Iterable, List, Optional
@@ -10,21 +10,22 @@ from typing import Iterable, List, Optional
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GrabArea, Height,
-    Keywords, Layer, Name, Polygon, Position, Rotation, Value, Version, Vertex, Width
+    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
+    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
 )
 from entities.component import SignalUUID
 from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.package import (
-    AutoRotate, Drill, Footprint, FootprintPad, LetterSpacing, LineSpacing, Mirror, Package, PackagePad, Shape, Side,
-    Size, StrokeText, StrokeWidth
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, FootprintPad, LetterSpacing,
+    LineSpacing, Mirror, Package, PackagePad, PackagePadUuid, PadFunction, PadHole, Shape, ShapeRadius, Size,
+    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
 
 GENERATOR_NAME = 'librepcb-parts-generator (generate_led.py)'
 
 lead_width = 0.5
 pad_drill = 0.8
-line_width = 0.2
+default_line_width = 0.2
 pkg_text_height = 1.0
 
 
@@ -133,7 +134,9 @@ def generate_pkg(
             version=Version(version),
             created=Created(create_date or now()),
             deprecated=Deprecated(False),
-            category=Category(pkgcat),
+            generated_by=GeneratedBy(''),
+            categories=[Category(pkgcat)],
+            assembly_type=AssemblyType.AUTO,
         )
 
         # Package pads
@@ -151,19 +154,29 @@ def generate_pkg(
                 uuid=_uuid('footprint' + identifier_suffix),
                 name=name,
                 description=Description(''),
+                position_3d=Position3D(0.0, 0.0, 0.0),
+                rotation_3d=Rotation3D(0.0, 0.0, 0.0),
             )
             package.add_footprint(footprint)
 
             # Footprint pads
             for pad, factor in [('a', 1), ('c', -1)]:
+                pad_uuid = _uuid('pad-{}'.format(pad))
                 footprint.add_pad(FootprintPad(
-                    uuid=_uuid('pad-{}'.format(pad)),
-                    side=Side.THT,
-                    shape=Shape.RECT if pad == 'c' else Shape.ROUND,
+                    uuid=pad_uuid,
+                    side=ComponentSide.TOP,
+                    shape=Shape.ROUNDED_RECT,
                     position=Position(config.lead_spacing / 2 * factor, 0),
                     rotation=Rotation(90),
                     size=pad_size,
-                    drill=Drill(pad_drill),
+                    radius=ShapeRadius(0.0 if pad == 'c' else 1.0),
+                    stop_mask=StopMaskConfig.AUTO,
+                    solder_paste=SolderPasteConfig.OFF,
+                    copper_clearance=CopperClearance(0.0),
+                    function=PadFunction.UNSPECIFIED,
+                    package_pad=PackagePadUuid(pad_uuid),
+                    holes=[PadHole(pad_uuid, DrillDiameter(pad_drill),
+                                   [Vertex(Position(0.0, 0.0), Angle(0.0))])],
                 ))
 
             return footprint
@@ -189,6 +202,7 @@ def generate_pkg(
                 layer: str,
                 outer_radius: float,
                 inner_radius: float,
+                line_width: float,
                 reduced: bool = False,
             ) -> None:
                 """
@@ -256,15 +270,17 @@ def generate_pkg(
                 footprint,
                 identifier='polygon-doc' + identifier_suffix,
                 layer='top_documentation',
-                outer_radius=config.bot_diameter / 2 - line_width / 2,
-                inner_radius=config.top_diameter / 2 - line_width / 2,
+                outer_radius=config.bot_diameter / 2 - default_line_width / 2,
+                inner_radius=config.top_diameter / 2 - default_line_width / 2,
+                line_width=default_line_width,
             )
             _add_flattened_circle(
                 footprint,
-                identifier='polygon-placement' + identifier_suffix,
-                layer='top_placement',
-                outer_radius=config.bot_diameter / 2 + line_width / 2,
-                inner_radius=config.top_diameter / 2 + line_width / 2,
+                identifier='polygon-legend' + identifier_suffix,
+                layer='top_legend',
+                outer_radius=config.bot_diameter / 2 + default_line_width / 2,
+                inner_radius=config.top_diameter / 2 + default_line_width / 2,
+                line_width=default_line_width,
                 reduced=is_small,
             )
 
@@ -277,6 +293,7 @@ def generate_pkg(
                 layer='top_courtyard',
                 outer_radius=max(config.bot_diameter / 2, pad_ring_x_bounds) + courtyard_offset,
                 inner_radius=max(config.top_diameter / 2, pad_ring_x_bounds) + courtyard_offset,
+                line_width=0.0,
             )
 
             # Text
@@ -328,15 +345,15 @@ def generate_pkg(
             polygon = Polygon(
                 uuid=_uuid('polygon-doc' + identifier_suffix),
                 layer=Layer('top_documentation'),
-                width=Width(line_width),
+                width=Width(default_line_width),
                 fill=Fill(False),
                 grab_area=GrabArea(False),
             )
-            inner_radius = config.top_diameter / 2 - line_width / 2
-            outer_radius = config.bot_diameter / 2 - line_width / 2
-            body_bottom_y = body_offset + line_width / 2
-            body_middle_y = body_bottom_y + 1.0 - line_width
-            body_top_y = body_bottom_y + body_height - inner_radius - line_width
+            inner_radius = config.top_diameter / 2 - default_line_width / 2
+            outer_radius = config.bot_diameter / 2 - default_line_width / 2
+            body_bottom_y = body_offset + default_line_width / 2
+            body_middle_y = body_bottom_y + 1.0 - default_line_width
+            body_top_y = body_bottom_y + body_height - inner_radius - default_line_width
             polygon.add_vertex(Vertex(Position(-inner_radius, body_middle_y), Angle(0)))
             polygon.add_vertex(Vertex(Position(-inner_radius, body_top_y), Angle(-180)))
             polygon.add_vertex(Vertex(Position(inner_radius, body_top_y), Angle(0)))
@@ -366,39 +383,39 @@ def generate_pkg(
                 polygon.add_vertex(Vertex(Position(x0, body_offset), Angle(0)))
                 footprint.add_polygon(polygon)
 
-            # Determine placement variant
-            body_bottom_y -= line_width
-            pad_placement_clearance = pad_size.width / 2 + line_width / 2 + 0.18
-            split_placement = body_bottom_y < pad_placement_clearance
+            # Determine legend variant
+            body_bottom_y -= default_line_width
+            pad_legend_clearance = pad_size.width / 2 + default_line_width / 2 + 0.18
+            split_legend = body_bottom_y < pad_legend_clearance
 
-            # Placement short
-            if split_placement:
+            # legend short
+            if split_legend:
                 polygon = Polygon(
-                    uuid=_uuid('polygon-placement2' + identifier_suffix),
-                    layer=Layer('top_placement'),
-                    width=Width(line_width),
+                    uuid=_uuid('polygon-legend2' + identifier_suffix),
+                    layer=Layer('top_legend'),
+                    width=Width(default_line_width),
                     fill=Fill(False),
                     grab_area=GrabArea(False),
                 )
-                placement_x = config.lead_spacing / 2 - pad_placement_clearance
-                polygon.add_vertex(Vertex(Position(-placement_x, body_bottom_y), Angle(0)))
-                polygon.add_vertex(Vertex(Position(placement_x, body_bottom_y), Angle(0)))
+                legend_x = config.lead_spacing / 2 - pad_legend_clearance
+                polygon.add_vertex(Vertex(Position(-legend_x, body_bottom_y), Angle(0)))
+                polygon.add_vertex(Vertex(Position(legend_x, body_bottom_y), Angle(0)))
                 footprint.add_polygon(polygon)
 
-            # Placement outline
+            # legend outline
             polygon = Polygon(
-                uuid=_uuid('polygon-placement' + identifier_suffix),
-                layer=Layer('top_placement'),
-                width=Width(line_width),
+                uuid=_uuid('polygon-legend' + identifier_suffix),
+                layer=Layer('top_legend'),
+                width=Width(default_line_width),
                 fill=Fill(False),
                 grab_area=GrabArea(False),
             )
-            inner_radius = config.top_diameter / 2 + line_width / 2
-            outer_radius = config.bot_diameter / 2 + line_width / 2
-            body_bottom_silkscreen_x = config.lead_spacing / 2 + pad_placement_clearance
-            body_bottom_silkscreen_y = max(body_bottom_y, pad_placement_clearance)
-            body_middle_y += line_width
-            if split_placement is False:
+            inner_radius = config.top_diameter / 2 + default_line_width / 2
+            outer_radius = config.bot_diameter / 2 + default_line_width / 2
+            body_bottom_silkscreen_x = config.lead_spacing / 2 + pad_legend_clearance
+            body_bottom_silkscreen_y = max(body_bottom_y, pad_legend_clearance)
+            body_middle_y += default_line_width
+            if split_legend is False:
                 polygon.add_vertex(Vertex(Position(-inner_radius, body_bottom_y), Angle(0)))
             elif body_bottom_silkscreen_x < inner_radius:
                 polygon.add_vertex(Vertex(Position(-body_bottom_silkscreen_x, body_bottom_y), Angle(0)))
@@ -409,7 +426,7 @@ def generate_pkg(
             polygon.add_vertex(Vertex(Position(inner_radius, body_top_y), Angle(0)))
             polygon.add_vertex(Vertex(Position(inner_radius, body_middle_y), Angle(0)))
             polygon.add_vertex(Vertex(Position(outer_radius, body_middle_y), Angle(0)))
-            if split_placement is False:
+            if split_legend is False:
                 polygon.add_vertex(Vertex(Position(outer_radius, body_bottom_y), Angle(0)))
                 polygon.add_vertex(Vertex(Position(-inner_radius, body_bottom_y), Angle(0)))
             elif body_bottom_silkscreen_x < outer_radius:
@@ -424,7 +441,7 @@ def generate_pkg(
             polygon = Polygon(
                 uuid=_uuid('polygon-courtyard' + identifier_suffix),
                 layer=Layer('top_courtyard'),
-                width=Width(line_width),
+                width=Width(0.0),
                 fill=Fill(False),
                 grab_area=GrabArea(False),
             )
@@ -516,14 +533,7 @@ def generate_pkg(
             body_offset=7.62,
         )
 
-        pkg_dir_path = path.join('out', library, category, uuid_pkg)
-        if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-            makedirs(pkg_dir_path)
-        with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-            f.write('0.1\n')
-        with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
-            f.write(str(package))
-            f.write('\n')
+        package.serialize(path.join('out', library, category))
 
 
 def generate_dev(
@@ -553,7 +563,8 @@ def generate_dev(
             version=Version(version),
             created=Created(create_date or now()),
             deprecated=Deprecated(False),
-            category=Category(cmpcat),
+            generated_by=GeneratedBy(''),
+            categories=[Category(cmpcat)],
             component_uuid=ComponentUUID('2b24b18d-bd95-4fb4-8fe6-bce1d020ead4'),
             package_uuid=PackageUUID(uuid('pkg', config.pkg_name, 'pkg')),
         )
@@ -566,14 +577,7 @@ def generate_dev(
             signal=SignalUUID('7b023430-b68f-403a-80b8-c7deb12e7a0c'),
         ))
 
-        dev_dir_path = path.join('out', library, category, device.uuid)
-        if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
-            makedirs(dev_dir_path)
-        with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
-            f.write('0.1\n')
-        with open(path.join(dev_dir_path, 'device.lp'), 'w') as f:
-            f.write(str(device))
-            f.write('\n')
+        device.serialize(path.join('out', library, category))
 
 
 if __name__ == '__main__':

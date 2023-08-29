@@ -4,24 +4,26 @@ Generate DO packages.
 - JEDEC DO-214 https://www.jedec.org/system/files/docs/DO-214D.PDF
 
 """
-from os import makedirs, path
+from os import path
 from uuid import uuid4
+
+from typing import Optional
 
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GrabArea, Height, Keywords, Layer, Name,
-    Polygon, Position, Rotation, Value, Version, Vertex, Width
+    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
+    Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
 )
 from entities.package import (
-    AutoRotate, Drill, Footprint, FootprintPad, LetterSpacing, LineSpacing, Mirror, Package, PackagePad, Shape, Side,
-    Size, StrokeText, StrokeWidth
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
+    Mirror, Package, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size, SolderPasteConfig,
+    StopMaskConfig, StrokeText, StrokeWidth
 )
 
 GENERATOR_NAME = 'librepcb-parts-generator (generate_do.py)'
 
 line_width = 0.2
-courtyard_line_width = 0.1
 
 
 # Initialize UUID cache
@@ -76,6 +78,7 @@ def generate_pkg(
     polarity: bool,
     pkgcat: str,
     version: str,
+    create_date: Optional[str],
 ) -> None:
     keywords = f'Diode,SMD,DO-214{config.variant},DO214{config.variant},{config.common_name}'
     polarity_text = 'Unidirectional' if polarity else 'Bidirectional'
@@ -105,9 +108,11 @@ Generated with {GENERATOR_NAME}
         keywords=Keywords(keywords),
         author=Author(author),
         version=Version(version),
-        created=Created(now()),
+        created=Created(create_date or now()),
         deprecated=Deprecated(False),
-        category=Category(pkgcat),
+        generated_by=GeneratedBy(''),
+        categories=[Category(pkgcat)],
+        assembly_type=AssemblyType.AUTO,
     )
 
     pads = [('c', 'C', -1), ('a', 'A', 1)] if polarity else [('1', '1', -1), ('2', '2', 1)]
@@ -142,14 +147,21 @@ Generated with {GENERATOR_NAME}
         uuid_ns: str,
     ) -> None:
         for pad, name, side in pads:
+            pad_uuid = _uuid(f'pad-{pad}')
             footprint.add_pad(FootprintPad(
-                uuid=_uuid(f'pad-{pad}'),
-                side=Side.TOP,
-                shape=Shape.RECT,
+                uuid=pad_uuid,
+                side=ComponentSide.TOP,
+                shape=Shape.ROUNDED_RECT,
                 position=Position(_pad_center(side), 0),
                 rotation=Rotation(0),
                 size=Size(_pad_length(), _pad_width()),
-                drill=Drill(0),
+                radius=ShapeRadius(0.0),
+                stop_mask=StopMaskConfig.AUTO,
+                solder_paste=SolderPasteConfig.AUTO,
+                copper_clearance=CopperClearance(0.0),
+                function=PadFunction.UNSPECIFIED,
+                package_pad=PackagePadUuid(pad_uuid),
+                holes=[],
             ))
             lead = Polygon(
                 uuid=_uuid(uuid_ns + 'pad-lead'),
@@ -174,6 +186,8 @@ Generated with {GENERATOR_NAME}
             uuid=_uuid(uuid_ns + 'footprint'),
             name=name,
             description=Description(''),
+            position_3d=Position3D(0.0, 0.0, 0.0),
+            rotation_3d=Rotation3D(0.0, 0.0, 0.0),
         )
         package.add_footprint(footprint)
 
@@ -227,7 +241,7 @@ Generated with {GENERATOR_NAME}
         ) -> Polygon:
             return Polygon(
                 uuid=_uuid(uuid_ns + 'silkscreen-' + name),
-                layer=Layer('top_placement'),
+                layer=Layer('top_legend'),
                 width=Width(line_width),
                 fill=Fill(False),
                 grab_area=GrabArea(False),
@@ -264,7 +278,7 @@ Generated with {GENERATOR_NAME}
         courtyard = Polygon(
             uuid=_uuid(uuid_ns + 'courtyard'),
             layer=Layer('top_courtyard'),
-            width=Width(courtyard_line_width),
+            width=Width(0.0),
             fill=Fill(False),
             grab_area=GrabArea(False),
         )
@@ -309,14 +323,7 @@ Generated with {GENERATOR_NAME}
 
     _add_footprint(package, Name('default'), 'default-')
 
-    pkg_dir_path = path.join('out', library, 'pkg', uuid_pkg)
-    if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-        makedirs(pkg_dir_path)
-    with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-        f.write('0.1\n')
-    with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
-        f.write(str(package))
-        f.write('\n')
+    package.serialize(path.join('out', library, 'pkg'))
 
 
 if __name__ == '__main__':
@@ -353,7 +360,8 @@ if __name__ == '__main__':
             config=config,
             polarity=True,
             pkgcat='dcaa6b6c-0c55-43fd-a320-5dd74a2cdc85',
-            version='0.1'
+            version='0.1',
+            create_date='2023-08-15T22:33:08Z',
         )
         generate_pkg(
             library='LibrePCB_Base.lplib',
@@ -361,7 +369,8 @@ if __name__ == '__main__':
             config=config,
             polarity=False,
             pkgcat='dcaa6b6c-0c55-43fd-a320-5dd74a2cdc85',
-            version='0.1'
+            version='0.1',
+            create_date='2023-08-15T22:33:08Z',
         )
 
     save_cache(uuid_cache_file, uuid_cache)
