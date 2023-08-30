@@ -30,7 +30,7 @@ generator = 'librepcb-parts-generator (generate_idc.py)'
 # Global constants
 line_width = 0.25
 silkscreen_offset = 0.150  # 150 µm
-courtyard_offset = 0.25
+courtyard_offset = 0.5
 pkg_text_height = 1.0
 sym_text_height = 2.54
 
@@ -150,6 +150,7 @@ def generate_pkg(
         uuid_doc_contour = _uuid('documentation-contour')
         uuid_doc_triangle = _uuid('documentation-triangle')
         uuid_grab_area = _uuid('grab-area')
+        uuid_outline = _uuid('outline')
         uuid_courtyard = _uuid('courtyard')
 
         package = Package(
@@ -163,7 +164,7 @@ def generate_pkg(
             deprecated=Deprecated(False),
             generated_by=GeneratedBy(''),
             categories=[Category(cat) for cat in sorted(pkgcats)],
-            assembly_type=AssemblyType.AUTO,
+            assembly_type=AssemblyType.SMT,
         )
 
         for j in range(1, pin_count + 1):
@@ -191,11 +192,11 @@ def generate_pkg(
                 position=Position(coords.x + x_offset, coords.y),
                 rotation=Rotation(0),
                 size=Size(pad_size[0], pad_size[1]),
-                radius=ShapeRadius(0.0),
+                radius=ShapeRadius(0.5),
                 stop_mask=StopMaskConfig.AUTO,
                 solder_paste=SolderPasteConfig.AUTO,
                 copper_clearance=CopperClearance(0),
-                function=PadFunction.UNSPECIFIED,
+                function=PadFunction.STANDARD_PAD,
                 package_pad=PackagePadUuid(uuid_pad),
                 holes=[],
             ))
@@ -316,33 +317,39 @@ def generate_pkg(
             ],
         ))
 
-        # Courtyard
-        x_courtyard = body_bounds[0] + line_width + courtyard_offset
-        x_courtyard_extended = abs(pin1.x) + pad_size[0] + pad_x_offset + courtyard_offset
-        y_courtyard = body_bounds[1] + line_width + courtyard_offset
-        y_courtyard_extended = y_above_pin1 + line_width / 2 + courtyard_offset
-        footprint.add_polygon(Polygon(
-            uuid=uuid_courtyard,
-            layer=Layer('top_courtyard'),
-            width=Width(0),
-            fill=Fill(False),
-            grab_area=GrabArea(False),
-            vertices=[
-                Vertex(Position(-x_courtyard_extended, y_courtyard_extended), Angle(0)),
-                Vertex(Position(-x_courtyard, y_courtyard_extended), Angle(0)),
-                Vertex(Position(-x_courtyard, y_courtyard), Angle(0)),
-                Vertex(Position(x_courtyard, y_courtyard), Angle(0)),
-                Vertex(Position(x_courtyard, y_courtyard_extended), Angle(0)),
-                Vertex(Position(x_courtyard_extended, y_courtyard_extended), Angle(0)),
-                Vertex(Position(x_courtyard_extended, -y_courtyard_extended), Angle(0)),
-                Vertex(Position(x_courtyard, -y_courtyard_extended), Angle(0)),
-                Vertex(Position(x_courtyard, -y_courtyard), Angle(0)),
-                Vertex(Position(-x_courtyard, -y_courtyard), Angle(0)),
-                Vertex(Position(-x_courtyard, -y_courtyard_extended), Angle(0)),
-                Vertex(Position(-x_courtyard_extended, -y_courtyard_extended), Angle(0)),
-                Vertex(Position(-x_courtyard_extended, y_courtyard_extended), Angle(0)),
-            ],
-        ))
+        # Package outline and courtyard
+        def _create_outline(polygon_uuid: str, polygon_layer: str,
+                            polygon_offset: float, around_pads: bool) -> Polygon:
+            x_outline = body_bounds[0] + polygon_offset
+            if around_pads:
+                x_outline_extended = abs(pin1.x) + pad_size[0] + pad_x_offset + polygon_offset
+            else:
+                x_outline_extended = (lead_span / 2) + polygon_offset
+            y_outline = body_bounds[1] + polygon_offset
+            y_outline_extended = y_above_pin1 + polygon_offset
+            return Polygon(
+                uuid=polygon_uuid,
+                layer=Layer(polygon_layer),
+                width=Width(0),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(-x_outline_extended, y_outline_extended), Angle(0)),
+                    Vertex(Position(-x_outline, y_outline_extended), Angle(0)),
+                    Vertex(Position(-x_outline, y_outline), Angle(0)),
+                    Vertex(Position(x_outline, y_outline), Angle(0)),
+                    Vertex(Position(x_outline, y_outline_extended), Angle(0)),
+                    Vertex(Position(x_outline_extended, y_outline_extended), Angle(0)),
+                    Vertex(Position(x_outline_extended, -y_outline_extended), Angle(0)),
+                    Vertex(Position(x_outline, -y_outline_extended), Angle(0)),
+                    Vertex(Position(x_outline, -y_outline), Angle(0)),
+                    Vertex(Position(-x_outline, -y_outline), Angle(0)),
+                    Vertex(Position(-x_outline, -y_outline_extended), Angle(0)),
+                    Vertex(Position(-x_outline_extended, -y_outline_extended), Angle(0)),
+                ],
+            )
+        footprint.add_polygon(_create_outline(uuid_outline, 'top_package_outlines', 0, False))
+        footprint.add_polygon(_create_outline(uuid_courtyard, 'top_courtyard', courtyard_offset, True))
 
         # Labels
         body_y_max = (pin_count / 2 - 1) * pitch / 2 + body_offset_y
@@ -375,6 +382,13 @@ def generate_pkg(
             value=Value('{{VALUE}}'),
         ))
 
+        # Approvals
+        package.add_approval(
+            "(approved missing_footprint_3d_model\n" +
+            " (footprint {})\n".format(uuid_footprint) +
+            ")"
+        )
+
         package.serialize(path.join('out', library, category))
         print('{}x{} {} mm: Wrote package {}'.format(2, pin_count // 2, pitch, uuid_pkg))
 
@@ -397,7 +411,7 @@ if __name__ == '__main__':
         lead_span=5.5,
         pkgcats=['92186130-e1a4-4a82-8ce9-88f4aa854195', 'e4d3a6bf-af32-48a2-b427-5e794bed949a'],
         keywords='cnc tech,idc,header,male,box header,smd,3220,1.27mm',
-        version='0.1',
+        version='0.2',
         create_date='2019-07-09T21:31:21Z',
     )
     generate_pkg(
@@ -417,7 +431,7 @@ if __name__ == '__main__':
         lead_span=7.5,
         pkgcats=['92186130-e1a4-4a82-8ce9-88f4aa854195', 'e4d3a6bf-af32-48a2-b427-5e794bed949a'],
         keywords='cnc tech,idc,header,male,box header,smd,3120,2.00mm',
-        version='0.1',
+        version='0.2',
         create_date='2019-07-09T21:31:21Z',
     )
     generate_pkg(
@@ -437,7 +451,7 @@ if __name__ == '__main__':
         lead_span=10.2,
         pkgcats=['92186130-e1a4-4a82-8ce9-88f4aa854195', 'e4d3a6bf-af32-48a2-b427-5e794bed949a'],
         keywords='cnc tech,idc,header,male,box header,smd,3020,2.54mm',
-        version='0.1',
+        version='0.2',
         create_date='2019-07-09T21:31:21Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
