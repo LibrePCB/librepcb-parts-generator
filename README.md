@@ -7,7 +7,7 @@ This is a collection of Python 3 based scripts to generate parts for the
 ## Requirements
 
 - Python 3.8+
-- For testing and type checking: See `requirements.txt`
+- Dependencies in `requirements.txt`
 
 
 ## Introduction / Concepts
