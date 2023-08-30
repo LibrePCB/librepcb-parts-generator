@@ -2,7 +2,11 @@ from os import makedirs, path
 
 from typing import Iterable, List
 
-from .common import Author, Category, Created, Deprecated, Description, GeneratedBy, Keywords, Name, UUIDValue, Version
+from common import escape_string
+
+from .common import (
+    Author, Category, Created, Deprecated, Description, GeneratedBy, Keywords, Name, StringValue, UUIDValue, Version
+)
 from .component import SignalUUID
 from .helper import indent_entities
 
@@ -26,6 +30,20 @@ class ComponentPad():
         return '(pad {} {})'.format(self.pad_uuid, self.signal)
 
 
+class Manufacturer(StringValue):
+    def __init__(self, manufacturer: str):
+        super().__init__('manufacturer', manufacturer)
+
+
+class Part():
+    def __init__(self, mpn: str, manufacturer: Manufacturer):
+        self.mpn = mpn
+        self.manufacturer = manufacturer
+
+    def __str__(self) -> str:
+        return '(part "{}" {}\n)'.format(escape_string(self.mpn), self.manufacturer)
+
+
 class Device():
     def __init__(self, uuid: str, name: Name, description: Description,
                  keywords: Keywords, author: Author, version: Version,
@@ -45,10 +63,14 @@ class Device():
         self.component_uuid = component_uuid
         self.package_uuid = package_uuid
         self.pads = []  # type: List[ComponentPad]
+        self.parts = []  # type: List[Part]
         self.approvals = []  # type: List[str]
 
     def add_pad(self, pad: ComponentPad) -> None:
         self.pads.append(pad)
+
+    def add_part(self, part: Part) -> None:
+        self.parts.append(part)
 
     def add_approval(self, approval: str) -> None:
         self.approvals.append(approval)
@@ -67,6 +89,7 @@ class Device():
             ' {}\n'.format(self.component_uuid) +\
             ' {}\n'.format(self.package_uuid)
         ret += indent_entities(sorted(self.pads, key=lambda x: str(x.pad_uuid)))
+        ret += indent_entities(self.parts)
         ret += indent_entities(sorted(self.approvals))
         ret += ')'
         return ret

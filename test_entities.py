@@ -7,7 +7,7 @@ from entities.component import (
     Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
     Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
 )
-from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
+from entities.device import ComponentPad, ComponentUUID, Device, Manufacturer, PackageUUID, Part
 from entities.package import (
     AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, FootprintPad, LetterSpacing,
     LineSpacing, Mirror, Package, PackagePad, PackagePadUuid, PadFunction, PadHole, Shape, ShapeRadius, Size,
@@ -505,6 +505,9 @@ def test_device() -> None:
     device.add_pad(ComponentPad('aec3f475-28c4-4508-ab4f-e1b618a0d77d', SignalUUID('726fd1ce-a01b-4287-bb61-e3ff165a0644')))
     device.add_pad(ComponentPad('67a7b034-b30b-4644-b8d3-d7a99606efdc', SignalUUID('9bccea5e-e23f-4b88-9de1-4be00dc0c12a')))
 
+    device.add_part(Part(mpn='mpn1', manufacturer=Manufacturer('man1')))
+    device.add_part(Part(mpn='mpn2', manufacturer=Manufacturer('man2')))
+
     device.add_approval('(approval foo)')
     device.add_approval('(approval bar)')
 
@@ -522,6 +525,10 @@ def test_device() -> None:
  (package b4e92c64-18c4-44a6-aa39-d1be3e8c29bd)
  (pad 67a7b034-b30b-4644-b8d3-d7a99606efdc (signal 9bccea5e-e23f-4b88-9de1-4be00dc0c12a))
  (pad aec3f475-28c4-4508-ab4f-e1b618a0d77d (signal 726fd1ce-a01b-4287-bb61-e3ff165a0644))
+ (part "mpn1" (manufacturer "man1")
+ )
+ (part "mpn2" (manufacturer "man2")
+ )
  (approval bar)
  (approval foo)
 )"""
