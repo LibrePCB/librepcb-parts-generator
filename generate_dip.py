@@ -157,20 +157,21 @@ Only some variants are listed.
 +----+-------------+-----------+------------+------------------+
 
 """
-from os import makedirs, path
+from os import path
 from uuid import uuid4
 
 from typing import Iterable, Optional, Tuple
 
 from common import format_ipc_dimension as ipc
-from common import indent, init_cache, save_cache
+from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Circle, Description, Diameter, Fill, GrabArea, Height, Layer, Name, Polygon, Position, Rotation,
-    Value, Vertex, Width
+    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
+    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
 )
 from entities.package import (
-    AutoRotate, Drill, Footprint, FootprintPad, LetterSpacing, LineSpacing, Mirror, Shape, Side, Size, StrokeText,
-    StrokeWidth
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, FootprintPad, LetterSpacing,
+    LineSpacing, Mirror, Package, PackagePad, PackagePadUuid, PadFunction, PadHole, Shape, ShapeRadius, Size,
+    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
 
 generator = 'librepcb-parts-generator (generate_dip.py)'
@@ -258,8 +259,6 @@ def generate_pkg(
 ) -> None:
     category = 'pkg'
     for config in configs:
-        lines = []
-
         pin_count = config.pin_count
         variant = '{}pin-D{:.1f}'.format(pin_count, drill_diameter)
 
@@ -285,27 +284,31 @@ def generate_pkg(
         description = "{}-lead DIP (Dual In-Line) package".format(pin_count)
         if config.standard:
             description += " ({})".format(config.standard)
-        description += "\\n\\n"
-        description += "Pitch: {:.2f}mm\\n".format(pitch)
-        description += "Body length: {:.2f}mm\\n".format(config.body_length)
-        description += "Body width: {:.2f}mm\\n".format(config.body_width)
-        description += "Lead span: {:.2f}mm\\n".format(config.lead_span)
-        description += "Lead width: {:.2f}mm\\n".format(lead_width)
-        description += "Max height: {:.2f}mm\\n".format(config.height)
-        description += "\\nGenerated with {}".format(generator)
+        description += "\n\n"
+        description += "Pitch: {:.2f}mm\n".format(pitch)
+        description += "Body length: {:.2f}mm\n".format(config.body_length)
+        description += "Body width: {:.2f}mm\n".format(config.body_width)
+        description += "Lead span: {:.2f}mm\n".format(config.lead_span)
+        description += "Lead width: {:.2f}mm\n".format(lead_width)
+        description += "Max height: {:.2f}mm\n".format(config.height)
+        description += "\nGenerated with {}".format(generator)
 
-        # General info
-        lines.append('(librepcb_package {}'.format(uuid_pkg))
-        lines.append(' (name "{}")'.format(ipc_name))
-        lines.append(' (description "{}")'.format(description))
-        lines.append(' (keywords "dip{},pdip{},{}")'.format(pin_count, pin_count, keywords))
-        lines.append(' (author "{}")'.format(author))
-        lines.append(' (version "{}")'.format(version))
-        lines.append(' (created {})'.format(create_date))
-        lines.append(' (deprecated false)')
-        lines.append(' (category {})'.format(pkgcat))
+        package = Package(
+            uuid=uuid_pkg,
+            name=Name(ipc_name),
+            description=Description(description),
+            keywords=Keywords("dip{},pdip{},{}".format(pin_count, pin_count, keywords)),
+            author=Author(author),
+            version=Version(version),
+            created=Created(create_date or now()),
+            deprecated=Deprecated(False),
+            generated_by=GeneratedBy(''),
+            categories=[Category(pkgcat)],
+            assembly_type=AssemblyType.THT,
+        )
+
         for p in range(1, pin_count + 1):
-            lines.append(' (pad {} (name "{}"))'.format(uuid_pads[p - 1], p))
+            package.add_pad(PackagePad(uuid_pads[p - 1], Name(str(p))))
 
         def add_footprint_variant(key: str, name: str, pad_size: Tuple[float, float]) -> None:
             uuid_footprint = _uuid('footprint-{}'.format(key))
@@ -322,7 +325,10 @@ def generate_pkg(
                 uuid_footprint,
                 Name(name),
                 Description(''),
+                Position3D(0, 0, 0),
+                Rotation3D(0, 0, 0),
             )
+            package.add_footprint(footprint)
 
             # Pads
             pad_x_offset = float(config.body_width) / 2
@@ -331,44 +337,58 @@ def generate_pkg(
                 y = get_y(p, pin_count // 2, pitch, False)
                 footprint.add_pad(FootprintPad(
                     uuid_pads[p - 1],
-                    Side.THT,
-                    Shape.RECT if p == 1 else Shape.ROUND,
+                    ComponentSide.TOP,
+                    Shape.ROUNDED_RECT,
                     Position(-pad_x_offset, y),
                     Rotation(0.0),
                     Size(pad_size[0], pad_size[1]),
-                    Drill(drill_diameter),
+                    ShapeRadius(0 if p == 1 else 1),
+                    StopMaskConfig.AUTO,
+                    SolderPasteConfig.OFF,
+                    CopperClearance(0),
+                    PadFunction.STANDARD_PAD,
+                    PackagePadUuid(uuid_pads[p - 1]),
+                    [PadHole(uuid_pads[p - 1], DrillDiameter(drill_diameter),
+                             [Vertex(Position(0, 0), Angle(0))])],
                 ))
             for p in range(1, pin_count // 2 + 1):
                 # Up on the right
                 y = -get_y(p, pin_count // 2, pitch, False)
                 footprint.add_pad(FootprintPad(
                     uuid_pads[p + pin_count // 2 - 1],
-                    Side.THT,
-                    Shape.ROUND,
+                    ComponentSide.TOP,
+                    Shape.ROUNDED_RECT,
                     Position(pad_x_offset, y),
                     Rotation(0.0),
                     Size(pad_size[0], pad_size[1]),
-                    Drill(drill_diameter),
+                    ShapeRadius(1),
+                    StopMaskConfig.AUTO,
+                    SolderPasteConfig.OFF,
+                    CopperClearance(0),
+                    PadFunction.STANDARD_PAD,
+                    PackagePadUuid(uuid_pads[p + pin_count // 2 - 1]),
+                    [PadHole(uuid_pads[p + pin_count // 2 - 1], DrillDiameter(drill_diameter),
+                             [Vertex(Position(0, 0), Angle(0))])],
                 ))
 
             # Silkscreen
             silkscreen_top = Polygon(
                 uuid_silkscreen_top,
-                Layer('top_placement'),
+                Layer('top_legend'),
                 Width(line_width),
                 Fill(False),
                 GrabArea(False),
             )
             silkscreen_bot = Polygon(
                 uuid_silkscreen_bot,
-                Layer('top_placement'),
+                Layer('top_legend'),
                 Width(line_width),
                 Fill(False),
                 GrabArea(False),
             )
             silkscreen_notch = Polygon(
                 uuid_silkscreen_notch,
-                Layer('top_placement'),
+                Layer('top_legend'),
                 Width(line_width),
                 Fill(False),
                 GrabArea(False),
@@ -424,7 +444,7 @@ def generate_pkg(
                 + silkscreen_offset
             pin1_dot = Circle(
                 uuid_pin1_dot,
-                Layer('top_placement'),
+                Layer('top_legend'),
                 Width(0.0),
                 Fill(True),
                 GrabArea(True),
@@ -437,7 +457,7 @@ def generate_pkg(
             courtyard = Polygon(
                 uuid_courtyard,
                 Layer('top_courtyard'),
-                Width(line_width),
+                Width(0),
                 Fill(False),
                 GrabArea(False),
             )
@@ -458,7 +478,6 @@ def generate_pkg(
             courtyard.add_vertex(Vertex(Position(-dx_outer, -dy_inner), Angle(0.0)))
             courtyard.add_vertex(Vertex(Position(-dx_outer,  dy_inner), Angle(0.0)))
             courtyard.add_vertex(Vertex(Position(-dx_inner,  dy_inner), Angle(0.0)))
-            courtyard.add_vertex(Vertex(Position(-dx_inner,  dy_outer), Angle(0.0)))
             footprint.add_polygon(courtyard)
 
             # Labels
@@ -489,22 +508,10 @@ def generate_pkg(
                 **text_attrs,  # type: ignore # (mypy cannot deal with kwargs)
             ))
 
-            lines.extend(indent(1, str(footprint).splitlines()))
-
         add_footprint_variant('handsoldering', 'hand soldering', (2.54, 1.27))
         add_footprint_variant('compact', 'compact', (1.6, 1.6))
 
-        lines.append(')')
-
-        pkg_dir_path = path.join('out', library, category, uuid_pkg)
-        if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-            makedirs(pkg_dir_path)
-        with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-            f.write('0.1\n')
-        with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
-            f.write('\n'.join(lines))
-            f.write('\n')
-
+        package.serialize(path.join('out', library, category))
         print('{}: Wrote package {}'.format(ipc_name, uuid_pkg))
 
 
