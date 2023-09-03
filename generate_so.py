@@ -15,8 +15,9 @@ from typing import Dict, Iterable, List, Optional
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
-    Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width, generate_courtyard
+    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
+    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width,
+    generate_courtyard
 )
 from entities.package import (
     AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
@@ -29,7 +30,7 @@ generator = 'librepcb-parts-generator (generate_so.py)'
 line_width = 0.25
 pkg_text_height = 1.0
 silkscreen_offset = 0.150  # 150 µm
-pin_package_offset = 0.762  # Distance between pad center and the package outline
+pin_package_offset = 0.762  # Distance between pad center and the package body
 
 
 # Based on IPC 7351B (Table 3-2)
@@ -183,7 +184,7 @@ def generate_pkg(
             deprecated=Deprecated(False),
             generated_by=GeneratedBy(''),
             categories=[Category(pkgcat)],
-            assembly_type=AssemblyType.AUTO,
+            assembly_type=AssemblyType.SMT,
         )
 
         for p in range(1, pin_count + 1):
@@ -197,6 +198,8 @@ def generate_pkg(
             uuid_footprint = _uuid('footprint-{}'.format(key))
             uuid_silkscreen_top = _uuid('polygon-silkscreen-{}'.format(key))
             uuid_silkscreen_bot = _uuid('polygon-silkscreen2-{}'.format(key))
+            uuid_body = _uuid('polygon-body-{}'.format(key))
+            uuid_pin1_dot = _uuid('pin1-dot-{}'.format(key))
             uuid_outline = _uuid('polygon-outline-{}'.format(key))
             uuid_courtyard = _uuid('polygon-courtyard-{}'.format(key))
             uuid_text_name = _uuid('text-name-{}'.format(key))
@@ -243,11 +246,11 @@ def generate_pkg(
                     position=Position(pxo, y),
                     rotation=Rotation(0),
                     size=Size(pad_length, pad_width),
-                    radius=ShapeRadius(0),
+                    radius=ShapeRadius(0.5),
                     stop_mask=StopMaskConfig.AUTO,
                     solder_paste=SolderPasteConfig.AUTO,
                     copper_clearance=CopperClearance(0.0),
-                    function=PadFunction.UNSPECIFIED,
+                    function=PadFunction.STANDARD_PAD,
                     package_pad=PackagePadUuid(pad_uuid),
                     holes=[],
                 ))
@@ -333,13 +336,13 @@ def generate_pkg(
                 ],
             ))
 
-            # Documentation outline (fully inside body)
-            outline_x_offset = body_width / 2 - line_width / 2
+            # Documentation body
+            body_x_offset = body_width / 2 - line_width / 2
             y_max = body_length / 2 - line_width / 2
             y_min = -body_length / 2 + line_width / 2
-            oxo = outline_x_offset  # Used for shorter code lines below :)
+            oxo = body_x_offset  # Used for shorter code lines below :)
             footprint.add_polygon(Polygon(
-                uuid=uuid_outline,
+                uuid=uuid_body,
                 layer=Layer('top_documentation'),
                 width=Width(line_width),
                 fill=Fill(False),
@@ -353,6 +356,39 @@ def generate_pkg(
                 ],
             ))
             max_y = max(max_y, body_length / 2)  # Body contour
+
+            # Documentation: Pin 1 dot
+            pin1_dot_diameter = 0.5
+            pin1_dot_offset = 1.0
+            dx = body_width / 2 - pin1_dot_offset
+            dy = config.body_length / 2 - pin1_dot_offset
+            pin1_dot = Circle(
+                uuid_pin1_dot,
+                Layer('top_documentation'),
+                Width(0.0),
+                Fill(True),
+                GrabArea(False),
+                Diameter(pin1_dot_diameter),
+                Position(-dx, dy),
+            )
+            footprint.add_circle(pin1_dot)
+
+            # Package Outline
+            dx = config.total_width / 2
+            dy = config.body_length / 2
+            footprint.add_polygon(Polygon(
+                uuid=uuid_outline,
+                layer=Layer('top_package_outlines'),
+                width=Width(0),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(-dx, dy), Angle(0)),  # NW
+                    Vertex(Position(dx, dy), Angle(0)),  # NE
+                    Vertex(Position(dx, -dy), Angle(0)),  # SE
+                    Vertex(Position(-dx, -dy), Angle(0)),  # SW
+                ],
+            ))
 
             # Courtyard
             courtyard_excess = get_by_density(pitch, density_level, 'courtyard')
@@ -425,7 +461,7 @@ if __name__ == '__main__':
         lead_contact_length=0.8,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
-        version='0.2.1',
+        version='0.3',
         create_date='2018-11-10T20:32:03Z',
     )
     configs = []
@@ -448,7 +484,7 @@ if __name__ == '__main__':
         lead_contact_length=0.8,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
-        version='0.2.1',
+        version='0.3',
         create_date='2018-11-10T20:32:03Z',
     )
     configs = []
@@ -471,7 +507,7 @@ if __name__ == '__main__':
         lead_contact_length=0.835,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec',
-        version='0.2.1',
+        version='0.3',
         create_date='2018-11-10T20:32:03Z',
     )
     configs = []
@@ -494,7 +530,7 @@ if __name__ == '__main__':
         lead_contact_length=0.835,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec,ms-013f',
-        version='0.1',
+        version='0.2',
         create_date='2020-09-15T20:46:13Z',
     )
 
@@ -591,7 +627,7 @@ if __name__ == '__main__':
         lead_contact_length=0.6,
         pkgcat='241d9d5d-8f74-4740-8901-3cf51cf50091',
         keywords='so,sop,tssop,small outline package,smd',
-        version='0.2',
+        version='0.3',
         create_date='2019-06-16T12:46:54Z',
     )
 
@@ -683,7 +719,7 @@ if __name__ == '__main__':
         lead_contact_length=0.6,
         pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
         keywords='so,sop,ssop,small outline package,smd,jedec,mo-152',
-        version='0.1',
+        version='0.2',
         create_date='2019-07-21T12:55:20Z',
     )
     generate_pkg(
@@ -720,7 +756,7 @@ if __name__ == '__main__':
         lead_contact_length=0.75,
         pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
         keywords='so,sop,ssop,small outline package,smd,jedec,mo-150',
-        version='0.1',
+        version='0.2',
         create_date='2019-07-21T12:55:20Z',
     )
 
@@ -764,7 +800,7 @@ if __name__ == '__main__':
         lead_contact_length=0.5,
         pkgcat='7993abb0-fb0a-4157-8f83-1db890755836',
         keywords='so,sop,tsop,small outline package,smd',
-        version='0.1',
+        version='0.2',
         create_date='2020-12-26T16:14:30Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
