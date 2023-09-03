@@ -11,6 +11,8 @@ class StepConstants:
 
 
 class StepColor:
+    IC_BODY = cq.Color('gray16')
+    IC_PIN1_DOT = cq.Color('gray55')
     LEAD_SMT = cq.Color('gainsboro')
     LEAD_THT = cq.Color('gainsboro')
 

@@ -7,6 +7,7 @@ Generate the following SO packages:
 - TSOP (JEDEC MS-024)
 
 """
+import sys
 from os import path
 from uuid import uuid4
 
@@ -20,9 +21,9 @@ from entities.common import (
     generate_courtyard
 )
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
-    Mirror, Package, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size, SolderPasteConfig,
-    StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, Footprint3DModel, FootprintPad, LetterSpacing,
+    LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size,
+    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
 
 generator = 'librepcb-parts-generator (generate_so.py)'
@@ -126,6 +127,7 @@ def generate_pkg(
     configs: Iterable[SoConfig],
     lead_width_lookup: Dict[float, float],
     lead_contact_length: float,
+    generate_3d_models: bool,
     pkgcat: str,
     keywords: str,
     version: str,
@@ -436,10 +438,103 @@ def generate_pkg(
         add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A')
         add_footprint_variant('density~c', 'Density Level C (min protrusion)', 'C')
 
+        # Generate 3D models (for certain package types)
+        uuid_3d = uuid('pkg', full_name, '3d')
+        if generate_3d_models:
+            generate_3d(library, full_name, uuid_pkg, uuid_3d, config,
+                        lead_width, lead_contact_length)
+        package.add_3d_model(Package3DModel(uuid_3d, Name(full_name)))
+        for footprint in package.footprints:
+            footprint.add_3d_model(Footprint3DModel(uuid_3d))
+
         package.serialize(path.join('out', library, category))
 
 
+def generate_3d(
+    library: str,
+    full_name: str,
+    uuid_pkg: str,
+    uuid_3d: str,
+    config: SoConfig,
+    lead_width: float,
+    lead_contact_length: float,
+) -> None:
+    import cadquery as cq
+
+    from cadquery_helpers import StepAssembly, StepColor
+
+    print(f'Generating pkg 3D model "{full_name}": {uuid_3d}')
+
+    body_standoff = 0.1
+    body_height = config.height - body_standoff
+    body_chamfer = 0.15
+    dot_diameter = 0.8
+    dot_position = 1.0
+    dot_depth = 0.15
+    leg_height = 0.17
+    leg_z_top = body_standoff + (body_height / 2)
+    bend_radius = 0.1 + (leg_height / 2)
+
+    dot_center = (
+        -(config.body_width / 2) + dot_position,
+        (config.body_length / 2) - dot_position,
+        body_standoff + body_height - dot_depth
+    )
+
+    body = cq.Workplane('XY', origin=(0, 0, body_standoff + (body_height / 2))) \
+        .box(config.body_width, config.body_length, body_height) \
+        .edges().chamfer(body_chamfer) \
+        .workplane(origin=(dot_center[0], dot_center[1]), offset=(body_height / 2) - dot_depth) \
+        .cylinder(5, dot_diameter / 2, centered=(True, True, False), combine='cut')
+    dot = cq.Workplane('XY', origin=dot_center) \
+        .cylinder(0.05, dot_diameter / 2, centered=(True, True, False))
+    leg_path = cq.Workplane("XZ") \
+        .hLine(lead_contact_length - (leg_height / 2) - bend_radius) \
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=270, angle2=360, sense=1) \
+        .vLine(leg_z_top - leg_height - (2 * bend_radius)) \
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
+        .hLine(config.total_width - (2 * bend_radius) - (2 * lead_contact_length) + leg_height) \
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1) \
+        .vLine(-(leg_z_top - leg_height - (2 * bend_radius))) \
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=180, angle2=270, sense=1) \
+        .hLine(lead_contact_length - (leg_height / 2) - bend_radius)
+    leg = cq.Workplane("ZY") \
+        .rect(leg_height, lead_width) \
+        .sweep(leg_path)
+
+    assembly = StepAssembly(full_name)
+    assembly.add_body(body, 'body', StepColor.IC_BODY)
+    assembly.add_body(dot, 'dot', StepColor.IC_PIN1_DOT)
+    y1 = get_y(1, config.pin_count // 2, config.pitch, False)
+    for i in range(0, config.pin_count // 2):
+        assembly.add_body(
+            leg,
+            'leg-{}'.format(i + 1), StepColor.LEAD_SMT,
+            location=cq.Location((
+                -config.total_width / 2,
+                y1 - i * config.pitch,
+                leg_height / 2,
+            ))
+        )
+
+    # Save without fusing for massively better minification!
+    out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
+    assembly.save(out_path, fused=False)
+
+
 if __name__ == '__main__':
+    if '--help' in sys.argv or '-h' in sys.argv:
+        print(f'Usage: {sys.argv[0]} [--3d]')
+        print()
+        print('Options:')
+        print('  --3d    Generate 3D models using cadquery')
+        sys.exit(1)
+
+    generate_3d_models = '--3d' in sys.argv
+    if not generate_3d_models:
+        warning = 'Note: Not generating 3D models unless the "--3d" argument is passed in!'
+        print(f'\033[1;33m{warning}\033[0m')
+
     # SOIC
     configs = []  # type: List[SoConfig]
     for pin_count in [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32]:
@@ -459,6 +554,7 @@ if __name__ == '__main__':
         configs=configs,
         lead_width_lookup={1.27: 0.4},
         lead_contact_length=0.8,
+        generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
         version='0.3',
@@ -482,6 +578,7 @@ if __name__ == '__main__':
         configs=configs,
         lead_width_lookup={1.27: 0.4},
         lead_contact_length=0.8,
+        generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
         version='0.3',
@@ -505,6 +602,7 @@ if __name__ == '__main__':
         configs=configs,
         lead_width_lookup={1.27: 0.45},
         lead_contact_length=0.835,
+        generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec',
         version='0.3',
@@ -528,6 +626,7 @@ if __name__ == '__main__':
         configs=configs,
         lead_width_lookup={1.27: 0.45},
         lead_contact_length=0.835,
+        generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec,ms-013f',
         version='0.2',
@@ -625,6 +724,7 @@ if __name__ == '__main__':
             0.4: 0.23,
         },
         lead_contact_length=0.6,
+        generate_3d_models=generate_3d_models,
         pkgcat='241d9d5d-8f74-4740-8901-3cf51cf50091',
         keywords='so,sop,tssop,small outline package,smd',
         version='0.3',
@@ -717,6 +817,7 @@ if __name__ == '__main__':
             0.40: 0.23,
         },
         lead_contact_length=0.6,
+        generate_3d_models=generate_3d_models,
         pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
         keywords='so,sop,ssop,small outline package,smd,jedec,mo-152',
         version='0.2',
@@ -754,6 +855,7 @@ if __name__ == '__main__':
             0.65: 0.38,
         },
         lead_contact_length=0.75,
+        generate_3d_models=generate_3d_models,
         pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
         keywords='so,sop,ssop,small outline package,smd,jedec,mo-150',
         version='0.2',
@@ -798,6 +900,7 @@ if __name__ == '__main__':
             1.27: 0.41,
         },
         lead_contact_length=0.5,
+        generate_3d_models=generate_3d_models,
         pkgcat='7993abb0-fb0a-4157-8f83-1db890755836',
         keywords='so,sop,tsop,small outline package,smd',
         version='0.2',
