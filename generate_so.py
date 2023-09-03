@@ -7,14 +7,22 @@ Generate the following SO packages:
 - TSOP (JEDEC MS-024)
 
 """
-from os import makedirs, path
+from os import path
 from uuid import uuid4
 
 from typing import Dict, Iterable, List, Optional
 
-from common import format_float as ff
 from common import format_ipc_dimension as fd
-from common import generate_courtyard, indent, init_cache, now, save_cache
+from common import init_cache, now, save_cache
+from entities.common import (
+    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
+    Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width, generate_courtyard
+)
+from entities.package import (
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
+    Mirror, Package, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size, SolderPasteConfig,
+    StopMaskConfig, StrokeText, StrokeWidth
+)
 
 generator = 'librepcb-parts-generator (generate_so.py)'
 
@@ -133,8 +141,6 @@ def generate_pkg(
         lead_width = lead_width_lookup[pitch]
         lead_length = (total_width - body_width) / 2
 
-        lines = []
-
         full_name = name.format(
             height=fd(height),
             pitch=fd(pitch),
@@ -154,7 +160,7 @@ def generate_pkg(
             lead_width=lead_width,
             lead_length=lead_length,
             variation=config.variation,
-        )
+        ) + "\n\nGenerated with {}".format(generator)
 
         def _uuid(identifier: str) -> str:
             return uuid(category, full_name, identifier)
@@ -166,18 +172,22 @@ def generate_pkg(
 
         print('Generating {}: {}'.format(full_name, uuid_pkg))
 
-        # General info
-        lines.append('(librepcb_package {}'.format(uuid_pkg))
-        lines.append(' (name "{}")'.format(full_name))
-        lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_description, generator))
-        lines.append(' (keywords "soic{},so{},{}")'.format(pin_count, pin_count, keywords))
-        lines.append(' (author "{}")'.format(author))
-        lines.append(' (version "{}")'.format(version))
-        lines.append(' (created {})'.format(create_date or now()))
-        lines.append(' (deprecated false)')
-        lines.append(' (category {})'.format(pkgcat))
+        package = Package(
+            uuid=uuid_pkg,
+            name=Name(full_name),
+            description=Description(full_description),
+            keywords=Keywords("soic{},so{},{}".format(pin_count, pin_count, keywords)),
+            author=Author(author),
+            version=Version(version),
+            created=Created(create_date or now()),
+            deprecated=Deprecated(False),
+            generated_by=GeneratedBy(''),
+            categories=[Category(pkgcat)],
+            assembly_type=AssemblyType.AUTO,
+        )
+
         for p in range(1, pin_count + 1):
-            lines.append(' (pad {} (name "{}"))'.format(uuid_pads[p - 1], p))
+            package.add_pad(PackagePad(uuid_pads[p - 1], Name(str(p))))
 
         def add_footprint_variant(
             key: str,
@@ -199,9 +209,14 @@ def generate_pkg(
             # Max boundaries (copper only)
             max_y_copper = 0.0
 
-            lines.append(' (footprint {}'.format(uuid_footprint))
-            lines.append('  (name "{}")'.format(name))
-            lines.append('  (description "")')
+            footprint = Footprint(
+                uuid=uuid_footprint,
+                name=Name(name),
+                description=Description(''),
+                position_3d=Position3D.zero(),
+                rotation_3d=Rotation3D.zero(),
+            )
+            package.add_footprint(footprint)
 
             # Pad excess according to IPC density levels
             pad_heel = get_by_density(pitch, density_level, 'heel')
@@ -216,16 +231,26 @@ def generate_pkg(
                 mid = pin_count // 2
                 if p <= mid:
                     y = get_y(p, pin_count // 2, pitch, False)
-                    pxo = ff(-pad_x_offset)
+                    pxo = -pad_x_offset
                 else:
                     y = -get_y(p - mid, pin_count // 2, pitch, False)
-                    pxo = ff(pad_x_offset)
+                    pxo = pad_x_offset
                 pad_uuid = uuid_pads[p - 1]
-                lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
-                lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                    pxo, ff(y), ff(pad_length), ff(pad_width),
+                footprint.add_pad(FootprintPad(
+                    uuid=pad_uuid,
+                    side=ComponentSide.TOP,
+                    shape=Shape.ROUNDED_RECT,
+                    position=Position(pxo, y),
+                    rotation=Rotation(0),
+                    size=Size(pad_length, pad_width),
+                    radius=ShapeRadius(0),
+                    stop_mask=StopMaskConfig.AUTO,
+                    solder_paste=SolderPasteConfig.AUTO,
+                    copper_clearance=CopperClearance(0.0),
+                    function=PadFunction.UNSPECIFIED,
+                    package_pad=PackagePadUuid(pad_uuid),
+                    holes=[],
                 ))
-                lines.append('  )')
                 max_y_copper = max(max_y_copper, y + pad_width / 2)
             max_x = max(max_x, total_width / 2 + pad_toe)
 
@@ -235,112 +260,147 @@ def generate_pkg(
                 mid = pin_count // 2
                 if p <= mid:  # left side
                     y = get_y(p, pin_count // 2, pitch, False)
-                    lcxo_max = ff(-lead_contact_x_offset - lead_contact_length)
-                    lcxo_min = ff(-lead_contact_x_offset)
-                    body_side = ff(-body_width / 2)
+                    lcxo_max = -lead_contact_x_offset - lead_contact_length
+                    lcxo_min = -lead_contact_x_offset
+                    body_side = -body_width / 2
                 else:  # right side
                     y = -get_y(p - mid, pin_count // 2, pitch, False)
-                    lcxo_min = ff(lead_contact_x_offset)
-                    lcxo_max = ff(lead_contact_x_offset + lead_contact_length)
-                    body_side = ff(body_width / 2)
-                y_max = ff(y - lead_width / 2)
-                y_min = ff(y + lead_width / 2)
+                    lcxo_min = lead_contact_x_offset
+                    lcxo_max = lead_contact_x_offset + lead_contact_length
+                    body_side = body_width / 2
+                y_max = y - lead_width / 2
+                y_min = y + lead_width / 2
                 lead_uuid_ctct = uuid_leads1[p - 1]  # Contact area
                 lead_uuid_proj = uuid_leads2[p - 1]  # Vertical projection
                 # Contact area
-                lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid_ctct))
-                lines.append('   (width 0.0) (fill true) (grab_area false)')
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_max))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_max, y_max))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_max, y_min))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_min))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_max))
-                lines.append('  )')
+                footprint.add_polygon(Polygon(
+                    uuid=lead_uuid_ctct,
+                    layer=Layer('top_documentation'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(lcxo_min, y_max), Angle(0)),
+                        Vertex(Position(lcxo_max, y_max), Angle(0)),
+                        Vertex(Position(lcxo_max, y_min), Angle(0)),
+                        Vertex(Position(lcxo_min, y_min), Angle(0)),
+                        Vertex(Position(lcxo_min, y_max), Angle(0)),
+                    ],
+                ))
                 # Vertical projection, between contact area and body
-                lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid_proj))
-                lines.append('   (width 0.0) (fill true) (grab_area false)')
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_max))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_max))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(lcxo_min, y_min))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_min))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(body_side, y_max))
-                lines.append('  )')
+                footprint.add_polygon(Polygon(
+                    uuid=lead_uuid_proj,
+                    layer=Layer('top_documentation'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(body_side, y_max), Angle(0)),
+                        Vertex(Position(lcxo_min, y_max), Angle(0)),
+                        Vertex(Position(lcxo_min, y_min), Angle(0)),
+                        Vertex(Position(body_side, y_min), Angle(0)),
+                        Vertex(Position(body_side, y_max), Angle(0)),
+                    ],
+                ))
 
             # Silkscreen (fully outside body)
             # Ensure minimum clearance between copper and silkscreen
             y_offset = max(silkscreen_offset - (body_length / 2 - max_y_copper), 0)
-            y_max = ff(body_length / 2 + line_width / 2 + y_offset)
-            y_min = ff(-body_length / 2 - line_width / 2 - y_offset)
+            y_max = body_length / 2 + line_width / 2 + y_offset
+            y_min = -body_length / 2 - line_width / 2 - y_offset
             short_x_offset = body_width / 2 - line_width / 2
             long_x_offset = total_width / 2 - line_width / 2 + pad_toe  # Pin1 marking
-            lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_top))
-            lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-long_x_offset), y_max))  # noqa
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(short_x_offset), y_max))  # noqa
-            lines.append('  )')
-            lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_bot))
-            lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(-short_x_offset), y_min))  # noqa
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(short_x_offset), y_min))  # noqa
-            lines.append('  )')
+            footprint.add_polygon(Polygon(
+                uuid=uuid_silkscreen_top,
+                layer=Layer('top_legend'),
+                width=Width(line_width),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(-long_x_offset, y_max), Angle(0)),
+                    Vertex(Position(short_x_offset, y_max), Angle(0)),
+                ],
+            ))
+            footprint.add_polygon(Polygon(
+                uuid=uuid_silkscreen_bot,
+                layer=Layer('top_legend'),
+                width=Width(line_width),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(-short_x_offset, y_min), Angle(0)),
+                    Vertex(Position(short_x_offset, y_min), Angle(0)),
+                ],
+            ))
 
             # Documentation outline (fully inside body)
             outline_x_offset = body_width / 2 - line_width / 2
-            lines.append('  (polygon {} (layer top_documentation)'.format(uuid_outline))
-            lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
-            y_max = ff(body_length / 2 - line_width / 2)
-            y_min = ff(-body_length / 2 + line_width / 2)
-            oxo = ff(outline_x_offset)  # Used for shorter code lines below :)
-            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_max))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, y_min))
-            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_min))
-            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, y_max))
-            lines.append('  )')
+            y_max = body_length / 2 - line_width / 2
+            y_min = -body_length / 2 + line_width / 2
+            oxo = outline_x_offset  # Used for shorter code lines below :)
+            footprint.add_polygon(Polygon(
+                uuid=uuid_outline,
+                layer=Layer('top_documentation'),
+                width=Width(line_width),
+                fill=Fill(False),
+                grab_area=GrabArea(True),
+                vertices=[
+                    Vertex(Position(-oxo, y_max), Angle(0)),
+                    Vertex(Position(oxo, y_max), Angle(0)),
+                    Vertex(Position(oxo, y_min), Angle(0)),
+                    Vertex(Position(-oxo, y_min), Angle(0)),
+                    Vertex(Position(-oxo, y_max), Angle(0)),
+                ],
+            ))
             max_y = max(max_y, body_length / 2)  # Body contour
 
             # Courtyard
             courtyard_excess = get_by_density(pitch, density_level, 'courtyard')
-            lines.extend(indent(2, generate_courtyard(
+            footprint.add_polygon(generate_courtyard(
                 uuid=uuid_courtyard,
                 max_x=max_x,
                 max_y=max_y,
                 excess_x=courtyard_excess,
                 excess_y=courtyard_excess,
-            )))
+            ))
 
             # Labels
-            y_max = ff(body_length / 2 + 1.27)
-            y_min = ff(-body_length / 2 - 1.27)
-            text_attrs = '(height {}) (stroke_width 0.2) ' \
-                         '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
-            lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
-            lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(y_max))
-            lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
-            lines.append('  )')
-            lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
-            lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(y_min))
-            lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
-            lines.append('  )')
-
-            lines.append(' )')
+            y_max = body_length / 2 + 1.27
+            y_min = -body_length / 2 - 1.27
+            footprint.add_text(StrokeText(
+                uuid=uuid_text_name,
+                layer=Layer('top_names'),
+                height=Height(pkg_text_height),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center bottom'),
+                position=Position(0.0, y_max),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(True),
+                mirror=Mirror(False),
+                value=Value('{{NAME}}'),
+            ))
+            footprint.add_text(StrokeText(
+                uuid=uuid_text_value,
+                layer=Layer('top_values'),
+                height=Height(pkg_text_height),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center top'),
+                position=Position(0.0, y_min),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(True),
+                mirror=Mirror(False),
+                value=Value('{{VALUE}}'),
+            ))
 
         add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B')
         add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A')
         add_footprint_variant('density~c', 'Density Level C (min protrusion)', 'C')
 
-        lines.append(')')
-
-        pkg_dir_path = path.join('out', library, category, uuid_pkg)
-        if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-            makedirs(pkg_dir_path)
-        with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-            f.write('0.1\n')
-        with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
-            f.write('\n'.join(lines))
-            f.write('\n')
+        package.serialize(path.join('out', library, category))
 
 
 if __name__ == '__main__':
@@ -358,8 +418,8 @@ if __name__ == '__main__':
         author='Danilo B.',
         name='SOIC{pitch}P762X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
-                    'standardized by EIAJ.\\n\\n'
-                    'Pitch: {pitch:.2f} mm\\nNominal width: 7.62mm\\nHeight: {height:.2f}mm',
+                    'standardized by EIAJ.\n\n'
+                    'Pitch: {pitch:.2f} mm\nNominal width: 7.62mm\nHeight: {height:.2f}mm',
         configs=configs,
         lead_width_lookup={1.27: 0.4},
         lead_contact_length=0.8,
@@ -381,8 +441,8 @@ if __name__ == '__main__':
         author='Danilo B.',
         name='SOIC{pitch}P1524X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
-                    'standardized by EIAJ.\\n\\n'
-                    'Pitch: {pitch:.2f} mm\\nNominal width: 15.24mm\\nHeight: {height:.2f}mm',
+                    'standardized by EIAJ.\n\n'
+                    'Pitch: {pitch:.2f} mm\nNominal width: 15.24mm\nHeight: {height:.2f}mm',
         configs=configs,
         lead_width_lookup={1.27: 0.4},
         lead_contact_length=0.8,
@@ -404,8 +464,8 @@ if __name__ == '__main__':
         author='Danilo B.',
         name='SOIC{pitch}P600X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
-                    'standardized by JEDEC (MS-012G).\\n\\n'
-                    'Pitch: {pitch:.2f} mm\\nNominal width: 6.00mm\\nHeight: {height:.2f}mm',
+                    'standardized by JEDEC (MS-012G).\n\n'
+                    'Pitch: {pitch:.2f} mm\nNominal width: 6.00mm\nHeight: {height:.2f}mm',
         configs=configs,
         lead_width_lookup={1.27: 0.45},
         lead_contact_length=0.835,
@@ -427,8 +487,8 @@ if __name__ == '__main__':
         author='U. Bruhin',
         name='SOIC{pitch}P1030X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
-                    'standardized by JEDEC (MS-013F).\\n\\n'
-                    'Pitch: {pitch:.2f} mm\\nNominal width: 10.30mm\\nHeight: {height:.2f}mm',
+                    'standardized by JEDEC (MS-013F).\n\n'
+                    'Pitch: {pitch:.2f} mm\nNominal width: 10.30mm\nHeight: {height:.2f}mm',
         configs=configs,
         lead_width_lookup={1.27: 0.45},
         lead_contact_length=0.835,
@@ -445,11 +505,11 @@ if __name__ == '__main__':
         # Name according to IPC7351C
         name='TSSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
         description='{pin_count}-pin Thin-Shrink Small Outline Package (TSSOP), '
-                    'standardized by JEDEC (MO-153), variation {variation}.\\n\\n'
-                    'Pitch: {pitch:.2f} mm\\nBody length: {body_length:.2f} mm\\n'
-                    'Body width: {body_width:.2f} mm\\nLead span: {lead_span:.2f} mm\\n'
-                    'Height: {height:.2f} mm\\n'
-                    'Lead length: {lead_length:.2f} mm\\nLead width: {lead_width:.2f} mm',
+                    'standardized by JEDEC (MO-153), variation {variation}.\n\n'
+                    'Pitch: {pitch:.2f} mm\nBody length: {body_length:.2f} mm\n'
+                    'Body width: {body_width:.2f} mm\nLead span: {lead_span:.2f} mm\n'
+                    'Height: {height:.2f} mm\n'
+                    'Lead length: {lead_length:.2f} mm\nLead width: {lead_width:.2f} mm',
         configs=[
             # pin count, pitch, body length, body width, total width, height
 
@@ -542,11 +602,11 @@ if __name__ == '__main__':
         # Name according to IPC7351C
         name='SSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
         description='{pin_count}-pin Plastic Shrink Small Outline Package (SSOP), '
-                    'standardized by JEDEC (MO-152), variation {variation}.\\n\\n'
-                    'Pitch: {pitch:.2f} mm\\nBody length: {body_length:.2f} mm\\n'
-                    'Body width: {body_width:.2f} mm\\nLead span: {lead_span:.2f} mm\\n'
-                    'Height: {height:.2f} mm\\n'
-                    'Lead length: {lead_length:.2f} mm\\nLead width: {lead_width:.2f} mm',
+                    'standardized by JEDEC (MO-152), variation {variation}.\n\n'
+                    'Pitch: {pitch:.2f} mm\nBody length: {body_length:.2f} mm\n'
+                    'Body width: {body_width:.2f} mm\nLead span: {lead_span:.2f} mm\n'
+                    'Height: {height:.2f} mm\n'
+                    'Lead length: {lead_length:.2f} mm\nLead width: {lead_width:.2f} mm',
         configs=[
             # pin count, pitch, body length, body width, total width, height
 
@@ -632,11 +692,11 @@ if __name__ == '__main__':
         # Name according to IPC7351C
         name='SSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
         description='{pin_count}-pin Plastic Shrink Small Outline Package (SSOP), '
-                    'standardized by JEDEC (MO-150), variation {variation}.\\n\\n'
-                    'Pitch: {pitch:.2f} mm\\nBody length: {body_length:.2f} mm\\n'
-                    'Body width: {body_width:.2f} mm\\nLead span: {lead_span:.2f} mm\\n'
-                    'Height: {height:.2f} mm\\n'
-                    'Lead length: {lead_length:.2f} mm\\nLead width: {lead_width:.2f} mm',
+                    'standardized by JEDEC (MO-150), variation {variation}.\n\n'
+                    'Pitch: {pitch:.2f} mm\nBody length: {body_length:.2f} mm\n'
+                    'Body width: {body_width:.2f} mm\nLead span: {lead_span:.2f} mm\n'
+                    'Height: {height:.2f} mm\n'
+                    'Lead length: {lead_length:.2f} mm\nLead width: {lead_width:.2f} mm',
         configs=[
             # pin count, pitch, body length, body width, total width, height
 
@@ -671,11 +731,11 @@ if __name__ == '__main__':
         # Name extrapolated from IPC7351C
         name='TSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
         description='{pin_count}-pin Thin Small Outline Package (TSOP), '
-                    'standardized by JEDEC (MS-024), Type II (pins on longer side), variation {variation}.\\n\\n'
-                    'Pitch: {pitch:.2f} mm\\nBody length: {body_length:.2f} mm\\n'
-                    'Body width: {body_width:.2f} mm\\nLead span: {lead_span:.2f} mm\\n'
-                    'Height: {height:.2f} mm\\n'
-                    'Lead length: {lead_length:.2f} mm\\nLead width: {lead_width:.2f} mm',
+                    'standardized by JEDEC (MS-024), Type II (pins on longer side), variation {variation}.\n\n'
+                    'Pitch: {pitch:.2f} mm\nBody length: {body_length:.2f} mm\n'
+                    'Body width: {body_width:.2f} mm\nLead span: {lead_span:.2f} mm\n'
+                    'Height: {height:.2f} mm\n'
+                    'Lead length: {lead_length:.2f} mm\nLead width: {lead_width:.2f} mm',
         configs=[
             # pin count, pitch, body length, body width, total width, height
 
