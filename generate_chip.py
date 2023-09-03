@@ -5,6 +5,7 @@ Generate the following packages:
 - Chip capacitors SMT
 
 """
+import sys
 from os import path
 from uuid import uuid4
 
@@ -19,9 +20,9 @@ from entities.common import (
 from entities.component import SignalUUID
 from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
-    Mirror, Package, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size, SolderPasteConfig,
-    StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, Footprint3DModel, FootprintPad, LetterSpacing,
+    LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size,
+    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
 
 generator = 'librepcb-parts-generator (generate_chip.py)'
@@ -184,10 +185,12 @@ class PolarizationConfig:
 def generate_pkg(
     library: str,
     author: str,
+    package_type: str,
     name: str,
     description: str,
     polarization: Optional[PolarizationConfig],
     configs: Iterable[ChipConfig],
+    generate_3d_models: bool,
     pkgcat: str,
     keywords: str,
     version: str,
@@ -206,6 +209,7 @@ def generate_pkg(
             'height': fd(config.body.height),
             'lead_length': fd(config.body.lead_length) if config.body.lead_length else None,
             'lead_width': fd(config.body.lead_width) if config.body.lead_width else None,
+            'package_type': package_type,
         }
         fmt_params_desc = {
             **fmt_params,
@@ -581,7 +585,75 @@ def generate_pkg(
         else:
             raise ValueError('Either gap or footprints must be set')
 
+        # Generate 3D models (for certain package types)
+        if package_type in ['RESC', 'CAPC']:
+            uuid_3d = uuid('pkg', full_name, '3d')
+            if generate_3d_models:
+                generate_3d(library, package_type, full_name, uuid_pkg, uuid_3d, config)
+            package.add_3d_model(Package3DModel(uuid_3d, Name(full_name)))
+            for footprint in package.footprints:
+                footprint.add_3d_model(Footprint3DModel(uuid_3d))
+
         package.serialize(path.join('out', library, category))
+
+
+def generate_3d(
+    library: str,
+    package_type: str,
+    full_name: str,
+    uuid_pkg: str,
+    uuid_3d: str,
+    config: ChipConfig,
+) -> None:
+    import cadquery as cq
+
+    from cadquery_helpers import StepAssembly
+
+    print(f'Generating pkg 3D model "{full_name}": {uuid_3d}')
+
+    length = config.body.length
+    width = config.body.width
+    height = config.body.height
+
+    max_fillet = 0.25 if package_type == 'CAPC' else 0.05
+    fillet = min(height * 0.2, max_fillet)
+
+    gap = config.gap or config.body.gap
+    if gap is None:
+        raise RuntimeError('Generating 3D models not supported for configs without gap')
+    edge = (length - gap) / 2
+    translation = (0, 0, height / 2)
+    edge_offset = length / 2 - edge
+
+    inner = cq.Workplane("XY") \
+        .box(length - 2 * edge, width, height) \
+        .edges('+X').fillet(fillet) \
+        .translate(translation)
+    left = cq.Workplane("XY") \
+        .box(edge, width, height) \
+        .edges('+X or <X').fillet(fillet) \
+        .translate(translation) \
+        .translate((-edge_offset - edge / 2, 0, 0))
+    right = cq.Workplane("XY") \
+        .box(edge, width, height) \
+        .edges('+X or >X').fillet(fillet) \
+        .translate(translation) \
+        .translate((edge_offset + edge / 2, 0, 0))
+
+    if package_type == 'RESC':
+        inner_color = cq.Color('gray16')
+    elif package_type == 'CAPC':
+        inner_color = cq.Color('bisque3')
+    else:
+        raise RuntimeError(f'Unsupported 3D package type: {package_type}')
+
+    assembly = StepAssembly(full_name)
+    assembly.add_body(inner, 'inner', inner_color)
+    assembly.add_body(left, 'left', cq.Color("gainsboro"))
+    assembly.add_body(right, 'right', cq.Color("gainsboro"))
+
+    out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
+    assembly.save(out_path)
 
 
 def generate_dev(
@@ -640,11 +712,24 @@ def generate_dev(
 
 
 if __name__ == '__main__':
+    if '--help' in sys.argv or '-h' in sys.argv:
+        print(f'Usage: {sys.argv[0]} [--3d]')
+        print()
+        print('Options:')
+        print('  --3d    Generate 3D models using cadquery')
+        sys.exit(1)
+
+    generate_3d_models = '--3d' in sys.argv
+    if not generate_3d_models:
+        warning = 'Note: Not generating 3D models unless the "--3d" argument is passed in!'
+        print(f'\033[1;33m{warning}\033[0m')
+
     # Chip resistors (RESC)
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
-        name='RESC{size_metric} ({size_imperial})',
+        package_type='RESC',
+        name='{package_type}{size_metric} ({size_imperial})',
         description='Generic chip resistor {size_metric} (imperial {size_imperial}).\n\n'
                     'Length: {length}mm\nWidth: {width}mm',
         polarization=None,
@@ -661,6 +746,7 @@ if __name__ == '__main__':
             ChipConfig('2010',  BodyDimensions(5.0, 2.5,  0.70), gap=3.3),   # noqa
             ChipConfig('2512',  BodyDimensions(6.4, 3.2,  0.70), gap=4.6),   # noqa
         ],
+        generate_3d_models=generate_3d_models,
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,chip,generic',
         version='0.3.2',
@@ -670,13 +756,15 @@ if __name__ == '__main__':
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
-        name='RESJ{size_metric} ({size_imperial})',
+        package_type='RESJ',
+        name='{package_type}{size_metric} ({size_imperial})',
         description='Generic J-lead resistor {size_metric} (imperial {size_imperial}).\n\n'
                     'Length: {length}mm\nWidth: {width}mm',
         polarization=None,
         configs=[
             ChipConfig('4527', BodyDimensions(11.56, 6.98, 5.84), gap=5.2),
         ],
+        generate_3d_models=generate_3d_models,
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,j-lead,generic',
         version='0.3.2',
@@ -686,7 +774,8 @@ if __name__ == '__main__':
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='murray',
-        name='CAPC{size_metric} ({size_imperial})',
+        package_type='CAPC',
+        name='{package_type}{size_metric} ({size_imperial})',
         description='Generic chip capacitor {size_metric} (imperial {size_imperial}).\n\n'
                     'Length: {length}mm\nWidth: {width}mm',
         polarization=None,
@@ -716,6 +805,7 @@ if __name__ == '__main__':
             # C9210
             ChipConfig('3640', BodyDimensions(9.2, 10.16, 2.8), gap=6.4),
         ],
+        generate_3d_models=generate_3d_models,
         pkgcat='414f873f-4099-47fd-8526-bdd8419de581',
         keywords='c,capacitor,chip,generic',
         version='0.3',
@@ -728,7 +818,8 @@ if __name__ == '__main__':
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
-        name='CAPPM{length}X{width}X{height}L{lead_length}X{lead_width}',
+        package_type='CAPPM',
+        name='{package_type}{length}X{width}X{height}L{lead_length}X{lead_width}',
         description='Generic polarized molded inward-L capacitor (EIA {meta[eia]}).\n\n'
                     'Length: {length}mm\nWidth: {width}mm\nMax height: {height}mm\n\n'
                     'EIA Size Code: {meta[eia]}\n'
@@ -796,6 +887,7 @@ if __name__ == '__main__':
                 'C': FootprintDimensions(1.99, 2.33, 4.03),
             }, meta={'eia': '7343-43', 'kemet': 'X', 'avx': 'E'}),
         ],
+        generate_3d_models=generate_3d_models,
         pkgcat='414f873f-4099-47fd-8526-bdd8419de581',
         keywords='c,capacitor,j-lead,inward-l,molded,generic,kemet {meta[kemet]},avx {meta[avx]}',
         version='0.1',

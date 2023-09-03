@@ -21,6 +21,7 @@ dev-resistor~3225~(1210)-dev,a5153d16-a78b-439c-876b-12d12a607237
 dev-resistor~3246~(1218)-dev,3a5ce2ef-4c16-459f-a6b8-f914508a17a1
 dev-resistor~5025~(2010)-dev,5512ed40-604c-43fd-802c-1da10d419357
 dev-resistor~6432~(2512)-dev,52876458-2396-4ade-8280-6a033efa911f
+pkg-capc0402~(01005)-3d,73f34ee6-fd11-4980-a03b-127ee8ab9482
 pkg-capc0402~(01005)-footprint-density~a,5107f609-8a98-4335-b26f-494b7d2ccd85
 pkg-capc0402~(01005)-footprint-density~b,d5cb4794-090f-4c09-b02c-c77dce04ef34
 pkg-capc0402~(01005)-line-silkscreen-bot-density~a,6e37bcda-6177-43d3-995c-270c05858ca7
@@ -48,6 +49,7 @@ pkg-capc0402~(01005)-text-name-density~a,f5a3af16-48de-4d8a-82db-a54d92669de1
 pkg-capc0402~(01005)-text-name-density~b,d14bd8c8-c1d0-4270-b149-33aa2ef0847c
 pkg-capc0402~(01005)-text-value-density~a,184836d5-620a-4945-ad8f-93206dba81c1
 pkg-capc0402~(01005)-text-value-density~b,101f24a8-f1a1-436f-99b3-b0db9bf833ad
+pkg-capc0603~(0201)-3d,d79bba4d-d1c9-4629-8bc9-33f3b2d1a1ee
 pkg-capc0603~(0201)-footprint-density~a,21a20d7c-a20a-4512-86c4-8b40d5ce63fd
 pkg-capc0603~(0201)-footprint-density~b,984d655b-da8b-482f-83f2-17540a9dbe96
 pkg-capc0603~(0201)-line-silkscreen-bot-density~a,be48f10f-4f6b-4758-86f7-aaa259c6a92d
@@ -75,6 +77,7 @@ pkg-capc0603~(0201)-text-name-density~a,f0462255-a3be-4921-bd5f-9e48c91ea237
 pkg-capc0603~(0201)-text-name-density~b,ff57428f-9e38-485e-9f59-5a31bc2aaafa
 pkg-capc0603~(0201)-text-value-density~a,4f932f5f-84ab-4143-a692-b04a51de17b0
 pkg-capc0603~(0201)-text-value-density~b,86ef971a-4694-4670-920e-1d25791393c4
+pkg-capc1005~(0402)-3d,351c3b6e-ccf6-4b55-8f82-c32f2ddd35fe
 pkg-capc1005~(0402)-footprint-density~a,8b20cda7-50e2-45e6-9f9f-82664d8e6f28
 pkg-capc1005~(0402)-footprint-density~b,aecdaa8d-2033-4d4e-aa55-bce599619b07
 pkg-capc1005~(0402)-line-silkscreen-bot-density~a,f20a8167-c2e1-42b1-b614-4da97eed979c
@@ -102,6 +105,7 @@ pkg-capc1005~(0402)-text-name-density~a,617190d6-2ea7-4518-80d8-400be44bada1
 pkg-capc1005~(0402)-text-name-density~b,3bbdbe05-14bd-40de-b5cf-bd8892b41cc5
 pkg-capc1005~(0402)-text-value-density~a,1a370cc5-f57b-4d09-8161-e5e99804e74d
 pkg-capc1005~(0402)-text-value-density~b,69f46c6d-835a-449b-b38f-92af308280b1
+pkg-capc1608~(0603)-3d,4a168e10-d86b-4f61-a0c8-1376973ceead
 pkg-capc1608~(0603)-footprint-density~a,d61e4907-6a28-4015-a0be-5885f7cc1bc6
 pkg-capc1608~(0603)-footprint-density~b,a77e5176-25d1-4b3a-872d-3dd32f6f9cbe
 pkg-capc1608~(0603)-line-silkscreen-bot-density~a,7bae5352-667d-4c72-8a6f-0d1c572e0616
@@ -129,6 +133,7 @@ pkg-capc1608~(0603)-text-name-density~a,bddc4fc9-5a69-4e26-a793-b1c90667ea90
 pkg-capc1608~(0603)-text-name-density~b,069597b0-1c19-435c-82e7-0803274ac800
 pkg-capc1608~(0603)-text-value-density~a,33c4f671-7cf1-45e7-97a6-3c01f16e421a
 pkg-capc1608~(0603)-text-value-density~b,f698f76d-7ec7-4cd5-aa77-b707bfeca833
+pkg-capc2012~(0805)-3d,5d053e45-ab76-407c-88ae-d7936dff282b
 pkg-capc2012~(0805)-footprint-density~a,328e4ae0-a0f1-4d92-87b5-1695afbe98e1
 pkg-capc2012~(0805)-footprint-density~b,2f2ea7e1-052e-4308-abec-85b5d2bd1d65
 pkg-capc2012~(0805)-line-silkscreen-bot-density~a,f070706a-cfca-4acf-99f5-1d7776e1fde4
@@ -156,6 +161,7 @@ pkg-capc2012~(0805)-text-name-density~a,e5af5e70-716a-456f-a595-43b71d7b578c
 pkg-capc2012~(0805)-text-name-density~b,3c4417a8-0e5c-48b0-822a-06f6f5df19f6
 pkg-capc2012~(0805)-text-value-density~a,53bbc432-323e-4945-8de0-f978d245c6cd
 pkg-capc2012~(0805)-text-value-density~b,52f75e24-4492-4616-a8ed-a1c0f3138abe
+pkg-capc3216~(1206)-3d,37a28abd-4fb8-4ba6-80cb-f6e9a26a9798
 pkg-capc3216~(1206)-footprint-density~a,8f1c52fc-e0ae-4a0a-acae-cb044a6d413c
 pkg-capc3216~(1206)-footprint-density~b,0ff03d40-c63a-4add-bd3c-5de12051d696
 pkg-capc3216~(1206)-line-silkscreen-bot-density~a,44be424d-f762-46c5-8168-0ab9635832f4
@@ -183,6 +189,7 @@ pkg-capc3216~(1206)-text-name-density~a,44100be3-927c-4e19-97aa-f1a9bbcf7acd
 pkg-capc3216~(1206)-text-name-density~b,a89e5595-0c86-4b3d-ac4f-8dc4edc7d046
 pkg-capc3216~(1206)-text-value-density~a,c7f31ff0-c725-4ea1-9256-26903d809749
 pkg-capc3216~(1206)-text-value-density~b,42d1737c-8a35-40b5-aa4d-ae690c62bd5d
+pkg-capc3225~(1210)-3d,5ac76b31-6b62-4222-9c1c-1c18a81ff3be
 pkg-capc3225~(1210)-footprint-density~a,2b9cf5e4-b75a-4462-99cf-1b4fb65400c9
 pkg-capc3225~(1210)-footprint-density~b,06e32be2-156c-4456-b124-38864dcec522
 pkg-capc3225~(1210)-line-silkscreen-bot-density~a,2e730782-5a81-44c6-a114-33fcf76c7cbf
@@ -210,6 +217,7 @@ pkg-capc3225~(1210)-text-name-density~a,dc0ae526-36e1-44a3-9aa9-f148c622ec54
 pkg-capc3225~(1210)-text-name-density~b,dfb5a519-f228-4c8f-bb74-92d7bd0860b3
 pkg-capc3225~(1210)-text-value-density~a,e2f7b384-6005-4c62-976a-a19ee667000e
 pkg-capc3225~(1210)-text-value-density~b,16437b16-e13b-48e8-bb60-84e1b835a068
+pkg-capc4520~(1808)-3d,39124023-56bf-4eb9-a7ec-d61f1e4e57ba
 pkg-capc4520~(1808)-footprint-density~a,d21a931c-9915-4d66-a999-61e715edafc7
 pkg-capc4520~(1808)-footprint-density~b,919cb699-73f9-4f96-8781-d40582f1ae8f
 pkg-capc4520~(1808)-line-silkscreen-bot-density~a,c0df7575-5da0-45f3-a1ad-95f8aa3985dc
@@ -237,6 +245,7 @@ pkg-capc4520~(1808)-text-name-density~a,9c808778-d401-4e11-89bc-78d20693e77c
 pkg-capc4520~(1808)-text-name-density~b,42eafd19-c520-47a9-a828-fe723d7450dd
 pkg-capc4520~(1808)-text-value-density~a,774af680-6557-4f52-aab8-424a482111a7
 pkg-capc4520~(1808)-text-value-density~b,d206f51d-a01d-44e9-b8dd-5891f4c9548d
+pkg-capc4532~(1812)-3d,691e72c7-d618-46aa-bb14-7513221fffbb
 pkg-capc4532~(1812)-footprint-density~a,51c36066-7fa5-48be-adbf-e8b9f2270e75
 pkg-capc4532~(1812)-footprint-density~b,cd858bd6-7eaf-4821-9f87-467ba974c076
 pkg-capc4532~(1812)-line-silkscreen-bot-density~a,ccc7a8da-95c4-465b-960e-47e21facb8a6
@@ -264,6 +273,7 @@ pkg-capc4532~(1812)-text-name-density~a,1a87f792-5dc2-4976-a7ab-c4af0ee3f5ea
 pkg-capc4532~(1812)-text-name-density~b,29e9bd34-6b94-40a3-bc93-cdaea325ad9d
 pkg-capc4532~(1812)-text-value-density~a,259ef008-d9fb-418e-a469-45e27ca32e17
 pkg-capc4532~(1812)-text-value-density~b,7ddb7260-d024-481e-a95e-05bda1ce3c23
+pkg-capc4564~(1825)-3d,5e8e1dbf-ee30-46b5-9c66-5d66e5b7ed6e
 pkg-capc4564~(1825)-footprint-density~a,77b78a8a-1839-42d5-acac-b98479b01d49
 pkg-capc4564~(1825)-footprint-density~b,69d0f3d4-2a68-464c-951b-b1526d391c39
 pkg-capc4564~(1825)-line-silkscreen-bot-density~a,ac93d4dd-b759-4d39-96f1-3b91afe1d105
@@ -291,6 +301,7 @@ pkg-capc4564~(1825)-text-name-density~a,c90e5b96-cacc-4afa-a59b-2c26cda21399
 pkg-capc4564~(1825)-text-name-density~b,981d282e-d494-49a9-8ecb-9be22bc91ed9
 pkg-capc4564~(1825)-text-value-density~a,eb01328d-74bb-45dd-bed2-c093dd1b225a
 pkg-capc4564~(1825)-text-value-density~b,d6ba956a-72af-4265-9680-44471d318e98
+pkg-capc5750~(2220)-3d,35822b47-c8b0-4596-99d7-b516841f230a
 pkg-capc5750~(2220)-footprint-density~a,6c809531-30e2-49b9-864e-abe55ad439b1
 pkg-capc5750~(2220)-footprint-density~b,b85aaf35-931a-4acb-be96-d840fba17390
 pkg-capc5750~(2220)-line-silkscreen-bot-density~a,45599d4a-7ce4-4548-8767-4cc3fb1ce334
@@ -318,6 +329,7 @@ pkg-capc5750~(2220)-text-name-density~a,af162e47-14ac-493c-ae88-ed92e191891f
 pkg-capc5750~(2220)-text-name-density~b,dd5cefde-2166-4e40-8d82-216594c6f892
 pkg-capc5750~(2220)-text-value-density~a,b1141f99-bfa4-4dde-90dd-952260dcd6a2
 pkg-capc5750~(2220)-text-value-density~b,97560f20-b638-4a16-951e-14f19e458d18
+pkg-capc9210~(3640)-3d,526c94e1-056d-4e6e-8531-64f3e22ca823
 pkg-capc9210~(3640)-footprint-density~a,3433314d-f78a-48ba-a434-944bbee5b139
 pkg-capc9210~(3640)-footprint-density~b,4b880d27-abf4-403b-99ca-aafbf1e61b5f
 pkg-capc9210~(3640)-line-silkscreen-bot-density~a,d1a019e3-0657-4dfb-bf99-d2e03c251738
@@ -774,6 +786,7 @@ pkg-cappm730x600x380l130x410-text-name-density~c,26eec489-c37c-4426-a709-14786bf
 pkg-cappm730x600x380l130x410-text-value-density~a,8751c57c-9249-4b2c-936c-2078247ba375
 pkg-cappm730x600x380l130x410-text-value-density~b,d53356a9-57a1-4cb9-969f-6edd2ee5ac0f
 pkg-cappm730x600x380l130x410-text-value-density~c,6bc50c55-6ef4-4c80-a4e3-036a82aff3ca
+pkg-resc0402~(01005)-3d,3e09bb48-d788-4dce-ad29-476e69382838
 pkg-resc0402~(01005)-footprint-density~a,8c6d3f1c-f659-4df8-9c5f-e78b5276b216
 pkg-resc0402~(01005)-footprint-density~b,6bc08ffc-d8b2-43c5-b927-6f24965a6fab
 pkg-resc0402~(01005)-line-silkscreen-bot-density~a,1ee09437-a55d-4503-9097-6c7bfa138bce
@@ -801,6 +814,7 @@ pkg-resc0402~(01005)-text-name-density~a,654e8c62-d8f9-4797-8a1d-82230a577f8b
 pkg-resc0402~(01005)-text-name-density~b,816289f0-dfcf-4d54-b0c9-c363b986e14c
 pkg-resc0402~(01005)-text-value-density~a,a20d54fe-9179-41c0-8943-33e03c04bf8e
 pkg-resc0402~(01005)-text-value-density~b,110c490c-bae8-468a-a4dc-eabe337a8d5c
+pkg-resc0603~(0201)-3d,0e4451c6-aff7-4b9b-a43b-cc61fc9cdde7
 pkg-resc0603~(0201)-footprint-density~a,3739bd6f-bbde-43c9-bda8-72b801569276
 pkg-resc0603~(0201)-footprint-density~b,69f24f45-ec80-4153-ad0a-25db491e3b41
 pkg-resc0603~(0201)-line-silkscreen-bot-density~a,c96a6411-912d-4531-975b-7cae0569290e
@@ -828,6 +842,7 @@ pkg-resc0603~(0201)-text-name-density~a,b936ef8c-71a2-4f16-bebc-2286d034ac43
 pkg-resc0603~(0201)-text-name-density~b,a34cf139-68f2-4e2f-b232-85582e2ec58a
 pkg-resc0603~(0201)-text-value-density~a,dcfbd410-396c-45eb-a780-c29c1ebcca4f
 pkg-resc0603~(0201)-text-value-density~b,6caff316-474e-4b70-b96f-1dc3e8c88e06
+pkg-resc1005~(0402)-3d,e7f4446a-786e-46a8-bb07-a0d0bc73e98a
 pkg-resc1005~(0402)-footprint-density~a,1abd2df7-4393-46bb-8aa5-fb7c23b2717e
 pkg-resc1005~(0402)-footprint-density~b,244d2cbe-9562-46ad-a8d9-8b29e0a3c0cc
 pkg-resc1005~(0402)-line-silkscreen-bot-density~a,6742f214-0b5d-48d2-a182-a8717be29006
@@ -855,6 +870,7 @@ pkg-resc1005~(0402)-text-name-density~a,637a4a70-f61f-42cd-b153-ca8d0c2cb4ba
 pkg-resc1005~(0402)-text-name-density~b,4a8fbb61-7d39-4aea-b728-4553fbf9d277
 pkg-resc1005~(0402)-text-value-density~a,bb2ad320-2956-402f-968a-ac4e51ed6364
 pkg-resc1005~(0402)-text-value-density~b,b8e78b85-e09a-42e6-a42a-0b4838511154
+pkg-resc1608~(0603)-3d,2d9f20e6-c3dc-422c-ae1e-e278f6ae8328
 pkg-resc1608~(0603)-footprint-density~a,4fceac63-0f89-46c4-8e93-d6ee67d33e69
 pkg-resc1608~(0603)-footprint-density~b,2a40ad27-1ab7-41ee-8f60-d70df83927a5
 pkg-resc1608~(0603)-line-silkscreen-bot-density~a,09a8ba9d-b5a5-4a4a-83da-9905af60b356
@@ -882,6 +898,7 @@ pkg-resc1608~(0603)-text-name-density~a,8e9560af-ad15-43c7-9089-5091c274409e
 pkg-resc1608~(0603)-text-name-density~b,0523853e-390b-480d-80f0-22df28be1042
 pkg-resc1608~(0603)-text-value-density~a,2908ba24-cc11-4fab-8a0c-3afad79255b9
 pkg-resc1608~(0603)-text-value-density~b,fa5fb8d1-fd3c-41ba-a14a-dc3c97f890d7
+pkg-resc2012~(0805)-3d,70a52ef3-ce4d-480a-a79b-5929f52ddf44
 pkg-resc2012~(0805)-footprint-density~a,75d2f5cb-4920-4f04-a83d-21bd28174f10
 pkg-resc2012~(0805)-footprint-density~b,e8596efa-bd51-4063-87aa-a44fa5640576
 pkg-resc2012~(0805)-line-silkscreen-bot-density~a,07710817-ff2b-4348-8cf3-50894f67725a
@@ -909,6 +926,7 @@ pkg-resc2012~(0805)-text-name-density~a,e72d97da-70f0-4595-b92d-2c67ab3eeac3
 pkg-resc2012~(0805)-text-name-density~b,4950b973-32f3-4283-a608-5ba302ece963
 pkg-resc2012~(0805)-text-value-density~a,ff99e004-056c-46d0-a157-acce83932e7f
 pkg-resc2012~(0805)-text-value-density~b,bb6f494d-576b-4b13-b10c-fd0781c5b8c3
+pkg-resc3216~(1206)-3d,a7b6870c-f390-4ad3-ae99-bc5b9e654210
 pkg-resc3216~(1206)-footprint-density~a,95e55ff1-3db6-46b2-8319-0d0a7420d15f
 pkg-resc3216~(1206)-footprint-density~b,3983cdc8-617d-4016-b8ba-5bc3002994cb
 pkg-resc3216~(1206)-line-silkscreen-bot-density~a,99dc95f0-c7a0-42cb-a1f5-2e4e2d5b0904
@@ -936,6 +954,7 @@ pkg-resc3216~(1206)-text-name-density~a,dc46cfac-cd12-45c0-af56-4bc565c8bcb0
 pkg-resc3216~(1206)-text-name-density~b,49a0d0fc-aeb5-43ac-a7d9-a5d687ab224c
 pkg-resc3216~(1206)-text-value-density~a,cbeaeee2-44a7-4a54-b1f1-bc74b9585cb7
 pkg-resc3216~(1206)-text-value-density~b,a39099cd-ce19-488d-8e25-ba869e6e9fd5
+pkg-resc3225~(1210)-3d,b9c07ce0-72a4-486e-af31-f64d8d082553
 pkg-resc3225~(1210)-footprint-density~a,bf5fe775-1694-4ab4-83f8-0981f878455e
 pkg-resc3225~(1210)-footprint-density~b,f43318d6-cdaf-45c5-a8c6-2855083fa8fb
 pkg-resc3225~(1210)-line-silkscreen-bot-density~a,00737d3c-57d4-4530-b0a1-9a5865318c71
@@ -963,6 +982,7 @@ pkg-resc3225~(1210)-text-name-density~a,7098d51d-705d-4714-8d82-ef1969f463a5
 pkg-resc3225~(1210)-text-name-density~b,e0af076b-e3d0-4864-8e6f-16be85e9e2ca
 pkg-resc3225~(1210)-text-value-density~a,cb3e9c1a-08d2-4ccc-885f-c7548854e681
 pkg-resc3225~(1210)-text-value-density~b,de9e465b-4753-482a-8e0d-f03b6bba3379
+pkg-resc3246~(1218)-3d,5c33b26e-3302-47ac-8e03-ca96dd3987cc
 pkg-resc3246~(1218)-footprint-density~a,3d38b934-b6be-439b-9a06-b4c359819908
 pkg-resc3246~(1218)-footprint-density~b,6c06ffaf-bc52-4ef1-a5cf-e4941cb2a168
 pkg-resc3246~(1218)-line-silkscreen-bot-density~a,65c30f1c-d81e-4952-9d66-0602f5401e22
@@ -990,6 +1010,7 @@ pkg-resc3246~(1218)-text-name-density~a,58f0ffa3-2c9e-444e-a70b-667f25dda91b
 pkg-resc3246~(1218)-text-name-density~b,9f28365f-27c6-4e5b-aca6-4145007d787a
 pkg-resc3246~(1218)-text-value-density~a,0c918266-f8a7-4349-9db9-ed72fbb9526a
 pkg-resc3246~(1218)-text-value-density~b,c79e2fd9-c259-4966-8ecf-b5f6e24f3b0e
+pkg-resc5025~(2010)-3d,e59e38f3-5ffd-447d-bda9-b1ef6aba4301
 pkg-resc5025~(2010)-footprint-density~a,2534ea27-83f7-4913-9c69-7918afec2203
 pkg-resc5025~(2010)-footprint-density~b,1e6bb096-359c-4a87-b29a-8c100f9ee5f5
 pkg-resc5025~(2010)-line-silkscreen-bot-density~a,414e1fb9-fb2b-457c-86d2-62cb2311a4b0
@@ -1017,6 +1038,7 @@ pkg-resc5025~(2010)-text-name-density~a,31361b7f-3382-4d65-815b-c695b921f09b
 pkg-resc5025~(2010)-text-name-density~b,b836798a-708a-454c-86e3-fadcb58f5c22
 pkg-resc5025~(2010)-text-value-density~a,adec4047-3988-4cf9-bdba-f70cb880c2e0
 pkg-resc5025~(2010)-text-value-density~b,b6b4849b-45d0-43ff-8520-4833e5f79057
+pkg-resc6432~(2512)-3d,9e33cd83-86b3-4b6a-83e7-fe37c87a8d91
 pkg-resc6432~(2512)-footprint-density~a,433d3637-0943-436a-b1c6-cac0b226a050
 pkg-resc6432~(2512)-footprint-density~b,dd258204-3f2c-47fb-bac6-1346f03fcd1a
 pkg-resc6432~(2512)-line-silkscreen-bot-density~a,32d96587-c3dd-4825-a802-4e0ac3a66e5a
