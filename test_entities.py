@@ -9,9 +9,9 @@ from entities.component import (
 )
 from entities.device import ComponentPad, ComponentUUID, Device, Manufacturer, PackageUUID, Part
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, FootprintPad, LetterSpacing,
-    LineSpacing, Mirror, Package, PackagePad, PackagePadUuid, PadFunction, PadHole, Shape, ShapeRadius, Size,
-    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, Footprint3DModel, FootprintPad,
+    LetterSpacing, LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, PadHole,
+    Shape, ShapeRadius, Size, SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
 from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation
 from entities.symbol import Pin as SymbolPin
@@ -315,6 +315,7 @@ def create_footprint() -> Footprint:
         Position3D(1.0, 2.0, 3.0),
         Rotation3D(10.0, 20.0, 30.0),
     )
+    footprint.add_3d_model(Footprint3DModel('ea459880-68df-4929-b796-b5c8686a1862'))
     footprint.add_pad(FootprintPad(
         '5c4d39d3-35cc-4836-a082-693143ee9135',
         ComponentSide.TOP,
@@ -375,6 +376,7 @@ def test_footprint() -> None:
  (name "default")
  (description "")
  (3d_position 1.0 2.0 3.0) (3d_rotation 10.0 20.0 30.0)
+ (3d_model ea459880-68df-4929-b796-b5c8686a1862)
  (pad 5c4d39d3-35cc-4836-a082-693143ee9135 (side top) (shape roundrect)
   (position 0.0 22.86) (rotation 0.0) (size 2.54 1.587) (radius 0.5)
   (stop_mask auto) (solder_paste off) (clearance 0.1) (function unspecified)
@@ -425,6 +427,8 @@ def test_package() -> None:
     package.add_pad(PackagePad('5c4d39d3-35cc-4836-a082-693143ee9135', Name('1')))
     package.add_pad(PackagePad('6100dd55-d3b3-4139-9085-d5a75e783c37', Name('2')))
 
+    package.add_3d_model(Package3DModel('ea459880-68df-4929-b796-b5c8686a1862', Name('3dmodel')))
+
     package.add_footprint(create_footprint())
 
     package.add_approval('(approval foo)')
@@ -443,10 +447,12 @@ def test_package() -> None:
  (assembly_type tht)
  (pad 5c4d39d3-35cc-4836-a082-693143ee9135 (name "1"))
  (pad 6100dd55-d3b3-4139-9085-d5a75e783c37 (name "2"))
+ (3d_model ea459880-68df-4929-b796-b5c8686a1862 (name "3dmodel"))
  (footprint 17b9f232-2b15-4281-a07d-ad0db5213f92
   (name "default")
   (description "")
   (3d_position 1.0 2.0 3.0) (3d_rotation 10.0 20.0 30.0)
+  (3d_model ea459880-68df-4929-b796-b5c8686a1862)
   (pad 5c4d39d3-35cc-4836-a082-693143ee9135 (side top) (shape roundrect)
    (position 0.0 22.86) (rotation 0.0) (size 2.54 1.587) (radius 0.5)
    (stop_mask auto) (solder_paste off) (clearance 0.1) (function unspecified)
@@ -532,3 +538,17 @@ def test_device() -> None:
  (approval bar)
  (approval foo)
 )"""
+
+
+def test_sort_package_3d_models() -> None:
+    model1 = Package3DModel('2e2263b8-c5e2-4d09-87b2-5aafbfa836c9', Name('a'))
+    model2 = Package3DModel('161c65b0-a386-4b45-9ac2-0293a812fb62', Name('b'))
+    models = [model1, model2]
+    assert sorted(models) == [model2, model1]
+
+
+def test_sort_footprint_3d_models() -> None:
+    model1 = Footprint3DModel('2e2263b8-c5e2-4d09-87b2-5aafbfa836c9')
+    model2 = Footprint3DModel('161c65b0-a386-4b45-9ac2-0293a812fb62')
+    models = [model1, model2]
+    assert sorted(models) == [model2, model1]

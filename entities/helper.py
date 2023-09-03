@@ -4,7 +4,9 @@ from common import indent
 
 
 def indent_entity(entity: Any) -> str:
-    """indent an entity and add trailing newline
+    """
+    Convert an entity to a string, indent every line of the string with a space,
+    and add a trailing newline.
 
     >>> indent_entity('(foo "1")')
     ' (foo "1")\\n'
@@ -17,7 +19,9 @@ def indent_entity(entity: Any) -> str:
 
 
 def indent_entities(entities: Iterable[Any]) -> str:
-    """indent a list of entities and add a trailing newline
+    """
+    Apply the `indent_entity` function to every item in the specified list of entities,
+    and return the concatenated string.
 
     >>> indent_entities(['(bar "2")', '(bar "3")'])
     ' (bar "2")\\n (bar "3")\\n'

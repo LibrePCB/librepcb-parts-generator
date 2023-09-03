@@ -12,6 +12,43 @@ from .common import (
 from .helper import indent_entities
 
 
+class Package3DModel():
+    """
+    A 3D model in a package.
+    """
+    def __init__(self, uuid: str, name: Name):
+        self.uuid = uuid
+        self.name = name
+
+    def __str__(self) -> str:
+        return f'(3d_model {self.uuid} {self.name})\n'
+
+    def __eq__(self, other):  # type: ignore
+        return self.uuid == other.uuid and self.name == other.name
+
+    def __lt__(self, other):  # type: ignore
+        if self.uuid == other.uuid:
+            return self.name < other.name
+        return self.uuid < other.uuid
+
+
+class Footprint3DModel():
+    """
+    A 3D model reference in a footprint.
+    """
+    def __init__(self, uuid: str):
+        self.uuid = uuid
+
+    def __str__(self) -> str:
+        return f'(3d_model {self.uuid})\n'
+
+    def __eq__(self, other):  # type: ignore
+        return self.uuid == other.uuid
+
+    def __lt__(self, other):  # type: ignore
+        return self.uuid < other.uuid
+
+
 class AssemblyType(EnumValue):
     NONE = 'none'
     THT = 'tht'
@@ -220,12 +257,16 @@ class Footprint():
         self.position_3d = position_3d
         self.rotation_3d = rotation_3d
         self.pads = []  # type: List[FootprintPad]
+        self.models_3d = []  # type: List[Footprint3DModel]
         self.polygons = []  # type: List[Polygon]
         self.circles = []  # type: List[Circle]
         self.texts = []  # type: List[StrokeText]
 
     def add_pad(self, pad: FootprintPad) -> None:
         self.pads.append(pad)
+
+    def add_3d_model(self, model: Footprint3DModel) -> None:
+        self.models_3d.append(model)
 
     def add_polygon(self, polygon: Polygon) -> None:
         self.polygons.append(polygon)
@@ -241,6 +282,7 @@ class Footprint():
             ' {}\n'.format(self.name) +\
             ' {}\n'.format(self.description) +\
             ' {} {}\n'.format(self.position_3d, self.rotation_3d)
+        ret += indent_entities(sorted(self.models_3d))
         ret += indent_entities(self.pads)
         ret += indent_entities(self.polygons)
         ret += indent_entities(self.circles)
@@ -267,6 +309,7 @@ class Package:
         self.categories = categories
         self.assembly_type = assembly_type
         self.pads = []  # type: List[PackagePad]
+        self.models_3d = []  # type: List[Package3DModel]
         self.footprints = []  # type: List[Footprint]
         self.approvals = []  # type: List[str]
 
@@ -275,6 +318,9 @@ class Package:
 
     def add_footprint(self, footprint: Footprint) -> None:
         self.footprints.append(footprint)
+
+    def add_3d_model(self, model: Package3DModel) -> None:
+        self.models_3d.append(model)
 
     def add_approval(self, approval: str) -> None:
         self.approvals.append(approval)
@@ -292,6 +338,7 @@ class Package:
             ''.join([' {}\n'.format(cat) for cat in self.categories]) +\
             ' {}\n'.format(self.assembly_type)
         ret += indent_entities(self.pads)
+        ret += indent_entities(self.models_3d)
         ret += indent_entities(self.footprints)
         ret += indent_entities(sorted(self.approvals))
         ret += ')'
