@@ -615,9 +615,9 @@ def generate_3d(
     width = config.body.width
     height = config.body.height
 
-    fillet = width * 0.05
-    if fillet * 2 >= height:
-        fillet = height * 0.2
+    max_fillet = 0.25 if package_type == 'CAPC' else 0.05
+    fillet = min(height * 0.2, max_fillet)
+
     gap = config.gap or config.body.gap
     if gap is None:
         raise RuntimeError('Generating 3D models not supported for configs without gap')
