@@ -24,6 +24,7 @@ jobs:
         run: mypy --strict
           common.py
           entities/*.py
+          cadquery_helpers.py
           dfn_configs.py
           generate*.py
           test_entities.py

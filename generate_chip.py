@@ -6,7 +6,7 @@ Generate the following packages:
 
 """
 import sys
-from os import makedirs, path
+from os import path
 from uuid import uuid4
 
 from typing import Any, Dict, Iterable, Optional, Tuple
@@ -607,6 +607,8 @@ def generate_3d(
 ) -> None:
     import cadquery as cq
 
+    from cadquery_helpers import StepAssembly
+
     print(f'Generating pkg 3D model "{full_name}": {uuid_3d}')
 
     length = config.body.length
@@ -638,22 +640,13 @@ def generate_3d(
         .translate(translation) \
         .translate((edge_offset + edge / 2, 0, 0))
 
-    assembly = cq.Assembly(name=full_name) \
-        .add(inner, name="inner", color=cq.Color("gray16")) \
-        .add(left, name="left", color=cq.Color("gainsboro")) \
-        .add(right, name="right", color=cq.Color("gainsboro"))
+    assembly = StepAssembly(full_name)
+    assembly.add_body(inner, 'inner', cq.Color("gray16"))
+    assembly.add_body(left, 'left', cq.Color("gainsboro"))
+    assembly.add_body(right, 'right', cq.Color("gainsboro"))
 
-    dir_path = path.join('out', library, 'pkg', uuid_pkg)
-    if not (path.exists(dir_path) and path.isdir(dir_path)):
-        makedirs(dir_path)
-    filename = f'{uuid_3d}.step'
-
-    # Less verbose output
-    from OCP.Message import Message, Message_Gravity  # type: ignore
-    for printer in Message.DefaultMessenger_s().Printers():
-        printer.SetTraceLevel(Message_Gravity.Message_Fail)
-
-    assembly.save(path.join(dir_path, filename), 'STEP', mode='fused', write_pcurves=False)
+    out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
+    assembly.save(out_path)
 
 
 def generate_dev(
