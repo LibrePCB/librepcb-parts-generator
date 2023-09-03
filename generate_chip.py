@@ -586,7 +586,7 @@ def generate_pkg(
             raise ValueError('Either gap or footprints must be set')
 
         # Generate 3D models (for certain package types)
-        if package_type in ['RESC']:
+        if package_type in ['RESC', 'CAPC']:
             uuid_3d = uuid('pkg', full_name, '3d')
             if generate_3d_models:
                 generate_3d(library, package_type, full_name, uuid_pkg, uuid_3d, config)
@@ -640,8 +640,15 @@ def generate_3d(
         .translate(translation) \
         .translate((edge_offset + edge / 2, 0, 0))
 
+    if package_type == 'RESC':
+        inner_color = cq.Color('gray16')
+    elif package_type == 'CAPC':
+        inner_color = cq.Color('bisque3')
+    else:
+        raise RuntimeError(f'Unsupported 3D package type: {package_type}')
+
     assembly = StepAssembly(full_name)
-    assembly.add_body(inner, 'inner', cq.Color("gray16"))
+    assembly.add_body(inner, 'inner', inner_color)
     assembly.add_body(left, 'left', cq.Color("gainsboro"))
     assembly.add_body(right, 'right', cq.Color("gainsboro"))
 
