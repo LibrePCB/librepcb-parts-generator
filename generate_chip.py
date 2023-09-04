@@ -252,7 +252,7 @@ def generate_pkg(
             deprecated=Deprecated(False),
             generated_by=GeneratedBy(''),
             categories=[Category(pkgcat)],
-            assembly_type=AssemblyType.AUTO,
+            assembly_type=AssemblyType.SMT,
         )
 
         package.add_pad(PackagePad(uuid_pads[0], Name(polarization.name_marked if polarization else '1')))
@@ -280,12 +280,13 @@ def generate_pkg(
             uuid_text_value = _uuid('text-value-{}'.format(key))
             uuid_silkscreen_top = _uuid('line-silkscreen-top-{}'.format(key))
             uuid_silkscreen_bot = _uuid('line-silkscreen-bot-{}'.format(key))
+            uuid_outline = _uuid('polygon-outline-{}'.format(key))
             uuid_courtyard = _uuid('polygon-courtyard-{}'.format(key))
-            uuid_outline_top = _uuid('polygon-outline-top-{}'.format(key))
-            uuid_outline_bot = _uuid('polygon-outline-bot-{}'.format(key))
-            uuid_outline_left = _uuid('polygon-outline-left-{}'.format(key))
-            uuid_outline_right = _uuid('polygon-outline-right-{}'.format(key))
-            uuid_outline_around = _uuid('polygon-outline-around-{}'.format(key))
+            uuid_body_top = _uuid('polygon-body-top-{}'.format(key))
+            uuid_body_bot = _uuid('polygon-body-bot-{}'.format(key))
+            uuid_body_left = _uuid('polygon-body-left-{}'.format(key))
+            uuid_body_right = _uuid('polygon-body-right-{}'.format(key))
+            uuid_body_around = _uuid('polygon-body-around-{}'.format(key))
             uuid_polarization_mark = _uuid('polygon-polarization-mark-{}'.format(key))
 
             # Max boundary
@@ -340,7 +341,7 @@ def generate_pkg(
                     stop_mask=StopMaskConfig.AUTO,
                     solder_paste=SolderPasteConfig.AUTO,
                     copper_clearance=CopperClearance(0.0),
-                    function=PadFunction.UNSPECIFIED,
+                    function=PadFunction.STANDARD_PAD,
                     package_pad=PackagePadUuid(pad_uuid),
                     holes=[],
                 ))
@@ -355,7 +356,7 @@ def generate_pkg(
                 dx = config.body.length / 2
                 dy = config.body.width / 2
                 footprint.add_polygon(Polygon(
-                    uuid=uuid_outline_left,
+                    uuid=uuid_body_left,
                     layer=Layer('top_documentation'),
                     width=Width(0),
                     fill=Fill(True),
@@ -369,7 +370,7 @@ def generate_pkg(
                     ],
                 ))
                 footprint.add_polygon(Polygon(
-                    uuid=uuid_outline_right,
+                    uuid=uuid_body_right,
                     layer=Layer('top_documentation'),
                     width=Width(0),
                     fill=Fill(True),
@@ -384,7 +385,7 @@ def generate_pkg(
                 ))
                 dy = config.body.width / 2 - doc_lw / 2
                 footprint.add_polygon(Polygon(
-                    uuid=uuid_outline_top,
+                    uuid=uuid_body_top,
                     layer=Layer('top_documentation'),
                     width=Width(doc_lw),
                     fill=Fill(False),
@@ -395,7 +396,7 @@ def generate_pkg(
                     ],
                 ))
                 footprint.add_polygon(Polygon(
-                    uuid=uuid_outline_bot,
+                    uuid=uuid_body_bot,
                     layer=Layer('top_documentation'),
                     width=Width(doc_lw),
                     fill=Fill(False),
@@ -411,7 +412,7 @@ def generate_pkg(
                 dx = config.body.length / 2 - doc_lw / 2
                 dy = config.body.width / 2 - doc_lw / 2
                 footprint.add_polygon(Polygon(
-                    uuid=uuid_outline_around,
+                    uuid=uuid_body_around,
                     layer=Layer('top_documentation'),
                     width=Width(doc_lw),
                     fill=Fill(False),
@@ -427,7 +428,7 @@ def generate_pkg(
                 dx = config.body.length / 2
                 dy = (config.body.lead_width or dimensions.pad_width) / 2
                 footprint.add_polygon(Polygon(
-                    uuid=uuid_outline_left,
+                    uuid=uuid_body_left,
                     layer=Layer('top_documentation'),
                     width=Width(0),
                     fill=Fill(True),
@@ -441,7 +442,7 @@ def generate_pkg(
                     ],
                 ))
                 footprint.add_polygon(Polygon(
-                    uuid=uuid_outline_right,
+                    uuid=uuid_body_right,
                     layer=Layer('top_documentation'),
                     width=Width(0),
                     fill=Fill(True),
@@ -524,6 +525,23 @@ def generate_pkg(
                         ],
                     ))
 
+            # Package outlines
+            dx = config.body.length / 2
+            dy = config.body.width / 2
+            footprint.add_polygon(Polygon(
+                uuid=uuid_outline,
+                layer=Layer('top_package_outlines'),
+                width=Width(0),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(-dx, dy), Angle(0)),  # NW
+                    Vertex(Position(dx, dy), Angle(0)),  # NE
+                    Vertex(Position(dx, -dy), Angle(0)),  # SE
+                    Vertex(Position(-dx, -dy), Angle(0)),  # SW
+                ],
+            ))
+
             # Courtyard
             courtyard_excess = get_by_density(config.body.length, density_level, 'courtyard')
             footprint.add_polygon(generate_courtyard(
@@ -593,6 +611,14 @@ def generate_pkg(
             package.add_3d_model(Package3DModel(uuid_3d, Name(full_name)))
             for footprint in package.footprints:
                 footprint.add_3d_model(Footprint3DModel(uuid_3d))
+        else:
+            # For unsupported package types, approve the warnings
+            for footprint in package.footprints:
+                package.add_approval(
+                    "(approved missing_footprint_3d_model\n" +
+                    " (footprint {})\n".format(footprint.uuid) +
+                    ")"
+                )
 
         package.serialize(path.join('out', library, category))
 
@@ -708,6 +734,9 @@ def generate_dev(
         for (pad, signal) in sorted(zip(pads, signals)):
             device.add_pad(ComponentPad(pad_uuid=pad, signal=SignalUUID(signal)))
 
+        # Approve "no parts" warning because it's a generic device
+        device.add_approval("(approved no_parts)")
+
         device.serialize(path.join('out', library, category))
 
 
@@ -749,7 +778,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,chip,generic',
-        version='0.3.2',
+        version='0.4',
         create_date='2018-12-19T00:08:03Z',
     )
     # J-Lead resistors (RESJ)
@@ -767,7 +796,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,j-lead,generic',
-        version='0.3.2',
+        version='0.4',
         create_date='2019-01-04T23:06:17Z',
     )
     # Chip capacitors (CAPC)
@@ -808,7 +837,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='414f873f-4099-47fd-8526-bdd8419de581',
         keywords='c,capacitor,chip,generic',
-        version='0.3',
+        version='0.4',
         create_date='2015-06-21T12:37:34Z',
     )
     # Molded polarized capacitors (CAPPM)
@@ -890,7 +919,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='414f873f-4099-47fd-8526-bdd8419de581',
         keywords='c,capacitor,j-lead,inward-l,molded,generic,kemet {meta[kemet]},avx {meta[avx]}',
-        version='0.1',
+        version='0.2',
         create_date='2019-11-18T21:56:00Z',
     )
     # Generic devices
@@ -920,7 +949,7 @@ if __name__ == '__main__':
             'ad623f98-9e73-49c3-9404-f7cfa99d17cd',
         ],
         keywords='r,resistor,resistance,smd,smt',
-        version='0.3',
+        version='0.3.1',
         create_date='2019-01-29T19:47:42Z',
     )
     generate_dev(
@@ -950,7 +979,7 @@ if __name__ == '__main__':
             '6d776f4d-2a7c-4128-a98a-dbb1dd861411',
         ],
         keywords='c,capacitor,capacitance,smd,smt',
-        version='0.3',
+        version='0.3.1',
         create_date='2015-08-13T20:22:31Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
