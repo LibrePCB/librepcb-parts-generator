@@ -1,5 +1,7 @@
 from os import makedirs, path
 
+from typing import Optional
+
 import cadquery as cq
 from OCP.Message import Message, Message_Gravity  # type: ignore
 
@@ -24,11 +26,17 @@ class StepAssembly:
         for printer in Message.DefaultMessenger_s().Printers():
             printer.SetTraceLevel(Message_Gravity.Message_Fail)
 
-    def add_body(self, body: cq.Workplane, name: str, color: cq.Color) -> None:
+    def add_body(self, body: cq.Workplane, name: str, color: cq.Color,
+                 location: Optional[cq.Location] = None) -> None:
         """
         Add a body to the assembly.
+
+        Important: If the same body is added multiple times to the assembly
+        with different transformations, please use the `location` parameter
+        instead of transforming each body! This leads to much more efficient
+        STEP minification.
         """
-        self.assembly.add(body, name=name, color=color)
+        self.assembly.add(body, name=name, color=color, loc=location)
 
     def save(self, out_path: str) -> None:
         """
