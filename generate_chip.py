@@ -633,7 +633,7 @@ def generate_3d(
 ) -> None:
     import cadquery as cq
 
-    from cadquery_helpers import StepAssembly
+    from cadquery_helpers import StepAssembly, StepColor
 
     print(f'Generating pkg 3D model "{full_name}": {uuid_3d}')
 
@@ -675,8 +675,8 @@ def generate_3d(
 
     assembly = StepAssembly(full_name)
     assembly.add_body(inner, 'inner', inner_color)
-    assembly.add_body(left, 'left', cq.Color("gainsboro"))
-    assembly.add_body(right, 'right', cq.Color("gainsboro"))
+    assembly.add_body(left, 'left', StepColor.LEAD_SMT)
+    assembly.add_body(right, 'right', StepColor.LEAD_SMT)
 
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
     assembly.save(out_path)

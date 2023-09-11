@@ -4,6 +4,10 @@ import cadquery as cq
 from OCP.Message import Message, Message_Gravity  # type: ignore
 
 
+class StepColor:
+    LEAD_SMT = cq.Color('gainsboro')
+
+
 class StepAssembly:
     """
     A STEP assembly.
