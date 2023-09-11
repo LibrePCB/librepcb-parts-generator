@@ -23,3 +23,13 @@ test = [
     "mypy == 1.5.1",
     "isort ~= 5.10.1",
 ]
+
+[tool.isort]
+line_length = 120
+multi_line_output = 5
+balanced_wrapping = false
+known_typing = "typing"
+sections = "FUTURE,STDLIB,TYPING,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules"
