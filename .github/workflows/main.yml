@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: "${{ matrix.python-version }}"
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install .[test]
       - name: Run pytest
         run: pytest
       - name: Run mypy

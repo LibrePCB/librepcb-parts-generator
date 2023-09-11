@@ -1,0 +1,25 @@
+[project]
+name = "librepcb-parts-generator"
+authors = [
+    { name = "Danilo Bargen", email = "mail@dbrgn.ch" },
+    { name = "Hannes Badertscher", email = "h_badertscher@bluewin.ch" },
+    { name = "Murray", email = "murray.calavera@protonmail.com" },
+    { name = "ouabache", email = "z3qmtr45@gmail.com" },
+    { name = "Raphael Nestler", email = "raphael.nestler@gmail.com" },
+    { name = "Tubbles", email = "jae91m@gmail.com" },
+    { name = "U. Bruhin", email = "urbibruhin@bluewin.ch" },
+]
+
+requires-python = ">=3.8"
+dependencies = [
+    "cadquery == 2.3.1",
+]
+version = "0.1.0"
+
+[project.optional-dependencies]
+test = [
+    "pytest ~= 6.2.5",
+    "flake8 ~= 4.0.1",
+    "mypy == 1.5.1",
+    "isort ~= 5.10.1",
+]
