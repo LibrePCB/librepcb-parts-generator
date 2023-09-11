@@ -154,12 +154,26 @@ class PinName:
         return '{}/{}'.format(self.generic, self.concrete)
 
 
+class Part:
+    """
+    Class representing a part with MPN
+    """
+    def __init__(self, mpn: str, t_min: Optional[float], t_max: Optional[float],
+                 packing_type: Optional[str], status: Optional[str]):
+        self.mpn = mpn
+        self.t_min = t_min
+        self.t_max = t_max
+        self.packing_type = packing_type
+        self.status = status
+
+
 class MCU:
     """
     Data class for a MCU.
     """
 
-    def __init__(self, ref: str, info: Dict[str, Any], pins: Iterable[Pin]):
+    def __init__(self, ref: str, info: Dict[str, Any], pins: Iterable[Pin],
+                 parts: Iterable[Part]):
         # Note: Don't use this directly, use `from_json` instead
         self.ref = ref
         self.name = info['names']['name']
@@ -174,6 +188,7 @@ class MCU:
         self.family = info['names']['family']
         self.package = info['package']
         self.pins = list(pins)
+        self.parts = list(parts)
         self.flash = '{} KiB'.format(info['info']['flash'])
         self.ram = '{} KiB'.format(info['info']['ram'])
         self.io_count = info['info']['io']  # type: int
@@ -215,6 +230,10 @@ class MCU:
             val = re.sub(r'\s*/\s*OSC', r'-OSC', val)
             val = re.sub(r'([0-9])OSC', r'\1-OSC', val)
 
+        # Remove brackets and their contents
+        if '(' in pin_name:
+            val = re.sub(r'\(.*\)', r'', val)
+
         # Remove everything after the first space
         val = val.split(' ')[0]
 
@@ -227,6 +246,28 @@ class MCU:
 
     @classmethod
     def from_json(cls, ref: str, info: Dict[str, Any]) -> 'MCU':
+        # Collect parts, but not those with preview status.
+        parts = []  # type: List[Part]
+        skipped_status = ['Coming soon', 'Evaluation', 'Preview', 'Proposal']
+        for entry in info.get('parts', []):  # TODO
+            part = Part(
+                mpn=entry['mpn'],
+                t_min=entry['temperature_min'],
+                t_max=entry['temperature_max'],
+                packing_type=entry['packing_type'],
+                status=entry['status'],
+            )
+            if part.status in ['Active', 'NRND', 'Obsolete']:
+                parts.append(part)
+            else:
+                assert part.status in skipped_status, part.status
+
+        # Skip MCUs which have no active parts before processing them further
+        # to not risk errors on MCUs we're not interested in anyway
+        if len(parts) == 0:
+            print('Skipped MCU without parts: {}'.format(ref))
+            return None
+
         # Collect pins, grouped by number
         pin_map = defaultdict(list)  # type: Dict[str, List[Pin]]
         for entry in info['pinout']:
@@ -259,7 +300,7 @@ class MCU:
             pin.name = merged_name
             pins.append(pin)
 
-        return MCU(ref, info, pins)
+        return MCU(ref, info, pins, parts)
 
     def pin_types(self) -> Set[str]:
         """
@@ -338,10 +379,12 @@ class MCU:
             'C': 256,
             'D': 384,
             'E': 512,
+            'Y': 640,  # Only STM32WB55VY (?)
             'F': 768,
             'G': 1024,
             'H': 1536,
             'I': 2048,
+            'J': 4096,
         }
         assert size in flash_sizes, \
             "{}: Flash size {} doesn't look valid".format(self.ref, size)
@@ -876,9 +919,10 @@ if __name__ == '__main__':
             with open(info_path, 'r') as f:
                 info = json.loads(f.read())
                 mcu = MCU.from_json(mcu_ref, info)
+            if mcu is not None:
                 assert None not in mcu.pin_types()
-            assert mcu_ref not in data
-            data[mcu_ref] = mcu
+                assert mcu_ref not in data
+                data[mcu_ref] = mcu
 
     # Generate library elements
     generate(data, args.base_lib, args.debug)
