@@ -130,6 +130,10 @@ class Position3D():
         self.y = y
         self.z = z
 
+    @staticmethod
+    def zero() -> 'Position3D':
+        return Position3D(0.0, 0.0, 0.0)
+
     def __str__(self) -> str:
         return '(3d_position {} {} {})'.format(format_float(self.x), format_float(self.y), format_float(self.z))
 
@@ -144,6 +148,10 @@ class Rotation3D():
         self.x = x
         self.y = y
         self.z = z
+
+    @staticmethod
+    def zero() -> 'Rotation3D':
+        return Rotation3D(0.0, 0.0, 0.0)
 
     def __str__(self) -> str:
         return '(3d_rotation {} {} {})'.format(format_float(self.x), format_float(self.y), format_float(self.z))
