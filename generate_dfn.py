@@ -7,8 +7,6 @@ from uuid import uuid4
 
 from typing import List, Optional
 
-import numpy as np
-
 from common import format_float as ff
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
@@ -202,7 +200,7 @@ def generate_pkg(
 
             # Measure clearance pad-exposed pad
             clearance = abs(pad_pos_x) - (pad_length / 2) - (exposed_length / 2)
-            if np.around(clearance, decimals=2) < MIN_CLEARANCE:
+            if round(clearance, ndigits=2) < MIN_CLEARANCE:
                 print("Warning: minimal clearance violated in {}: {:.4f} < {:.2f}".format(full_name, clearance, MIN_CLEARANCE))
 
         # Create Silk Screen (lines and dot only)
@@ -215,7 +213,7 @@ def generate_pkg(
         silk_top_line_height = config.length / 2
         if make_exposed:
             silk_clearance = silk_top_line_height - (SILKSCREEN_LINE_WIDTH / 2) - (config.exposed_width / 2)
-            if np.around(silk_clearance, decimals=2) < SILKSCREEN_OFFSET:
+            if round(silk_clearance, ndigits=2) < SILKSCREEN_OFFSET:
                 silk_top_line_height = silk_top_line_height + (SILKSCREEN_OFFSET - silk_clearance)
                 silk_down = silk_down + (SILKSCREEN_OFFSET - silk_clearance)
                 print("Increasing exp-silk clearance from {:.4f} to {:.2f}".format(silk_clearance, SILKSCREEN_OFFSET))

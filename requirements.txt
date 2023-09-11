@@ -1,6 +1,5 @@
 pytest~=6.2.5
 flake8~=4.0.1
 mypy==1.5.1
-numpy~=1.22
 isort~=5.10.1
 cadquery==2.3.1
