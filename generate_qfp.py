@@ -8,6 +8,7 @@ Relevant standards:
 - JEDEC MS-026 https://www.jedec.org/system/files/docs/MS-026D.pdf
 
 """
+import sys
 from collections import namedtuple
 from copy import deepcopy
 from itertools import chain
@@ -23,9 +24,9 @@ from entities.common import (
     Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
 )
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
-    Mirror, Package, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size, SolderPasteConfig,
-    StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, Footprint3DModel, FootprintPad, LetterSpacing,
+    LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size,
+    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
 
 generator = 'librepcb-parts-generator (generate_qfp.py)'
@@ -333,6 +334,7 @@ def generate_pkg(
     library: str,
     author: str,
     configs: Iterable[QfpConfig],
+    generate_3d_models: bool,
     pkgcat: str,
     version: str,
     create_date: Optional[str],
@@ -636,15 +638,117 @@ def generate_pkg(
         add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A')
         add_footprint_variant('density~c', 'Density Level C (min protrusion)', 'C')
 
+        # Generate 3D models
+        uuid_3d = uuid('pkg', full_name, '3d')
+        if generate_3d_models:
+            generate_3d(library, full_name, uuid_pkg, uuid_3d, config)
+        package.add_3d_model(Package3DModel(uuid_3d, Name(full_name)))
+        for footprint in package.footprints:
+            footprint.add_3d_model(Footprint3DModel(uuid_3d))
+
         package.serialize(path.join('out', library, category))
 
 
+def generate_3d(
+    library: str,
+    full_name: str,
+    uuid_pkg: str,
+    uuid_3d: str,
+    config: QfpConfig,
+) -> None:
+    import cadquery as cq
+
+    from cadquery_helpers import StepAssembly, StepColor
+
+    print(f'Generating pkg 3D model "{full_name}": {uuid_3d}')
+
+    body_standoff = 0.1
+    body_height = config.height_nom - body_standoff
+    body_chamfer = 0.15
+    dot_diameter = 0.8
+    dot_position = 1.0
+    dot_depth = 0.15
+    leg_height = 0.17
+    leg_z_top = body_standoff + (body_height / 2)
+    bend_radius = 0.1 + (leg_height / 2)
+
+    dot_center = (
+        -(config.body_size_x / 2) + dot_position,
+        (config.body_size_y / 2) - dot_position,
+        body_standoff + body_height - dot_depth
+    )
+
+    body = cq.Workplane('XY', origin=(0, 0, body_standoff + (body_height / 2))) \
+        .box(config.body_size_x, config.body_size_y, body_height) \
+        .edges().chamfer(body_chamfer) \
+        .workplane(origin=(dot_center[0], dot_center[1]), offset=(body_height / 2) - dot_depth) \
+        .cylinder(5, dot_diameter / 2, centered=(True, True, False), combine='cut')
+    dot = cq.Workplane('XY', origin=dot_center) \
+        .cylinder(0.05, dot_diameter / 2, centered=(True, True, False))
+    leg_path = cq.Workplane("XZ") \
+        .hLine(config.lead_contact_length - (leg_height / 2) - bend_radius) \
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=270, angle2=360, sense=1) \
+        .vLine(leg_z_top - leg_height - (2 * bend_radius)) \
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
+        .hLine(config.lead_span_x - (2 * bend_radius) - (2 * config.lead_contact_length) + leg_height) \
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1) \
+        .vLine(-(leg_z_top - leg_height - (2 * bend_radius))) \
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=180, angle2=270, sense=1) \
+        .hLine(config.lead_contact_length - (leg_height / 2) - bend_radius)
+    leg = cq.Workplane("ZY") \
+        .rect(leg_height, config.lead_width) \
+        .sweep(leg_path)
+    assert config.lead_span_x == config.lead_span_y  # Only one leg object!
+
+    assembly = StepAssembly(full_name)
+    assembly.add_body(body, 'body', StepColor.IC_BODY)
+    assembly.add_body(dot, 'dot', StepColor.IC_PIN1_DOT)
+    lead_offset = ((config.lead_count // 4) - 1) * config.pitch / 2
+    for i in range(0, config.lead_count // 2):
+        if i < config.lead_count // 4:
+            # Horizontal leads
+            location = cq.Location((
+                -config.lead_span_x / 2,
+                lead_offset - i * config.pitch,
+                leg_height / 2,
+            ))
+        else:
+            # Vertical leads
+            location = cq.Location((
+                -lead_offset + (i - config.lead_count // 4) * config.pitch,
+                -config.lead_span_y / 2,
+                leg_height / 2,
+            ), (0, 0, 1), 90)
+        assembly.add_body(
+            leg,
+            'leg-{}'.format(i + 1), StepColor.LEAD_SMT,
+            location=location,
+        )
+
+    # Save without fusing for massively better minification!
+    out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
+    assembly.save(out_path, fused=False)
+
+
 if __name__ == '__main__':
+    if '--help' in sys.argv or '-h' in sys.argv:
+        print(f'Usage: {sys.argv[0]} [--3d]')
+        print()
+        print('Options:')
+        print('  --3d    Generate 3D models using cadquery')
+        sys.exit(1)
+
+    generate_3d_models = '--3d' in sys.argv
+    if not generate_3d_models:
+        warning = 'Note: Not generating 3D models unless the "--3d" argument is passed in!'
+        print(f'\033[1;33m{warning}\033[0m')
+
     configs = list(chain.from_iterable(c.get_configs() for c in JEDEC_CONFIGS))
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
         configs=configs,
+        generate_3d_models=generate_3d_models,
         pkgcat='3363b8b1-6fa8-4041-962e-5f839cfd86b7',
         version='0.4',
         create_date='2019-02-07T21:03:03Z',
