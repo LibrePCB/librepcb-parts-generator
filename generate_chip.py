@@ -679,7 +679,7 @@ def generate_3d(
     assembly.add_body(right, 'right', StepColor.LEAD_SMT)
 
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
-    assembly.save(out_path)
+    assembly.save(out_path, fused=True)
 
 
 def generate_dev(

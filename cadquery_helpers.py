@@ -38,9 +38,15 @@ class StepAssembly:
         """
         self.assembly.add(body, name=name, color=color, loc=location)
 
-    def save(self, out_path: str) -> None:
+    def save(self, out_path: str, fused: bool) -> None:
         """
         Write the STEP file to the specified path.
+
+        Important: For simple bodies with (almost) no repetition (like
+        resistors, capacitors, ...), pass `fused=True` to get a simple,
+        non-hierarchical STEP file. However, for models with repetition (like
+        an IC with several pins), pass `fused=False` since this leads to much
+        more efficient STEP minification (saves several 100MB in total!).
         """
         dir_path = path.dirname(out_path)
         if path.exists(dir_path) and not path.isdir(dir_path):
@@ -48,4 +54,5 @@ class StepAssembly:
         if not path.exists(dir_path):
             makedirs(dir_path)
 
-        self.assembly.save(out_path, 'STEP', mode='fused', write_pcurves=False)
+        mode = 'fused' if fused else 'default'  # type: cq.occ_impl.exporters.assembly.STEPExportModeLiterals
+        self.assembly.save(out_path, 'STEP', mode=mode, write_pcurves=False)

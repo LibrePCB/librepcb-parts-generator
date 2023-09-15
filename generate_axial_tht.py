@@ -567,7 +567,7 @@ def generate_3d(
     assembly.add_body(leg, 'leg', StepColor.LEAD_THT)
 
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
-    assembly.save(out_path)
+    assembly.save(out_path, fused=True)
 
 
 if __name__ == '__main__':
