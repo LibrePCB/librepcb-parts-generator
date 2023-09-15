@@ -19,8 +19,8 @@ from typing import Iterable, List, Optional
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache, sign
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
-    Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
+    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
+    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
 )
 from entities.package import (
     AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
@@ -30,9 +30,9 @@ from entities.package import (
 
 generator = 'librepcb-parts-generator (generate_qfp.py)'
 
-line_width = 0.25
+line_width = 0.2
 pkg_text_height = 1.0
-text_y_offset = 1.0
+text_y_offset = 0.7
 silkscreen_offset = 0.150  # 150 µm
 
 
@@ -363,7 +363,7 @@ def generate_pkg(
             deprecated=Deprecated(False),
             generated_by=GeneratedBy(''),
             categories=[Category(pkgcat)],
-            assembly_type=AssemblyType.AUTO,
+            assembly_type=AssemblyType.SMT,
         )
 
         for p in range(1, config.lead_count + 1):
@@ -378,6 +378,8 @@ def generate_pkg(
             uuid_footprint = _uuid('footprint-{}'.format(key))
             uuid_silkscreen = [_uuid('polygon-silkscreen-{}-{}'.format(quadrant, key)) for quadrant in [1, 2, 3, 4]]
             uuid_body = _uuid('polygon-body-{}'.format(key))
+            uuid_pin1_dot = _uuid('pin1-dot-{}'.format(key))
+            uuid_outline = _uuid('polygon-outline-{}'.format(key))
             uuid_courtyard = _uuid('polygon-courtyard-{}'.format(key))
             uuid_text_name = _uuid('text-name-{}'.format(key))
             uuid_text_value = _uuid('text-value-{}'.format(key))
@@ -416,11 +418,11 @@ def generate_pkg(
                     position=Position(pos.x, pos.y),
                     rotation=Rotation(pad_rotation),
                     size=Size(pad_width, pad_length),
-                    radius=ShapeRadius(0),
+                    radius=ShapeRadius(0.5),
                     stop_mask=StopMaskConfig.AUTO,
                     solder_paste=SolderPasteConfig.AUTO,
                     copper_clearance=CopperClearance(0.0),
-                    function=PadFunction.UNSPECIFIED,
+                    function=PadFunction.STANDARD_PAD,
                     package_pad=PackagePadUuid(pad_uuid),
                     holes=[],
                 ))
@@ -536,37 +538,67 @@ def generate_pkg(
                 ],
             ))
 
+            # Documentation: Pin 1 dot
+            pin1_dot_diameter = 0.5
+            pin1_dot_offset = 1.0
+            dx = config.body_size_x / 2 - pin1_dot_offset
+            dy = config.body_size_y / 2 - pin1_dot_offset
+            pin1_dot = Circle(
+                uuid_pin1_dot,
+                Layer('top_documentation'),
+                Width(0.0),
+                Fill(True),
+                GrabArea(False),
+                Diameter(pin1_dot_diameter),
+                Position(-dx, dy),
+            )
+            footprint.add_circle(pin1_dot)
+
+            def _create_outline_vertices(offset: float = 0, around_pads: bool = False) -> List[Vertex]:
+                x_max = config.lead_span_x / 2
+                x_mid = config.body_size_x / 2
+                x_min = abs(pos_last.x) + config.lead_width / 2
+                y_max = config.lead_span_y / 2
+                y_mid = config.body_size_y / 2
+                y_min = abs(pos_first.y) + config.lead_width / 2
+                if around_pads:
+                    x_max += excess.toe
+                    x_min += excess.side
+                    y_max += excess.toe
+                    y_min += excess.side
+                vertices = [  # Starting at top left
+                    # Top
+                    (-x_min,  y_max), ( x_min,  y_max), ( x_min,  y_mid), ( x_mid,  y_mid), ( x_mid,  y_min),
+                    # Right
+                    ( x_max,  y_min), ( x_max, -y_min), ( x_mid, -y_min), ( x_mid, -y_mid), ( x_min, -y_mid),
+                    # Bottom
+                    ( x_min, -y_max), (-x_min, -y_max), (-x_min, -y_mid), (-x_mid, -y_mid), (-x_mid, -y_min),
+                    # Left
+                    (-x_max, -y_min), (-x_max,  y_min), (-x_mid,  y_min), (-x_mid,  y_mid), (-x_min,  y_mid),
+                ]
+                return [
+                    Vertex(Position(x + sign(x) * offset, y + sign(y) * offset), Angle(0))
+                    for (x, y) in vertices
+                ]
+
+            # Package Outline
+            footprint.add_polygon(Polygon(
+                uuid=uuid_outline,
+                layer=Layer('top_package_outlines'),
+                width=Width(0),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=_create_outline_vertices(),
+            ))
+
             # Courtyard
-            x_max = config.lead_span_x / 2 + excess.toe
-            x_mid = config.body_size_x / 2
-            x_min = abs(pos_last.x) + config.lead_width / 2 + excess.side
-            y_max = config.lead_span_y / 2 + excess.toe
-            y_mid = config.body_size_y / 2
-            y_min = abs(pos_first.y) + config.lead_width / 2 + excess.side
-            vertices = [  # Starting at top left
-                # Top
-                (-x_min,  y_max), ( x_min,  y_max), ( x_min,  y_mid), ( x_mid,  y_mid), ( x_mid,  y_min),
-                # Right
-                ( x_max,  y_min), ( x_max, -y_min), ( x_mid, -y_min), ( x_mid, -y_mid), ( x_min, -y_mid),
-                # Bottom
-                ( x_min, -y_max), (-x_min, -y_max), (-x_min, -y_mid), (-x_mid, -y_mid), (-x_mid, -y_min),
-                # Left
-                (-x_max, -y_min), (-x_max,  y_min), (-x_mid,  y_min), (-x_mid,  y_mid), (-x_min,  y_mid),
-                # Back to top
-                (-x_min,  y_max),
-            ]
             footprint.add_polygon(Polygon(
                 uuid=uuid_courtyard,
                 layer=Layer('top_courtyard'),
                 width=Width(0),
                 fill=Fill(False),
                 grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(x + sign(x) * excess.courtyard,
-                                    y + sign(y) * excess.courtyard),
-                           Angle(0))
-                    for (x, y) in vertices
-                ],
+                vertices=_create_outline_vertices(offset=excess.courtyard, around_pads=True),
             ))
 
             # Labels
@@ -614,7 +646,7 @@ if __name__ == '__main__':
         author='Danilo B.',
         configs=configs,
         pkgcat='3363b8b1-6fa8-4041-962e-5f839cfd86b7',
-        version='0.3.1',
+        version='0.4',
         create_date='2019-02-07T21:03:03Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
