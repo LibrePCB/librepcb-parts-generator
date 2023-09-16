@@ -131,8 +131,8 @@ def generate_pkg(
             uuid=_fpt_uuid('footprint'),
             name=Name(name),
             description=Description(''),
-            position_3d=Position3D(0.0, 0.0, 0.0),
-            rotation_3d=Rotation3D(0.0, 0.0, 0.0),
+            position_3d=Position3D.zero(),
+            rotation_3d=Rotation3D.zero(),
         )
         pad_hole_path = [Vertex(Position(0.0, 0.0), Angle(0.0))]
         uuid_plus = _pkg_uuid('pad-plus')

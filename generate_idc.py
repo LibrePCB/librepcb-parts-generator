@@ -208,8 +208,8 @@ def generate_pkg(config: Config) -> None:
         uuid=uuid_footprint,
         name=Name('default'),
         description=Description(''),
-        position_3d=Position3D(0.0, 0.0, 0.0),
-        rotation_3d=Rotation3D(0.0, 0.0, 0.0),
+        position_3d=Position3D.zero(),
+        rotation_3d=Rotation3D.zero(),
     )
     package.add_footprint(footprint)
 

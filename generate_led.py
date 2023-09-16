@@ -154,8 +154,8 @@ def generate_pkg(
                 uuid=_uuid('footprint' + identifier_suffix),
                 name=name,
                 description=Description(''),
-                position_3d=Position3D(0.0, 0.0, 0.0),
-                rotation_3d=Rotation3D(0.0, 0.0, 0.0),
+                position_3d=Position3D.zero(),
+                rotation_3d=Rotation3D.zero(),
             )
             package.add_footprint(footprint)
 

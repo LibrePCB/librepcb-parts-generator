@@ -4,6 +4,15 @@ import cadquery as cq
 from OCP.Message import Message, Message_Gravity  # type: ignore
 
 
+class StepConstants:
+    THT_LEAD_SOLDER_LENGTH = 3.0  # Lead length on the PCB solder side
+
+
+class StepColor:
+    LEAD_SMT = cq.Color('gainsboro')
+    LEAD_THT = cq.Color('gainsboro')
+
+
 class StepAssembly:
     """
     A STEP assembly.

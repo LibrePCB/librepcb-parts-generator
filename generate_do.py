@@ -186,8 +186,8 @@ Generated with {GENERATOR_NAME}
             uuid=_uuid(uuid_ns + 'footprint'),
             name=name,
             description=Description(''),
-            position_3d=Position3D(0.0, 0.0, 0.0),
-            rotation_3d=Rotation3D(0.0, 0.0, 0.0),
+            position_3d=Position3D.zero(),
+            rotation_3d=Rotation3D.zero(),
         )
         package.add_footprint(footprint)
 
