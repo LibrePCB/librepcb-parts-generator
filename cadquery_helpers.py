@@ -1,5 +1,7 @@
 from os import makedirs, path
 
+from typing import Optional
+
 import cadquery as cq
 from OCP.Message import Message, Message_Gravity  # type: ignore
 
@@ -9,6 +11,8 @@ class StepConstants:
 
 
 class StepColor:
+    IC_BODY = cq.Color('gray16')
+    IC_PIN1_DOT = cq.Color('gray55')
     LEAD_SMT = cq.Color('gainsboro')
     LEAD_THT = cq.Color('gainsboro')
 
@@ -24,15 +28,27 @@ class StepAssembly:
         for printer in Message.DefaultMessenger_s().Printers():
             printer.SetTraceLevel(Message_Gravity.Message_Fail)
 
-    def add_body(self, body: cq.Workplane, name: str, color: cq.Color) -> None:
+    def add_body(self, body: cq.Workplane, name: str, color: cq.Color,
+                 location: Optional[cq.Location] = None) -> None:
         """
         Add a body to the assembly.
-        """
-        self.assembly.add(body, name=name, color=color)
 
-    def save(self, out_path: str) -> None:
+        Important: If the same body is added multiple times to the assembly
+        with different transformations, please use the `location` parameter
+        instead of transforming each body! This leads to much more efficient
+        STEP minification.
+        """
+        self.assembly.add(body, name=name, color=color, loc=location)
+
+    def save(self, out_path: str, fused: bool) -> None:
         """
         Write the STEP file to the specified path.
+
+        Important: For simple bodies with (almost) no repetition (like
+        resistors, capacitors, ...), pass `fused=True` to get a simple,
+        non-hierarchical STEP file. However, for models with repetition (like
+        an IC with several pins), pass `fused=False` since this leads to much
+        more efficient STEP minification (saves several 100MB in total!).
         """
         dir_path = path.dirname(out_path)
         if path.exists(dir_path) and not path.isdir(dir_path):
@@ -40,4 +56,5 @@ class StepAssembly:
         if not path.exists(dir_path):
             makedirs(dir_path)
 
-        self.assembly.save(out_path, 'STEP', mode='fused', write_pcurves=False)
+        mode = 'fused' if fused else 'default'  # type: cq.occ_impl.exporters.assembly.STEPExportModeLiterals
+        self.assembly.save(out_path, 'STEP', mode=mode, write_pcurves=False)
