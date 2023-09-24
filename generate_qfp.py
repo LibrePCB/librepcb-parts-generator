@@ -8,23 +8,32 @@ Relevant standards:
 - JEDEC MS-026 https://www.jedec.org/system/files/docs/MS-026D.pdf
 
 """
+import sys
 from collections import namedtuple
 from copy import deepcopy
 from itertools import chain
-from os import makedirs, path
+from os import path
 from uuid import uuid4
 
 from typing import Iterable, List, Optional
 
-from common import format_float as ff
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache, sign
+from entities.common import (
+    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
+    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
+)
+from entities.package import (
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, Footprint3DModel, FootprintPad, LetterSpacing,
+    LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size,
+    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
+)
 
 generator = 'librepcb-parts-generator (generate_qfp.py)'
 
-line_width = 0.25
+line_width = 0.2
 pkg_text_height = 1.0
-text_y_offset = 1.0
+text_y_offset = 0.7
 silkscreen_offset = 0.150  # 150 µm
 
 
@@ -119,9 +128,9 @@ class QfpConfig:
             full_name = 'Quad Flat Package (QFP)'
         else:
             raise ValueError('Invalid name: {}'.format(self.name))
-        return '{}-pin {}, standardized by JEDEC in MS-026.\\n\\n' \
-               'Pitch: {} mm\\nBody size: {}x{} mm\\nLead span: {}x{} mm\\n' \
-               'Nominal height: {} mm\\nMax height: {} mm\\n\\nGenerated with {}'.format(
+        return '{}-pin {}, standardized by JEDEC in MS-026.\n\n' \
+               'Pitch: {} mm\nBody size: {}x{} mm\nLead span: {}x{} mm\n' \
+               'Nominal height: {} mm\nMax height: {} mm\n\nGenerated with {}'.format(
                    self.lead_count, full_name, self.pitch, self.body_size_x,
                    self.body_size_y, self.lead_span_x, self.lead_span_y,
                    self.height_nom, self.height_max, generator,
@@ -325,14 +334,13 @@ def generate_pkg(
     library: str,
     author: str,
     configs: Iterable[QfpConfig],
+    generate_3d_models: bool,
     pkgcat: str,
     version: str,
     create_date: Optional[str],
 ) -> None:
     category = 'pkg'
     for config in configs:
-        lines = []
-
         full_name = config.ipc_name()
         full_description = config.description()
 
@@ -346,18 +354,22 @@ def generate_pkg(
 
         print('Generating {}: {}'.format(full_name, uuid_pkg))
 
-        # General info
-        lines.append('(librepcb_package {}'.format(uuid_pkg))
-        lines.append(' (name "{}")'.format(full_name))
-        lines.append(' (description "{}")'.format(full_description))
-        lines.append(' (keywords "{}")'.format(config.keywords))
-        lines.append(' (author "{}")'.format(author))
-        lines.append(' (version "{}")'.format(version))
-        lines.append(' (created {})'.format(create_date or now()))
-        lines.append(' (deprecated false)')
-        lines.append(' (category {})'.format(pkgcat))
+        package = Package(
+            uuid=uuid_pkg,
+            name=Name(full_name),
+            description=Description(full_description),
+            keywords=Keywords(config.keywords),
+            author=Author(author),
+            version=Version(version),
+            created=Created(create_date or now()),
+            deprecated=Deprecated(False),
+            generated_by=GeneratedBy(''),
+            categories=[Category(pkgcat)],
+            assembly_type=AssemblyType.SMT,
+        )
+
         for p in range(1, config.lead_count + 1):
-            lines.append(' (pad {} (name "{}"))'.format(uuid_pads[p - 1], p))
+            package.add_pad(PackagePad(uuid_pads[p - 1], Name(str(p))))
 
         def add_footprint_variant(
             key: str,
@@ -367,6 +379,8 @@ def generate_pkg(
             # UUIDs
             uuid_footprint = _uuid('footprint-{}'.format(key))
             uuid_silkscreen = [_uuid('polygon-silkscreen-{}-{}'.format(quadrant, key)) for quadrant in [1, 2, 3, 4]]
+            uuid_body = _uuid('polygon-body-{}'.format(key))
+            uuid_pin1_dot = _uuid('pin1-dot-{}'.format(key))
             uuid_outline = _uuid('polygon-outline-{}'.format(key))
             uuid_courtyard = _uuid('polygon-courtyard-{}'.format(key))
             uuid_text_name = _uuid('text-name-{}'.format(key))
@@ -382,9 +396,14 @@ def generate_pkg(
             pos_first = get_pad_coords(1, config.lead_count, config.pitch, lead_contact_x_offset)
             pos_last = get_pad_coords(config.lead_count, config.lead_count, config.pitch, lead_contact_x_offset)
 
-            lines.append(' (footprint {}'.format(uuid_footprint))
-            lines.append('  (name "{}")'.format(name))
-            lines.append('  (description "")')
+            footprint = Footprint(
+                uuid=uuid_footprint,
+                name=Name(name),
+                description=Description(''),
+                position_3d=Position3D.zero(),
+                rotation_3d=Rotation3D.zero(),
+            )
+            package.add_footprint(footprint)
 
             # Pads
             pad_width = config.lead_width + excess.side * 2
@@ -394,11 +413,21 @@ def generate_pkg(
                 pad_center_offset_x = config.lead_span_x / 2 - pad_length / 2 + excess.toe
                 pos = get_pad_coords(p, config.lead_count, config.pitch, pad_center_offset_x)
                 pad_rotation = 90.0 if pos.orientation == 'horizontal' else 0.0
-                lines.append('  (pad {} (side top) (shape rect)'.format(pad_uuid))
-                lines.append('   (position {} {}) (rotation {}) (size {} {}) (drill 0.0)'.format(
-                    ff(pos.x), ff(pos.y), ff(pad_rotation), ff(pad_width), ff(pad_length),
+                footprint.add_pad(FootprintPad(
+                    uuid=pad_uuid,
+                    side=ComponentSide.TOP,
+                    shape=Shape.ROUNDED_RECT,
+                    position=Position(pos.x, pos.y),
+                    rotation=Rotation(pad_rotation),
+                    size=Size(pad_width, pad_length),
+                    radius=ShapeRadius(0.5),
+                    stop_mask=StopMaskConfig.AUTO,
+                    solder_paste=SolderPasteConfig.AUTO,
+                    copper_clearance=CopperClearance(0.0),
+                    function=PadFunction.STANDARD_PAD,
+                    package_pad=PackagePadUuid(pad_uuid),
+                    holes=[],
                 ))
-                lines.append('  )')
 
             # Documentation: Leads
             for p in range(1, config.lead_count + 1):
@@ -409,43 +438,55 @@ def generate_pkg(
 
                 # Contact area
                 if pos.orientation == 'horizontal':
-                    x1 = ff(pos.x)
-                    x2 = ff(pos.x + sign(pos.x) * config.lead_contact_length)
-                    y1 = ff(pos.y - config.lead_width / 2)
-                    y2 = ff(pos.y + config.lead_width / 2)
+                    x1 = pos.x
+                    x2 = pos.x + sign(pos.x) * config.lead_contact_length
+                    y1 = pos.y - config.lead_width / 2
+                    y2 = pos.y + config.lead_width / 2
                 elif pos.orientation == 'vertical':
-                    x1 = ff(pos.x - config.lead_width / 2)
-                    x2 = ff(pos.x + config.lead_width / 2)
-                    y1 = ff(pos.y)
-                    y2 = ff(pos.y + sign(pos.y) * config.lead_contact_length)
-                lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid_ctct))
-                lines.append('   (width 0.0) (fill true) (grab_area false)')
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x1, y1))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x2, y1))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x2, y2))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x1, y2))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x1, y1))
-                lines.append('  )')
+                    x1 = pos.x - config.lead_width / 2
+                    x2 = pos.x + config.lead_width / 2
+                    y1 = pos.y
+                    y2 = pos.y + sign(pos.y) * config.lead_contact_length
+                footprint.add_polygon(Polygon(
+                    uuid=lead_uuid_ctct,
+                    layer=Layer('top_documentation'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(x1, y1), Angle(0)),
+                        Vertex(Position(x2, y1), Angle(0)),
+                        Vertex(Position(x2, y2), Angle(0)),
+                        Vertex(Position(x1, y2), Angle(0)),
+                        Vertex(Position(x1, y1), Angle(0)),
+                    ],
+                ))
                 # Vertical projection, between contact area and body
                 if pos.orientation == 'horizontal':
-                    x1 = ff(sign(pos.x) * config.body_size_x / 2)
-                    x2 = ff(pos.x)
-                    y1 = ff(pos.y - config.lead_width / 2)
-                    y2 = ff(pos.y + config.lead_width / 2)
+                    x1 = sign(pos.x) * config.body_size_x / 2
+                    x2 = pos.x
+                    y1 = pos.y - config.lead_width / 2
+                    y2 = pos.y + config.lead_width / 2
                 elif pos.orientation == 'vertical':
-                    x1 = x2 = y1 = y2 = ff(0)
-                    x1 = ff(pos.x - config.lead_width / 2)
-                    x2 = ff(pos.x + config.lead_width / 2)
-                    y1 = ff(sign(pos.y) * config.body_size_y / 2)
-                    y2 = ff(pos.y)
-                lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid_proj))
-                lines.append('   (width 0.0) (fill true) (grab_area false)')
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x1, y1))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x2, y1))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x2, y2))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x1, y2))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x1, y1))
-                lines.append('  )')
+                    x1 = x2 = y1 = y2 = 0
+                    x1 = pos.x - config.lead_width / 2
+                    x2 = pos.x + config.lead_width / 2
+                    y1 = sign(pos.y) * config.body_size_y / 2
+                    y2 = pos.y
+                footprint.add_polygon(Polygon(
+                    uuid=lead_uuid_proj,
+                    layer=Layer('top_documentation'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(x1, y1), Angle(0)),
+                        Vertex(Position(x2, y1), Angle(0)),
+                        Vertex(Position(x2, y2), Angle(0)),
+                        Vertex(Position(x1, y2), Angle(0)),
+                        Vertex(Position(x1, y1), Angle(0)),
+                    ],
+                ))
 
             # Silkscreen: 1 per quadrant
             # (Quadrant 1 is at the top right, the rest follows CCW)
@@ -465,98 +506,251 @@ def generate_pkg(
                         y_min,
                     ))
 
-                lines.append('  (polygon {} (layer top_placement)'.format(uuid))
-                lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
                 sign_x = 1 if quadrant in [1, 4] else -1
                 sign_y = 1 if quadrant in [1, 2] else -1
-                for (x, y) in vertices:
-                    xx = ff(sign_x * x)
-                    yy = ff(sign_y * y)
-                    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(xx, yy))
-                lines.append('  )')
+                footprint.add_polygon(Polygon(
+                    uuid=uuid,
+                    layer=Layer('top_legend'),
+                    width=Width(line_width),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(sign_x * x, sign_y * y), Angle(0))
+                        for (x, y) in vertices
+                    ],
+                ))
 
             # Documentation outline (fully inside body)
             outline_x_offset = config.body_size_x / 2 - line_width / 2
             outline_y_offset = config.body_size_y / 2 - line_width / 2
-            lines.append('  (polygon {} (layer top_documentation)'.format(uuid_outline))
-            lines.append('   (width {}) (fill false) (grab_area false)'.format(line_width))
-            oxo = ff(outline_x_offset)  # Used for shorter code lines below :)
-            oyo = ff(outline_y_offset)  # Used for shorter code lines below :)
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, oyo))  # NE
-            lines.append('   (vertex (position {} -{}) (angle 0.0))'.format(oxo, oyo))  # SE
-            lines.append('   (vertex (position -{} -{}) (angle 0.0))'.format(oxo, oyo))  # SW
-            lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(oxo, oyo))  # NW
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(oxo, oyo))  # NE
-            lines.append('  )')
+            oxo = outline_x_offset  # Used for shorter code lines below :)
+            oyo = outline_y_offset  # Used for shorter code lines below :)
+            footprint.add_polygon(Polygon(
+                uuid=uuid_body,
+                layer=Layer('top_documentation'),
+                width=Width(line_width),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(oxo, oyo), Angle(0)),  # NE
+                    Vertex(Position(oxo, -oyo), Angle(0)),  # SE
+                    Vertex(Position(-oxo, -oyo), Angle(0)),  # SW
+                    Vertex(Position(-oxo, oyo), Angle(0)),  # NW
+                    Vertex(Position(oxo, oyo), Angle(0)),  # NE
+                ],
+            ))
+
+            # Documentation: Pin 1 dot
+            pin1_dot_diameter = 0.5
+            pin1_dot_offset = 1.0
+            dx = config.body_size_x / 2 - pin1_dot_offset
+            dy = config.body_size_y / 2 - pin1_dot_offset
+            pin1_dot = Circle(
+                uuid_pin1_dot,
+                Layer('top_documentation'),
+                Width(0.0),
+                Fill(True),
+                GrabArea(False),
+                Diameter(pin1_dot_diameter),
+                Position(-dx, dy),
+            )
+            footprint.add_circle(pin1_dot)
+
+            def _create_outline_vertices(offset: float = 0, around_pads: bool = False) -> List[Vertex]:
+                x_max = config.lead_span_x / 2
+                x_mid = config.body_size_x / 2
+                x_min = abs(pos_last.x) + config.lead_width / 2
+                y_max = config.lead_span_y / 2
+                y_mid = config.body_size_y / 2
+                y_min = abs(pos_first.y) + config.lead_width / 2
+                if around_pads:
+                    x_max += excess.toe
+                    x_min += excess.side
+                    y_max += excess.toe
+                    y_min += excess.side
+                vertices = [  # Starting at top left
+                    # Top
+                    (-x_min,  y_max), ( x_min,  y_max), ( x_min,  y_mid), ( x_mid,  y_mid), ( x_mid,  y_min),
+                    # Right
+                    ( x_max,  y_min), ( x_max, -y_min), ( x_mid, -y_min), ( x_mid, -y_mid), ( x_min, -y_mid),
+                    # Bottom
+                    ( x_min, -y_max), (-x_min, -y_max), (-x_min, -y_mid), (-x_mid, -y_mid), (-x_mid, -y_min),
+                    # Left
+                    (-x_max, -y_min), (-x_max,  y_min), (-x_mid,  y_min), (-x_mid,  y_mid), (-x_min,  y_mid),
+                ]
+                return [
+                    Vertex(Position(x + sign(x) * offset, y + sign(y) * offset), Angle(0))
+                    for (x, y) in vertices
+                ]
+
+            # Package Outline
+            footprint.add_polygon(Polygon(
+                uuid=uuid_outline,
+                layer=Layer('top_package_outlines'),
+                width=Width(0),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=_create_outline_vertices(),
+            ))
 
             # Courtyard
-            x_max = config.lead_span_x / 2 + excess.toe
-            x_mid = config.body_size_x / 2
-            x_min = abs(pos_last.x) + config.lead_width / 2 + excess.side
-            y_max = config.lead_span_y / 2 + excess.toe
-            y_mid = config.body_size_y / 2
-            y_min = abs(pos_first.y) + config.lead_width / 2 + excess.side
-            vertices = [  # Starting at top left
-                # Top
-                (-x_min,  y_max), ( x_min,  y_max), ( x_min,  y_mid), ( x_mid,  y_mid), ( x_mid,  y_min),
-                # Right
-                ( x_max,  y_min), ( x_max, -y_min), ( x_mid, -y_min), ( x_mid, -y_mid), ( x_min, -y_mid),
-                # Bottom
-                ( x_min, -y_max), (-x_min, -y_max), (-x_min, -y_mid), (-x_mid, -y_mid), (-x_mid, -y_min),
-                # Left
-                (-x_max, -y_min), (-x_max,  y_min), (-x_mid,  y_min), (-x_mid,  y_mid), (-x_min,  y_mid),
-                # Back to top
-                (-x_min,  y_max),
-            ]
-            lines.append('  (polygon {} (layer {})'.format(uuid_courtyard, 'top_courtyard'))
-            lines.append('   (width {}) (fill false) (grab_area false)'.format(0.0))
-            for (x, y) in vertices:
-                xx = ff(x + sign(x) * excess.courtyard)
-                yy = ff(y + sign(y) * excess.courtyard)
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(xx, yy))
-            lines.append('  )')
+            footprint.add_polygon(Polygon(
+                uuid=uuid_courtyard,
+                layer=Layer('top_courtyard'),
+                width=Width(0),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=_create_outline_vertices(offset=excess.courtyard, around_pads=True),
+            ))
 
             # Labels
-            y_offset = ff(config.lead_span_y / 2 + text_y_offset)
-            text_attrs = '(height {}) (stroke_width 0.2) ' \
-                         '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
-            lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
-            lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(y_offset))
-            lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
-            lines.append('  )')
-            lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
-            lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center top) (position 0.0 -{}) (rotation 0.0)'.format(y_offset))
-            lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
-            lines.append('  )')
-
-            lines.append(' )')
+            y_offset = config.lead_span_y / 2 + text_y_offset
+            footprint.add_text(StrokeText(
+                uuid=uuid_text_name,
+                layer=Layer('top_names'),
+                height=Height(pkg_text_height),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center bottom'),
+                position=Position(0.0, y_offset),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(True),
+                mirror=Mirror(False),
+                value=Value('{{NAME}}'),
+            ))
+            footprint.add_text(StrokeText(
+                uuid=uuid_text_value,
+                layer=Layer('top_values'),
+                height=Height(pkg_text_height),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center top'),
+                position=Position(0.0, -y_offset),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(True),
+                mirror=Mirror(False),
+                value=Value('{{VALUE}}'),
+            ))
 
         add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B')
         add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A')
         add_footprint_variant('density~c', 'Density Level C (min protrusion)', 'C')
 
-        lines.append(')')
+        # Generate 3D models
+        uuid_3d = uuid('pkg', full_name, '3d')
+        if generate_3d_models:
+            generate_3d(library, full_name, uuid_pkg, uuid_3d, config)
+        package.add_3d_model(Package3DModel(uuid_3d, Name(full_name)))
+        for footprint in package.footprints:
+            footprint.add_3d_model(Footprint3DModel(uuid_3d))
 
-        pkg_dir_path = path.join('out', library, category, uuid_pkg)
-        if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-            makedirs(pkg_dir_path)
-        with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-            f.write('0.1\n')
-        with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
-            f.write('\n'.join(lines))
-            f.write('\n')
+        package.serialize(path.join('out', library, category))
+
+
+def generate_3d(
+    library: str,
+    full_name: str,
+    uuid_pkg: str,
+    uuid_3d: str,
+    config: QfpConfig,
+) -> None:
+    import cadquery as cq
+
+    from cadquery_helpers import StepAssembly, StepColor
+
+    print(f'Generating pkg 3D model "{full_name}": {uuid_3d}')
+
+    body_standoff = 0.1
+    body_height = config.height_nom - body_standoff
+    body_chamfer = 0.15
+    dot_diameter = 0.8
+    dot_position = 1.0
+    dot_depth = 0.15
+    leg_height = 0.17
+    leg_z_top = body_standoff + (body_height / 2)
+    bend_radius = 0.1 + (leg_height / 2)
+
+    dot_center = (
+        -(config.body_size_x / 2) + dot_position,
+        (config.body_size_y / 2) - dot_position,
+        body_standoff + body_height - dot_depth
+    )
+
+    body = cq.Workplane('XY', origin=(0, 0, body_standoff + (body_height / 2))) \
+        .box(config.body_size_x, config.body_size_y, body_height) \
+        .edges().chamfer(body_chamfer) \
+        .workplane(origin=(dot_center[0], dot_center[1]), offset=(body_height / 2) - dot_depth) \
+        .cylinder(5, dot_diameter / 2, centered=(True, True, False), combine='cut')
+    dot = cq.Workplane('XY', origin=dot_center) \
+        .cylinder(0.05, dot_diameter / 2, centered=(True, True, False))
+    leg_path = cq.Workplane("XZ") \
+        .hLine(config.lead_contact_length - (leg_height / 2) - bend_radius) \
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=270, angle2=360, sense=1) \
+        .vLine(leg_z_top - leg_height - (2 * bend_radius)) \
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
+        .hLine(config.lead_span_x - (2 * bend_radius) - (2 * config.lead_contact_length) + leg_height) \
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1) \
+        .vLine(-(leg_z_top - leg_height - (2 * bend_radius))) \
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=180, angle2=270, sense=1) \
+        .hLine(config.lead_contact_length - (leg_height / 2) - bend_radius)
+    leg = cq.Workplane("ZY") \
+        .rect(leg_height, config.lead_width) \
+        .sweep(leg_path)
+    assert config.lead_span_x == config.lead_span_y  # Only one leg object!
+
+    assembly = StepAssembly(full_name)
+    assembly.add_body(body, 'body', StepColor.IC_BODY)
+    assembly.add_body(dot, 'dot', StepColor.IC_PIN1_DOT)
+    lead_offset = ((config.lead_count // 4) - 1) * config.pitch / 2
+    for i in range(0, config.lead_count // 2):
+        if i < config.lead_count // 4:
+            # Horizontal leads
+            location = cq.Location((
+                -config.lead_span_x / 2,
+                lead_offset - i * config.pitch,
+                leg_height / 2,
+            ))
+        else:
+            # Vertical leads
+            location = cq.Location((
+                -lead_offset + (i - config.lead_count // 4) * config.pitch,
+                -config.lead_span_y / 2,
+                leg_height / 2,
+            ), (0, 0, 1), 90)
+        assembly.add_body(
+            leg,
+            'leg-{}'.format(i + 1), StepColor.LEAD_SMT,
+            location=location,
+        )
+
+    # Save without fusing for massively better minification!
+    out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
+    assembly.save(out_path, fused=False)
 
 
 if __name__ == '__main__':
+    if '--help' in sys.argv or '-h' in sys.argv:
+        print(f'Usage: {sys.argv[0]} [--3d]')
+        print()
+        print('Options:')
+        print('  --3d    Generate 3D models using cadquery')
+        sys.exit(1)
+
+    generate_3d_models = '--3d' in sys.argv
+    if not generate_3d_models:
+        warning = 'Note: Not generating 3D models unless the "--3d" argument is passed in!'
+        print(f'\033[1;33m{warning}\033[0m')
+
     configs = list(chain.from_iterable(c.get_configs() for c in JEDEC_CONFIGS))
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
         configs=configs,
+        generate_3d_models=generate_3d_models,
         pkgcat='3363b8b1-6fa8-4041-962e-5f839cfd86b7',
-        version='0.3.1',
+        version='0.4',
         create_date='2019-02-07T21:03:03Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
