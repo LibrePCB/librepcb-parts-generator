@@ -9,7 +9,7 @@ from common import escape_string, format_float, format_ipc_dimension, human_sort
     ('\n', '\\n'),
     ('\\', '\\\\'),
 ])
-def test_escape_string(inval: str, outval: str):
+def test_escape_string(inval: str, outval: str) -> None:
     assert escape_string(inval) == outval
 
 
@@ -20,7 +20,7 @@ def test_escape_string(inval: str, outval: str):
     (-0.0, '0.0'),
     (-0.0001, '0.0'),  # Unsigned zero, due to rounding to 3 decimals
 ])
-def test_format_float(inval: float, outval: str):
+def test_format_float(inval: float, outval: str) -> None:
     assert format_float(inval) == outval
 
 
@@ -34,7 +34,7 @@ def test_format_float(inval: float, outval: str):
     (0.7999999999, 2, '80'),
     (0.809, 2, '80'),
 ])
-def test_format_ipc_dimension(inval: float, decimals: int, outval: str):
+def test_format_ipc_dimension(inval: float, decimals: int, outval: str) -> None:
     assert format_ipc_dimension(inval, decimals) == outval
 
 
@@ -47,7 +47,7 @@ def test_format_ipc_dimension(inval: float, decimals: int, outval: str):
     (-1, -1),
     (-0.001, -1),
 ])
-def test_sign(inval: float, outval: str):
+def test_sign(inval: float, outval: int) -> None:
     assert sign(inval) == outval
 
 

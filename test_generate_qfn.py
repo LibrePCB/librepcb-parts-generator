@@ -43,7 +43,7 @@ def test_get_pad_coords(
     offset: float,
     x: float,
     y: float,
-):
+) -> None:
     result = generate_qfp.get_pad_coords(pad_number, pad_count, pitch, offset)
     assert result.x == x
     assert result.y == y

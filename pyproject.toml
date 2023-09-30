@@ -19,6 +19,20 @@ test = [
     "isort ~= 5.10.1",
 ]
 
+[tool.mypy]
+warn_unused_configs = true
+strict = true
+
+[[tool.mypy.overrides]]
+module = [
+    'test_common',
+    'test_generate_connectors',
+    'test_generate_qfn',
+    'test_generate_idc',
+    'test_generate_stm_mcu',
+]
+disallow_untyped_defs = false
+
 [tool.isort]
 line_length = 120
 multi_line_output = 5
