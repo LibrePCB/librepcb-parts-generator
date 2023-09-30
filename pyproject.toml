@@ -22,6 +22,9 @@ test = [
 [tool.mypy]
 warn_unused_configs = true
 strict = true
+exclude = [
+    'build'
+]
 
 [[tool.mypy.overrides]]
 module = [
