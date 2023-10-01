@@ -19,6 +19,9 @@ test = [
     "isort ~= 5.10.1",
 ]
 
+[tool.setuptools.packages.find]
+exclude = ["out*"]
+
 [tool.mypy]
 warn_unused_configs = true
 strict = true
