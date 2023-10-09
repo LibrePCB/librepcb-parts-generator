@@ -732,15 +732,21 @@ if __name__ == '__main__':
     # Commonly used LED dimensions were determined by looking at various LED
     # datasheets. The bottom diameter, body height and standoff height vary
     # between the many different LEDs since there's no standard and because
-    # the the specified tolerances are huge (>1mm). However, for these generic
+    # the specified tolerances are huge (>1mm). However, for these generic
     # packages we just use some average dimensions for simplicity. For exact
     # dimensions, a separate package needs to be created for each LED model.
     #
     # Note: The standoff specifies the distance between the bottom of the
     #       LED body and the surface of the PCB.
     configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 1.0, False, 'Clear', (0.7, 0.7, 0.7, 0.5)))
+    configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 1.0, False, 'Green', (0, 0.8, 0, 0.5)))
+    configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 1.0, False, 'Red', (0.8, 0, 0, 0.5)))
+    configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 1.0, False, 'Yellow', (0.8, 0.8, 0, 0.5)))
     configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 5.0, True, 'Clear', (0.7, 0.7, 0.7, 0.5)))
     configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 1.0, False, 'Clear', (0.7, 0.7, 0.7, 0.5)))
+    configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 1.0, False, 'Green', (0, 0.8, 0, 0.5)))
+    configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 1.0, False, 'Red', (0.8, 0, 0, 0.5)))
+    configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 1.0, False, 'Yellow', (0.8, 0.8, 0, 0.5)))
     configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 5.0, True, 'Clear', (0.7, 0.7, 0.7, 0.5)))
 
     generate_pkg(
