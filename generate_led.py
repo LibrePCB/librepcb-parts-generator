@@ -1,11 +1,12 @@
 """
 Generate THT LED packages.
 """
+import sys
 from math import acos, asin, degrees, sqrt
 from os import path
 from uuid import uuid4
 
-from typing import Iterable, List, Optional
+from typing import Iterable, List, Optional, Tuple
 
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
@@ -16,9 +17,9 @@ from entities.common import (
 from entities.component import SignalUUID
 from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, FootprintPad, LetterSpacing,
-    LineSpacing, Mirror, Package, PackagePad, PackagePadUuid, PadFunction, PadHole, Shape, ShapeRadius, Size,
-    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, Footprint3DModel, FootprintPad,
+    LetterSpacing, LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, PadHole,
+    Shape, ShapeRadius, Size, SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
 
 GENERATOR_NAME = 'librepcb-parts-generator (generate_led.py)'
@@ -62,6 +63,7 @@ class LedConfig:
         standoff: float,
         standoff_in_name: bool,
         body_color: str,
+        body_color_rgba: Tuple[float, float, float, float],
     ):
         self.top_diameter = top_diameter
         self.bot_diameter = bot_diameter
@@ -70,6 +72,7 @@ class LedConfig:
         self.standoff = standoff
         self.standoff_in_name = standoff_in_name
         self.body_color = body_color
+        self.body_color_rgba = body_color_rgba
 
         self.pkg_name = 'LED-THT-P{lead_spacing}D{top_diameter}H{body_height}{standoff_option}-{body_color}'.format(
             top_diameter=fd(top_diameter),
@@ -112,10 +115,12 @@ def generate_pkg(
     keywords: str,
     version: str,
     create_date: Optional[str],
+    generate_3d_models: bool,
 ) -> None:
     category = 'pkg'
     for config in configs:
         is_small = config.top_diameter < 5  # Small LEDs need adjusted footprints
+        generated_3d_uuids = set()
 
         def _uuid(identifier: str) -> str:
             return uuid(category, config.pkg_name, identifier)
@@ -146,13 +151,16 @@ def generate_pkg(
         # Footprint
         def _add_footprint(
             package: Package,
-            name: Name,
+            name: str,
             identifier_suffix: str,
+            identifier_3d: str,
             pad_size: Size,
+            vertical: bool,
+            horizontal_offset: float,
         ) -> Footprint:
             footprint = Footprint(
                 uuid=_uuid('footprint' + identifier_suffix),
-                name=name,
+                name=Name(name),
                 description=Description(''),
                 position_3d=Position3D.zero(),
                 rotation_3d=Rotation3D.zero(),
@@ -179,19 +187,37 @@ def generate_pkg(
                                    [Vertex(Position(0.0, 0.0), Angle(0.0))])],
                 ))
 
+            # 3D model
+            uuid_3d = _uuid(identifier_3d + '-3d')
+            name_3d = name
+            # Note: Some 3D models are used by multiple footprints but they shall
+            # be added to the package only once, thus we keep a list of which
+            # models were already added.
+            if uuid_3d not in generated_3d_uuids:
+                if generate_3d_models:
+                    generate_3d(library, name_3d, uuid_pkg, uuid_3d, config,
+                                vertical, horizontal_offset)
+                package.add_3d_model(Package3DModel(uuid_3d, Name(name_3d)))
+                generated_3d_uuids.add(uuid_3d)
+            footprint.add_3d_model(Footprint3DModel(uuid_3d))
+
             return footprint
 
         def _add_vertical_footprint(
             package: Package,
-            name: Name,
+            name: str,
             identifier_suffix: str,
+            identifier_3d: str,
             pad_size: Size,
         ) -> None:
             footprint = _add_footprint(
                 package=package,
                 identifier_suffix=identifier_suffix,
+                identifier_3d=identifier_3d,
                 name=name,
                 pad_size=pad_size,
+                vertical=True,
+                horizontal_offset=0,
             )
 
             # Now the interesting part: The circles with the flattened side.
@@ -339,8 +365,9 @@ def generate_pkg(
 
         def _add_horizontal_footprint(
             package: Package,
-            name: Name,
+            name: str,
             identifier_suffix: str,
+            identifier_3d: str,
             pad_size: Size,
             body_height: float,
             body_offset: float,
@@ -348,8 +375,11 @@ def generate_pkg(
             footprint = _add_footprint(
                 package=package,
                 identifier_suffix=identifier_suffix,
+                identifier_3d=identifier_3d,
                 name=name,
                 pad_size=pad_size,
+                vertical=False,
+                horizontal_offset=body_offset,
             )
 
             # Documentation outline
@@ -521,43 +551,121 @@ def generate_pkg(
         # Add footprints
         _add_vertical_footprint(
             package,
-            name=Name('Vertical'),
+            name='Vertical',
             identifier_suffix='',
+            identifier_3d='v',
             pad_size=Size(1.4, 1.4),
         )
         if not is_small:
             _add_vertical_footprint(
                 package,
-                name=Name('Vertical, Large Pads'),
+                name='Vertical, Large Pads',
                 identifier_suffix='-large',
+                identifier_3d='v',
                 pad_size=Size(2.5, 1.3),
             )
         _add_horizontal_footprint(
             package,
-            name=Name('Horizontal, 0.5 mm Offset'),
+            name='Horizontal, 0.5 mm Offset',
             identifier_suffix='-h050',
+            identifier_3d='h050',
             pad_size=Size(1.4, 1.4),
             body_height=config.body_height,
             body_offset=0.5,
         )
         _add_horizontal_footprint(
             package,
-            name=Name('Horizontal, 2.54 mm Offset'),
+            name='Horizontal, 2.54 mm Offset',
             identifier_suffix='-h254',
+            identifier_3d='h254',
             pad_size=Size(1.4, 1.4),
             body_height=config.body_height,
             body_offset=2.54,
         )
         _add_horizontal_footprint(
             package,
-            name=Name('Horizontal, 7.62 mm Offset'),
+            name='Horizontal, 7.62 mm Offset',
             identifier_suffix='-h762',
+            identifier_3d='h762',
             pad_size=Size(1.4, 1.4),
             body_height=config.body_height,
             body_offset=7.62,
         )
 
         package.serialize(path.join('out', library, category))
+
+
+def generate_3d(
+    library: str,
+    name: str,
+    uuid_pkg: str,
+    uuid_3d: str,
+    config: LedConfig,
+    vertical: bool,
+    horizontal_offset: float,
+) -> None:
+    import cadquery as cq
+
+    from cadquery_helpers import StepAssembly, StepColor, StepConstants
+
+    print(f'Generating pkg 3D model "{name}": {uuid_3d}')
+
+    ring_height = 1.0
+    cylinder_height = config.body_height - (config.top_diameter / 2) - ring_height
+    standoff_clearance = 0.3
+    standoff_height = min(config.standoff - standoff_clearance, 1.0)
+    standoff_width = lead_width + 0.3
+
+    body = cq.Workplane('XY') \
+        .cylinder(ring_height, config.bot_diameter / 2, centered=(True, True, False)) \
+        .faces('>Z') \
+        .cylinder(cylinder_height, config.top_diameter / 2, centered=(True, True, False)) \
+        .faces('>Z') \
+        .sphere(config.top_diameter / 2) \
+        .center(-config.bot_diameter / 2, 0) \
+        .box((config.bot_diameter - config.top_diameter - 0.1) / 2, 20, 20, centered=(False, True, True), combine='cut')
+
+    if vertical:
+        body = body.translate((0, 0, config.standoff))
+        leg = cq.Workplane('XY') \
+            .box(lead_width, lead_width, StepConstants.THT_LEAD_SOLDER_LENGTH + config.standoff + 0.1, centered=(True, True, False)) \
+            .faces('<Z') \
+            .workplane(offset=StepConstants.THT_LEAD_SOLDER_LENGTH, invert=True) \
+            .box(standoff_width, lead_width, standoff_height, centered=(True, True, False))
+    else:
+        bend_radius = lead_width
+        horizontal_length = horizontal_offset - bend_radius
+        extra_standoff = max(config.standoff - horizontal_length - (config.bot_diameter / 2), 0)
+        body = body.rotate((0, 0, 0), (1, 0, 0), angleDegrees=-90) \
+            .translate((0, horizontal_offset, (config.bot_diameter / 2) + extra_standoff))
+        leg_path = cq.Workplane('YZ') \
+            .vLine((config.bot_diameter / 2) - bend_radius + extra_standoff + StepConstants.THT_LEAD_SOLDER_LENGTH) \
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
+            .hLine(horizontal_length + 0.1)
+        leg = cq.Workplane('XY') \
+            .rect(lead_width, lead_width) \
+            .sweep(leg_path)
+        if extra_standoff > 0:
+            leg = leg.faces('<Z') \
+                .workplane(offset=StepConstants.THT_LEAD_SOLDER_LENGTH, invert=True) \
+                .box(standoff_width, lead_width, standoff_height, centered=(True, True, False))
+        if config.standoff < horizontal_length:
+            leg = leg.faces('>Z') \
+                .workplane(offset=-lead_width / 2) \
+                .center(0, horizontal_length + bend_radius - config.standoff) \
+                .box(standoff_width, standoff_height, lead_width, centered=(True, False, True))
+
+    assembly = StepAssembly(name)
+    assembly.add_body(body, 'body', cq.Color(*config.body_color_rgba))
+    assembly.add_body(leg, 'leg-1', StepColor.LEAD_THT, location=cq.Location(
+        (-config.lead_spacing / 2, 0, -StepConstants.THT_LEAD_SOLDER_LENGTH))
+    )
+    assembly.add_body(leg, 'leg-2', StepColor.LEAD_THT, location=cq.Location(
+        (config.lead_spacing / 2, 0, -StepConstants.THT_LEAD_SOLDER_LENGTH))
+    )
+
+    out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
+    assembly.save(out_path, fused=True)
 
 
 def generate_dev(
@@ -605,6 +713,18 @@ def generate_dev(
 
 
 if __name__ == '__main__':
+    if '--help' in sys.argv or '-h' in sys.argv:
+        print(f'Usage: {sys.argv[0]} [--3d]')
+        print()
+        print('Options:')
+        print('  --3d    Generate 3D models using cadquery')
+        sys.exit(1)
+
+    generate_3d_models = '--3d' in sys.argv
+    if not generate_3d_models:
+        warning = 'Note: Not generating 3D models unless the "--3d" argument is passed in!'
+        print(f'\033[1;33m{warning}\033[0m')
+
     configs = []  # type: List[LedConfig]
 
     # Generic LEDs
@@ -618,10 +738,10 @@ if __name__ == '__main__':
     #
     # Note: The standoff specifies the distance between the bottom of the
     #       LED body and the surface of the PCB.
-    configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 1.0, False, 'Clear'))
-    configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 5.0, True, 'Clear'))
-    configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 1.0, False, 'Clear'))
-    configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 5.0, True, 'Clear'))
+    configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 1.0, False, 'Clear', (0.7, 0.7, 0.7, 0.5)))
+    configs.append(LedConfig(3.00, 3.80, 2.54, 4.5, 5.0, True, 'Clear', (0.7, 0.7, 0.7, 0.5)))
+    configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 1.0, False, 'Clear', (0.7, 0.7, 0.7, 0.5)))
+    configs.append(LedConfig(5.00, 5.80, 2.54, 8.7, 5.0, True, 'Clear', (0.7, 0.7, 0.7, 0.5)))
 
     generate_pkg(
         library='LibrePCB_Base.lplib',
@@ -631,6 +751,7 @@ if __name__ == '__main__':
         keywords='led,tht',
         version='0.2',
         create_date='2022-02-26T00:06:03Z',
+        generate_3d_models=generate_3d_models,
     )
     generate_dev(
         library='LibrePCB_Base.lplib',
