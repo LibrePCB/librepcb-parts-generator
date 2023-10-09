@@ -30,6 +30,10 @@ pkg-led-tht-p254d300h450-clear-polygon-legend-h254,c8777eeb-5704-436b-b4b8-df916
 pkg-led-tht-p254d300h450-clear-polygon-legend-h762,4769f118-37ea-40b2-af18-1ca257b2a746
 pkg-led-tht-p254d300h450-clear-polygon-legend-top,903f93c4-325d-46fa-a132-561cdf446169
 pkg-led-tht-p254d300h450-clear-polygon-legend2-h050,2d93ca35-17b2-42f9-987e-42b62a764e9c
+pkg-led-tht-p254d300h450-clear-polygon-outline,da2be1f2-2357-43dc-8c30-860d280b5a05
+pkg-led-tht-p254d300h450-clear-polygon-outline-h050,258dc18d-a4fb-4d58-a08b-61df28a1f9a2
+pkg-led-tht-p254d300h450-clear-polygon-outline-h254,ab0858de-a15d-427e-88c8-8c202b4ee549
+pkg-led-tht-p254d300h450-clear-polygon-outline-h762,01395dad-ad68-4b1b-9896-f3b1569ee82c
 pkg-led-tht-p254d300h450-clear-text-name,f4dc7e31-c2e7-4044-bfe7-e7f19c325a23
 pkg-led-tht-p254d300h450-clear-text-name-h050,cdcbd1eb-3182-4340-b765-a323830b78ef
 pkg-led-tht-p254d300h450-clear-text-name-h254,eaf7fa8c-131c-40b4-badd-a0f5aa0e22c8
@@ -65,6 +69,10 @@ pkg-led-tht-p254d300h450s500-clear-polygon-legend-h254,0579bff8-7c35-484a-acc5-d
 pkg-led-tht-p254d300h450s500-clear-polygon-legend-h762,9cd16067-3fbb-4d54-8990-c884c6d74e74
 pkg-led-tht-p254d300h450s500-clear-polygon-legend-top,5d9f4351-5e48-483c-ba6e-f66a605e0fbb
 pkg-led-tht-p254d300h450s500-clear-polygon-legend2-h050,f9ae99d5-814d-4dfe-a5f0-f2caf4738770
+pkg-led-tht-p254d300h450s500-clear-polygon-outline,e9c7b337-b6b6-4209-8d4b-cc5d40fdaf3f
+pkg-led-tht-p254d300h450s500-clear-polygon-outline-h050,acf0017f-eb9e-447d-b8f9-c683acd5d333
+pkg-led-tht-p254d300h450s500-clear-polygon-outline-h254,2ac35316-da1b-4d99-a6d4-de8ae7caa8c4
+pkg-led-tht-p254d300h450s500-clear-polygon-outline-h762,5a7a5c91-c8ea-465f-891d-026f38f22ded
 pkg-led-tht-p254d300h450s500-clear-text-name,273fc66f-2608-4820-934a-9e4e86ba0cbe
 pkg-led-tht-p254d300h450s500-clear-text-name-h050,72af66a0-7b48-4bc6-abe3-f5fec9327451
 pkg-led-tht-p254d300h450s500-clear-text-name-h254,d6fafe4d-15f6-4052-927f-85eca362c700
@@ -156,6 +164,11 @@ pkg-led-tht-p254d500h870-clear-polygon-legend-h254,15952613-40de-4c47-9aa1-41632
 pkg-led-tht-p254d500h870-clear-polygon-legend-h762,9e7dc203-80f3-4ee9-b7f5-bda209ea3f41
 pkg-led-tht-p254d500h870-clear-polygon-legend-large,7f8c464b-8d73-4371-bef5-4d972d2501a0
 pkg-led-tht-p254d500h870-clear-polygon-legend2-h050,9985b377-e618-4646-91cf-7f324af6f0e9
+pkg-led-tht-p254d500h870-clear-polygon-outline,975ce222-92c2-41dc-ae99-0a8378d1a147
+pkg-led-tht-p254d500h870-clear-polygon-outline-h050,de515f79-4c61-4ec3-95a1-fe33031c4e5c
+pkg-led-tht-p254d500h870-clear-polygon-outline-h254,e152a712-35ce-4e22-926f-80ee5b491f36
+pkg-led-tht-p254d500h870-clear-polygon-outline-h762,cfcdf5a5-ac66-469b-9d2e-7049a7766064
+pkg-led-tht-p254d500h870-clear-polygon-outline-large,76fc6f76-c6e6-475d-963a-a90ef4a64254
 pkg-led-tht-p254d500h870-clear-text-name,40cc4d3e-23fc-41eb-867c-e2ed9dee654c
 pkg-led-tht-p254d500h870-clear-text-name-h050,e5cffb20-7cf6-4676-a9da-021065ed100b
 pkg-led-tht-p254d500h870-clear-text-name-h254,69f2ec9d-63d3-48f6-84a4-f1eacf1074af
@@ -196,6 +209,11 @@ pkg-led-tht-p254d500h870s500-clear-polygon-legend-h254,5657886c-c7e4-4c68-a01f-5
 pkg-led-tht-p254d500h870s500-clear-polygon-legend-h762,18c587a1-6f27-4ce6-adaf-818ad1f57e6e
 pkg-led-tht-p254d500h870s500-clear-polygon-legend-large,f13a48c2-4502-4491-b4b0-56eb38df4f5d
 pkg-led-tht-p254d500h870s500-clear-polygon-legend2-h050,b1b25dd4-3b62-4ad6-9043-ab61c8ca2907
+pkg-led-tht-p254d500h870s500-clear-polygon-outline,24dcfc4e-c0e0-42d5-8a88-08d66280a821
+pkg-led-tht-p254d500h870s500-clear-polygon-outline-h050,9bd255cf-04b7-4607-926f-4c7e34accaad
+pkg-led-tht-p254d500h870s500-clear-polygon-outline-h254,ae785c06-60df-400d-b3ba-5549e4107e9e
+pkg-led-tht-p254d500h870s500-clear-polygon-outline-h762,55f3eb34-8c67-4cbe-9c27-592542094c91
+pkg-led-tht-p254d500h870s500-clear-polygon-outline-large,ff9484c8-279f-4df1-9c89-ef389e801241
 pkg-led-tht-p254d500h870s500-clear-text-name,60d8f68a-0f5b-425f-9884-68da58c57175
 pkg-led-tht-p254d500h870s500-clear-text-name-h050,a167148e-3e47-45cb-8032-42f73311d67c
 pkg-led-tht-p254d500h870s500-clear-text-name-h254,1e0c0dcd-afa4-48a0-b048-e9ab3a17640f

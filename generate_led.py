@@ -81,10 +81,10 @@ class LedConfig:
         self.pkg_description = \
             'Generic through-hole LED with {top_diameter:.2f} mm' \
             ' body diameter.\n\n' \
-            'Body height: {body_height:.2f} mm.\n' \
-            'Lead spacing: {lead_spacing:.2f} mm.\n' \
-            'Standoff: {standoff:.2f} mm.\n' \
-            'Body color: {body_color}.' \
+            'Body height: {body_height:.2f} mm\n' \
+            'Lead spacing: {lead_spacing:.2f} mm\n' \
+            'Standoff: {standoff:.2f} mm\n' \
+            'Body color: {body_color}' \
             '\n\nGenerated with {generator}'.format(
                 top_diameter=top_diameter,
                 body_height=body_height,
@@ -136,7 +136,7 @@ def generate_pkg(
             deprecated=Deprecated(False),
             generated_by=GeneratedBy(''),
             categories=[Category(pkgcat)],
-            assembly_type=AssemblyType.AUTO,
+            assembly_type=AssemblyType.THT,
         )
 
         # Package pads
@@ -173,7 +173,7 @@ def generate_pkg(
                     stop_mask=StopMaskConfig.AUTO,
                     solder_paste=SolderPasteConfig.OFF,
                     copper_clearance=CopperClearance(0.0),
-                    function=PadFunction.UNSPECIFIED,
+                    function=PadFunction.STANDARD_PAD,
                     package_pad=PackagePadUuid(pad_uuid),
                     holes=[PadHole(pad_uuid, DrillDiameter(pad_drill),
                                    [Vertex(Position(0.0, 0.0), Angle(0.0))])],
@@ -282,6 +282,17 @@ def generate_pkg(
                 inner_radius=config.top_diameter / 2 + default_line_width / 2,
                 line_width=default_line_width,
                 reduced=is_small,
+            )
+
+            # Package outline
+            _add_flattened_circle(
+                footprint,
+                identifier='polygon-outline' + identifier_suffix,
+                layer='top_package_outlines',
+                outer_radius=config.bot_diameter / 2,
+                inner_radius=config.top_diameter / 2,
+                line_width=0,
+                reduced=False,
             )
 
             # Courtyard
@@ -436,33 +447,46 @@ def generate_pkg(
                 polygon.add_vertex(Vertex(Position(outer_radius, body_bottom_silkscreen_y), Angle(0)))
             footprint.add_polygon(polygon)
 
+            # Package outline
+            def _generate_outline(offset: float = 0, pad_offset: float = 0) -> List[Vertex]:
+                r_inner = (config.top_diameter / 2) + offset
+                r_outer = (config.bot_diameter / 2) + offset
+                body_y_mid = body_bottom_y + 1.0 + (default_line_width / 2) + offset
+                body_y_bot = body_offset - offset
+                leads_x = min(config.lead_spacing / 2 + lead_width / 2 + offset + pad_offset, r_inner)
+                leads_y = -lead_width / 2 - offset - pad_offset
+                return [
+                    Vertex(Position(-r_inner, body_y_bot), Angle(0)),
+                    Vertex(Position(-r_inner, body_top_y), Angle(-180)),
+                    Vertex(Position(r_inner, body_top_y), Angle(0)),
+                    Vertex(Position(r_inner, body_y_mid), Angle(0)),
+                    Vertex(Position(r_outer, body_y_mid), Angle(0)),
+                    Vertex(Position(r_outer, body_y_bot), Angle(0)),
+                    Vertex(Position(leads_x, body_y_bot), Angle(0)),
+                    Vertex(Position(leads_x, leads_y), Angle(0)),
+                    Vertex(Position(-leads_x, leads_y), Angle(0)),
+                    Vertex(Position(-leads_x, body_y_bot), Angle(0)),
+                ]
+
+            footprint.add_polygon(Polygon(
+                uuid=_uuid('polygon-outline' + identifier_suffix),
+                layer=Layer('top_package_outlines'),
+                width=Width(0.0),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=_generate_outline(),
+            ))
+
             # Courtyard
-            courtyard_offset = (1.0 if config.bot_diameter >= 10.0 else 0.8) / 2
-            polygon = Polygon(
+            courtyard_offset = 0.5 if config.bot_diameter >= 10.0 else 0.4
+            footprint.add_polygon(Polygon(
                 uuid=_uuid('polygon-courtyard' + identifier_suffix),
                 layer=Layer('top_courtyard'),
                 width=Width(0.0),
                 fill=Fill(False),
                 grab_area=GrabArea(False),
-            )
-            inner_radius += courtyard_offset
-            outer_radius += courtyard_offset
-            body_middle_y += courtyard_offset
-            body_bottom_y -= courtyard_offset
-            courtyard_bottom_x = min(config.lead_spacing / 2 + pad_drill / 2 + courtyard_offset + 0.2, inner_radius)
-            courtyard_bottom_y = -pad_drill / 2 - courtyard_offset - 0.2
-            polygon.add_vertex(Vertex(Position(-inner_radius, body_bottom_y), Angle(0)))
-            polygon.add_vertex(Vertex(Position(-inner_radius, body_top_y), Angle(-180)))
-            polygon.add_vertex(Vertex(Position(inner_radius, body_top_y), Angle(0)))
-            polygon.add_vertex(Vertex(Position(inner_radius, body_middle_y), Angle(0)))
-            polygon.add_vertex(Vertex(Position(outer_radius, body_middle_y), Angle(0)))
-            polygon.add_vertex(Vertex(Position(outer_radius, body_bottom_y), Angle(0)))
-            polygon.add_vertex(Vertex(Position(courtyard_bottom_x, body_bottom_y), Angle(0)))
-            polygon.add_vertex(Vertex(Position(courtyard_bottom_x, courtyard_bottom_y), Angle(0)))
-            polygon.add_vertex(Vertex(Position(-courtyard_bottom_x, courtyard_bottom_y), Angle(0)))
-            polygon.add_vertex(Vertex(Position(-courtyard_bottom_x, body_bottom_y), Angle(0)))
-            polygon.add_vertex(Vertex(Position(-inner_radius, body_bottom_y), Angle(0)))
-            footprint.add_polygon(polygon)
+                vertices=_generate_outline(courtyard_offset, 0.1),
+            ))
 
             # Text
             footprint.add_text(StrokeText(
@@ -601,11 +625,11 @@ if __name__ == '__main__':
 
     generate_pkg(
         library='LibrePCB_Base.lplib',
-        author='Danilo B.',
+        author='Danilo B., U. Bruhin',
         configs=configs,
         pkgcat='9c36c4be-3582-4f27-ae00-4c1229f1e870',
         keywords='led,tht',
-        version='0.1',
+        version='0.2',
         create_date='2022-02-26T00:06:03Z',
     )
     generate_dev(
@@ -614,7 +638,7 @@ if __name__ == '__main__':
         configs=configs,
         cmpcat='70421345-ae1d-4fed-aa60-e7619524b97f',
         keywords='led,tht',
-        version='0.1',
+        version='0.1.1',
         create_date='2022-08-31T11:18:33Z',
     )
 
