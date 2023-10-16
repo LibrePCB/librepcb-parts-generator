@@ -89,6 +89,7 @@ def generate_pkg(
     leg_diameter_nom: float,
     body_diameter_nom: float,
     body_length_nom: float,
+    polarized: bool,
     pad_names: Tuple[str, str],
     pad_hole_diameter: float,
     variants: Iterable[FootprintVariant],
@@ -336,60 +337,63 @@ Generated with {generator}
                 ))
 
         # Pin-1 markings
-        bar_width = min(0.2 * body_length_nom, 0.8)
-        bar_position = 0.2
-        if variant.vertical:
-            r = (body_diameter_nom / 2) + (line_width if simple_silkscreen else 0.01)
-            h = r - ((pad_size[0] / 2) + 0.15)
-            x = -(variant.pitch / 2) - r + h
-            dy = sqrt(2 * r * h - h ** 2)
-            angle = 360 * acos(1 - (h / r)) / pi
-            footprint.add_polygon(Polygon(
-                uuid=_uuid(uuid_ns + 'polygon-legend-bar'),
-                layer=Layer('top_legend'),
-                width=Width(0),
-                fill=Fill(True),
-                grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(x, dy), Angle(0)),
-                    Vertex(Position(x, -dy), Angle(-angle)),
-                    Vertex(Position(x, dy), Angle(0)),
-                ],
-            ))
-        else:
-            x = (-body_length_nom / 2) + bar_position * body_length_nom
-            x1 = x - (bar_width / 2)
-            x2 = x + (bar_width / 2)
-            dy = (body_diameter_nom / 2) - line_width
-            footprint.add_polygon(Polygon(
-                uuid=_uuid(uuid_ns + 'polygon-bar'),
-                layer=Layer('top_documentation'),
-                width=Width(0),
-                fill=Fill(True),
-                grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(x1, dy), Angle(0)),  # NW
-                    Vertex(Position(x2, dy), Angle(0)),  # NE
-                    Vertex(Position(x2, -dy), Angle(0)),  # SE
-                    Vertex(Position(x1, -dy), Angle(0)),  # SW
-                    Vertex(Position(x1, dy), Angle(0)),  # NW
-                ],
-            ))
-            dy = body_diameter_nom / 2
-            footprint.add_polygon(Polygon(
-                uuid=_uuid(uuid_ns + 'polygon-legend-bar'),
-                layer=Layer('top_legend'),
-                width=Width(0),
-                fill=Fill(True),
-                grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(x1, dy), Angle(0)),  # NW
-                    Vertex(Position(x2, dy), Angle(0)),  # NE
-                    Vertex(Position(x2, -dy), Angle(0)),  # SE
-                    Vertex(Position(x1, -dy), Angle(0)),  # SW
-                    Vertex(Position(x1, dy), Angle(0)),  # NW
-                ],
-            ))
+        bar_width = 0.0
+        bar_position = 0.0
+        if polarized:
+            bar_width = min(0.2 * body_length_nom, 0.8)
+            bar_position = 0.2
+            if variant.vertical:
+                r = (body_diameter_nom / 2) + (line_width if simple_silkscreen else 0.01)
+                h = r - ((pad_size[0] / 2) + 0.15)
+                x = -(variant.pitch / 2) - r + h
+                dy = sqrt(2 * r * h - h ** 2)
+                angle = 360 * acos(1 - (h / r)) / pi
+                footprint.add_polygon(Polygon(
+                    uuid=_uuid(uuid_ns + 'polygon-legend-bar'),
+                    layer=Layer('top_legend'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(x, dy), Angle(0)),
+                        Vertex(Position(x, -dy), Angle(-angle)),
+                        Vertex(Position(x, dy), Angle(0)),
+                    ],
+                ))
+            else:
+                x = (-body_length_nom / 2) + bar_position * body_length_nom
+                x1 = x - (bar_width / 2)
+                x2 = x + (bar_width / 2)
+                dy = (body_diameter_nom / 2) - line_width
+                footprint.add_polygon(Polygon(
+                    uuid=_uuid(uuid_ns + 'polygon-bar'),
+                    layer=Layer('top_documentation'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(x1, dy), Angle(0)),  # NW
+                        Vertex(Position(x2, dy), Angle(0)),  # NE
+                        Vertex(Position(x2, -dy), Angle(0)),  # SE
+                        Vertex(Position(x1, -dy), Angle(0)),  # SW
+                        Vertex(Position(x1, dy), Angle(0)),  # NW
+                    ],
+                ))
+                dy = body_diameter_nom / 2
+                footprint.add_polygon(Polygon(
+                    uuid=_uuid(uuid_ns + 'polygon-legend-bar'),
+                    layer=Layer('top_legend'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(x1, dy), Angle(0)),  # NW
+                        Vertex(Position(x2, dy), Angle(0)),  # NE
+                        Vertex(Position(x2, -dy), Angle(0)),  # SE
+                        Vertex(Position(x1, -dy), Angle(0)),  # SW
+                        Vertex(Position(x1, dy), Angle(0)),  # NW
+                    ],
+                ))
 
         def _create_outline_vertices(offset: float = 0, around_pads: bool = False) -> List[Vertex]:
             if variant.vertical:
@@ -525,22 +529,57 @@ def generate_3d(
 
     vertical_standoff = 0.3
     bend_radius = 0.5
-    marking_diameter = body_diameter + 0.05
-    marking_offset = body_length * (0.5 - marking_position)
+    assembly = StepAssembly(name)
 
-    if vertical:
-        body = cq.Workplane("XY") \
-            .cylinder(body_length, body_diameter / 2, centered=(True, True, False)) \
-            .translate((-pitch / 2, 0, vertical_standoff))
-        marking = cq.Workplane("XY") \
-            .cylinder(marking_width, marking_diameter / 2, centered=(True, True, False)) \
-            .translate((-pitch / 2, 0, vertical_standoff + (body_length / 2) - marking_offset))
+    if pkg_type == 'R':
+        body_color = cq.Color('bisque3')
+        outer_length = body_length * 0.25
+        if vertical:
+            body_inner = cq.Workplane("XY") \
+                .cylinder(body_length - outer_length, body_diameter * 0.42, centered=(True, True, False)) \
+                .translate((-pitch / 2, 0, vertical_standoff + outer_length / 2))
+            body_outer = cq.Workplane("XY") \
+                .cylinder(outer_length, body_diameter / 2, centered=(True, True, False)) \
+                .fillet(body_diameter / 6)
+            assembly.add_body(body_outer, 'body_outer_1', body_color,
+                              location=cq.Location((-pitch / 2, 0, vertical_standoff)))
+            assembly.add_body(body_outer, 'body_outer_2', body_color,
+                              location=cq.Location((-pitch / 2, 0, vertical_standoff + body_length - outer_length)))
+        else:
+            body_inner = cq.Workplane("YZ") \
+                .cylinder(body_length - outer_length, body_diameter * 0.42, centered=(True, True, True)) \
+                .translate((0, 0, body_diameter / 2))
+            body_outer = cq.Workplane("YZ") \
+                .cylinder(outer_length, body_diameter / 2, centered=(True, False, True)) \
+                .fillet(body_diameter / 6)
+            assembly.add_body(body_outer, 'body_outer_1', body_color,
+                              location=cq.Location((-(body_length - outer_length) / 2, 0, 0)))
+            assembly.add_body(body_outer, 'body_outer_2', body_color,
+                              location=cq.Location(((body_length - outer_length) / 2, 0, 0)))
+        assembly.add_body(body_inner, 'body_inner', body_color)
+    elif pkg_type == 'DO':
+        if vertical:
+            body = cq.Workplane("XY") \
+                .cylinder(body_length, body_diameter / 2, centered=(True, True, False)) \
+                .translate((-pitch / 2, 0, vertical_standoff))
+        else:
+            body = cq.Workplane("YZ") \
+                .cylinder(body_length, body_diameter / 2, centered=(True, False, True))
+        assembly.add_body(body, 'body', cq.Color('gray16'))
+
+        marking_diameter = body_diameter + 0.05
+        marking_offset = body_length * (0.5 - marking_position)
+        if vertical:
+            marking = cq.Workplane("XY") \
+                .cylinder(marking_width, marking_diameter / 2, centered=(True, True, False)) \
+                .translate((-pitch / 2, 0, vertical_standoff + (body_length / 2) - marking_offset))
+        else:
+            marking = cq.Workplane("YZ") \
+                .cylinder(marking_width, marking_diameter / 2, centered=(True, False, True)) \
+                .translate((-marking_offset, 0, 0))
+        assembly.add_body(marking, 'marking', cq.Color('gray80'))
     else:
-        body = cq.Workplane("YZ") \
-            .cylinder(body_length, body_diameter / 2, centered=(True, False, True))
-        marking = cq.Workplane("YZ") \
-            .cylinder(marking_width, marking_diameter / 2, centered=(True, False, True)) \
-            .translate((-marking_offset, 0, 0))
+        raise RuntimeError(f'Unsupported 3D package type: {pkg_type}')
 
     leg_length = StepConstants.THT_LEAD_SOLDER_LENGTH - bend_radius + \
         ((body_length + 2 * vertical_standoff + (leg_diameter / 2)) if vertical
@@ -555,15 +594,6 @@ def generate_3d(
         .circle(leg_diameter / 2) \
         .sweep(leg_path) \
         .translate((-pitch / 2, 0, -StepConstants.THT_LEAD_SOLDER_LENGTH))
-
-    if pkg_type == 'DO':
-        body_color = cq.Color('gray16')
-    else:
-        raise RuntimeError(f'Unsupported 3D package type: {pkg_type}')
-
-    assembly = StepAssembly(name)
-    assembly.add_body(body, 'body', body_color)
-    assembly.add_body(marking, 'marking', cq.Color('gray80'))
     assembly.add_body(leg, 'leg', StepColor.LEAD_THT)
 
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
@@ -583,6 +613,92 @@ if __name__ == '__main__':
         warning = 'Note: Not generating 3D models unless the "--3d" argument is passed in!'
         print(f'\033[1;33m{warning}\033[0m')
 
+    # Resistors (R-THT)
+    generate_pkg(
+        library='LibrePCB_Base.lplib',
+        pkg_type='R',
+        pkg_identifier='r0204',
+        name='R-THT-0204',
+        description='Standard through-hole resistor according DIN 0204.',
+        keywords='',
+        leg_diameter_nom=0.45,
+        body_diameter_nom=1.9,
+        body_length_nom=3.7,
+        polarized=False,
+        pad_names=('1', '2'),
+        pad_hole_diameter=calculate_pad_hole_diameter(0.5),  # max diameter
+        variants=[
+            FootprintVariant(vertical=False, pitch=7.62, compact=True),
+            FootprintVariant(vertical=False, pitch=10.16, compact=True),
+            FootprintVariant(vertical=False, pitch=12.7, compact=True),
+            FootprintVariant(vertical=False, pitch=15.24, compact=True),
+            FootprintVariant(vertical=False, pitch=5.08, compact=True),  # tight!
+            FootprintVariant(vertical=True, pitch=2.54, compact=True),
+        ],
+        author='U. Bruhin',
+        pkgcat='72ceb547-9e68-4d6b-8c96-283d325e1abf',
+        version='0.3',
+        create_date='2018-10-11T22:24:42Z',
+        generate_3d_models=generate_3d_models,
+    )
+    generate_pkg(
+        library='LibrePCB_Base.lplib',
+        pkg_type='R',
+        pkg_identifier='r0207',
+        name='R-THT-0207',
+        description='Standard through-hole resistor according DIN 0207.',
+        keywords='',
+        leg_diameter_nom=0.6,
+        body_diameter_nom=2.5,
+        body_length_nom=6.5,
+        polarized=False,
+        pad_names=('1', '2'),
+        pad_hole_diameter=calculate_pad_hole_diameter(0.65),  # max diameter
+        variants=[
+            FootprintVariant(vertical=False, pitch=10.16, compact=True),
+            FootprintVariant(vertical=False, pitch=12.7, compact=True),
+            FootprintVariant(vertical=False, pitch=15.24, compact=True),
+            FootprintVariant(vertical=False, pitch=17.78, compact=True),
+            FootprintVariant(vertical=False, pitch=7.62, compact=True),  # tight!
+            FootprintVariant(vertical=True, pitch=2.54, compact=True),
+            FootprintVariant(vertical=True, pitch=5.08, compact=True),
+        ],
+        author='U. Bruhin',
+        pkgcat='72ceb547-9e68-4d6b-8c96-283d325e1abf',
+        version='0.3',
+        create_date='2018-10-11T22:24:42Z',
+        generate_3d_models=generate_3d_models,
+    )
+    generate_pkg(
+        library='LibrePCB_Base.lplib',
+        pkg_type='R',
+        pkg_identifier='r0309',
+        name='R-THT-0309',
+        description='Standard through-hole resistor according DIN 0309.',
+        keywords='',
+        leg_diameter_nom=0.7,
+        body_diameter_nom=3.5,
+        body_length_nom=9,
+        polarized=False,
+        pad_names=('1', '2'),
+        pad_hole_diameter=calculate_pad_hole_diameter(0.75),  # max diameter
+        variants=[
+            FootprintVariant(vertical=False, pitch=12.7, compact=True),
+            FootprintVariant(vertical=False, pitch=15.24, compact=True),
+            FootprintVariant(vertical=False, pitch=17.78, compact=True),
+            FootprintVariant(vertical=False, pitch=20.32, compact=True),
+            FootprintVariant(vertical=False, pitch=10.16, compact=True),  # tight!
+            FootprintVariant(vertical=True, pitch=2.54, compact=True),
+            FootprintVariant(vertical=True, pitch=5.08, compact=True),
+            FootprintVariant(vertical=True, pitch=7.62, compact=True),
+        ],
+        author='U. Bruhin',
+        pkgcat='72ceb547-9e68-4d6b-8c96-283d325e1abf',
+        version='0.3',
+        create_date='2018-10-11T22:24:42Z',
+        generate_3d_models=generate_3d_models,
+    )
+
     # DO-204 (only the variants which actually exist)
     generate_pkg(
         library='LibrePCB_Base.lplib',
@@ -595,6 +711,7 @@ if __name__ == '__main__':
         leg_diameter_nom=(0.46 + 0.55) / 2,  # b
         body_diameter_nom=(2.16 + 2.71) / 2,  # D
         body_length_nom=(5.85 + 7.62) / 2,  # G
+        polarized=True,
         pad_names=('1', '2'),
         pad_hole_diameter=calculate_pad_hole_diameter(0.6),  # b max
         variants=[
@@ -624,6 +741,7 @@ if __name__ == '__main__':
         leg_diameter_nom=(0.69 + 0.88) / 2,  # b
         body_diameter_nom=(2.65 + 3.55) / 2,  # D
         body_length_nom=(5.85 + 7.62) / 2,  # G
+        polarized=True,
         pad_names=('1', '2'),
         pad_hole_diameter=calculate_pad_hole_diameter(0.88),  # b max
         variants=[
@@ -653,6 +771,7 @@ if __name__ == '__main__':
         leg_diameter_nom=(0.46 + 0.55) / 2,  # b
         body_diameter_nom=(1.27 + 1.9) / 2,  # D
         body_length_nom=(2.16 + 3.04) / 2,  # G
+        polarized=True,
         pad_names=('1', '2'),
         pad_hole_diameter=calculate_pad_hole_diameter(0.55),  # b max
         variants=[
@@ -681,6 +800,7 @@ if __name__ == '__main__':
         leg_diameter_nom=(0.46 + 0.55) / 2,  # b
         body_diameter_nom=(1.53 + 2.28) / 2,  # D
         body_length_nom=(3.05 + 5.08) / 2,  # G
+        polarized=True,
         pad_names=('1', '2'),
         pad_hole_diameter=calculate_pad_hole_diameter(0.55),  # b max
         variants=[
@@ -709,6 +829,7 @@ if __name__ == '__main__':
         leg_diameter_nom=(0.72 + 0.86) / 2,  # b
         body_diameter_nom=(2.04 + 2.71) / 2,  # D
         body_length_nom=(4.07 + 5.2) / 2,  # G
+        polarized=True,
         pad_names=('1', '2'),
         pad_hole_diameter=calculate_pad_hole_diameter(0.86),  # b max
         variants=[
@@ -736,6 +857,7 @@ if __name__ == '__main__':
         leg_diameter_nom=(1.22 + 1.32) / 2,  # b
         body_diameter_nom=(6.1 + 6.35) / 2,  # D
         body_length_nom=(9.27 + 9.52) / 2,  # G
+        polarized=True,
         pad_names=('1', '2'),
         pad_hole_diameter=calculate_pad_hole_diameter(1.32),  # b max
         variants=[
