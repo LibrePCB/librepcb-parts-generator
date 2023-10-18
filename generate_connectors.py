@@ -15,17 +15,23 @@ Generate pin header and socket packages.
 from os import makedirs, path
 from uuid import uuid4
 
-from typing import Callable, Iterable, List, Optional, Tuple
+from typing import Callable, Iterable, Optional, Tuple
 
-from common import format_float as ff
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
-    Layer, Length, Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
+    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea,
+    Height, Keywords, Layer, Length, Name, Polygon, Position, Position3D, Rotation, Rotation3D,
+    Text, Value, Version, Vertex, Width,
 )
 from entities.component import (
-    Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
-    Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
+    Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required,
+    Role, SchematicOnly, Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant,
+)
+from entities.package import (
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint,
+    FootprintPad, LetterSpacing, LineSpacing, Mirror, Package,
+    PackagePad, PackagePadUuid, PadFunction, PadHole, Shape, ShapeRadius, Size, SolderPasteConfig,
+    StopMaskConfig, StrokeText, StrokeWidth,
 )
 from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation
 from entities.symbol import Pin as SymbolPin
@@ -126,7 +132,7 @@ def generate_pkg(
     min_pads: int,
     max_pads: int,
     pad_drills: Iterable[float],
-    generate_silkscreen: Callable[[List[str], str, str, str, int, int], None],
+    generate_silkscreen: Callable[[str, str, str, int, int], Polygon],
     version: str,
     create_date: Optional[str],
 ) -> None:
@@ -137,9 +143,7 @@ def generate_pkg(
             per_row = i // rows
             top_offset = spacing / 2
 
-            variant = '{}x{}-D{:.1f}'.format(rows, per_row, drill)
-
-            lines = []
+            variant = f'{rows}x{per_row}-D{drill:.1f}'
 
             def _uuid(identifier: str) -> str:
                 return uuid(category, kind, variant, identifier)
@@ -150,107 +154,147 @@ def generate_pkg(
             uuid_text_name = _uuid('text-name')
             uuid_text_value = _uuid('text-value')
 
-            # General info
-            lines.append('(librepcb_package {}'.format(uuid_pkg))
-            lines.append(' (name "{} {}x{:02d} ⌀{:.1f}mm")'.format(name, rows, per_row, drill))
-            lines.append(' (description "A {}x{} {} with {}mm pin spacing '
-                         'and {:.1f}mm drill holes.\\n\\n'
-                         'Generated with {}")'.format(rows, per_row, name_lower, spacing, drill, generator))
-            lines.append(' (keywords "connector, {}x{}, d{:.1f}, {}")'.format(rows, per_row, drill, keywords))
-            lines.append(' (author "{}")'.format(author))
-            lines.append(' (version "{}")'.format(version))
-            lines.append(' (created {})'.format(create_date or now()))
-            lines.append(' (deprecated false)')
-            lines.append(' (category {})'.format(pkgcat))
-            for j in range(1, i + 1):
-                lines.append(' (pad {} (name "{}"))'.format(uuid_pads[j - 1], j))
-            lines.append(' (footprint {}'.format(uuid_footprint))
-            lines.append('  (name "default")')
-            lines.append('  (description "")')
+            full_name = f'{name} {rows}x{per_row:02d} ⌀{drill:.1f}mm'
+            full_description = f'A {rows}x{per_row} {name_lower} with {spacing}mm pin spacing ' + \
+                               f'and {drill:.1f}mm drill holes.\n\nGenerated with {generator}'
 
-            # Pads
+            # Define package
+            package = Package(
+                uuid=uuid_pkg,
+                name=Name(full_name),
+                description=Description(full_description),
+                keywords=Keywords(f'connector, {rows}x{per_row}, d{drill:.1f}, {keywords}'),
+                author=Author(author),
+                version=Version(version),
+                created=Created(create_date or now()),
+                deprecated=Deprecated(False),
+                generated_by=GeneratedBy(''),
+                categories=[Category(pkgcat)],
+                assembly_type=AssemblyType.THT,
+            )
+
+            # Add pads to package
+            for j in range(1, i + 1):
+                package.add_pad(PackagePad(uuid_pads[j - 1], Name(str(j))))
+
+            # Add footprint
+            footprint = Footprint(
+                uuid=uuid_footprint,
+                name=Name('default'),
+                description=Description(''),
+                position_3d=Position3D.zero(),
+                rotation_3d=Rotation3D.zero(),
+            )
+            package.add_footprint(footprint)
+
+            # Add pads to footprint
             for p in range(1, i + 1):
+                pad_uuid = uuid_pads[p - 1]
                 if rows == 1:
                     x = 0.0
                 elif rows == 2:
                     x = spacing / 2 if (p % rows == 0) else -spacing / 2
                 y = get_y(p, i, rows, spacing, False)
-                shape = 'rect' if p == 1 else 'round'
-                lines.append('  (pad {} (side tht) (shape {})'.format(uuid_pads[p - 1], shape))
-                lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill {})'.format(
-                    ff(x), ff(y), ff(pad_size[0]), ff(pad_size[1]), drill,
+                corner_radius = 0.0 if p == 1 else 1.0
+                footprint.add_pad(FootprintPad(
+                    uuid=pad_uuid,
+                    side=ComponentSide.TOP,
+                    shape=Shape.ROUNDED_RECT,
+                    position=Position(x, y),
+                    rotation=Rotation(0),
+                    size=Size(pad_size[0], pad_size[1]),
+                    radius=ShapeRadius(corner_radius),
+                    stop_mask=StopMaskConfig.AUTO,
+                    solder_paste=SolderPasteConfig.OFF,
+                    copper_clearance=CopperClearance(0.0),
+                    function=PadFunction.STANDARD_PAD,
+                    package_pad=PackagePadUuid(pad_uuid),
+                    holes=[
+                        PadHole(
+                            pad_uuid,
+                            DrillDiameter(drill),
+                            [Vertex(Position(0.0, 0.0), Angle(0.0))],
+                        )
+                    ],
                 ))
-                lines.append('  )')
 
-            # Silkscreen
-            generate_silkscreen(lines, category, kind, variant, i, rows)
+            # Add silkscreen to footprint
+            silkscreen = generate_silkscreen(category, kind, variant, i, rows)
+            footprint.add_polygon(silkscreen)
 
             # Labels
             y_max, y_min = get_rectangle_bounds(i, rows, spacing, top_offset + 1.27, False)
-            text_attrs = '(height {}) (stroke_width 0.2) ' \
-                         '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
-            lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
-            lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(
-                ff(y_max),
+            footprint.add_text(StrokeText(
+                uuid=uuid_text_name,
+                layer=Layer('top_names'),
+                height=Height(pkg_text_height),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center bottom'),
+                position=Position(0.0, y_max),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(True),
+                mirror=Mirror(False),
+                value=Value('{{NAME}}'),
             ))
-            lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
-            lines.append('  )')
-            lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
-            lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(
-                ff(y_min),
+            footprint.add_text(StrokeText(
+                uuid=uuid_text_value,
+                layer=Layer('top_values'),
+                height=Height(pkg_text_height),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center top'),
+                position=Position(0.0, y_min),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(True),
+                mirror=Mirror(False),
+                value=Value('{{VALUE}}'),
             ))
-            lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
-            lines.append('  )')
 
-            lines.append(' )')
-            lines.append(')')
-
-            pkg_dir_path = path.join('out', library, category, uuid_pkg)
-            if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-                makedirs(pkg_dir_path)
-            with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-                f.write('0.1\n')
-            with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
-                f.write('\n'.join(lines))
-                f.write('\n')
+            package.serialize(path.join('out', library, category))
 
             print('{}x{:02d} {} ⌀{:.1f}mm: Wrote package {}'.format(rows, per_row, kind, drill, uuid_pkg))
 
 
 def generate_silkscreen_female(
-    lines: List[str],
     category: str,
     kind: str,
     variant: str,
     pin_count: int,
     rows: int,
-) -> None:
+) -> Polygon:
     uuid_polygon = uuid(category, kind, variant, 'polygon-contour')
 
     x = 1.27 * rows + line_width / 2
     top_offset = spacing / 2 + line_width / 2
 
-    lines.append('  (polygon {} (layer top_placement)'.format(uuid_polygon))
-    lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
     y_max, y_min = get_rectangle_bounds(pin_count, rows, spacing, top_offset, False)
-    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x), ff(y_max)))
-    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x), ff(y_max)))
-    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x), ff(y_min)))
-    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x), ff(y_min)))
-    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x), ff(y_max)))
-    lines.append('  )')
+
+    return Polygon(
+        uuid=uuid_polygon,
+        layer=Layer('top_legend'),
+        width=Width(line_width),
+        fill=Fill(False),
+        grab_area=GrabArea(True),
+        vertices=[
+            Vertex(Position(-x, y_max), Angle(0)),
+            Vertex(Position(x, y_max), Angle(0)),
+            Vertex(Position(x, y_min), Angle(0)),
+            Vertex(Position(-x, y_min), Angle(0)),
+            Vertex(Position(-x, y_max), Angle(0)),
+        ],
+    )
 
 
 def generate_silkscreen_male(
-    lines: List[str],
     category: str,
     kind: str,
     variant: str,
     pin_count: int,
     rows: int,
-) -> None:
+) -> Polygon:
     uuid_polygon = uuid(category, kind, variant, 'polygon-contour')
 
     per_row = pin_count // rows
@@ -258,31 +302,38 @@ def generate_silkscreen_male(
     x_inner = x_outer - 0.27
     offset = line_width / 2
 
+    polygon = Polygon(
+        uuid=uuid_polygon,
+        layer=Layer('top_legend'),
+        width=Width(line_width),
+        fill=Fill(False),
+        grab_area=GrabArea(True),
+    )
+
     # Start in top right corner, go around the pads clockwise
-    lines.append('  (polygon {} (layer top_placement)'.format(uuid_polygon))
-    lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
     # Down on the right
     for pin in range(1, per_row + 1):
         y = get_y(pin, per_row, 1, spacing, False)
         top_offset = offset if pin == 1 else 0
         bot_offset = offset if pin == per_row else 0
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_outer), ff(y + 1 + top_offset)))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_outer), ff(y - 1 - bot_offset)))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_inner), ff(y - 1.27 - bot_offset)))
+        polygon.add_vertex(Vertex(Position(x_outer, y + 1 + top_offset), Angle(0)))
+        polygon.add_vertex(Vertex(Position(x_outer, y - 1 - bot_offset), Angle(0)))
+        polygon.add_vertex(Vertex(Position(x_inner, y - 1.27 - bot_offset), Angle(0)))
     # Up on the left
     for pin in range(per_row, 0, -1):
         y = get_y(pin, per_row, 1, spacing, False)
         top_offset = offset if pin == 1 else 0
         bot_offset = offset if pin == per_row else 0
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_inner), ff(y - 1.27 - bot_offset)))
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_outer), ff(y - 1 - bot_offset)))
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_outer), ff(y + 1 + top_offset)))
+        polygon.add_vertex(Vertex(Position(-x_inner, y - 1.27 - bot_offset), Angle(0)))
+        polygon.add_vertex(Vertex(Position(-x_outer, y - 1 - bot_offset), Angle(0)))
+        polygon.add_vertex(Vertex(Position(-x_outer, y + 1 + top_offset), Angle(0)))
     # Back to start
     top_y = get_y(1, per_row, 1, spacing, False) + spacing / 2 + offset
-    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_inner), ff(top_y)))
-    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_inner), ff(top_y)))
-    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_outer), ff(top_y - 0.27)))
-    lines.append('  )')
+    polygon.add_vertex(Vertex(Position(-x_inner, top_y), Angle(0)))
+    polygon.add_vertex(Vertex(Position(x_inner, top_y), Angle(0)))
+    polygon.add_vertex(Vertex(Position(x_outer, top_y - 0.27), Angle(0)))
+
+    return polygon
 
 
 def generate_sym(
@@ -540,6 +591,7 @@ def generate_dev(
             lines.append(' (version "0.1")')
             lines.append(' (created {})'.format(create_date or now()))
             lines.append(' (deprecated false)')
+            lines.append(' (generated_by "")')
             lines.append(' (category {})'.format(cmpcat))
             lines.append(' (component {})'.format(uuid_cmp))
             lines.append(' (package {})'.format(uuid_pkg))
@@ -553,7 +605,7 @@ def generate_dev(
             if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
                 makedirs(dev_dir_path)
             with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
-                f.write('0.1\n')
+                f.write('1\n')
             with open(path.join(dev_dir_path, 'device.lp'), 'w') as f:
                 f.write('\n'.join(lines))
                 f.write('\n')
