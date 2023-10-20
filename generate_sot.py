@@ -120,6 +120,23 @@ if __name__ == '__main__':
         pin1_indicator=False,
     )
     generate(
+        name='SOT23-3P95_280X145L60X40',
+        body_width=1.6,
+        body_length=2.9,
+        total_height=1.45,
+        lead_span=2.8,
+        lead_height=0.17,
+        lead_contact_length=0.45,
+        leads_left=[
+            ('1', 0.95, 0.4),
+            ('2', -0.95, 0.4),
+        ],
+        leads_right=[
+            ('3', 0, 0.4),
+        ],
+        pin1_indicator=False,
+    )
+    generate(
         name='SOT23-5P95_280X145L60X40',
         body_width=1.6,
         body_length=2.9,
