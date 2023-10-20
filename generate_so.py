@@ -438,7 +438,7 @@ def generate_pkg(
         add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A')
         add_footprint_variant('density~c', 'Density Level C (min protrusion)', 'C')
 
-        # Generate 3D models (for certain package types)
+        # Generate 3D models
         uuid_3d = uuid('pkg', full_name, '3d')
         if generate_3d_models:
             generate_3d(library, full_name, uuid_pkg, uuid_3d, config,
