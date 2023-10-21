@@ -12,20 +12,27 @@ Generate pin header and socket packages.
              +---+
 
 """
+import math
+import sys
+from functools import partial
 from os import makedirs, path
 from uuid import uuid4
 
-from typing import Callable, Iterable, List, Optional, Tuple
+from typing import Callable, Iterable, Optional, Tuple
 
-from common import format_float as ff
 from common import init_cache, now, save_cache
 from entities.common import (
     Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
-    Layer, Length, Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
+    Layer, Length, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Text, Value, Version, Vertex, Width
 )
 from entities.component import (
     Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
     Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
+)
+from entities.package import (
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, Footprint3DModel, FootprintPad,
+    LetterSpacing, LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, PadHole,
+    Shape, ShapeRadius, Size, SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
 from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation
 from entities.symbol import Pin as SymbolPin
@@ -76,7 +83,7 @@ def get_y(pin_number: int, pin_count: int, rows: int, spacing: float, grid_align
     Return the y coordinate of the specified pin. Keep the pins grid aligned, if desired.
 
     The pin number is 1 index based. Pin 1 is at the top. The middle pin will
-    be at or near 0.
+    be at or near y=0.
 
     """
     # For two-row shapes, we map the values to the single-row variant
@@ -120,13 +127,16 @@ def generate_pkg(
     name: str,
     name_lower: str,
     kind: str,
+    assembly_type: AssemblyType,
     pkgcat: str,
     keywords: str,
     rows: int,
     min_pads: int,
     max_pads: int,
     pad_drills: Iterable[float],
-    generate_silkscreen: Callable[[List[str], str, str, str, int, int], None],
+    generate_silkscreen: Callable[[str, str, str, int, int], Polygon],
+    generate_3d_model: Optional[Callable[[str, str, str, str, int, int, float], None]],
+    generate_3d_models: bool,
     version: str,
     create_date: Optional[str],
 ) -> None:
@@ -137,9 +147,7 @@ def generate_pkg(
             per_row = i // rows
             top_offset = spacing / 2
 
-            variant = '{}x{}-D{:.1f}'.format(rows, per_row, drill)
-
-            lines = []
+            variant = f'{rows}x{per_row}-D{drill:.1f}'
 
             def _uuid(identifier: str) -> str:
                 return uuid(category, kind, variant, identifier)
@@ -150,107 +158,157 @@ def generate_pkg(
             uuid_text_name = _uuid('text-name')
             uuid_text_value = _uuid('text-value')
 
-            # General info
-            lines.append('(librepcb_package {}'.format(uuid_pkg))
-            lines.append(' (name "{} {}x{:02d} ⌀{:.1f}mm")'.format(name, rows, per_row, drill))
-            lines.append(' (description "A {}x{} {} with {}mm pin spacing '
-                         'and {:.1f}mm drill holes.\\n\\n'
-                         'Generated with {}")'.format(rows, per_row, name_lower, spacing, drill, generator))
-            lines.append(' (keywords "connector, {}x{}, d{:.1f}, {}")'.format(rows, per_row, drill, keywords))
-            lines.append(' (author "{}")'.format(author))
-            lines.append(' (version "{}")'.format(version))
-            lines.append(' (created {})'.format(create_date or now()))
-            lines.append(' (deprecated false)')
-            lines.append(' (category {})'.format(pkgcat))
-            for j in range(1, i + 1):
-                lines.append(' (pad {} (name "{}"))'.format(uuid_pads[j - 1], j))
-            lines.append(' (footprint {}'.format(uuid_footprint))
-            lines.append('  (name "default")')
-            lines.append('  (description "")')
+            full_name = f'{name} {rows}x{per_row:02d} ⌀{drill:.1f}mm'
+            full_description = f'A generic {rows}x{per_row} {name_lower} ' + \
+                               f'with {spacing}mm pin spacing and {drill:.1f}mm drill holes.' \
+                               f'\n\nGenerated with {generator}'
 
-            # Pads
+            # Define package
+            package = Package(
+                uuid=uuid_pkg,
+                name=Name(full_name),
+                description=Description(full_description),
+                keywords=Keywords(f'connector, {rows}x{per_row}, d{drill:.1f}, {keywords}'),
+                author=Author(author),
+                version=Version(version),
+                created=Created(create_date or now()),
+                deprecated=Deprecated(False),
+                generated_by=GeneratedBy(''),
+                categories=[Category(pkgcat)],
+                assembly_type=assembly_type,
+            )
+
+            # Add pads to package
+            for j in range(1, i + 1):
+                package.add_pad(PackagePad(uuid_pads[j - 1], Name(str(j))))
+
+            # Add footprint
+            footprint = Footprint(
+                uuid=uuid_footprint,
+                name=Name('default'),
+                description=Description(''),
+                position_3d=Position3D.zero(),
+                rotation_3d=Rotation3D.zero(),
+            )
+            package.add_footprint(footprint)
+
+            # Add pads to footprint
             for p in range(1, i + 1):
+                pad_uuid = uuid_pads[p - 1]
                 if rows == 1:
                     x = 0.0
                 elif rows == 2:
                     x = spacing / 2 if (p % rows == 0) else -spacing / 2
                 y = get_y(p, i, rows, spacing, False)
-                shape = 'rect' if p == 1 else 'round'
-                lines.append('  (pad {} (side tht) (shape {})'.format(uuid_pads[p - 1], shape))
-                lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill {})'.format(
-                    ff(x), ff(y), ff(pad_size[0]), ff(pad_size[1]), drill,
+                corner_radius = 0.0 if p == 1 else 1.0
+                footprint.add_pad(FootprintPad(
+                    uuid=pad_uuid,
+                    side=ComponentSide.TOP,
+                    shape=Shape.ROUNDED_RECT,
+                    position=Position(x, y),
+                    rotation=Rotation(0),
+                    size=Size(pad_size[0], pad_size[1]),
+                    radius=ShapeRadius(corner_radius),
+                    stop_mask=StopMaskConfig.AUTO,
+                    solder_paste=SolderPasteConfig.OFF,
+                    copper_clearance=CopperClearance(0.0),
+                    function=PadFunction.STANDARD_PAD,
+                    package_pad=PackagePadUuid(pad_uuid),
+                    holes=[
+                        PadHole(
+                            pad_uuid,
+                            DrillDiameter(drill),
+                            [Vertex(Position(0.0, 0.0), Angle(0.0))],
+                        )
+                    ],
                 ))
-                lines.append('  )')
 
-            # Silkscreen
-            generate_silkscreen(lines, category, kind, variant, i, rows)
+            # Add silkscreen to footprint
+            silkscreen = generate_silkscreen(category, kind, variant, i, rows)
+            footprint.add_polygon(silkscreen)
 
             # Labels
             y_max, y_min = get_rectangle_bounds(i, rows, spacing, top_offset + 1.27, False)
-            text_attrs = '(height {}) (stroke_width 0.2) ' \
-                         '(letter_spacing auto) (line_spacing auto)'.format(pkg_text_height)
-            lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
-            lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(
-                ff(y_max),
+            footprint.add_text(StrokeText(
+                uuid=uuid_text_name,
+                layer=Layer('top_names'),
+                height=Height(pkg_text_height),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center bottom'),
+                position=Position(0.0, y_max),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(True),
+                mirror=Mirror(False),
+                value=Value('{{NAME}}'),
             ))
-            lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
-            lines.append('  )')
-            lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
-            lines.append('   {}'.format(text_attrs))
-            lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(
-                ff(y_min),
+            footprint.add_text(StrokeText(
+                uuid=uuid_text_value,
+                layer=Layer('top_values'),
+                height=Height(pkg_text_height),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center top'),
+                position=Position(0.0, y_min),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(True),
+                mirror=Mirror(False),
+                value=Value('{{VALUE}}'),
             ))
-            lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
-            lines.append('  )')
 
-            lines.append(' )')
-            lines.append(')')
+            # Generate 3D models (for some packages)
+            if generate_3d_model is not None:
+                uuid_3d = _uuid('3d')
+                if generate_3d_models:
+                    generate_3d_model(library, full_name, uuid_pkg, uuid_3d, rows, i, drill)
+                package.add_3d_model(Package3DModel(uuid_3d, Name(full_name)))
+                for footprint in package.footprints:
+                    footprint.add_3d_model(Footprint3DModel(uuid_3d))
 
-            pkg_dir_path = path.join('out', library, category, uuid_pkg)
-            if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-                makedirs(pkg_dir_path)
-            with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-                f.write('0.1\n')
-            with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
-                f.write('\n'.join(lines))
-                f.write('\n')
+            package.serialize(path.join('out', library, category))
 
             print('{}x{:02d} {} ⌀{:.1f}mm: Wrote package {}'.format(rows, per_row, kind, drill, uuid_pkg))
 
 
 def generate_silkscreen_female(
-    lines: List[str],
     category: str,
     kind: str,
     variant: str,
     pin_count: int,
     rows: int,
-) -> None:
+) -> Polygon:
     uuid_polygon = uuid(category, kind, variant, 'polygon-contour')
 
     x = 1.27 * rows + line_width / 2
     top_offset = spacing / 2 + line_width / 2
 
-    lines.append('  (polygon {} (layer top_placement)'.format(uuid_polygon))
-    lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
     y_max, y_min = get_rectangle_bounds(pin_count, rows, spacing, top_offset, False)
-    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x), ff(y_max)))
-    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x), ff(y_max)))
-    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x), ff(y_min)))
-    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x), ff(y_min)))
-    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x), ff(y_max)))
-    lines.append('  )')
+
+    return Polygon(
+        uuid=uuid_polygon,
+        layer=Layer('top_legend'),
+        width=Width(line_width),
+        fill=Fill(False),
+        grab_area=GrabArea(True),
+        vertices=[
+            Vertex(Position(-x, y_max), Angle(0)),
+            Vertex(Position(x, y_max), Angle(0)),
+            Vertex(Position(x, y_min), Angle(0)),
+            Vertex(Position(-x, y_min), Angle(0)),
+            Vertex(Position(-x, y_max), Angle(0)),
+        ],
+    )
 
 
 def generate_silkscreen_male(
-    lines: List[str],
     category: str,
     kind: str,
     variant: str,
     pin_count: int,
     rows: int,
-) -> None:
+) -> Polygon:
     uuid_polygon = uuid(category, kind, variant, 'polygon-contour')
 
     per_row = pin_count // rows
@@ -258,31 +316,111 @@ def generate_silkscreen_male(
     x_inner = x_outer - 0.27
     offset = line_width / 2
 
+    polygon = Polygon(
+        uuid=uuid_polygon,
+        layer=Layer('top_legend'),
+        width=Width(line_width),
+        fill=Fill(False),
+        grab_area=GrabArea(True),
+    )
+
     # Start in top right corner, go around the pads clockwise
-    lines.append('  (polygon {} (layer top_placement)'.format(uuid_polygon))
-    lines.append('   (width {}) (fill false) (grab_area true)'.format(line_width))
     # Down on the right
     for pin in range(1, per_row + 1):
         y = get_y(pin, per_row, 1, spacing, False)
         top_offset = offset if pin == 1 else 0
         bot_offset = offset if pin == per_row else 0
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_outer), ff(y + 1 + top_offset)))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_outer), ff(y - 1 - bot_offset)))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_inner), ff(y - 1.27 - bot_offset)))
+        polygon.add_vertex(Vertex(Position(x_outer, y + 1 + top_offset), Angle(0)))
+        polygon.add_vertex(Vertex(Position(x_outer, y - 1 - bot_offset), Angle(0)))
+        polygon.add_vertex(Vertex(Position(x_inner, y - 1.27 - bot_offset), Angle(0)))
     # Up on the left
     for pin in range(per_row, 0, -1):
         y = get_y(pin, per_row, 1, spacing, False)
         top_offset = offset if pin == 1 else 0
         bot_offset = offset if pin == per_row else 0
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_inner), ff(y - 1.27 - bot_offset)))
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_outer), ff(y - 1 - bot_offset)))
-        lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_outer), ff(y + 1 + top_offset)))
+        polygon.add_vertex(Vertex(Position(-x_inner, y - 1.27 - bot_offset), Angle(0)))
+        polygon.add_vertex(Vertex(Position(-x_outer, y - 1 - bot_offset), Angle(0)))
+        polygon.add_vertex(Vertex(Position(-x_outer, y + 1 + top_offset), Angle(0)))
     # Back to start
     top_y = get_y(1, per_row, 1, spacing, False) + spacing / 2 + offset
-    lines.append('   (vertex (position -{} {}) (angle 0.0))'.format(ff(x_inner), ff(top_y)))
-    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_inner), ff(top_y)))
-    lines.append('   (vertex (position {} {}) (angle 0.0))'.format(ff(x_outer), ff(top_y - 0.27)))
-    lines.append('  )')
+    polygon.add_vertex(Vertex(Position(-x_inner, top_y), Angle(0)))
+    polygon.add_vertex(Vertex(Position(x_inner, top_y), Angle(0)))
+    polygon.add_vertex(Vertex(Position(x_outer, top_y - 0.27), Angle(0)))
+
+    return polygon
+
+
+def generate_3d_model_generic(
+    model_type: str,  # male or female
+    library: str,
+    full_name: str,
+    uuid_pkg: str,
+    uuid_3d: str,
+    rows: int,
+    pin_count: int,
+    drill: float,
+) -> None:
+    import cadquery as cq
+
+    from cadquery_helpers import StepAssembly, StepColor
+
+    print(f'Generating pkg 3D model "{full_name}": {uuid_3d}')
+
+    insulator_height = 7.0  # Full height of female header
+    standoff_height = 2.5  # Plastic part of male header
+    lead_length_bottom = 3.0  # Towards bottom side
+    lead_length_top_exposed = 5.5  # The exposed part towards the top of male header
+
+    if model_type == 'female':
+        # These are often slightly flat
+        lead_dimensions = (0.4, drill - 0.2)
+    else:
+        dim = math.sqrt(((drill - 0.05) ** 2) / 2)
+        lead_dimensions = (dim, dim)
+
+    # Make base element a little longer, to get some overlap (to avoid rendering bugs when two
+    # faces are in the same position)
+    a_little = 0.001
+
+    # Insulator
+    if model_type == 'female':
+        hole_offset = 1.0
+        insulator = cq.Workplane('XY') \
+            .box(spacing, spacing + a_little, insulator_height, centered=(True, True, False)) \
+            .transformed(offset=(0, 0, hole_offset)) \
+            .rect(spacing / 1.5, spacing / 1.5) \
+            .offset2D(spacing / 20) \
+            .cutBlind(insulator_height - hole_offset)
+    else:
+        insulator = cq.Workplane('XY') \
+            .box(spacing, spacing + a_little, standoff_height, centered=(True, True, False))
+
+    # Lead
+    if model_type == 'female':
+        total_lead_length = lead_length_bottom
+    else:
+        total_lead_length = lead_length_bottom + standoff_height + lead_length_top_exposed
+    lead = cq.Workplane('XY') \
+        .transformed(offset=(0, 0, -lead_length_bottom)) \
+        .box(lead_dimensions[0], lead_dimensions[1], total_lead_length, centered=(True, True, False))
+
+    # Combine into assembly
+    assembly = StepAssembly(full_name)
+    for pin in range(1, pin_count + 1):
+        if rows == 1:
+            x = 0.0
+        elif rows == 2:
+            x = spacing / 2 if (pin % rows == 0) else -spacing / 2
+        else:
+            raise RuntimeError(f'Invalid row count: {rows}')
+        y = get_y(pin, pin_count, rows, spacing, False)
+        location = cq.Location((x, y, 0))
+        assembly.add_body(insulator, f'insulator-{pin}', StepColor.IC_BODY, location=location)
+        assembly.add_body(lead, f'lead-{pin}', StepColor.LEAD_THT, location=location)
+
+    # Save without fusing for massively better minification!
+    out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
+    assembly.save(out_path, fused=False)
 
 
 def generate_sym(
@@ -540,6 +678,7 @@ def generate_dev(
             lines.append(' (version "0.1")')
             lines.append(' (created {})'.format(create_date or now()))
             lines.append(' (deprecated false)')
+            lines.append(' (generated_by "")')
             lines.append(' (category {})'.format(cmpcat))
             lines.append(' (component {})'.format(uuid_cmp))
             lines.append(' (package {})'.format(uuid_pkg))
@@ -553,7 +692,7 @@ def generate_dev(
             if not (path.exists(dev_dir_path) and path.isdir(dev_dir_path)):
                 makedirs(dev_dir_path)
             with open(path.join(dev_dir_path, '.librepcb-dev'), 'w') as f:
-                f.write('0.1\n')
+                f.write('1\n')
             with open(path.join(dev_dir_path, 'device.lp'), 'w') as f:
                 f.write('\n'.join(lines))
                 f.write('\n')
@@ -562,6 +701,18 @@ def generate_dev(
 
 
 if __name__ == '__main__':
+    if '--help' in sys.argv or '-h' in sys.argv:
+        print(f'Usage: {sys.argv[0]} [--3d]')
+        print()
+        print('Options:')
+        print('  --3d    Generate 3D models using cadquery')
+        sys.exit(1)
+
+    generate_3d_models = '--3d' in sys.argv
+    if not generate_3d_models:
+        warning = 'Note: Not generating 3D models unless the "--3d" argument is passed in!'
+        print(f'\033[1;33m{warning}\033[0m')
+
     # Male pin headers
     generate_sym(
         library='LibrePCB_Connectors.lplib',
@@ -627,6 +778,7 @@ if __name__ == '__main__':
         name='Pin Header 2.54mm',
         name_lower='male pin header',
         kind=KIND_HEADER,
+        assembly_type=AssemblyType.THT,
         pkgcat='e4d3a6bf-af32-48a2-b427-5e794bed949a',
         keywords='pin header, male header, tht',
         rows=1,
@@ -634,6 +786,8 @@ if __name__ == '__main__':
         max_pads=40,
         pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_male,
+        generate_3d_model=partial(generate_3d_model_generic, 'male'),
+        generate_3d_models=generate_3d_models,
         version='0.2',
         create_date='2018-10-17T19:13:41Z',
     )
@@ -643,6 +797,7 @@ if __name__ == '__main__':
         name='Pin Header 2.54mm',
         name_lower='male pin header',
         kind=KIND_HEADER,
+        assembly_type=AssemblyType.THT,
         pkgcat='e4d3a6bf-af32-48a2-b427-5e794bed949a',
         keywords='pin header, male header, tht',
         rows=2,
@@ -650,6 +805,8 @@ if __name__ == '__main__':
         max_pads=80,
         pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_male,
+        generate_3d_model=partial(generate_3d_model_generic, 'male'),
+        generate_3d_models=generate_3d_models,
         version='0.2',
         create_date='2019-09-17T20:00:41Z',
     )
@@ -747,6 +904,7 @@ if __name__ == '__main__':
         name='Pin Socket 2.54mm',
         name_lower='female pin socket',
         kind=KIND_SOCKET,
+        assembly_type=AssemblyType.THT,
         pkgcat='6183d171-e810-475a-a568-2a270aff8f5e',
         keywords='pin socket, female header, tht',
         rows=1,
@@ -754,6 +912,8 @@ if __name__ == '__main__':
         max_pads=40,
         pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_female,
+        generate_3d_model=partial(generate_3d_model_generic, 'female'),
+        generate_3d_models=generate_3d_models,
         version='0.2',
         create_date='2018-10-17T19:13:41Z',
     )
@@ -763,6 +923,7 @@ if __name__ == '__main__':
         name='Pin Socket 2.54mm',
         name_lower='female pin socket',
         kind=KIND_SOCKET,
+        assembly_type=AssemblyType.THT,
         pkgcat='6183d171-e810-475a-a568-2a270aff8f5e',
         keywords='pin socket, female header, tht',
         rows=2,
@@ -770,6 +931,8 @@ if __name__ == '__main__':
         max_pads=80,
         pad_drills=[0.9, 1.0, 1.1],
         generate_silkscreen=generate_silkscreen_female,
+        generate_3d_model=partial(generate_3d_model_generic, 'female'),
+        generate_3d_models=generate_3d_models,
         version='0.2',
         create_date='2019-09-17T20:00:41Z',
     )
@@ -840,6 +1003,7 @@ if __name__ == '__main__':
         name='Soldered Wire Connector',
         name_lower='soldered wire connector',
         kind=KIND_WIRE_CONNECTOR,
+        assembly_type=AssemblyType.NONE,
         pkgcat='56a5773f-eeb4-4b39-8cb9-274f3da26f4f',
         keywords='connector, soldering, generic',
         rows=1,
@@ -847,6 +1011,8 @@ if __name__ == '__main__':
         max_pads=40,
         pad_drills=[1.0],
         generate_silkscreen=generate_silkscreen_female,
+        generate_3d_model=None,
+        generate_3d_models=False,
         version='0.2',
         create_date='2018-10-17T19:13:41Z',
     )
