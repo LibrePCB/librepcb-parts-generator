@@ -46,6 +46,7 @@ pad_size = (2.54 - 0.35, 1.27 * 1.25)
 line_width = 0.25
 pkg_text_height = 1.0
 sym_text_height = 2.54
+courtyard_offset = 0.5  # Rather large because packages are generic (i.e. not exact)
 
 
 KIND_HEADER = 'pinheader'
@@ -155,6 +156,8 @@ def generate_pkg(
             uuid_pkg = _uuid('pkg')
             uuid_pads = [_uuid('pad-{}'.format(p)) for p in range(i)]
             uuid_footprint = _uuid('footprint-default')
+            uuid_outline = _uuid('polygon-outline')
+            uuid_courtyard = _uuid('polygon-courtyard')
             uuid_text_name = _uuid('text-name')
             uuid_text_value = _uuid('text-value')
 
@@ -227,6 +230,40 @@ def generate_pkg(
             silkscreen = generate_silkscreen(category, kind, variant, i, rows)
             footprint.add_polygon(silkscreen)
 
+            # Package outline
+            dx = (width + (rows - 1) * spacing) / 2
+            dy = (width + (per_row - 1) * spacing) / 2
+            footprint.add_polygon(Polygon(
+                uuid=uuid_outline,
+                layer=Layer('top_package_outlines'),
+                width=Width(0),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(-dx, dy), Angle(0)),
+                    Vertex(Position(dx, dy), Angle(0)),
+                    Vertex(Position(dx, -dy), Angle(0)),
+                    Vertex(Position(-dx, -dy), Angle(0)),
+                ],
+            ))
+
+            # Courtyard
+            dx += courtyard_offset
+            dy += courtyard_offset
+            footprint.add_polygon(Polygon(
+                uuid=uuid_courtyard,
+                layer=Layer('top_courtyard'),
+                width=Width(0),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(-dx, dy), Angle(0)),
+                    Vertex(Position(dx, dy), Angle(0)),
+                    Vertex(Position(dx, -dy), Angle(0)),
+                    Vertex(Position(-dx, -dy), Angle(0)),
+                ],
+            ))
+
             # Labels
             y_max, y_min = get_rectangle_bounds(i, rows, spacing, top_offset + 1.27, False)
             footprint.add_text(StrokeText(
@@ -266,6 +303,12 @@ def generate_pkg(
                 package.add_3d_model(Package3DModel(uuid_3d, Name(full_name)))
                 for footprint in package.footprints:
                     footprint.add_3d_model(Footprint3DModel(uuid_3d))
+
+            # Message approvals
+            if assembly_type == AssemblyType.NONE:
+                # Assembly type is reported as suspicious because there are
+                # some pads, but this is intended for soldered wire connectors.
+                package.add_approval("(approved suspicious_assembly_type)")
 
             package.serialize(path.join('out', library, category))
 
@@ -630,6 +673,11 @@ def generate_cmp(
 
         component.add_variant(Variant(uuid_variant, Norm.EMPTY, Name('default'), Description(''), gate))
 
+        # Message approvals
+        if len(default_value) == 0:
+            # Approve the "no default value set" message.
+            component.add_approval("(approved empty_default_value)")
+
         component.serialize(path.join('out', library, category))
         print('{}x{} {}: Wrote component {}'.format(rows, per_row, kind, uuid_cmp))
 
@@ -675,7 +723,7 @@ def generate_dev(
                          'Generated with {}")'.format(rows, per_row, name_lower, spacing, drill, generator))
             lines.append(' (keywords "connector, {}x{}, d{:.1f}, {}")'.format(rows, per_row, drill, keywords))
             lines.append(' (author "{}")'.format(author))
-            lines.append(' (version "0.1")')
+            lines.append(' (version "0.1.1")')
             lines.append(' (created {})'.format(create_date or now()))
             lines.append(' (deprecated false)')
             lines.append(' (generated_by "")')
@@ -686,6 +734,7 @@ def generate_dev(
             for p in range(1, i + 1):
                 signalmappings.append(' (pad {} (signal {}))'.format(uuid_pads[p - 1], uuid_signals[p - 1]))
             lines.extend(sorted(signalmappings))
+            lines.append(" (approved no_parts)")
             lines.append(')')
 
             dev_dir_path = path.join('out', library, category, uuid_dev)
@@ -788,7 +837,7 @@ if __name__ == '__main__':
         generate_silkscreen=generate_silkscreen_male,
         generate_3d_model=partial(generate_3d_model_generic, 'male'),
         generate_3d_models=generate_3d_models,
-        version='0.2',
+        version='0.3',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_pkg(
@@ -807,7 +856,7 @@ if __name__ == '__main__':
         generate_silkscreen=generate_silkscreen_male,
         generate_3d_model=partial(generate_3d_model_generic, 'male'),
         generate_3d_models=generate_3d_models,
-        version='0.2',
+        version='0.3',
         create_date='2019-09-17T20:00:41Z',
     )
     generate_dev(
@@ -914,7 +963,7 @@ if __name__ == '__main__':
         generate_silkscreen=generate_silkscreen_female,
         generate_3d_model=partial(generate_3d_model_generic, 'female'),
         generate_3d_models=generate_3d_models,
-        version='0.2',
+        version='0.3',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_pkg(
@@ -933,7 +982,7 @@ if __name__ == '__main__':
         generate_silkscreen=generate_silkscreen_female,
         generate_3d_model=partial(generate_3d_model_generic, 'female'),
         generate_3d_models=generate_3d_models,
-        version='0.2',
+        version='0.3',
         create_date='2019-09-17T20:00:41Z',
     )
     generate_dev(
@@ -994,7 +1043,7 @@ if __name__ == '__main__':
         rows=1,
         min_pads=1,
         max_pads=40,
-        version='0.1',
+        version='0.1.1',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_pkg(
@@ -1013,7 +1062,7 @@ if __name__ == '__main__':
         generate_silkscreen=generate_silkscreen_female,
         generate_3d_model=None,
         generate_3d_models=False,
-        version='0.2',
+        version='0.3',
         create_date='2018-10-17T19:13:41Z',
     )
     generate_dev(
