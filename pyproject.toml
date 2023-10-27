@@ -1,0 +1,50 @@
+[project]
+name = "librepcb-parts-generator"
+authors = [
+    { name = "Danilo Bargen", email = "mail@dbrgn.ch" },
+    { name = "Raphael Nestler", email = "raphael.nestler@gmail.com" },
+]
+
+requires-python = ">=3.8"
+dependencies = [
+    "cadquery == 2.3.1",
+]
+version = "0.1.0"
+
+[project.optional-dependencies]
+test = [
+    "pytest ~= 6.2.5",
+    "flake8 ~= 4.0.1",
+    "mypy == 1.5.1",
+    "isort ~= 5.10.1",
+]
+
+[tool.setuptools.packages.find]
+exclude = ["out*"]
+
+[tool.mypy]
+warn_unused_configs = true
+strict = true
+exclude = [
+    'build'
+]
+
+[[tool.mypy.overrides]]
+module = [
+    'test_common',
+    'test_generate_connectors',
+    'test_generate_qfn',
+    'test_generate_idc',
+    'test_generate_stm_mcu',
+]
+disallow_untyped_defs = false
+
+[tool.isort]
+line_length = 120
+multi_line_output = 5
+balanced_wrapping = false
+known_typing = "typing"
+sections = "FUTURE,STDLIB,TYPING,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules"

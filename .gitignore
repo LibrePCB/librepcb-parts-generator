@@ -6,3 +6,5 @@ __pycache__/
 out/
 out_3d/
 *.pdf
+/librepcb_parts_generator.egg-info/
+/build/

@@ -17,20 +17,11 @@ jobs:
         with:
           python-version: "${{ matrix.python-version }}"
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install .[test]
       - name: Run pytest
         run: pytest
       - name: Run mypy
-        run: mypy --strict
-          common.py
-          entities/*.py
-          cadquery_helpers.py
-          dfn_configs.py
-          generate*.py
-          test_entities.py
-        # test_common.py
-        # test_generate_connectors.py
-        # test_generate_qfn.py
+        run: mypy .
       - name: Run flake8
         run: flake8
       - name: Run isort
