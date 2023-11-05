@@ -604,7 +604,7 @@ def generate_pkg(
             raise ValueError('Either gap or footprints must be set')
 
         # Generate 3D models (for certain package types)
-        if package_type in ['RESC', 'CAPC']:
+        if package_type in ['RESC', 'CAPC', 'INDC']:
             uuid_3d = uuid('pkg', full_name, '3d')
             if generate_3d_models:
                 generate_3d(library, package_type, full_name, uuid_pkg, uuid_3d, config)
@@ -641,7 +641,7 @@ def generate_3d(
     width = config.body.width
     height = config.body.height
 
-    max_fillet = 0.25 if package_type == 'CAPC' else 0.05
+    max_fillet = 0.05 if package_type == 'RESC' else 0.25
     fillet = min(height * 0.2, max_fillet)
 
     gap = config.gap or config.body.gap
@@ -670,6 +670,8 @@ def generate_3d(
         inner_color = cq.Color('gray16')
     elif package_type == 'CAPC':
         inner_color = cq.Color('bisque3')
+    elif package_type == 'INDC':
+        inner_color = cq.Color('lightsteelblue3')
     else:
         raise RuntimeError(f'Unsupported 3D package type: {package_type}')
 
@@ -922,6 +924,32 @@ if __name__ == '__main__':
         version='0.2',
         create_date='2019-11-18T21:56:00Z',
     )
+    # Chip inductors (INDC)
+    generate_pkg(
+        library='LibrePCB_Base.lplib',
+        author='U. Bruhin',
+        package_type='INDC',
+        name='{package_type}{size_metric} ({size_imperial})',
+        description='Generic chip inductor {size_metric} (imperial {size_imperial}).\n\n'
+                    'Length: {length}mm\nWidth: {width}mm',
+        polarization=None,
+        configs=[
+            # Configuration: Values taken from Taiyo Yuden, TDK and Murata specs.
+            ChipConfig('01005', BodyDimensions(0.4, 0.2, 0.2), gap=0.15),
+            ChipConfig('0201', BodyDimensions(0.6, 0.3, 0.3), gap=0.3),
+            ChipConfig('0402', BodyDimensions(1.0, 0.5, 0.5), gap=0.5),
+            ChipConfig('0603', BodyDimensions(1.6, 0.8, 0.8), gap=0.7),
+            ChipConfig('0805', BodyDimensions(2.0, 1.25, 1.25), gap=1.0),
+            ChipConfig('1008', BodyDimensions(2.5, 2.0, 2.0), gap=1.3),
+            ChipConfig('1206', BodyDimensions(3.2, 1.6, 1.6), gap=2.0),
+            ChipConfig('1210', BodyDimensions(3.2, 2.5, 2.5), gap=2.0),
+        ],
+        generate_3d_models=generate_3d_models,
+        pkgcat='812c8e64-3a47-49d8-987f-2cfba377c8ae',
+        keywords='l,inductor,ferrite,bead,chip,generic',
+        version='0.1',
+        create_date='2023-11-05T09:15:41Z',
+    )
     # Generic devices
     generate_dev(
         library='LibrePCB_Base.lplib',
@@ -981,5 +1009,31 @@ if __name__ == '__main__':
         keywords='c,capacitor,capacitance,smd,smt',
         version='0.3.1',
         create_date='2015-08-13T20:22:31Z',
+    )
+    generate_dev(
+        library='LibrePCB_Base.lplib',
+        author='U. Bruhin',
+        name='Inductor {size_metric} ({size_imperial})',
+        description='Generic SMD inductor {size_metric} (imperial {size_imperial}).',
+        packages=[
+            # Metric, Imperial, Name
+            ('0402', '01005', 'INDC0402 (01005)'),
+            ('0603', '0201', 'INDC0603 (0201)'),
+            ('1005', '0402', 'INDC1005 (0402)'),
+            ('1608', '0603', 'INDC1608 (0603)'),
+            ('2012', '0805', 'INDC2012 (0805)'),
+            ('2520', '1008', 'INDC2520 (1008)'),
+            ('3216', '1206', 'INDC3216 (1206)'),
+            ('3225', '1210', 'INDC3225 (1210)'),
+        ],
+        cmp='506bd124-6062-400e-9078-b38bd7e1aaee',
+        cat='b3adfa1e-b878-44f6-902a-14ef3dad7a14',
+        signals=[
+            '777f11cd-9d4e-4b2b-aafa-7e7a836ff56e',
+            '5b36d330-6f19-4391-8f95-1c2f6a658286',
+        ],
+        keywords='l,inductor,ferrite,bead,smd,smt',
+        version='0.1',
+        create_date='2023-11-05T09:15:41Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
