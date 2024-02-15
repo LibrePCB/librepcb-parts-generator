@@ -487,10 +487,8 @@ def generate_sym(
     for i in range(min_pads, max_pads + 1, rows):
         per_row = i // rows
         w = width * rows  # Make double-row symbols wider!
-        if kind == KIND_SCREW_TERMINAL:
-            w_offset = 1.27  # Make screw terminals wider on the left
-        else:
-            w_offset = 0
+        pin_length_inside = 0.6 if kind == KIND_SCREW_TERMINAL else 1.27
+        pin_name_offset = 5.2 if kind == KIND_SCREW_TERMINAL else 5.08
 
         variant = '{}x{}'.format(rows, per_row)
 
@@ -528,8 +526,8 @@ def generate_sym(
                 Name(str(p)),
                 Position((w + 2.54) * x_sign, get_y(p, i, rows, spacing, True)),
                 Rotation(180.0 if p % rows == 0 else 0),
-                Length(3.81),
-                NamePosition(5.08, 0.0),
+                Length(2.54 + pin_length_inside),
+                NamePosition(pin_name_offset, 0.0),
                 NameRotation(0.0),
                 NameHeight(2.5),
                 NameAlign('left center'),
@@ -545,11 +543,11 @@ def generate_sym(
             Fill(False),
             GrabArea(True)
         )
-        polygon.add_vertex(Vertex(Position(-w - w_offset, y_max), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-w, y_max), Angle(0.0)))
         polygon.add_vertex(Vertex(Position(w, y_max), Angle(0.0)))
         polygon.add_vertex(Vertex(Position(w, y_min), Angle(0.0)))
-        polygon.add_vertex(Vertex(Position(-w - w_offset, y_min), Angle(0.0)))
-        polygon.add_vertex(Vertex(Position(-w - w_offset, y_max), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-w, y_min), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(-w, y_max), Angle(0.0)))
         symbol.add_polygon(polygon)
 
         # Decorations
@@ -597,7 +595,7 @@ def generate_sym(
                 y = get_y(p, i, rows, spacing, True)
                 dy = spacing / 4 * 0.75
                 diam = 1.6
-                x_offset = -w - w_offset + (diam / 2) + 0.6
+                x_offset = w - (diam / 2) - pin_length_inside
                 pos = Position(x_offset, y)
                 symbol.add_circle(Circle(
                     uuid_decoration,
@@ -1073,7 +1071,7 @@ if __name__ == '__main__':
         rows=1,
         min_pads=1,
         max_pads=40,
-        version='0.1',
+        version='0.2',
         create_date='2022-07-16T21:23:20Z',
     )
     generate_cmp(
@@ -1088,7 +1086,7 @@ if __name__ == '__main__':
         rows=1,
         min_pads=1,
         max_pads=40,
-        version='0.1',
+        version='0.2',
         create_date='2022-07-16T21:23:20Z',
     )
 
