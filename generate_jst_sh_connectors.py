@@ -107,7 +107,7 @@ def lookup_connector_component(rows: int, circuits: int) -> str:
     with open(path.join('uuid_cache_connectors.csv'), 'r') as f:
         lines = f.readlines()
         for l in lines:
-            if l.startswith(f'cmp-pinsocket-{rows}x{circuits}-cmp,'):
+            if l.startswith(f'cmp-pinheader-{rows}x{circuits}-cmp,'):
                 return l.split(',')[1][:-1]
 
         print(f'error! could not find connector symbol for {rows}x{circuits}')
@@ -120,7 +120,7 @@ def lookup_connector_component_signal(rows: int, circuits: int) -> List[str]:
         lines = f.readlines()
         for l in lines:
             for i in range(circuits):
-                if l.startswith(f'cmp-pinsocket-{rows}x{circuits}-signal-{i},'):
+                if l.startswith(f'cmp-pinheader-{rows}x{circuits}-signal-{i},'):
                     found[i] = l.split(',')[1][:-1]
 
         for i in range(circuits):
