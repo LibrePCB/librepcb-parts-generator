@@ -594,7 +594,7 @@ def generate_pkg(
 
     package = Package(
         uuid=pkg_uuid(connector, 'pkg'),
-        name=Name(f"JST {connector.type}-{connector.subtype}-{connector.circuits}"),
+        name=Name(f"JST {connector.type}-{connector.subtype}-{connector.circuits:02d}"),
         description=Description(description),
         keywords=Keywords(keywords),
         author=Author(author),
