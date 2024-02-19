@@ -714,8 +714,8 @@ if __name__ == "__main__":
         library="JST.lplib",
         pkg_type="SH",
         pkg_subtype="SM",
-        description="",
-        keywords="Header SR 1.0 SMT side entry",  # taken from https://jst.de/product-family/show/65/sh
+        description="Header SR 1.0 SMT side entry",
+        keywords="connector,jst,j",  # taken from https://jst.de/product-family/show/65/sh
         author="nbes4",
         generated_by="nbes4",
         pkgcat="2f9c28ee-8507-45be-8c06-591549d8bee3",
@@ -749,7 +749,7 @@ if __name__ == "__main__":
         pkg_type="SH",
         pkg_subtype="BM",
         description="Header SR 1.0 SMT top entry",
-        keywords="",
+        keywords="connector,jst,j",
         author="nbes4",
         generated_by="nbes4",
         pkgcat="2f9c28ee-8507-45be-8c06-591549d8bee3",
