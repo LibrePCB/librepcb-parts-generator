@@ -38,6 +38,11 @@ legend_line_width = 0.2
 uuid_cache_file = 'uuid_cache_jst_sh_connectors.csv'
 uuid_cache = init_cache(uuid_cache_file)
 
+# we use these patterns multiple times in the code
+# that is why we define them here, single source of truth
+pad_uuid_name_pattern = 'pad{}'
+support_pad_uuid_pattern = 'supportpad{}'
+
 
 class Connector:
     def __init__(self, type: str, subtype: str, circuits: int) -> None:
@@ -132,10 +137,10 @@ def sanitize_rotation(rotation: int) -> int:
     """
     while(rotation < 0):
         rotation += 360
-    while(rotation > 360):
+    while(rotation >= 360):
         rotation -= 360
     if rotation % 90 != 0:
-        raise ValueError(f"Invalid rotation ({rotation})! Allowed rotations: 0, 90, 180, 270")
+        raise ValueError(f"Invalid rotation ({rotation})! Rotation must be multiple of 90")
     return rotation
 
 
@@ -213,7 +218,7 @@ def footprint_add_support_pads(
     for i in range(2):
         footprint.add_pad(
             FootprintPad(
-                uuid=footprint_uuid(connector, f'supportpad{i}'),
+                uuid=footprint_uuid(connector, support_pad_uuid_pattern.format(i)),
                 side=ComponentSide.TOP,
                 shape=Shape.ROUNDED_RECT,
                 position=Position(spec.support_pad_first_x_center + i * spec.support_pad_distance_x(connector.circuits), spec.support_pad_first_y_center),
@@ -238,9 +243,10 @@ def footprint_add_pads(
 ) -> None:
     for i in range(connector.circuits):
         pad_number = i if not reverse_pad_order else (connector.circuits - 1) - i
+        pad_uuid_identifier = pad_uuid_name_pattern.format(pad_number)
         footprint.add_pad(
             FootprintPad(
-                uuid=footprint_uuid(connector, f'pad{pad_number}'),
+                uuid=footprint_uuid(connector, pad_uuid_identifier),
                 side=ComponentSide.TOP,
                 shape=Shape.ROUNDED_RECT,
                 position=Position(spec.pad_first_x_center + i * spec.pad_distance_mid_to_mid_x, spec.pad_first_y_center),
@@ -251,7 +257,7 @@ def footprint_add_pads(
                 solder_paste=SolderPasteConfig.AUTO,
                 copper_clearance=CopperClearance(0),
                 function=PadFunction.STANDARD_PAD,
-                package_pad=PackagePadUuid(pkg_uuid(connector, f'pad{pad_number}')),
+                package_pad=PackagePadUuid(pkg_uuid(connector, pad_uuid_identifier)),
                 holes=[]
             )
         )
@@ -578,6 +584,32 @@ def footprint_rotate_around_center(footprint: Footprint, angle_deg: int) -> None
         _rotate(circle.position)
 
 
+def approve_footprint_warnings(package: Package, footprint: Footprint, connector: Connector) -> None:
+    """
+    THIS FUNCTIONS APPROVES "missing_footprint_3d_model" AND "suspicious_pad_function" WARNINGS IN THE PACKAGE EDITOR
+    TO MAKE THE CI PASS
+
+    TODO: Remove the 3D models approval once we have 3D models
+    TODO: Use "Approval" entity once it gets added
+    """
+    footprint_str = f" (footprint {footprint.uuid})\n"
+
+    approval_missing_3d_model = "(approved missing_footprint_3d_model\n" +\
+                                footprint_str +\
+                                ")"
+
+    approval_suspicious_pad = "(approved suspicious_pad_function\n" +\
+        footprint_str +\
+        " (pad {})\n" +\
+        ")"
+
+    for i in range(2):
+        pad_uuid = footprint_uuid(connector, support_pad_uuid_pattern.format(i))
+        package.add_approval(approval_suspicious_pad.format(pad_uuid))
+
+    package.add_approval(approval_missing_3d_model)
+
+
 def generate_pkg(
     connector: Connector,
     description: str,
@@ -607,9 +639,11 @@ def generate_pkg(
     )
 
     for i in range(connector.circuits):
-        package.add_pad(PackagePad(pkg_uuid(connector, f'pad{i}'), Name(str(i + 1))))
+        package.add_pad(PackagePad(pkg_uuid(connector, pad_uuid_name_pattern.format(i)), Name(str(i + 1))))
 
     footprint = generate_footprint(connector, footprint_spec, description, reverse_pad_order, rotation)
+
+    approve_footprint_warnings(package, footprint, connector)
 
     package.add_footprint(footprint)
 
@@ -651,7 +685,7 @@ def generate_dev(
     # only connect actual circuits (pins) to signals
     # the support pads are left unconnected (as per library conventions)
     for i in range(connector.circuits):
-        dev.add_pad(ComponentPad(pkg_uuid(connector, f'pad{i}'), SignalUUID(signal_uuids[i])))
+        dev.add_pad(ComponentPad(pkg_uuid(connector, pad_uuid_name_pattern.format(i)), SignalUUID(signal_uuids[i])))
 
     dev.add_part(Part(dev_name, Manufacturer("J.S.T. Mfg. Co., Ltd.")))
 
