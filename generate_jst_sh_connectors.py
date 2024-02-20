@@ -5,31 +5,24 @@
         https://en.wikipedia.org/wiki/JST_connector, https://jst.de/product-family/show/65/sh
 
 """
+import math
 from os import path
 from uuid import uuid4
-import math
 
 from typing import Iterable, List, Optional
 
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GrabArea, Height, Keywords, Layer,
-    Name, Polygon, Position, Rotation, Value, Version, Vertex, Width, GeneratedBy
+    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
+    Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
 )
-from entities.component import (SignalUUID)
+from entities.component import SignalUUID
+from entities.device import ComponentPad, ComponentUUID, Device, Manufacturer, PackageUUID, Part
 from entities.package import (
-    AutoRotate, FootprintPad, LetterSpacing, LineSpacing, Mirror, Package, PackagePad, Footprint, Shape, ShapeRadius, ComponentSide, Size, StrokeText, StrokeWidth, AssemblyType, StopMaskConfig, SolderPasteConfig, CopperClearance, PadFunction, PackagePadUuid
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
+    Mirror, Package, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size, SolderPasteConfig,
+    StopMaskConfig, StrokeText, StrokeWidth
 )
-from entities.device import (
-    ComponentPad,
-    ComponentUUID,
-    Device,
-    PackageUUID,
-    Part,
-    Manufacturer
-)
-
-from entities.common import (Rotation3D, Position3D)
 
 generator = 'librepcb-parts-generator (generate_jst_sh_connectors.py)'
 
