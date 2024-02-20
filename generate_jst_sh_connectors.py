@@ -1,9 +1,9 @@
 """
     Generate JST SH wire-to-board female connectors
 
-    see 
+    see
         https://en.wikipedia.org/wiki/JST_connector, https://jst.de/product-family/show/65/sh
-    
+
 """
 from os import path
 from uuid import uuid4
@@ -18,17 +18,18 @@ from entities.common import (
 )
 from entities.component import (SignalUUID)
 from entities.package import (
-    AutoRotate, FootprintPad, LetterSpacing, LineSpacing, Mirror, Package, PackagePad, Footprint, Shape, ShapeRadius, ComponentSide, Size, StrokeText, StrokeWidth, AssemblyType, Position3D, Rotation3D, StopMaskConfig, SolderPasteConfig, CopperClearance, PadFunction, PackagePadUuid
+    AutoRotate, FootprintPad, LetterSpacing, LineSpacing, Mirror, Package, PackagePad, Footprint, Shape, ShapeRadius, ComponentSide, Size, StrokeText, StrokeWidth, AssemblyType, StopMaskConfig, SolderPasteConfig, CopperClearance, PadFunction, PackagePadUuid
 )
 from entities.device import (
     ComponentPad,
     ComponentUUID,
     Device,
-    PackageUUID, 
+    PackageUUID,
     Part,
     Manufacturer
 )
 
+from entities.common import (Rotation3D, Position3D)
 
 generator = 'librepcb-parts-generator (generate_jst_sh_connectors.py)'
 
@@ -130,12 +131,12 @@ def lookup_connector_component_signal(rows: int, circuits: int) -> List[str]:
                 exit(1)
 
         return found
-    
 
-"""
-Ensures the given rotation is a multiple of 90 and in between 0 and 360 (incl.)
-"""
+
 def sanitize_rotation(rotation: int) -> int:
+    """
+        Ensures the given rotation is a multiple of 90 and in between 0 and 360 (incl.)
+    """
     while(rotation < 0):
         rotation += 360
     while(rotation > 360):
@@ -145,7 +146,7 @@ def sanitize_rotation(rotation: int) -> int:
     return rotation
 
 
-def align_by_rotation(rotation: int) -> str: 
+def align_by_rotation(rotation: int) -> str:
     # python 3.10 would allow us to use the more elegant "match" expression
     if rotation == 0:
         return "left center"
@@ -157,7 +158,7 @@ def align_by_rotation(rotation: int) -> str:
         return "center bottom"
 
 
-def align_by_rotation_opposite(rotation: int) -> str: 
+def align_by_rotation_opposite(rotation: int) -> str:
     new_rotation = rotation + 180
     return align_by_rotation(new_rotation if new_rotation <= 360 else new_rotation - 360)
 
@@ -330,7 +331,6 @@ def footprint_add_text(
         name_text.position, value_text.position = value_text.position, name_text.position
         name_text.align, value_text.align = value_text.align, name_text.align
 
-
     footprint.add_text(name_text)
     footprint.add_text(value_text)
 
@@ -375,8 +375,8 @@ def footprint_add_outline(
         grab_area=GrabArea(False),
         vertices=[
             # left bottom
-            vertex(spec.header_x(connector.circuits), spec.header_y),    
-            # right bottom    
+            vertex(spec.header_x(connector.circuits), spec.header_y),
+            # right bottom
             vertex(spec.header_x(connector.circuits) + spec.header_width(connector.circuits), spec.header_y),
             # right top
             vertex(spec.header_x(connector.circuits) + spec.header_width(connector.circuits), spec.header_y + spec.header_height),
@@ -729,7 +729,7 @@ if __name__ == "__main__":
         keywords="connector,jst",  # taken from https://jst.de/product-family/show/65/sh
         author="nbes4",
         generated_by="nbes4",
-        pkgcats=["2f9c28ee-8507-45be-8c06-591549d8bee3","3f0f5992-67fd-4ce9-a510-7679870d6271"],  # Direct wire to board connector, JST
+        pkgcats=["2f9c28ee-8507-45be-8c06-591549d8bee3", "3f0f5992-67fd-4ce9-a510-7679870d6271"],  # Direct wire to board connector, JST
         devcat="e4c9b084-7ee2-4310-9b5c-dc66c736a6e0",
         version="0.1",
         footprint_spec=FootprintSpecification(
