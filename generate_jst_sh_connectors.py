@@ -9,7 +9,7 @@ import math
 from os import path
 from uuid import uuid4
 
-from typing import Iterable, List, Optional
+from typing import Iterable, Optional
 
 from common import init_cache, now, save_cache
 from entities.common import (
@@ -102,7 +102,7 @@ class FootprintSpecification:
 
     def header_x_center(self, circuits: int) -> float:
         return self.header_x(circuits) + (self.header_width(circuits) / 2)
-    
+
 
 def sanitize_rotation(rotation: int) -> int:
     """
@@ -621,7 +621,7 @@ def generate_dev(
     generated_by: str,
     dev_name: str
 ) -> Device:
-    
+
     connector_uuid_stub = f'cmp-pinheader-1x{connector.circuits}'
     component_uuid = uuid_cache_connectors[f'{connector_uuid_stub}-cmp']
     signal_uuids = [uuid_cache_connectors[f'{connector_uuid_stub}-signal-{i}'] for i in range(connector.circuits)]
