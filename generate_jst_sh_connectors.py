@@ -108,12 +108,14 @@ def sanitize_rotation(rotation: int) -> int:
     """
         Ensures the given rotation is a multiple of 90 and in between 0 and 360 (incl.)
     """
+    assert rotation % 90 == 0
+
     while(rotation < 0):
         rotation += 360
+
     while(rotation >= 360):
         rotation -= 360
-    if rotation % 90 != 0:
-        raise ValueError(f"Invalid rotation ({rotation})! Rotation must be multiple of 90")
+
     return rotation
 
 
