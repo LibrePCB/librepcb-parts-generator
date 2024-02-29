@@ -35,8 +35,10 @@ header_line_width = 0.2
 legend_header_spacing = 0
 legend_line_width = 0.2
 
-uuid_cache_file = 'uuid_cache_jst_sh_connectors.csv'
-uuid_cache = init_cache(uuid_cache_file)
+uuid_cache_jst_file = 'uuid_cache_jst_sh_connectors.csv'
+uuid_cache_jst = init_cache(uuid_cache_jst_file)
+
+uuid_cache_connectors = init_cache('uuid_cache_connectors.csv')
 
 # we use these patterns multiple times in the code
 # that is why we define them here, single source of truth
@@ -100,36 +102,7 @@ class FootprintSpecification:
 
     def header_x_center(self, circuits: int) -> float:
         return self.header_x(circuits) + (self.header_width(circuits) / 2)
-
-
-# we need some way of looking up the Connectors from LibrePCB Connectors library.
-def lookup_connector_component(rows: int, circuits: int) -> str:
-    with open(path.join('uuid_cache_connectors.csv'), 'r') as f:
-        lines = f.readlines()
-        for l in lines:
-            if l.startswith(f'cmp-pinheader-{rows}x{circuits}-cmp,'):
-                return l.split(',')[1][:-1]
-
-        print(f'error! could not find connector symbol for {rows}x{circuits}')
-        exit(1)
-
-
-def lookup_connector_component_signal(rows: int, circuits: int) -> List[str]:
-    found = [''] * circuits
-    with open(path.join('uuid_cache_connectors.csv'), 'r') as f:
-        lines = f.readlines()
-        for l in lines:
-            for i in range(circuits):
-                if l.startswith(f'cmp-pinheader-{rows}x{circuits}-signal-{i},'):
-                    found[i] = l.split(',')[1][:-1]
-
-        for i in range(circuits):
-            if found[i] == '':
-                print(f'error! could not find pin connector symbol for {rows}x{circuits} signal {i}')
-                exit(1)
-
-        return found
-
+    
 
 def sanitize_rotation(rotation: int) -> int:
     """
@@ -150,9 +123,9 @@ def variant(mounting_variant: str, circuits: int) -> str:
 
 def uuid(category: str, kind: str, variant: str, identifier: str) -> str:
     key = '{}-{}-{}-{}'.format(category, kind, variant, identifier).lower().replace(' ', '~')
-    if key not in uuid_cache:
-        uuid_cache[key] = str(uuid4())
-    return uuid_cache[key]
+    if key not in uuid_cache_jst:
+        uuid_cache_jst[key] = str(uuid4())
+    return uuid_cache_jst[key]
 
 
 def connector_uuid(category: str, connector: Connector, identifier: str) -> str:
@@ -656,9 +629,10 @@ def generate_dev(
     generated_by: str,
     dev_name: str
 ) -> Device:
-
-    component_uuid = lookup_connector_component(1, connector.circuits)
-    signal_uuids = lookup_connector_component_signal(1, connector.circuits)
+    
+    connector_uuid_stub = f'cmp-pinheader-1x{connector.circuits}'
+    component_uuid = uuid_cache_connectors[f'{connector_uuid_stub}-cmp']
+    signal_uuids = [uuid_cache_connectors[f'{connector_uuid_stub}-signal-{i}'] for i in range(connector.circuits)]
 
     dev = Device(
         uuid=dev_uuid(connector, 'dev'),
@@ -811,4 +785,4 @@ if __name__ == "__main__":
         rotation=90
     )
 
-    save_cache(uuid_cache_file, uuid_cache)
+    save_cache(uuid_cache_jst_file, uuid_cache_jst)
