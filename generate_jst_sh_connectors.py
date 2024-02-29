@@ -144,23 +144,6 @@ def sanitize_rotation(rotation: int) -> int:
     return rotation
 
 
-def align_by_rotation(rotation: int) -> str:
-    # python 3.10 would allow us to use the more elegant "match" expression
-    if rotation == 0:
-        return "left center"
-    elif rotation == 90:
-        return "center top"
-    elif rotation == 180:
-        return "right center"
-    else:  # rotation == 270 and fallback
-        return "center bottom"
-
-
-def align_by_rotation_opposite(rotation: int) -> str:
-    new_rotation = rotation + 180
-    return align_by_rotation(new_rotation if new_rotation <= 360 else new_rotation - 360)
-
-
 def variant(mounting_variant: str, circuits: int) -> str:
     return f"{mounting_variant}{circuits}"
 
@@ -296,6 +279,16 @@ def footprint_add_text(
     rotation: int
 ) -> None:
 
+    # TODO: use match expression when python 3.10 is min required version for librePCB
+    if rotation == 0:
+        value_align, name_align = "left center", "right center"
+    elif rotation == 90:
+        value_align, name_align = "center top", "center bottom"
+    elif rotation == 180:
+        value_align, name_align = "right center", "left center"
+    else:  # rotation == 270 and fallback
+        value_align, name_align = "center bottom", "center top"
+
     name_text = StrokeText(
         uuid=footprint_uuid(connector, 'textname'),
         layer=Layer('top_names'),
@@ -303,7 +296,7 @@ def footprint_add_text(
         stroke_width=StrokeWidth(text_stroke_width),
         letter_spacing=LetterSpacing.AUTO,
         line_spacing=LineSpacing.AUTO,
-        align=Align(align_by_rotation_opposite(rotation)),
+        align=Align(name_align),
         position=Position(spec.header_x_center(connector.circuits) - (spec.header_width(connector.circuits) / 2) - text_header_spacing, spec.header_y_center),
         rotation=Rotation(0),
         auto_rotate=AutoRotate(True),
@@ -318,7 +311,7 @@ def footprint_add_text(
         stroke_width=StrokeWidth(text_stroke_width),
         letter_spacing=LetterSpacing.AUTO,
         line_spacing=LineSpacing.AUTO,
-        align=Align(align_by_rotation(rotation)),
+        align=Align(value_align),
         position=Position(spec.header_x_center(connector.circuits) + (spec.header_width(connector.circuits) / 2) + text_header_spacing, spec.header_y_center),
         rotation=Rotation(0),
         auto_rotate=AutoRotate(True),
