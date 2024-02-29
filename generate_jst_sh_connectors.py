@@ -104,21 +104,6 @@ class FootprintSpecification:
         return self.header_x(circuits) + (self.header_width(circuits) / 2)
 
 
-def sanitize_rotation(rotation: int) -> int:
-    """
-        Ensures the given rotation is a multiple of 90 and in between 0 and 360 (incl.)
-    """
-    assert rotation % 90 == 0
-
-    while(rotation < 0):
-        rotation += 360
-
-    while(rotation >= 360):
-        rotation -= 360
-
-    return rotation
-
-
 def variant(mounting_variant: str, circuits: int) -> str:
     return f"{mounting_variant}{circuits}"
 
@@ -670,6 +655,8 @@ def generate_jst(
     rotation: int
 ) -> None:
 
+    assert (rotation >= 0 and rotation <= 270 and rotation % 90 == 0)
+
     for circuits in available_circuits:
 
         conn = Connector(pkg_type, pkg_subtype, circuits)
@@ -685,7 +672,7 @@ def generate_jst(
             generated_by=generated_by,
             footprint_spec=footprint_spec,
             reverse_pad_order=reverse_pad_order,
-            rotation=sanitize_rotation(rotation)
+            rotation=rotation
         )
 
         dev = generate_dev(
@@ -742,7 +729,7 @@ if __name__ == "__main__":
         device_naming_pattern="SM{}B-SRSS-TB",
         create_date=None,
         reverse_pad_order=True,
-        rotation=-90
+        rotation=270
     )
 
     generate_jst(
