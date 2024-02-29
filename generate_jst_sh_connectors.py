@@ -144,16 +144,6 @@ def dev_uuid(connector: Connector, identifier: str) -> str:
     return connector_uuid("dev", connector, identifier)
 
 
-def write_pkg(library: str, pkg: Package) -> None:
-    pkg.serialize(path.join('out', library, 'pkg'))
-    print(f'wrote package {pkg.name.value}: {pkg.uuid}')
-
-
-def write_dev(library: str, dev: Device) -> None:
-    dev.serialize(path.join('out', library, 'dev'))
-    print(f'wrote device {dev.name.value}: {dev.uuid}')
-
-
 def vertex(x: float, y: float) -> Vertex:
     return Vertex(Position(x, y), Angle(0))
 
@@ -709,8 +699,11 @@ def generate_jst(
             dev_name=device_naming_pattern.format(f"{circuits:02d}").upper().replace(' ', '-')
         )
 
-        write_pkg(library, pkg)
-        write_dev(library, dev)
+        pkg.serialize(path.join('out', library, 'pkg'))
+        print(f'wrote package {pkg.name.value}: {pkg.uuid}')
+
+        dev.serialize(path.join('out', library, 'dev'))
+        print(f'wrote device {dev.name.value}: {dev.uuid}')
 
 
 if __name__ == "__main__":
