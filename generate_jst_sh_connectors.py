@@ -631,7 +631,7 @@ def generate_dev(
     for i in range(connector.circuits):
         dev.add_pad(ComponentPad(pkg_uuid(connector, pad_uuid_name_pattern.format(i)), SignalUUID(signal_uuids[i])))
 
-    dev.add_part(Part(dev_name, Manufacturer("J.S.T. Mfg. Co., Ltd.")))
+    dev.add_part(Part(dev_name, Manufacturer("JST")))
 
     return dev
 
