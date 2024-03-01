@@ -208,7 +208,7 @@ def footprint_add_header(
         layer=Layer("top_documentation"),
         width=Width(header_line_width),
         fill=Fill(False),
-        grab_area=GrabArea(False)
+        grab_area=GrabArea(True)
     )
 
     # NOTE: lines in librePCB expand equally on each
