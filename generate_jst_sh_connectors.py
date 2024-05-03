@@ -6,6 +6,7 @@
 
 """
 import math
+
 from os import path
 from uuid import uuid4
 
@@ -696,6 +697,9 @@ def generate_jst(
 
 
 if __name__ == "__main__":
+
+    create_date = '2024-05-03T17:19:09Z'
+
     # units in mm
     generate_jst(
         library="JST.lplib",
@@ -704,9 +708,9 @@ if __name__ == "__main__":
         description="Header SR 1.0 SMT side entry, 1mm pitch",
         keywords="connector,jst",  # taken from https://jst.de/product-family/show/65/sh
         author="nbes4",
-        generated_by="nbes4",
-        pkgcats=["2f9c28ee-8507-45be-8c06-591549d8bee3", "3f0f5992-67fd-4ce9-a510-7679870d6271"],  # Direct wire to board connector, JST
-        devcat="e4c9b084-7ee2-4310-9b5c-dc66c736a6e0",
+        generated_by="",  # leave empty, not used yet
+        pkgcats=["e4d3a6bf-af32-48a2-b427-5e794bed949a", "3f0f5992-67fd-4ce9-a510-7679870d6271"],  # Pin Headers (male), JST
+        devcat="4a4e3c72-94fb-45f9-a6d8-122d2af16fb1",  # Pin Headers (male)
         version="0.1",
         footprint_spec=FootprintSpecification(
             pad_width=0.6,
@@ -727,7 +731,7 @@ if __name__ == "__main__":
         ),
         available_circuits=[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20],
         device_naming_pattern="SM{}B-SRSS-TB",
-        create_date=None,
+        create_date=create_date,
         reverse_pad_order=True,
         rotation=270
     )
@@ -739,9 +743,9 @@ if __name__ == "__main__":
         description="Header SR 1.0 SMT top entry, 1mm pitch",
         keywords="connector,jst",
         author="nbes4",
-        generated_by="nbes4",
-        pkgcats=["2f9c28ee-8507-45be-8c06-591549d8bee3", "3f0f5992-67fd-4ce9-a510-7679870d6271"],  # Direct wire to board connector, JST
-        devcat="e4c9b084-7ee2-4310-9b5c-dc66c736a6e0",
+        generated_by="",  # leave empty, not used yet
+        pkgcats=["e4d3a6bf-af32-48a2-b427-5e794bed949a", "3f0f5992-67fd-4ce9-a510-7679870d6271"],  # Pin Headers (male), JST
+        devcat="4a4e3c72-94fb-45f9-a6d8-122d2af16fb1",  # Pin Headers (male)
         version="0.1",
         footprint_spec=FootprintSpecification(
             pad_width=0.6,
@@ -762,7 +766,7 @@ if __name__ == "__main__":
         ),
         available_circuits=[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
         device_naming_pattern="BM{}B-SRSS-TB",
-        create_date=None,
+        create_date=create_date,
         reverse_pad_order=False,
         rotation=90
     )
