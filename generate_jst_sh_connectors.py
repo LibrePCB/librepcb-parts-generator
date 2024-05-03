@@ -6,7 +6,6 @@
 
 """
 import math
-
 from os import path
 from uuid import uuid4
 
