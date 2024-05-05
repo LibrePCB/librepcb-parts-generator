@@ -48,6 +48,7 @@ class AttributeType(EnumValue):
 
 class MetricPrefix(Enum):
     PICO = 'pico'
+    NANO = 'nano'
     MICRO = 'micro'
     MILLI = 'milli'
     NONE = ''  # no prefix
