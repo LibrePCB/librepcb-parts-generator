@@ -1,6 +1,6 @@
 from os import makedirs, path
 
-from typing import Iterable, List
+from typing import Iterable, List, Optional
 
 from common import escape_string
 from entities.attribute import Attribute
@@ -37,10 +37,10 @@ class Manufacturer(StringValue):
 
 
 class Part():
-    def __init__(self, mpn: str, manufacturer: Manufacturer):
+    def __init__(self, mpn: str, manufacturer: Manufacturer, attributes: Optional[List[Attribute]] = None):
         self.mpn = mpn
         self.manufacturer = manufacturer
-        self.attributes = []  # type: List[Attribute]
+        self.attributes = attributes or []
 
     def __str__(self) -> str:
         ret = '(part "{}" {}\n'.format(escape_string(self.mpn), self.manufacturer)
