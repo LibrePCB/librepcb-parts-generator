@@ -577,7 +577,7 @@ def generate_pkg(
         created=Created(create_date or now()),
         deprecated=Deprecated(False),
         generated_by=GeneratedBy(generated_by),
-        categories=[Category(pkgcat) for pkgcat in pkgcats],
+        categories=[Category(pkgcat) for pkgcat in sorted(pkgcats)],
         assembly_type=AssemblyType.SMT
     )
 
