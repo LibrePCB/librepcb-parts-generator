@@ -1,17 +1,15 @@
-from enum import Enum
+from typing import Optional
 
 from entities.common import EnumValue, Value
 
 
-class Unit(Enum):
-    FARAD = 'farad'
-    AMPERE = 'ampere'
-    VOLT = 'volt'
-    HENRY = 'henry'
-    WATT = 'watt'
-    HERTZ = 'hertz'
-    OHM = 'ohm'
-    NONE = 'none'
+class AttributeUnit(EnumValue):
+    def get_name(self) -> str:
+        return 'unit'
+
+
+class UnitlessUnit(AttributeUnit):
+    NONE = "none"
 
 
 class AttributeType(EnumValue):
@@ -27,51 +25,115 @@ class AttributeType(EnumValue):
     def get_name(self) -> str:
         return 'type'
 
-    def to_unit(self) -> Unit:
-        if self == AttributeType.VOLTAGE:
-            return Unit.VOLT
-        elif self == AttributeType.CURRENT:
-            return Unit.AMPERE
-        elif self == AttributeType.FREQUENCY:
-            return Unit.HERTZ
-        elif self == AttributeType.RESISTANCE:
-            return Unit.OHM
-        elif self == AttributeType.STRING:
-            return Unit.NONE
-        elif self == AttributeType.INDUCTANCE:
-            return Unit.HENRY
-        elif self == AttributeType.POWER:
-            return Unit.WATT
-        else:
-            return Unit.NONE  # Type.STRING and fallback
-
-
-class MetricPrefix(Enum):
-    PICO = 'pico'
-    NANO = 'nano'
-    MICRO = 'micro'
-    MILLI = 'milli'
-    NONE = ''  # no prefix
-    KILO = 'kilo'
-    MEGA = 'mega'
-    GIGA = 'giga'
-
-
-class AttributeUnit():
-    def __init__(self, prefix: MetricPrefix, unit: Unit) -> None:
-        self.attribute_unit = prefix.value + unit.value
-
-    def __str__(self) -> str:
-        return '(unit {})'.format(self.attribute_unit)
-
 
 class Attribute():
-    def __init__(self, name: str, value: Value, attribute_type: AttributeType, prefix: MetricPrefix) -> None:
+    def __init__(self, name: str, value: Value, attribute_type: AttributeType, unit: Optional[AttributeUnit]) -> None:
         self.name = name
+
         self.value = value
-        self.prefix = prefix if prefix is not None else MetricPrefix.NONE
-        self.attribute_type = attribute_type if attribute_type is not None else AttributeType.STRING
-        self.unit = AttributeUnit(self.prefix, self.attribute_type.to_unit())
+        self.unit = unit or UnitlessUnit.NONE
+        self.attribute_type = attribute_type
 
     def __str__(self) -> str:
         return '(attribute "{}" {} {} {})'.format(self.name, self.attribute_type, self.unit, self.value)
+
+
+class CapacitanceUnit(AttributeUnit):
+    PICOFARAD = 'picofarad'
+    NANOFARAD = 'nanofarad'
+    MICROFARAD = 'microfarad'
+    MILLIFARAD = 'millifarad'
+    FARAD = 'farad'
+
+
+class CapacitanceAttribute(Attribute):
+    def __init__(self, name: str, value: Value, unit: CapacitanceUnit) -> None:
+        super().__init__(name, value, AttributeType.CAPACITANCE, unit)
+
+
+class CurrentUnit(AttributeUnit):
+    PICOAMPERE = 'picoampere'
+    NANOAMPERE = 'nanoampere'
+    MICROAMPERE = 'microampere'
+    MILLIAMPERE = 'milliampere'
+    AMPERE = 'ampere'
+    KILOAMPERE = 'kiloampere'
+    MEGAAMPERE = 'megaampere'
+
+
+class CurrentAttribute(Attribute):
+    def __init__(self, name: str, value: Value, unit: CurrentUnit) -> None:
+        super().__init__(name, value, AttributeType.CURRENT, unit)
+
+
+class FrequencyUnit(AttributeUnit):
+    MICROHERTZ = 'microhertz'
+    MILLIHERTZ = 'millihertz'
+    HERTZ = 'hertz'
+    KILOHERTZ = 'kilohertz'
+    MEGAHERTZ = 'megahertz'
+    GIGAHERTZ = 'gigahertz'
+
+
+class FrequencyAttribute(Attribute):
+    def __init__(self, name: str, value: Value, unit: FrequencyUnit) -> None:
+        super().__init__(name, value, AttributeType.FREQUENCY, unit)
+
+
+class InductanceUnit(AttributeUnit):
+    NANOHENRY = 'nanohenry'
+    MICROHENRY = 'microhenry'
+    MILLIHENRY = 'millihenry'
+    HENRY = 'henry'
+
+
+class InductanceAttribute(Attribute):
+    def __init__(self, name: str, value: Value, unit: InductanceUnit) -> None:
+        super().__init__(name, value, AttributeType.INDUCTANCE, unit)
+
+
+class PowerUnit(AttributeUnit):
+    NANOWATT = 'nanowatt'
+    MICROWATT = 'microwatt'
+    MILLIWATT = 'milliwatt'
+    WATT = 'watt'
+    KILOWATT = 'kilowatt'
+    MEGAWATT = 'megawatt'
+    GIGAWATT = 'gigawatt'
+
+
+class PowerAttribute(Attribute):
+    def __init__(self, name: str, value: Value, unit: PowerUnit) -> None:
+        super().__init__(name, value, AttributeType.POWER, unit)
+
+
+class ResistanceUnit(AttributeUnit):
+    MICROOHM = 'microohm'
+    MILLIOHM = 'milliohm'
+    OHM = 'ohm'
+    KILOOHM = 'kiloohm'
+    MEGAOHM = 'megaohm'
+
+
+class ResistanceAttribute(Attribute):
+    def __init__(self, name: str, value: Value, unit: ResistanceUnit) -> None:
+        super().__init__(name, value, AttributeType.RESISTANCE, unit)
+
+
+class VoltageUnit(AttributeUnit):
+    NANOVOLT = 'nanovolt'
+    MICROVOLT = 'microvolt'
+    MILLIVOLT = 'millivolt'
+    VOLT = 'volt'
+    KILOVOLT = 'kilovolt'
+    MEGAVOLT = 'megavolt'
+
+
+class VoltageAttribute(Attribute):
+    def __init__(self, name: str, value: Value, unit: VoltageUnit) -> None:
+        super().__init__(name, value, AttributeType.VOLTAGE, unit)
+
+
+class StringAttribute(Attribute):
+    def __init__(self, name: str, value: Value) -> None:
+        super().__init__(name, value, AttributeType.STRING, None)
