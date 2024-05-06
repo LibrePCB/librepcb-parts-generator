@@ -7,7 +7,6 @@ from entities.attribute import (
     FrequencyAttribute, FrequencyUnit, InductanceAttribute, InductanceUnit, PowerAttribute, PowerUnit,
     ResistanceAttribute, ResistanceUnit, StringAttribute, UnitlessUnit, VoltageAttribute, VoltageUnit
 )
-from entities.common import Value
 
 
 @pytest.mark.parametrize(['name', 'value', 'attribute_type', 'unit', 'output'], [
@@ -23,19 +22,19 @@ from entities.common import Value
     # add more for new types
 ])
 def test_attribute(name: str, value: str, attribute_type: AttributeType, unit: Optional[AttributeUnit], output: str) -> None:
-    attribute_s_exp = str(Attribute(name, Value(value), attribute_type, unit))
+    attribute_s_exp = str(Attribute(name, value, attribute_type, unit))
     assert attribute_s_exp == output
 
 
 @pytest.mark.parametrize(['attr', 'attribute_type'], [
-    (StringAttribute("s",       Value("a")),                        AttributeType.STRING),
-    (CurrentAttribute("c",      Value("1"), CurrentUnit.AMPERE),    AttributeType.CURRENT),
-    (CapacitanceAttribute("c",  Value("1"), CapacitanceUnit.FARAD), AttributeType.CAPACITANCE),
-    (FrequencyAttribute("f",    Value("1"), FrequencyUnit.HERTZ),   AttributeType.FREQUENCY),
-    (InductanceAttribute("i",   Value("1"), InductanceUnit.HENRY),  AttributeType.INDUCTANCE),
-    (PowerAttribute("p",        Value("1"), PowerUnit.WATT),        AttributeType.POWER),
-    (ResistanceAttribute("r",   Value("1"), ResistanceUnit.OHM),    AttributeType.RESISTANCE),
-    (VoltageAttribute("v",      Value("1"), VoltageUnit.VOLT),      AttributeType.VOLTAGE),
+    (StringAttribute("s", "a"),                             AttributeType.STRING),
+    (CurrentAttribute("c", "1",     CurrentUnit.AMPERE),    AttributeType.CURRENT),
+    (CapacitanceAttribute("c", "1", CapacitanceUnit.FARAD), AttributeType.CAPACITANCE),
+    (FrequencyAttribute("f", "1",   FrequencyUnit.HERTZ),   AttributeType.FREQUENCY),
+    (InductanceAttribute("i", "1",  InductanceUnit.HENRY),  AttributeType.INDUCTANCE),
+    (PowerAttribute("p", "1",       PowerUnit.WATT),        AttributeType.POWER),
+    (ResistanceAttribute("r", "1",  ResistanceUnit.OHM),    AttributeType.RESISTANCE),
+    (VoltageAttribute("v", "1",     VoltageUnit.VOLT),      AttributeType.VOLTAGE),
     # add more for new types
 ])
 def test_typed_attribute_has_correct_type(attr: Attribute, attribute_type: AttributeType) -> None:
@@ -43,7 +42,7 @@ def test_typed_attribute_has_correct_type(attr: Attribute, attribute_type: Attri
 
 
 @pytest.mark.parametrize('attr', [
-    StringAttribute("s", Value("a")),
+    StringAttribute("s", "a"),
     # add more for new unitless types
 ])
 def test_unitless_typed_types_have_unit_none(attr: Attribute) -> None:
@@ -52,21 +51,21 @@ def test_unitless_typed_types_have_unit_none(attr: Attribute) -> None:
 
 def test_none_unit_evaluates_to_unitless_none() -> None:
     # we pass None as unit
-    a = Attribute("n", Value("v"), AttributeType.STRING, None)
+    a = Attribute("n", "v", AttributeType.STRING, None)
     # check if it gets set to UnitlessUnit.NONE internally
     assert a.unit == UnitlessUnit.NONE
 
 
 @pytest.mark.parametrize(['typed', 'general'], [
-    (StringAttribute("s",       Value("a")),                        Attribute("s", Value("a"), AttributeType.STRING,       None)),
-    (StringAttribute("s",       Value("a")),                        Attribute("s", Value("a"), AttributeType.STRING,       UnitlessUnit.NONE)),
-    (CurrentAttribute("c",      Value("1"), CurrentUnit.AMPERE),    Attribute("c", Value("1"), AttributeType.CURRENT,      CurrentUnit.AMPERE)),
-    (CapacitanceAttribute("c",  Value("1"), CapacitanceUnit.FARAD), Attribute("c", Value("1"), AttributeType.CAPACITANCE,  CapacitanceUnit.FARAD)),
-    (FrequencyAttribute("f",    Value("1"), FrequencyUnit.HERTZ),   Attribute("f", Value("1"), AttributeType.FREQUENCY,    FrequencyUnit.HERTZ)),
-    (InductanceAttribute("i",   Value("1"), InductanceUnit.HENRY),  Attribute("i", Value("1"), AttributeType.INDUCTANCE,   InductanceUnit.HENRY)),
-    (PowerAttribute("p",        Value("1"), PowerUnit.WATT),        Attribute("p", Value("1"), AttributeType.POWER,        PowerUnit.WATT)),
-    (ResistanceAttribute("r",   Value("1"), ResistanceUnit.OHM),    Attribute("r", Value("1"), AttributeType.RESISTANCE,   ResistanceUnit.OHM)),
-    (VoltageAttribute("v",      Value("1"), VoltageUnit.VOLT),      Attribute("v", Value("1"), AttributeType.VOLTAGE,      VoltageUnit.VOLT)),
+    (StringAttribute("s",       "a"),                        Attribute("s", "a", AttributeType.STRING,       None)),
+    (StringAttribute("s",       "a"),                        Attribute("s", "a", AttributeType.STRING,       UnitlessUnit.NONE)),
+    (CurrentAttribute("c",      "1", CurrentUnit.AMPERE),    Attribute("c", "1", AttributeType.CURRENT,      CurrentUnit.AMPERE)),
+    (CapacitanceAttribute("c",  "1", CapacitanceUnit.FARAD), Attribute("c", "1", AttributeType.CAPACITANCE,  CapacitanceUnit.FARAD)),
+    (FrequencyAttribute("f",    "1", FrequencyUnit.HERTZ),   Attribute("f", "1", AttributeType.FREQUENCY,    FrequencyUnit.HERTZ)),
+    (InductanceAttribute("i",   "1", InductanceUnit.HENRY),  Attribute("i", "1", AttributeType.INDUCTANCE,   InductanceUnit.HENRY)),
+    (PowerAttribute("p",        "1", PowerUnit.WATT),        Attribute("p", "1", AttributeType.POWER,        PowerUnit.WATT)),
+    (ResistanceAttribute("r",   "1", ResistanceUnit.OHM),    Attribute("r", "1", AttributeType.RESISTANCE,   ResistanceUnit.OHM)),
+    (VoltageAttribute("v",      "1", VoltageUnit.VOLT),      Attribute("v", "1", AttributeType.VOLTAGE,      VoltageUnit.VOLT)),
     # add more for new types
 ])
 def test_typed_vs_general_attribute_equivalence(typed: Attribute, general: Attribute) -> None:
