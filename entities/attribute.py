@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from entities.common import EnumValue, Value
 
@@ -27,7 +27,7 @@ class AttributeType(EnumValue):
 
 
 class Attribute():
-    def __init__(self, name: str, value: Value | str, attribute_type: AttributeType, unit: Optional[AttributeUnit]) -> None:
+    def __init__(self, name: str, value: Union[Value, str], attribute_type: AttributeType, unit: Optional[AttributeUnit]) -> None:
         self.name = name
 
         self.value = Value(value) if isinstance(value, str) else value
@@ -47,7 +47,7 @@ class CapacitanceUnit(AttributeUnit):
 
 
 class CapacitanceAttribute(Attribute):
-    def __init__(self, name: str, value: Value | str, unit: CapacitanceUnit) -> None:
+    def __init__(self, name: str, value: Union[Value, str], unit: CapacitanceUnit) -> None:
         super().__init__(name, value, AttributeType.CAPACITANCE, unit)
 
 
@@ -62,7 +62,7 @@ class CurrentUnit(AttributeUnit):
 
 
 class CurrentAttribute(Attribute):
-    def __init__(self, name: str, value: Value | str, unit: CurrentUnit) -> None:
+    def __init__(self, name: str, value: Union[Value, str], unit: CurrentUnit) -> None:
         super().__init__(name, value, AttributeType.CURRENT, unit)
 
 
@@ -76,7 +76,7 @@ class FrequencyUnit(AttributeUnit):
 
 
 class FrequencyAttribute(Attribute):
-    def __init__(self, name: str, value: Value | str, unit: FrequencyUnit) -> None:
+    def __init__(self, name: str, value: Union[Value, str], unit: FrequencyUnit) -> None:
         super().__init__(name, value, AttributeType.FREQUENCY, unit)
 
 
@@ -88,7 +88,7 @@ class InductanceUnit(AttributeUnit):
 
 
 class InductanceAttribute(Attribute):
-    def __init__(self, name: str, value: Value | str, unit: InductanceUnit) -> None:
+    def __init__(self, name: str, value: Union[Value, str], unit: InductanceUnit) -> None:
         super().__init__(name, value, AttributeType.INDUCTANCE, unit)
 
 
@@ -103,7 +103,7 @@ class PowerUnit(AttributeUnit):
 
 
 class PowerAttribute(Attribute):
-    def __init__(self, name: str, value: Value | str, unit: PowerUnit) -> None:
+    def __init__(self, name: str, value: Union[Value, str], unit: PowerUnit) -> None:
         super().__init__(name, value, AttributeType.POWER, unit)
 
 
@@ -116,7 +116,7 @@ class ResistanceUnit(AttributeUnit):
 
 
 class ResistanceAttribute(Attribute):
-    def __init__(self, name: str, value: Value | str, unit: ResistanceUnit) -> None:
+    def __init__(self, name: str, value: Union[Value, str], unit: ResistanceUnit) -> None:
         super().__init__(name, value, AttributeType.RESISTANCE, unit)
 
 
@@ -130,10 +130,10 @@ class VoltageUnit(AttributeUnit):
 
 
 class VoltageAttribute(Attribute):
-    def __init__(self, name: str, value: Value | str, unit: VoltageUnit) -> None:
+    def __init__(self, name: str, value: Union[Value, str], unit: VoltageUnit) -> None:
         super().__init__(name, value, AttributeType.VOLTAGE, unit)
 
 
 class StringAttribute(Attribute):
-    def __init__(self, name: str, value: Value | str) -> None:
+    def __init__(self, name: str, value: Union[Value, str]) -> None:
         super().__init__(name, value, AttributeType.STRING, None)
