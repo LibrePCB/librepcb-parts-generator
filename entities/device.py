@@ -1,8 +1,9 @@
 from os import makedirs, path
 
-from typing import Iterable, List
+from typing import Iterable, List, Optional
 
 from common import escape_string
+from entities.attribute import Attribute
 
 from .common import (
     Author, Category, Created, Deprecated, Description, GeneratedBy, Keywords, Name, StringValue, UUIDValue, Version
@@ -36,12 +37,19 @@ class Manufacturer(StringValue):
 
 
 class Part():
-    def __init__(self, mpn: str, manufacturer: Manufacturer):
+    def __init__(self, mpn: str, manufacturer: Manufacturer, attributes: Optional[List[Attribute]] = None):
         self.mpn = mpn
         self.manufacturer = manufacturer
+        self.attributes = attributes or []
 
     def __str__(self) -> str:
-        return '(part "{}" {}\n)'.format(escape_string(self.mpn), self.manufacturer)
+        ret = '(part "{}" {}\n'.format(escape_string(self.mpn), self.manufacturer)
+        ret += indent_entities(self.attributes)
+        ret += ')'
+        return ret
+
+    def add_attribute(self, attr: Attribute) -> None:
+        self.attributes.append(attr)
 
 
 class Device():
