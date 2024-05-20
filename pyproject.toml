@@ -13,10 +13,10 @@ version = "0.1.0"
 
 [project.optional-dependencies]
 test = [
-    "pytest ~= 6.2.5",
+    "pytest ~= 8.2.1",
     "flake8 ~= 4.0.1",
-    "mypy == 1.5.1",
-    "isort ~= 5.10.1",
+    "mypy == 1.10.0",
+    "isort ~= 5.13.2",
 ]
 
 [tool.setuptools.packages.find]
