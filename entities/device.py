@@ -70,9 +70,9 @@ class Device():
         self.categories = categories
         self.component_uuid = component_uuid
         self.package_uuid = package_uuid
-        self.pads = []  # type: List[ComponentPad]
-        self.parts = []  # type: List[Part]
-        self.approvals = []  # type: List[str]
+        self.pads: List[ComponentPad] = []
+        self.parts: List[Part] = []
+        self.approvals: List[str] = []
 
     def add_pad(self, pad: ComponentPad) -> None:
         self.pads.append(pad)

@@ -76,11 +76,11 @@ class Symbol:
         self.deprecated = deprecated
         self.generated_by = generated_by
         self.categories = categories
-        self.pins = []  # type: List[Pin]
-        self.polygons = []  # type: List[Polygon]
-        self.circles = []  # type: List[Circle]
-        self.texts = []  # type: List[Text]
-        self.approvals = []  # type: List[str]
+        self.pins: List[Pin] = []
+        self.polygons: List[Polygon] = []
+        self.circles: List[Circle] = []
+        self.texts: List[Text] = []
+        self.approvals: List[str] = []
 
     def add_pin(self, pin: Pin) -> None:
         self.pins.append(pin)

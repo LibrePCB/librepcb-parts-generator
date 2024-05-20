@@ -30,7 +30,7 @@ from collections import defaultdict
 from os import listdir, path
 from uuid import uuid4
 
-from typing import Any, Dict, Iterable, Iterator, List, Optional, Set, Tuple
+from typing import Any, DefaultDict, Dict, Iterable, Iterator, List, Optional, Set, Tuple
 
 import common
 from common import human_sort_key, init_cache, save_cache
@@ -101,8 +101,8 @@ class Pin:
 
 class SymbolPinPlacement:
     def __init__(self) -> None:
-        self.left = []  # type: List[Tuple[str, int]]
-        self.right = []  # type: List[Tuple[str, int]]
+        self.left: List[Tuple[str, int]] = []
+        self.right: List[Tuple[str, int]] = []
 
     def add_left_pin(self, pin_name: str, y_pos: int) -> None:
         self.left.append((pin_name, y_pos))
@@ -176,24 +176,24 @@ class MCU:
         self.pins = list(pins)
         self.flash = '{} KiB'.format(info['info']['flash'])
         self.ram = '{} KiB'.format(info['info']['ram'])
-        self.io_count = info['info']['io']  # type: int
+        self.io_count: int = info['info']['io']
         self.gpio_version = info['gpio_version'] if len(info['gpio_version']) else None
         if 'frequency' in info['info']:
-            self.frequency = '{} MHz'.format(info['info']['frequency'])  # type: Optional[str]
+            self.frequency: Optional[str] = '{} MHz'.format(info['info']['frequency'])
         else:
             self.frequency = None
         if 'voltage' in info['info']:
-            self.voltage = '{:.2}-{:.2}V'.format(
+            self.voltage: Optional[str] = '{:.2}-{:.2}V'.format(
                 info['info']['voltage']['min'],
                 info['info']['voltage']['max'],
-            )  # type: Optional[str]
+            )
         else:
             self.voltage = None
         if 'temperature' in info['info']:
-            self.temperature = '{:.0f}-{:.0f}°C'.format(
+            self.temperature: Optional[str] = '{:.0f}-{:.0f}°C'.format(
                 info['info']['temperature']['min'],
                 info['info']['temperature']['max'],
-            )  # type: Optional[str]
+            )
         else:
             self.temperature = None
 
@@ -228,7 +228,7 @@ class MCU:
     @classmethod
     def from_json(cls, ref: str, info: Dict[str, Any]) -> 'MCU':
         # Collect pins, grouped by number
-        pin_map = defaultdict(list)  # type: Dict[str, List[Pin]]
+        pin_map: DefaultDict[str, List[Pin]] = defaultdict(list)
         for entry in info['pinout']:
             if entry['type'] == 'NC' and len(entry['signals']) == 0:
                 # Skip non-connected pins without signals
@@ -241,7 +241,7 @@ class MCU:
             pin_map[entry['position']].append(pin)
 
         # Merge pins into a flat list
-        pins = []  # type: List[Pin]
+        pins: List[Pin] = []
         for group in pin_map.values():
             # Merge signal names
             merged_name = '/'.join(sorted((pin.name for pin in group), key=human_sort_key))
@@ -280,7 +280,7 @@ class MCU:
         Return all pin names of that type (without duplicates), sorted.
         """
         pins = self.get_pins_by_type(pin_type)
-        known_names = set()  # type: Set[str]
+        known_names: Set[str] = set()
         result = []
         i = 1
         for pin in pins:
@@ -814,21 +814,21 @@ def generate_dev(mcu: MCU, symbol_map: Dict[str, str], base_lib_path: str, debug
 
 def generate(data: Dict[str, MCU], base_lib_path: str, debug: bool = False) -> None:
     # A map mapping symbol names to UUIDs
-    symbol_map = {}  # type: Dict[str, str]
+    symbol_map: Dict[str, str] = {}
 
     print('\nProcessing {} MCUs'.format(len(data)))
 
     # Group symbols
-    symbols = defaultdict(list)  # type: Dict[str, List[MCU]]
+    symbols: DefaultDict[str, List[MCU]] = defaultdict(list)
     for mcu in data.values():
         symbols[mcu.symbol_identifier].append(mcu)
     print('Generating {} symbols'.format(len(symbols)))
 
     # Group components
-    components_tmp = defaultdict(list)  # type: Dict[str, List[MCU]]
+    components_tmp: DefaultDict[str, List[MCU]] = defaultdict(list)
     for mcu in data.values():
         components_tmp[mcu.component_identifier].append(mcu)
-    components = defaultdict(list)  # type: Dict[str, List[MCU]]
+    components: DefaultDict[str, List[MCU]] = defaultdict(list)
     for k, v in components_tmp.items():
         combined_name = v[0].ref_for_flash_variants([mcu.ref for mcu in v])
         components[combined_name] = v
@@ -865,7 +865,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Load and parse all data
-    data = {}  # type: Dict[str, MCU]
+    data: Dict[str, MCU] = {}
     for filename in listdir(args.data_dir):
         # Note: Only process STM32 files for now, because the STM8 ref naming scheme is inconsistent.
         # See https://github.com/LibrePCB-Libraries/STMicroelectronics.lplib/pull/5 for details.

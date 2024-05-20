@@ -256,11 +256,11 @@ class Footprint():
         self.description = description
         self.position_3d = position_3d
         self.rotation_3d = rotation_3d
-        self.pads = []  # type: List[FootprintPad]
-        self.models_3d = []  # type: List[Footprint3DModel]
-        self.polygons = []  # type: List[Polygon]
-        self.circles = []  # type: List[Circle]
-        self.texts = []  # type: List[StrokeText]
+        self.pads: List[FootprintPad] = []
+        self.models_3d: List[Footprint3DModel] = []
+        self.polygons: List[Polygon] = []
+        self.circles: List[Circle] = []
+        self.texts: List[StrokeText] = []
 
     def add_pad(self, pad: FootprintPad) -> None:
         self.pads.append(pad)
@@ -308,10 +308,10 @@ class Package:
         self.generated_by = generated_by
         self.categories = categories
         self.assembly_type = assembly_type
-        self.pads = []  # type: List[PackagePad]
-        self.models_3d = []  # type: List[Package3DModel]
-        self.footprints = []  # type: List[Footprint]
-        self.approvals = []  # type: List[str]
+        self.pads: List[PackagePad] = []
+        self.models_3d: List[Package3DModel] = []
+        self.footprints: List[Footprint] = []
+        self.approvals: List[str] = []
 
     def add_pad(self, pad: PackagePad) -> None:
         self.pads.append(pad)

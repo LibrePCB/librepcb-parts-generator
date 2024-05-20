@@ -536,7 +536,7 @@ if __name__ == '__main__':
         print(f'\033[1;33m{warning}\033[0m')
 
     # SOIC
-    configs = []  # type: List[SoConfig]
+    configs: List[SoConfig] = []
     for pin_count in [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32]:
         for height in [1.2, 1.4, 1.7, 2.7]:
             pitch = 1.27

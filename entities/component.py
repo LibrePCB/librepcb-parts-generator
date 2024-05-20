@@ -112,7 +112,7 @@ class Gate():
         self.rotation = rotation
         self.required = required
         self.suffix = suffix
-        self.pins = []  # type: List[PinSignalMap]
+        self.pins: List[PinSignalMap] = []
 
     def add_pin_signal_map(self, pin_signal_map: PinSignalMap) -> None:
         self.pins.append(pin_signal_map)
@@ -144,7 +144,7 @@ class Variant:
         self.norm = norm
         self.name = name
         self.description = description
-        self.gates = [gate]  # type: List[Gate]
+        self.gates = [gate]
 
     def add_gate(self, gate_map: Gate) -> None:
         self.gates.append(gate_map)
@@ -178,9 +178,9 @@ class Component:
         self.schematic_only = schematic_only
         self.default_value = default_value
         self.prefix = prefix
-        self.signals = []  # type: List[Signal]
-        self.variants = []  # type: List[Variant]
-        self.approvals = []  # type: List[str]
+        self.signals: List[Signal] = []
+        self.variants: List[Variant] = []
+        self.approvals: List[str] = []
 
     def add_approval(self, approval: str) -> None:
         self.approvals.append(approval)

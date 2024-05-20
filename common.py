@@ -7,7 +7,7 @@ import os.path
 import re
 from datetime import datetime
 
-from typing import Any, Dict, Iterable, List, Union
+from typing import Any, Dict, Iterable, List, OrderedDict, Union
 
 # String escape sequences
 STRING_ESCAPE_SEQUENCES = (
@@ -24,7 +24,7 @@ STRING_ESCAPE_SEQUENCES = (
 
 def init_cache(uuid_cache_file: str) -> Dict[str, str]:
     print('Loading cache: {}'.format(uuid_cache_file))
-    uuid_cache = collections.OrderedDict()  # type: Dict[str, str]
+    uuid_cache: OrderedDict[str, str] = collections.OrderedDict()
     try:
         with open(uuid_cache_file, 'r') as f:
             reader = csv.reader(f, delimiter=',', quotechar='"')
