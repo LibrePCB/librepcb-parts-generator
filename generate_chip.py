@@ -9,7 +9,7 @@ import sys
 from os import path
 from uuid import uuid4
 
-from typing import Any, Dict, Iterable, Optional, Tuple
+from typing import Dict, Iterable, Optional, Tuple
 
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
@@ -198,10 +198,10 @@ def generate_pkg(
 ) -> None:
     category = 'pkg'
     for config in configs:
-        fmt_params = {
+        fmt_params: Dict[str, str] = {
             'size_metric': config.size_metric(),
             'size_imperial': config.size_imperial(),
-        }  # type: Dict[str, Any]
+        }
         fmt_params_name = {
             **fmt_params,
             'length': fd(config.body.length),
@@ -699,10 +699,10 @@ def generate_dev(
 ) -> None:
     category = 'dev'
     for (size_metric, size_imperial, pkg_name) in packages:
-        fmt_params = {
+        fmt_params: Dict[str, str] = {
             'size_metric': size_metric,
             'size_imperial': size_imperial,
-        }  # type: Dict[str, Any]
+        }
         full_name = name.format(**fmt_params)
         full_desc = description.format(**fmt_params) + \
             "\n\nGenerated with {}".format(generator)

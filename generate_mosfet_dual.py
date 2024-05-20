@@ -113,10 +113,10 @@ def generate_dev(
     for fet_config in configs:
         lines = []
 
-        fmt_params = {
+        fmt_params: Dict[str, Any] = {
             'name': fet_config.name,
             'max_voltage': fet_config.max_voltage,
-        }  # type: Dict[str, Any]
+        }
         full_name = name.format(**fmt_params)
         full_desc = description.format(**fmt_params)
 

@@ -725,7 +725,7 @@ if __name__ == '__main__':
         warning = 'Note: Not generating 3D models unless the "--3d" argument is passed in!'
         print(f'\033[1;33m{warning}\033[0m')
 
-    configs = []  # type: List[LedConfig]
+    configs: List[LedConfig] = []
 
     # Generic LEDs
     #

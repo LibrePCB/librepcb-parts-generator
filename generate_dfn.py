@@ -377,7 +377,7 @@ def generate_pkg(
 
 
 if __name__ == '__main__':
-    generated_packages = []  # type: List[str]
+    generated_packages: List[str] = []
 
     for config in JEDEC_CONFIGS:
         # Find out which configs to create
