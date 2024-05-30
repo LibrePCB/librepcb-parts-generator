@@ -615,7 +615,7 @@ def generate_dev(
 
     dev = Device(
         uuid=dev_uuid(connector, 'dev'),
-        name=Name(dev_name),
+        name=Name('JST ' + dev_name),  # prefix device name
         description=Description(description),
         keywords=Keywords(keywords),
         author=Author(author),
@@ -706,7 +706,7 @@ def generate_jst(
 
 if __name__ == "__main__":
 
-    create_date = '2024-05-30T18:30:11Z'
+    create_date = '2024-05-03T17:19:09Z'
 
     # units in mm
     generate_jst(
@@ -739,7 +739,7 @@ if __name__ == "__main__":
         ),
         available_circuits=[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20],
         suction_cap_variant_available=False,
-        device_naming_pattern="JST SM{}B-SRSS-TB",
+        device_naming_pattern="SM{}B-SRSS-TB",
         create_date=create_date,
         reverse_pad_order=True,
         rotation=270
@@ -775,7 +775,7 @@ if __name__ == "__main__":
         ),
         available_circuits=[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
         suction_cap_variant_available=True,  # see https://github.com/LibrePCB/librepcb-parts-generator/pull/127#issuecomment-2079003507
-        device_naming_pattern="JST BM{}B-SRSS-TB",
+        device_naming_pattern="BM{}B-SRSS-TB",
         create_date=create_date,
         reverse_pad_order=False,
         rotation=90
