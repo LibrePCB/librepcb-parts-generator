@@ -12,6 +12,7 @@ from uuid import uuid4
 from typing import Iterable, Optional
 
 from common import init_cache, now, save_cache
+from entities.attribute import StringAttribute
 from entities.common import (
     Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
     Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
@@ -604,7 +605,8 @@ def generate_dev(
     version: str,
     create_date: Optional[str],
     generated_by: str,
-    dev_name: str
+    dev_name: str,
+    suction_cap_variant_available: bool
 ) -> Device:
 
     connector_uuid_stub = f'cmp-pinheader-1x{connector.circuits}'
@@ -633,6 +635,11 @@ def generate_dev(
 
     dev.add_part(Part(dev_name, Manufacturer("JST")))
 
+    if suction_cap_variant_available:
+        part_with_suction_cap = Part(dev_name + 'T', Manufacturer("JST"))
+        part_with_suction_cap.add_attribute(StringAttribute("FEATURES", "Suction Cap"))
+        dev.add_part(part_with_suction_cap)
+
     return dev
 
 
@@ -650,6 +657,7 @@ def generate_jst(
     generated_by: str,
     footprint_spec: FootprintSpecification,
     available_circuits: Iterable[int],
+    suction_cap_variant_available: bool,
     device_naming_pattern: str,
     reverse_pad_order: bool,
     rotation: int
@@ -685,7 +693,8 @@ def generate_jst(
             version=version,
             create_date=create_date,
             generated_by=generated_by,
-            dev_name=device_naming_pattern.format(f"{circuits:02d}").upper().replace(' ', '-')
+            dev_name=device_naming_pattern.format(f"{circuits:02d}").upper(),
+            suction_cap_variant_available=suction_cap_variant_available
         )
 
         pkg.serialize(path.join('out', library, 'pkg'))
@@ -697,7 +706,7 @@ def generate_jst(
 
 if __name__ == "__main__":
 
-    create_date = '2024-05-03T17:19:09Z'
+    create_date = '2024-05-30T18:30:11Z'
 
     # units in mm
     generate_jst(
@@ -710,7 +719,7 @@ if __name__ == "__main__":
         generated_by="",  # leave empty, not used yet
         pkgcats=["e4d3a6bf-af32-48a2-b427-5e794bed949a", "3f0f5992-67fd-4ce9-a510-7679870d6271"],  # Pin Headers (male), JST
         devcat="4a4e3c72-94fb-45f9-a6d8-122d2af16fb1",  # Pin Headers (male)
-        version="0.1",
+        version="0.2",
         footprint_spec=FootprintSpecification(
             pad_width=0.6,
             pad_height=1.55,
@@ -729,7 +738,8 @@ if __name__ == "__main__":
             pad_first_y_center=4 + (1.55 / 2),
         ),
         available_circuits=[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20],
-        device_naming_pattern="SM{}B-SRSS-TB",
+        suction_cap_variant_available=False,
+        device_naming_pattern="JST SM{}B-SRSS-TB",
         create_date=create_date,
         reverse_pad_order=True,
         rotation=270
@@ -745,7 +755,7 @@ if __name__ == "__main__":
         generated_by="",  # leave empty, not used yet
         pkgcats=["e4d3a6bf-af32-48a2-b427-5e794bed949a", "3f0f5992-67fd-4ce9-a510-7679870d6271"],  # Pin Headers (male), JST
         devcat="4a4e3c72-94fb-45f9-a6d8-122d2af16fb1",  # Pin Headers (male)
-        version="0.1",
+        version="0.2",
         footprint_spec=FootprintSpecification(
             pad_width=0.6,
             pad_height=1.55,
@@ -764,7 +774,8 @@ if __name__ == "__main__":
             pad_first_y_center=2.65 + (1.55 / 2),
         ),
         available_circuits=[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-        device_naming_pattern="BM{}B-SRSS-TB",
+        suction_cap_variant_available=True,  # see https://github.com/LibrePCB/librepcb-parts-generator/pull/127#issuecomment-2079003507
+        device_naming_pattern="JST BM{}B-SRSS-TB",
         create_date=create_date,
         reverse_pad_order=False,
         rotation=90
