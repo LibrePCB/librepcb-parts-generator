@@ -1,8 +1,6 @@
-from os import makedirs, path
-
 from typing import Iterable, List, Optional
 
-from common import escape_string
+from common import escape_string, serialize_common
 from entities.attribute import Attribute
 
 from .common import (
@@ -103,11 +101,8 @@ class Device():
         return ret
 
     def serialize(self, output_directory: str) -> None:
-        dir_path = path.join(output_directory, self.uuid)
-        if not (path.exists(dir_path) and path.isdir(dir_path)):
-            makedirs(dir_path)
-        with open(path.join(dir_path, '.librepcb-dev'), 'w') as f:
-            f.write('1\n')
-        with open(path.join(dir_path, 'device.lp'), 'w') as f:
-            f.write(str(self))
-            f.write('\n')
+        serialize_common(serializable=self,
+                         output_directory=output_directory,
+                         uuid=self.uuid,
+                         long_type='device',
+                         short_type='dev')
