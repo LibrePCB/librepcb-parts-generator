@@ -1,6 +1,7 @@
 """
 Generate dual mosfet devices.
 """
+
 from os import makedirs, path
 from uuid import uuid4
 
@@ -155,7 +156,7 @@ def generate_dev(
         lines.append(' (component {})'.format(uuid_cmp))
         lines.append(' (package {})'.format(uuid_pkg))
         pad_signal_mappings = []
-        for (pad, signal) in zip(uuid_pads, uuid_signals):
+        for pad, signal in zip(uuid_pads, uuid_signals):
             pad_signal_mappings.append(' (pad {} (signal {}))'.format(pad, signal))
         lines.extend(sorted(pad_signal_mappings))
         lines.append(')')
@@ -184,75 +185,273 @@ if __name__ == '__main__':
         uuid_cmp='9d043413-9574-4727-af3a-21c5623cffae',
         configs=[
             # SOIC127P600X175-8
-            FetConfig('DMC2020USD', 20, 'SOIC127P600X175-8', [
-                'sn', 'gn', 'sp', 'gp', 'dp', 'dp', 'dn', 'dn',
-            ], 'https://www.diodes.com/assets/Datasheets/DMC2020USD.pdf'),
-            FetConfig('DMC3016LSD', 30, 'SOIC127P600X175-8', [
-                'sn', 'gn', 'sp', 'gp', 'dp', 'dp', 'dn', 'dn',
-            ], 'https://www.diodes.com/assets/Datasheets/DMC3016LSD.pdf'),
-            FetConfig('DMC3021LSD[Q]', 30, 'SOIC127P600X175-8', [
-                'sn', 'gn', 'sp', 'gp', 'dp', 'dp', 'dn', 'dn',
-            ], [
-                'https://www.diodes.com/assets/Datasheets/ds32152.pdf',
-                'https://www.diodes.com/assets/Datasheets/DMC3021LSDQ.pdf',
-            ]),
-            FetConfig('DMC3025LSD[Q]', 30, 'SOIC127P600X175-8', [
-                'sn', 'gn', 'sp', 'gp', 'dp', 'dp', 'dn', 'dn',
-            ], [
-                'https://www.diodes.com/assets/Datasheets/DMC3025LSD.pdf',
-                'https://www.diodes.com/assets/Datasheets/DMC3025LSDQ.pdf',
-            ]),
-            FetConfig('DMC3028LSD[Q[X]]', 30, 'SOIC127P600X175-8', [
-                'sn', 'gn', 'sp', 'gp', 'dp', 'dp', 'dn', 'dn',
-            ], [
-                'https://www.diodes.com/assets/Datasheets/DMC3028LSD.pdf',
-                'https://www.diodes.com/assets/Datasheets/DMC3028LSDX.pdf',
-                'https://www.diodes.com/assets/Datasheets/DMC3028LSDXQ.pdf',
-            ]),
-            FetConfig('DMC3032LSD', 30, 'SOIC127P600X175-8', [
-                'sn', 'gn', 'sp', 'gp', 'dp', 'dp', 'dn', 'dn',
-            ], 'https://www.diodes.com/assets/Datasheets/ds32153.pdf'),
-            FetConfig('DMC4015SSD', 40, 'SOIC127P600X175-8', [
-                'sn', 'gn', 'sp', 'gp', 'dp', 'dp', 'dn', 'dn',
-            ], 'https://www.diodes.com/assets/Datasheets/DMC4015SSD.pdf'),
-            FetConfig('DMC4028SSD', 40, 'SOIC127P600X175-8', [
-                'sn', 'gn', 'sp', 'gp', 'dp', 'dp', 'dn', 'dn',
-            ], 'https://www.diodes.com/assets/Datasheets/DMC4028SSD.pdf'),
-            FetConfig('DMC4029SSD', 40, 'SOIC127P600X175-8', [
-                'sn', 'gn', 'sp', 'gp', 'dp', 'dp', 'dn', 'dn',
-            ], 'https://www.diodes.com/assets/Datasheets/DMC4029SSD.pdf'),
-            FetConfig('DMC4040SSD[Q]', 40, 'SOIC127P600X175-8', [
-                'sn', 'gn', 'sp', 'gp', 'dp', 'dp', 'dn', 'dn',
-            ], [
-                'https://www.diodes.com/assets/Datasheets/ds32120.pdf',
-                'https://www.diodes.com/assets/Datasheets/DMC4040SSDQ.pdf',
-            ]),
-            FetConfig('DMC4047LSD', 40, 'SOIC127P600X175-8', [
-                'sn', 'gn', 'sp', 'gp', 'dp', 'dp', 'dn', 'dn',
-            ], 'https://www.diodes.com/assets/Datasheets/DMC4047LSD.pdf'),
-            FetConfig('DMC4050SSD[Q]', 40, 'SOIC127P600X175-8', [
-                'sn', 'gn', 'sp', 'gp', 'dp', 'dp', 'dn', 'dn',
-            ], 'https://www.diodes.com/assets/Datasheets/DS33310.pdf'),
-            FetConfig('DMC6040SSD[Q]', 60, 'SOIC127P600X175-8', [
-                'sn', 'gn', 'sp', 'gp', 'dp', 'dp', 'dn', 'dn',
-            ], [
-                'https://www.diodes.com/assets/Datasheets/DMC6040SSD.pdf',
-                'https://www.diodes.com/assets/Datasheets/DMC6040SSDQ.pdf',
-            ]),
-
+            FetConfig(
+                'DMC2020USD',
+                20,
+                'SOIC127P600X175-8',
+                [
+                    'sn',
+                    'gn',
+                    'sp',
+                    'gp',
+                    'dp',
+                    'dp',
+                    'dn',
+                    'dn',
+                ],
+                'https://www.diodes.com/assets/Datasheets/DMC2020USD.pdf',
+            ),
+            FetConfig(
+                'DMC3016LSD',
+                30,
+                'SOIC127P600X175-8',
+                [
+                    'sn',
+                    'gn',
+                    'sp',
+                    'gp',
+                    'dp',
+                    'dp',
+                    'dn',
+                    'dn',
+                ],
+                'https://www.diodes.com/assets/Datasheets/DMC3016LSD.pdf',
+            ),
+            FetConfig(
+                'DMC3021LSD[Q]',
+                30,
+                'SOIC127P600X175-8',
+                [
+                    'sn',
+                    'gn',
+                    'sp',
+                    'gp',
+                    'dp',
+                    'dp',
+                    'dn',
+                    'dn',
+                ],
+                [
+                    'https://www.diodes.com/assets/Datasheets/ds32152.pdf',
+                    'https://www.diodes.com/assets/Datasheets/DMC3021LSDQ.pdf',
+                ],
+            ),
+            FetConfig(
+                'DMC3025LSD[Q]',
+                30,
+                'SOIC127P600X175-8',
+                [
+                    'sn',
+                    'gn',
+                    'sp',
+                    'gp',
+                    'dp',
+                    'dp',
+                    'dn',
+                    'dn',
+                ],
+                [
+                    'https://www.diodes.com/assets/Datasheets/DMC3025LSD.pdf',
+                    'https://www.diodes.com/assets/Datasheets/DMC3025LSDQ.pdf',
+                ],
+            ),
+            FetConfig(
+                'DMC3028LSD[Q[X]]',
+                30,
+                'SOIC127P600X175-8',
+                [
+                    'sn',
+                    'gn',
+                    'sp',
+                    'gp',
+                    'dp',
+                    'dp',
+                    'dn',
+                    'dn',
+                ],
+                [
+                    'https://www.diodes.com/assets/Datasheets/DMC3028LSD.pdf',
+                    'https://www.diodes.com/assets/Datasheets/DMC3028LSDX.pdf',
+                    'https://www.diodes.com/assets/Datasheets/DMC3028LSDXQ.pdf',
+                ],
+            ),
+            FetConfig(
+                'DMC3032LSD',
+                30,
+                'SOIC127P600X175-8',
+                [
+                    'sn',
+                    'gn',
+                    'sp',
+                    'gp',
+                    'dp',
+                    'dp',
+                    'dn',
+                    'dn',
+                ],
+                'https://www.diodes.com/assets/Datasheets/ds32153.pdf',
+            ),
+            FetConfig(
+                'DMC4015SSD',
+                40,
+                'SOIC127P600X175-8',
+                [
+                    'sn',
+                    'gn',
+                    'sp',
+                    'gp',
+                    'dp',
+                    'dp',
+                    'dn',
+                    'dn',
+                ],
+                'https://www.diodes.com/assets/Datasheets/DMC4015SSD.pdf',
+            ),
+            FetConfig(
+                'DMC4028SSD',
+                40,
+                'SOIC127P600X175-8',
+                [
+                    'sn',
+                    'gn',
+                    'sp',
+                    'gp',
+                    'dp',
+                    'dp',
+                    'dn',
+                    'dn',
+                ],
+                'https://www.diodes.com/assets/Datasheets/DMC4028SSD.pdf',
+            ),
+            FetConfig(
+                'DMC4029SSD',
+                40,
+                'SOIC127P600X175-8',
+                [
+                    'sn',
+                    'gn',
+                    'sp',
+                    'gp',
+                    'dp',
+                    'dp',
+                    'dn',
+                    'dn',
+                ],
+                'https://www.diodes.com/assets/Datasheets/DMC4029SSD.pdf',
+            ),
+            FetConfig(
+                'DMC4040SSD[Q]',
+                40,
+                'SOIC127P600X175-8',
+                [
+                    'sn',
+                    'gn',
+                    'sp',
+                    'gp',
+                    'dp',
+                    'dp',
+                    'dn',
+                    'dn',
+                ],
+                [
+                    'https://www.diodes.com/assets/Datasheets/ds32120.pdf',
+                    'https://www.diodes.com/assets/Datasheets/DMC4040SSDQ.pdf',
+                ],
+            ),
+            FetConfig(
+                'DMC4047LSD',
+                40,
+                'SOIC127P600X175-8',
+                [
+                    'sn',
+                    'gn',
+                    'sp',
+                    'gp',
+                    'dp',
+                    'dp',
+                    'dn',
+                    'dn',
+                ],
+                'https://www.diodes.com/assets/Datasheets/DMC4047LSD.pdf',
+            ),
+            FetConfig(
+                'DMC4050SSD[Q]',
+                40,
+                'SOIC127P600X175-8',
+                [
+                    'sn',
+                    'gn',
+                    'sp',
+                    'gp',
+                    'dp',
+                    'dp',
+                    'dn',
+                    'dn',
+                ],
+                'https://www.diodes.com/assets/Datasheets/DS33310.pdf',
+            ),
+            FetConfig(
+                'DMC6040SSD[Q]',
+                60,
+                'SOIC127P600X175-8',
+                [
+                    'sn',
+                    'gn',
+                    'sp',
+                    'gp',
+                    'dp',
+                    'dp',
+                    'dn',
+                    'dn',
+                ],
+                [
+                    'https://www.diodes.com/assets/Datasheets/DMC6040SSD.pdf',
+                    'https://www.diodes.com/assets/Datasheets/DMC6040SSDQ.pdf',
+                ],
+            ),
             # SOT95P280X145-6
-            FetConfig('DMC2053UVT', 20, 'SOT95P280X145-6', ['gn', 'sp', 'gp', 'dp', 'sn', 'dn'],
-                      'https://www.diodes.com/assets/Datasheets/DMC2053UVT.pdf'),
-            FetConfig('DMC2057UVT', 20, 'SOT95P280X145-6', ['gn', 'sp', 'gp', 'dp', 'sn', 'dn'],
-                      'https://www.diodes.com/assets/Datasheets/DMC2057UVT2.pdf'),
-            FetConfig('DMC3071LVT', 30, 'SOT95P280X145-6', ['gn', 'sp', 'gp', 'dp', 'sn', 'dn'],
-                      'https://www.diodes.com/assets/Datasheets/DMC3071LVT.pdf'),
-            FetConfig('DMC3730UVT', 25, 'SOT95P280X145-6', ['gn', 'sp', 'gp', 'dp', 'sn', 'dn'],
-                      'https://www.diodes.com/assets/Datasheets/DMC3730UVT.pdf'),
-            FetConfig('DMG6601LVT', 30, 'SOT95P280X145-6', ['gn', 'sp', 'gp', 'dp', 'sn', 'dn'],
-                      'https://www.diodes.com/assets/Datasheets/DMG6601LVT.pdf'),
-            FetConfig('DMG6602SVTQ', 30, 'SOT95P280X145-6', ['gn', 'sp', 'gp', 'dp', 'sn', 'dn'],
-                      'https://www.diodes.com/assets/Datasheets/DMG6602SVTQ.pdf'),
+            FetConfig(
+                'DMC2053UVT',
+                20,
+                'SOT95P280X145-6',
+                ['gn', 'sp', 'gp', 'dp', 'sn', 'dn'],
+                'https://www.diodes.com/assets/Datasheets/DMC2053UVT.pdf',
+            ),
+            FetConfig(
+                'DMC2057UVT',
+                20,
+                'SOT95P280X145-6',
+                ['gn', 'sp', 'gp', 'dp', 'sn', 'dn'],
+                'https://www.diodes.com/assets/Datasheets/DMC2057UVT2.pdf',
+            ),
+            FetConfig(
+                'DMC3071LVT',
+                30,
+                'SOT95P280X145-6',
+                ['gn', 'sp', 'gp', 'dp', 'sn', 'dn'],
+                'https://www.diodes.com/assets/Datasheets/DMC3071LVT.pdf',
+            ),
+            FetConfig(
+                'DMC3730UVT',
+                25,
+                'SOT95P280X145-6',
+                ['gn', 'sp', 'gp', 'dp', 'sn', 'dn'],
+                'https://www.diodes.com/assets/Datasheets/DMC3730UVT.pdf',
+            ),
+            FetConfig(
+                'DMG6601LVT',
+                30,
+                'SOT95P280X145-6',
+                ['gn', 'sp', 'gp', 'dp', 'sn', 'dn'],
+                'https://www.diodes.com/assets/Datasheets/DMG6601LVT.pdf',
+            ),
+            FetConfig(
+                'DMG6602SVTQ',
+                30,
+                'SOT95P280X145-6',
+                ['gn', 'sp', 'gp', 'dp', 'sn', 'dn'],
+                'https://www.diodes.com/assets/Datasheets/DMG6602SVTQ.pdf',
+            ),
         ],
     )
     save_cache(uuid_cache_file, uuid_cache)

@@ -1,6 +1,7 @@
 """
 Generate THT polarized radial electrolytic capacitors (CAPPRD).
 """
+
 from os import path
 from uuid import uuid4
 
@@ -8,15 +9,57 @@ from typing import Optional
 
 from common import format_ipc_dimension, init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
-    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
+    Align,
+    Angle,
+    Author,
+    Category,
+    Circle,
+    Created,
+    Deprecated,
+    Description,
+    Diameter,
+    Fill,
+    GeneratedBy,
+    GrabArea,
+    Height,
+    Keywords,
+    Layer,
+    Name,
+    Polygon,
+    Position,
+    Position3D,
+    Rotation,
+    Rotation3D,
+    Value,
+    Version,
+    Vertex,
+    Width,
 )
 from entities.component import SignalUUID
 from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, FootprintPad, LetterSpacing,
-    LineSpacing, Mirror, Package, PackagePad, PackagePadUuid, PadFunction, PadHole, Shape, ShapeRadius, Size,
-    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType,
+    AutoRotate,
+    ComponentSide,
+    CopperClearance,
+    DrillDiameter,
+    Footprint,
+    FootprintPad,
+    LetterSpacing,
+    LineSpacing,
+    Mirror,
+    Package,
+    PackagePad,
+    PackagePadUuid,
+    PadFunction,
+    PadHole,
+    Shape,
+    ShapeRadius,
+    Size,
+    SolderPasteConfig,
+    StopMaskConfig,
+    StrokeText,
+    StrokeWidth,
 )
 
 generator = 'librepcb-parts-generator (generate_capacitor_radial_tht.py)'
@@ -75,21 +118,25 @@ def generate_pkg(
     # Name according IPC-7351 "Capacitor, Polarized Radial Diameter":
     # CAPPRD + Lead Spacing + W Lead Width + D Body Diameter + H Body Height
     name = 'CAPPRD{}W{}D{}H{}'.format(
-        format_ipc_dimension(pitch), format_ipc_dimension(lead_width),
-        format_ipc_dimension(diameter), format_ipc_dimension(height))
+        format_ipc_dimension(pitch),
+        format_ipc_dimension(lead_width),
+        format_ipc_dimension(diameter),
+        format_ipc_dimension(height),
+    )
     variant = get_variant(diameter, height, pitch, lead_width)
 
     def _pkg_uuid(identifier: str) -> str:
         return uuid('pkg', variant, identifier)
 
     def _create_footprint(footprint_identifier: str, name: str) -> Footprint:
-
         def _fpt_uuid(identifier: str) -> str:
             return _pkg_uuid(footprint_identifier + '-' + identifier)
 
         drill = LEAD_WIDTH_TO_DRILL[lead_width]
-        restring = min((0.4 if diameter >= 6.0 else 0.3),  # preferred restring
-                       (pitch - drill - 0.25) / 2)  # minimum required restring
+        restring = min(
+            (0.4 if diameter >= 6.0 else 0.3),  # preferred restring
+            (pitch - drill - 0.25) / 2,
+        )  # minimum required restring
         pad_diameter = drill + (2 * restring)  # outer diameter of pad
         courtyard_diameter = diameter + (1.0 if diameter >= 10.0 else 0.8)
 
@@ -101,7 +148,7 @@ def generate_pkg(
                 fill=Fill(True),
                 grab_area=GrabArea(False),
             )
-            if ((pitch - pad_diameter) < 0.6):
+            if (pitch - pad_diameter) < 0.6:
                 # not enough space, use a simplified polygon
                 vertices = [
                     (0.0, (diameter / 2) - 0.2, 0.0),
@@ -136,108 +183,126 @@ def generate_pkg(
         )
         pad_hole_path = [Vertex(Position(0.0, 0.0), Angle(0.0))]
         uuid_plus = _pkg_uuid('pad-plus')
-        footprint.add_pad(FootprintPad(
-            uuid=uuid_plus,
-            side=ComponentSide.TOP,
-            shape=Shape.ROUNDED_RECT,
-            position=Position(-pitch / 2, 0),
-            rotation=Rotation(0),
-            size=Size(pad_diameter, pad_diameter),
-            radius=ShapeRadius(0.0),
-            stop_mask=StopMaskConfig.AUTO,
-            solder_paste=SolderPasteConfig.OFF,
-            copper_clearance=CopperClearance(0),
-            function=PadFunction.UNSPECIFIED,
-            package_pad=PackagePadUuid(uuid_plus),
-            holes=[PadHole(uuid_plus, DrillDiameter(drill), pad_hole_path)],
-        ))
+        footprint.add_pad(
+            FootprintPad(
+                uuid=uuid_plus,
+                side=ComponentSide.TOP,
+                shape=Shape.ROUNDED_RECT,
+                position=Position(-pitch / 2, 0),
+                rotation=Rotation(0),
+                size=Size(pad_diameter, pad_diameter),
+                radius=ShapeRadius(0.0),
+                stop_mask=StopMaskConfig.AUTO,
+                solder_paste=SolderPasteConfig.OFF,
+                copper_clearance=CopperClearance(0),
+                function=PadFunction.UNSPECIFIED,
+                package_pad=PackagePadUuid(uuid_plus),
+                holes=[PadHole(uuid_plus, DrillDiameter(drill), pad_hole_path)],
+            )
+        )
         uuid_minus = _pkg_uuid('pad-minus')
-        footprint.add_pad(FootprintPad(
-            uuid=uuid_minus,
-            side=ComponentSide.TOP,
-            shape=Shape.ROUNDED_RECT,
-            position=Position(pitch / 2, 0),
-            rotation=Rotation(0),
-            size=Size(pad_diameter, pad_diameter),
-            radius=ShapeRadius(1.0),
-            stop_mask=StopMaskConfig.AUTO,
-            solder_paste=SolderPasteConfig.OFF,
-            copper_clearance=CopperClearance(0),
-            function=PadFunction.UNSPECIFIED,
-            package_pad=PackagePadUuid(uuid_minus),
-            holes=[PadHole(uuid_minus, DrillDiameter(drill), pad_hole_path)],
-        ))
+        footprint.add_pad(
+            FootprintPad(
+                uuid=uuid_minus,
+                side=ComponentSide.TOP,
+                shape=Shape.ROUNDED_RECT,
+                position=Position(pitch / 2, 0),
+                rotation=Rotation(0),
+                size=Size(pad_diameter, pad_diameter),
+                radius=ShapeRadius(1.0),
+                stop_mask=StopMaskConfig.AUTO,
+                solder_paste=SolderPasteConfig.OFF,
+                copper_clearance=CopperClearance(0),
+                function=PadFunction.UNSPECIFIED,
+                package_pad=PackagePadUuid(uuid_minus),
+                holes=[PadHole(uuid_minus, DrillDiameter(drill), pad_hole_path)],
+            )
+        )
 
         # placement
-        footprint.add_circle(Circle(
-            uuid=_fpt_uuid('circle-placement'),
-            layer=Layer('top_legend'),
-            width=Width(0.2),
-            fill=Fill(False),
-            grab_area=GrabArea(False),
-            diameter=Diameter(diameter + 0.2),
-            position=Position(0.0, 0.0),
-        ))
-        footprint.add_polygon(_generate_fill_polygon(
-            identifier='polygon-placement-fill',
-            layer='top_legend',
-        ))
+        footprint.add_circle(
+            Circle(
+                uuid=_fpt_uuid('circle-placement'),
+                layer=Layer('top_legend'),
+                width=Width(0.2),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                diameter=Diameter(diameter + 0.2),
+                position=Position(0.0, 0.0),
+            )
+        )
+        footprint.add_polygon(
+            _generate_fill_polygon(
+                identifier='polygon-placement-fill',
+                layer='top_legend',
+            )
+        )
 
         # documentation
-        footprint.add_circle(Circle(
-            uuid=_fpt_uuid('circle-documentation'),
-            layer=Layer('top_documentation'),
-            width=Width(0.2),
-            fill=Fill(False),
-            grab_area=GrabArea(False),
-            diameter=Diameter(diameter - 0.2),
-            position=Position(0.0, 0.0),
-        ))
-        footprint.add_polygon(_generate_fill_polygon(
-            identifier='polygon-documentation-fill',
-            layer='top_documentation',
-        ))
+        footprint.add_circle(
+            Circle(
+                uuid=_fpt_uuid('circle-documentation'),
+                layer=Layer('top_documentation'),
+                width=Width(0.2),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                diameter=Diameter(diameter - 0.2),
+                position=Position(0.0, 0.0),
+            )
+        )
+        footprint.add_polygon(
+            _generate_fill_polygon(
+                identifier='polygon-documentation-fill',
+                layer='top_documentation',
+            )
+        )
 
         # courtyard
-        footprint.add_circle(Circle(
-            uuid=_fpt_uuid('circle-courtyard'),
-            layer=Layer('top_courtyard'),
-            width=Width(0.0),
-            fill=Fill(False),
-            grab_area=GrabArea(False),
-            diameter=Diameter(courtyard_diameter),
-            position=Position(0.0, 0.0),
-        ))
+        footprint.add_circle(
+            Circle(
+                uuid=_fpt_uuid('circle-courtyard'),
+                layer=Layer('top_courtyard'),
+                width=Width(0.0),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                diameter=Diameter(courtyard_diameter),
+                position=Position(0.0, 0.0),
+            )
+        )
 
         # texts
-        footprint.add_text(StrokeText(
-            uuid=_fpt_uuid('text-name'),
-            layer=Layer('top_names'),
-            height=Height(1.0),
-            stroke_width=StrokeWidth(0.2),
-            letter_spacing=LetterSpacing.AUTO,
-            line_spacing=LineSpacing.AUTO,
-            align=Align('center bottom'),
-            position=Position(0.0, (diameter / 2) + 0.8),
-            rotation=Rotation(0.0),
-            auto_rotate=AutoRotate(True),
-            mirror=Mirror(False),
-            value=Value('{{NAME}}'),
-        ))
-        footprint.add_text(StrokeText(
-            uuid=_fpt_uuid('text-value'),
-            layer=Layer('top_values'),
-            height=Height(1.0),
-            stroke_width=StrokeWidth(0.2),
-            letter_spacing=LetterSpacing.AUTO,
-            line_spacing=LineSpacing.AUTO,
-            align=Align('center top'),
-            position=Position(0.0, -(diameter / 2) - 0.8),
-            rotation=Rotation(0.0),
-            auto_rotate=AutoRotate(True),
-            mirror=Mirror(False),
-            value=Value('{{VALUE}}'),
-        ))
+        footprint.add_text(
+            StrokeText(
+                uuid=_fpt_uuid('text-name'),
+                layer=Layer('top_names'),
+                height=Height(1.0),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center bottom'),
+                position=Position(0.0, (diameter / 2) + 0.8),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(True),
+                mirror=Mirror(False),
+                value=Value('{{NAME}}'),
+            )
+        )
+        footprint.add_text(
+            StrokeText(
+                uuid=_fpt_uuid('text-value'),
+                layer=Layer('top_values'),
+                height=Height(1.0),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center top'),
+                position=Position(0.0, -(diameter / 2) - 0.8),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(True),
+                mirror=Mirror(False),
+                value=Value('{{VALUE}}'),
+            )
+        )
         return footprint
 
     # package
@@ -245,12 +310,12 @@ def generate_pkg(
         uuid=_pkg_uuid('pkg'),
         name=Name(name),
         description=Description(
-            'Polarized radial electrolytic capacitor.\n\n' +
-            'Diameter: {} mm\n'.format(diameter) +
-            'Height: {} mm\n'.format(height) +
-            'Lead Spacing: {} mm\n'.format(pitch) +
-            'Max. Lead Diameter: {} mm\n\n'.format(lead_width) +
-            'Generated with {}'.format(generator)
+            'Polarized radial electrolytic capacitor.\n\n'
+            + 'Diameter: {} mm\n'.format(diameter)
+            + 'Height: {} mm\n'.format(height)
+            + 'Lead Spacing: {} mm\n'.format(pitch)
+            + 'Max. Lead Diameter: {} mm\n\n'.format(lead_width)
+            + 'Generated with {}'.format(generator)
         ),
         keywords=Keywords('electrolytic,capacitor,polarized,radial,c,cap,cpol'),
         author=Author(author),
@@ -263,10 +328,12 @@ def generate_pkg(
     )
     package.add_pad(PackagePad(uuid=_pkg_uuid('pad-plus'), name=Name('+')))
     package.add_pad(PackagePad(uuid=_pkg_uuid('pad-minus'), name=Name('-')))
-    package.add_footprint(_create_footprint(
-        footprint_identifier='default',
-        name='default',
-    ))
+    package.add_footprint(
+        _create_footprint(
+            footprint_identifier='default',
+            name='default',
+        )
+    )
 
     # write files
     package.serialize(path.join('out', library, 'pkg'))
@@ -293,12 +360,12 @@ def generate_dev(
         uuid=_uuid('dev'),
         name=Name(name),
         description=Description(
-            'Generic polarized radial electrolytic capacitor.\n\n' +
-            'Diameter: {} mm\n'.format(diameter) +
-            'Height: {} mm\n'.format(height) +
-            'Lead Spacing: {} mm\n'.format(pitch) +
-            'Max. Lead Diameter: {} mm\n\n'.format(lead_width) +
-            'Generated with {}'.format(generator)
+            'Generic polarized radial electrolytic capacitor.\n\n'
+            + 'Diameter: {} mm\n'.format(diameter)
+            + 'Height: {} mm\n'.format(height)
+            + 'Lead Spacing: {} mm\n'.format(pitch)
+            + 'Max. Lead Diameter: {} mm\n\n'.format(lead_width)
+            + 'Generated with {}'.format(generator)
         ),
         keywords=Keywords('electrolytic,capacitor,polarized,radial,c,cap,cpol'),
         author=Author(author),
@@ -310,14 +377,18 @@ def generate_dev(
         component_uuid=ComponentUUID('c54375c5-7149-4ded-95c5-7462f7301ee7'),
         package_uuid=PackageUUID(uuid('pkg', variant, 'pkg')),
     )
-    device.add_pad(ComponentPad(
-        pad_uuid=uuid('pkg', variant, 'pad-plus'),
-        signal=SignalUUID('e010ecbb-6210-4da3-9270-ebd58656dbf0'),
-    ))
-    device.add_pad(ComponentPad(
-        pad_uuid=uuid('pkg', variant, 'pad-minus'),
-        signal=SignalUUID('af3ffca8-0085-4edb-a775-fcb759f63411'),
-    ))
+    device.add_pad(
+        ComponentPad(
+            pad_uuid=uuid('pkg', variant, 'pad-plus'),
+            signal=SignalUUID('e010ecbb-6210-4da3-9270-ebd58656dbf0'),
+        )
+    )
+    device.add_pad(
+        ComponentPad(
+            pad_uuid=uuid('pkg', variant, 'pad-minus'),
+            signal=SignalUUID('af3ffca8-0085-4edb-a775-fcb759f63411'),
+        )
+    )
 
     # write files
     device.serialize(path.join('out', library, 'dev'))
@@ -325,25 +396,24 @@ def generate_dev(
 
 
 if __name__ == '__main__':
-
     CONFIGS = [
         # Some typical, frequently used configurations. The lead width depends
         # from package to package, thus choosing the highest value to ensure
         # compatibility with all variants (models with thinner leads can
         # still be mount).
-        {'diameter':  3.0, 'height':  5.0, 'pitch': 1.0, 'lead_width': 0.4},
-        {'diameter':  4.0, 'height':  5.0, 'pitch': 1.5, 'lead_width': 0.45},
-        {'diameter':  4.0, 'height':  7.0, 'pitch': 1.5, 'lead_width': 0.45},
-        {'diameter':  4.0, 'height': 11.0, 'pitch': 1.5, 'lead_width': 0.45},
-        {'diameter':  5.0, 'height':  5.0, 'pitch': 2.0, 'lead_width': 0.5},
-        {'diameter':  5.0, 'height':  7.0, 'pitch': 2.0, 'lead_width': 0.5},
-        {'diameter':  5.0, 'height': 11.0, 'pitch': 2.0, 'lead_width': 0.5},
-        {'diameter':  6.3, 'height':  5.0, 'pitch': 2.5, 'lead_width': 0.5},
-        {'diameter':  6.3, 'height':  7.0, 'pitch': 2.5, 'lead_width': 0.5},
-        {'diameter':  6.3, 'height': 11.0, 'pitch': 2.5, 'lead_width': 0.5},
-        {'diameter':  8.0, 'height':  5.0, 'pitch': 2.5, 'lead_width': 0.6},
-        {'diameter':  8.0, 'height':  7.0, 'pitch': 3.5, 'lead_width': 0.6},
-        {'diameter':  8.0, 'height': 11.5, 'pitch': 3.5, 'lead_width': 0.6},
+        {'diameter': 3.0, 'height': 5.0, 'pitch': 1.0, 'lead_width': 0.4},
+        {'diameter': 4.0, 'height': 5.0, 'pitch': 1.5, 'lead_width': 0.45},
+        {'diameter': 4.0, 'height': 7.0, 'pitch': 1.5, 'lead_width': 0.45},
+        {'diameter': 4.0, 'height': 11.0, 'pitch': 1.5, 'lead_width': 0.45},
+        {'diameter': 5.0, 'height': 5.0, 'pitch': 2.0, 'lead_width': 0.5},
+        {'diameter': 5.0, 'height': 7.0, 'pitch': 2.0, 'lead_width': 0.5},
+        {'diameter': 5.0, 'height': 11.0, 'pitch': 2.0, 'lead_width': 0.5},
+        {'diameter': 6.3, 'height': 5.0, 'pitch': 2.5, 'lead_width': 0.5},
+        {'diameter': 6.3, 'height': 7.0, 'pitch': 2.5, 'lead_width': 0.5},
+        {'diameter': 6.3, 'height': 11.0, 'pitch': 2.5, 'lead_width': 0.5},
+        {'diameter': 8.0, 'height': 5.0, 'pitch': 2.5, 'lead_width': 0.6},
+        {'diameter': 8.0, 'height': 7.0, 'pitch': 3.5, 'lead_width': 0.6},
+        {'diameter': 8.0, 'height': 11.5, 'pitch': 3.5, 'lead_width': 0.6},
         {'diameter': 10.0, 'height': 12.5, 'pitch': 5.0, 'lead_width': 0.6},
         {'diameter': 10.0, 'height': 16.0, 'pitch': 5.0, 'lead_width': 0.6},
         {'diameter': 10.0, 'height': 20.0, 'pitch': 5.0, 'lead_width': 0.6},

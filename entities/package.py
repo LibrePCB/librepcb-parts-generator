@@ -5,17 +5,39 @@ from typing import Iterable, List
 from common import format_float
 
 from .common import (
-    Align, Author, BoolValue, Category, Circle, Created, Deprecated, Description, EnumValue, FloatValue, GeneratedBy,
-    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, UUIDValue, Value, Version,
-    Vertex
+    Align,
+    Author,
+    BoolValue,
+    Category,
+    Circle,
+    Created,
+    Deprecated,
+    Description,
+    EnumValue,
+    FloatValue,
+    GeneratedBy,
+    Height,
+    Keywords,
+    Layer,
+    Name,
+    Polygon,
+    Position,
+    Position3D,
+    Rotation,
+    Rotation3D,
+    UUIDValue,
+    Value,
+    Version,
+    Vertex,
 )
 from .helper import indent_entities
 
 
-class Package3DModel():
+class Package3DModel:
     """
     A 3D model in a package.
     """
+
     def __init__(self, uuid: str, name: Name):
         self.uuid = uuid
         self.name = name
@@ -32,10 +54,11 @@ class Package3DModel():
         return self.uuid < other.uuid
 
 
-class Footprint3DModel():
+class Footprint3DModel:
     """
     A 3D model reference in a footprint.
     """
+
     def __init__(self, uuid: str):
         self.uuid = uuid
 
@@ -61,7 +84,7 @@ class AssemblyType(EnumValue):
         return 'assembly_type'
 
 
-class PackagePad():
+class PackagePad:
     def __init__(self, uuid: str, name: Name):
         self.uuid = uuid
         self.name = name
@@ -99,12 +122,22 @@ class Mirror(BoolValue):
         super().__init__('mirror', mirror)
 
 
-class StrokeText():
-    def __init__(self, uuid: str, layer: Layer, height: Height,
-                 stroke_width: StrokeWidth, letter_spacing: LetterSpacing,
-                 line_spacing: LineSpacing, align: Align, position: Position,
-                 rotation: Rotation, auto_rotate: AutoRotate, mirror: Mirror,
-                 value: Value):
+class StrokeText:
+    def __init__(
+        self,
+        uuid: str,
+        layer: Layer,
+        height: Height,
+        stroke_width: StrokeWidth,
+        letter_spacing: LetterSpacing,
+        line_spacing: LineSpacing,
+        align: Align,
+        position: Position,
+        rotation: Rotation,
+        auto_rotate: AutoRotate,
+        mirror: Mirror,
+        value: Value,
+    ):
         self.uuid = uuid
         self.layer = layer
         self.height = height
@@ -119,10 +152,12 @@ class StrokeText():
         self.value = value
 
     def __str__(self) -> str:
-        ret = '(stroke_text {} {}\n'.format(self.uuid, self.layer) +\
-            ' {} {} {} {}\n'.format(self.height, self.stroke_width, self.letter_spacing, self.line_spacing) +\
-            ' {} {} {}\n'.format(self.align, self.position, self.rotation) +\
-            ' {} {} {}\n)'.format(self.auto_rotate, self.mirror, self.value)
+        ret = (
+            '(stroke_text {} {}\n'.format(self.uuid, self.layer)
+            + ' {} {} {} {}\n'.format(self.height, self.stroke_width, self.letter_spacing, self.line_spacing)
+            + ' {} {} {}\n'.format(self.align, self.position, self.rotation)
+            + ' {} {} {}\n)'.format(self.auto_rotate, self.mirror, self.value)
+        )
         return ret
 
 
@@ -148,7 +183,7 @@ class ShapeRadius(FloatValue):
         super().__init__('radius', radius_normalized)
 
 
-class Size():
+class Size:
     def __init__(self, width: float, height: float):
         self.width = width
         self.height = height
@@ -203,9 +238,8 @@ class DrillDiameter(FloatValue):
         super().__init__('diameter', diameter)
 
 
-class PadHole():
-    def __init__(self, uuid: str, diameter: DrillDiameter,
-                 vertices: List[Vertex]):
+class PadHole:
+    def __init__(self, uuid: str, diameter: DrillDiameter, vertices: List[Vertex]):
         self.uuid = uuid
         self.diameter = diameter
         self.vertices = vertices
@@ -217,13 +251,23 @@ class PadHole():
         return ret
 
 
-class FootprintPad():
-    def __init__(self, uuid: str, side: ComponentSide, shape: Shape,
-                 position: Position, rotation: Rotation, size: Size,
-                 radius: ShapeRadius, stop_mask: StopMaskConfig,
-                 solder_paste: SolderPasteConfig,
-                 copper_clearance: CopperClearance, function: PadFunction,
-                 package_pad: PackagePadUuid, holes: List[PadHole]):
+class FootprintPad:
+    def __init__(
+        self,
+        uuid: str,
+        side: ComponentSide,
+        shape: Shape,
+        position: Position,
+        rotation: Rotation,
+        size: Size,
+        radius: ShapeRadius,
+        stop_mask: StopMaskConfig,
+        solder_paste: SolderPasteConfig,
+        copper_clearance: CopperClearance,
+        function: PadFunction,
+        package_pad: PackagePadUuid,
+        holes: List[PadHole],
+    ):
         self.uuid = uuid
         self.side = side
         self.shape = shape
@@ -239,18 +283,21 @@ class FootprintPad():
         self.holes = holes
 
     def __str__(self) -> str:
-        ret = '(pad {} {} {}\n'.format(self.uuid, self.side, self.shape) +\
-            ' {} {} {} {}\n'.format(self.position, self.rotation, self.size, self.radius) +\
-            ' {} {} {} {}\n'.format(self.stop_mask, self.solder_paste, self.copper_clearance, self.function) +\
-            ' {}\n'.format(self.package_pad)
+        ret = (
+            '(pad {} {} {}\n'.format(self.uuid, self.side, self.shape)
+            + ' {} {} {} {}\n'.format(self.position, self.rotation, self.size, self.radius)
+            + ' {} {} {} {}\n'.format(self.stop_mask, self.solder_paste, self.copper_clearance, self.function)
+            + ' {}\n'.format(self.package_pad)
+        )
         ret += indent_entities(self.holes)
         ret += ')'
         return ret
 
 
-class Footprint():
-    def __init__(self, uuid: str, name: Name, description: Description,
-                 position_3d: Position3D, rotation_3d: Rotation3D):
+class Footprint:
+    def __init__(
+        self, uuid: str, name: Name, description: Description, position_3d: Position3D, rotation_3d: Rotation3D
+    ):
         self.uuid = uuid
         self.name = name
         self.description = description
@@ -278,10 +325,12 @@ class Footprint():
         self.texts.append(text)
 
     def __str__(self) -> str:
-        ret = '(footprint {}\n'.format(self.uuid) +\
-            ' {}\n'.format(self.name) +\
-            ' {}\n'.format(self.description) +\
-            ' {} {}\n'.format(self.position_3d, self.rotation_3d)
+        ret = (
+            '(footprint {}\n'.format(self.uuid)
+            + ' {}\n'.format(self.name)
+            + ' {}\n'.format(self.description)
+            + ' {} {}\n'.format(self.position_3d, self.rotation_3d)
+        )
         ret += indent_entities(sorted(self.models_3d))
         ret += indent_entities(self.pads)
         ret += indent_entities(self.polygons)
@@ -292,11 +341,20 @@ class Footprint():
 
 
 class Package:
-    def __init__(self, uuid: str, name: Name, description: Description,
-                 keywords: Keywords, author: Author, version: Version,
-                 created: Created, deprecated: Deprecated,
-                 generated_by: GeneratedBy, categories: Iterable[Category],
-                 assembly_type: AssemblyType):
+    def __init__(
+        self,
+        uuid: str,
+        name: Name,
+        description: Description,
+        keywords: Keywords,
+        author: Author,
+        version: Version,
+        created: Created,
+        deprecated: Deprecated,
+        generated_by: GeneratedBy,
+        categories: Iterable[Category],
+        assembly_type: AssemblyType,
+    ):
         self.uuid = uuid
         self.name = name
         self.description = description
@@ -326,17 +384,19 @@ class Package:
         self.approvals.append(approval)
 
     def __str__(self) -> str:
-        ret = '(librepcb_package {}\n'.format(self.uuid) +\
-            ' {}\n'.format(self.name) +\
-            ' {}\n'.format(self.description) +\
-            ' {}\n'.format(self.keywords) +\
-            ' {}\n'.format(self.author) +\
-            ' {}\n'.format(self.version) +\
-            ' {}\n'.format(self.created) +\
-            ' {}\n'.format(self.deprecated) +\
-            ' {}\n'.format(self.generated_by) +\
-            ''.join([' {}\n'.format(cat) for cat in self.categories]) +\
-            ' {}\n'.format(self.assembly_type)
+        ret = (
+            '(librepcb_package {}\n'.format(self.uuid)
+            + ' {}\n'.format(self.name)
+            + ' {}\n'.format(self.description)
+            + ' {}\n'.format(self.keywords)
+            + ' {}\n'.format(self.author)
+            + ' {}\n'.format(self.version)
+            + ' {}\n'.format(self.created)
+            + ' {}\n'.format(self.deprecated)
+            + ' {}\n'.format(self.generated_by)
+            + ''.join([' {}\n'.format(cat) for cat in self.categories])
+            + ' {}\n'.format(self.assembly_type)
+        )
         ret += indent_entities(self.pads)
         ret += indent_entities(self.models_3d)
         ret += indent_entities(self.footprints)
