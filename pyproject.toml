@@ -17,6 +17,7 @@ test = [
     "flake8 ~= 4.0.1",
     "mypy == 1.10.0",
     "isort ~= 5.13.2",
+    "ruff ~= 0.4.7",
 ]
 
 [tool.setuptools.packages.find]
