@@ -115,8 +115,10 @@ class Symbol:
         return ret
 
     def serialize(self, output_directory: str) -> None:
-        serialize_common(serializable=self,
-                         output_directory=output_directory,
-                         uuid=self.uuid,
-                         long_type='symbol',
-                         short_type='sym')
+        serialize_common(
+            serializable=self,
+            output_directory=output_directory,
+            uuid=self.uuid,
+            long_type='symbol',
+            short_type='sym'
+        )

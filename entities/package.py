@@ -343,8 +343,10 @@ class Package:
         return ret
 
     def serialize(self, output_directory: str) -> None:
-        serialize_common(serializable=self,
-                         output_directory=output_directory,
-                         uuid=self.uuid,
-                         long_type='package',
-                         short_type='pkg')
+        serialize_common(
+            serializable=self,
+            output_directory=output_directory,
+            uuid=self.uuid,
+            long_type='package',
+            short_type='pkg'
+        )

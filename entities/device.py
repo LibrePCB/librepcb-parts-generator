@@ -101,8 +101,10 @@ class Device():
         return ret
 
     def serialize(self, output_directory: str) -> None:
-        serialize_common(serializable=self,
-                         output_directory=output_directory,
-                         uuid=self.uuid,
-                         long_type='device',
-                         short_type='dev')
+        serialize_common(
+            serializable=self,
+            output_directory=output_directory,
+            uuid=self.uuid,
+            long_type='device',
+            short_type='dev'
+        )

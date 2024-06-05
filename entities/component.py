@@ -212,8 +212,10 @@ class Component:
         self.variants.append(variant)
 
     def serialize(self, output_directory: str) -> None:
-        serialize_common(serializable=self,
-                         output_directory=output_directory,
-                         uuid=self.uuid,
-                         long_type='component',
-                         short_type='cmp')
+        serialize_common(
+            serializable=self,
+            output_directory=output_directory,
+            uuid=self.uuid,
+            long_type='component',
+            short_type='cmp'
+        )
