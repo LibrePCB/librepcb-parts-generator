@@ -1,8 +1,6 @@
-from os import makedirs, path
-
 from typing import Iterable, List
 
-from common import format_float
+from common import format_float, serialize_common
 
 from .common import (
     Align, Author, BoolValue, Category, Circle, Created, Deprecated, Description, EnumValue, FloatValue, GeneratedBy,
@@ -345,11 +343,10 @@ class Package:
         return ret
 
     def serialize(self, output_directory: str) -> None:
-        dir_path = path.join(output_directory, self.uuid)
-        if not (path.exists(dir_path) and path.isdir(dir_path)):
-            makedirs(dir_path)
-        with open(path.join(dir_path, '.librepcb-pkg'), 'w') as f:
-            f.write('1\n')
-        with open(path.join(dir_path, 'package.lp'), 'w') as f:
-            f.write(str(self))
-            f.write('\n')
+        serialize_common(
+            serializable=self,
+            output_directory=output_directory,
+            uuid=self.uuid,
+            long_type='package',
+            short_type='pkg'
+        )

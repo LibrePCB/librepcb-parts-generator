@@ -3,9 +3,9 @@ Common functionality for generator scripts.
 """
 import collections
 import csv
-import os.path
 import re
 from datetime import datetime
+from os import makedirs, path
 
 from typing import Any, Dict, Iterable, List, OrderedDict, Union
 
@@ -148,7 +148,7 @@ def get_pad_uuids(base_lib_path: str, pkg_uuid: str) -> Dict[str, str]:
     """
     Return a mapping from pad name to pad UUID.
     """
-    with open(os.path.join(base_lib_path, 'pkg', pkg_uuid, 'package.lp'), 'r') as f:
+    with open(path.join(base_lib_path, 'pkg', pkg_uuid, 'package.lp'), 'r') as f:
         lines = f.readlines()
     opt_matches = [
         re.match(r' \(pad ([^\s]*) \(name "([^"]*)"\)\)$', line)
@@ -173,3 +173,17 @@ def human_sort_key(key: str) -> List[Any]:
         return int(text) if text.isdigit() else text
 
     return [_convert(x) for x in re.split(r'(\d+)', key) if x]
+
+
+def serialize_common(serializable: Any, output_directory: str, uuid: str, long_type: str, short_type: str) -> None:
+    """
+    Centralized serialize() implementation shared between Component, Symbol, Device, Package
+    """
+    dir_path = path.join(output_directory, uuid)
+    if not (path.exists(dir_path) and path.isdir(dir_path)):
+        makedirs(dir_path)
+    with open(path.join(dir_path, f'.librepcb-{short_type}'), 'w', newline='\n') as f:
+        f.write('1\n')
+    with open(path.join(dir_path, f'{long_type}.lp'), 'w', newline='\n') as f:
+        f.write(str(serializable))
+        f.write('\n')

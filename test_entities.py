@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from entities.common import (
     Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
     Height, Keywords, Layer, Length, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Text, Value, Version,
@@ -552,3 +554,113 @@ def test_sort_footprint_3d_models() -> None:
     model2 = Footprint3DModel('161c65b0-a386-4b45-9ac2-0293a812fb62')
     models = [model1, model2]
     assert sorted(models) == [model2, model1]
+
+
+def check_all_file_newlines_in_dir_are_unix(dir_with_files: Path) -> bool:
+    """
+    Checks if all files in the given directory have Unix-style line endings
+
+    Helper function, not a test!
+    """
+    for temp_file in dir_with_files.iterdir():
+        with temp_file.open(mode="r", newline='') as file_under_test:
+            file_under_test.readlines()  # read all lines to populate file_under_test.newlines
+            if file_under_test.newlines is None:
+                return False
+            if not all((newline == '\n') for newline in file_under_test.newlines):
+                return False
+    return True
+
+
+def test_serialized_component_line_endings(tmp_path: Path) -> None:
+
+    component_uuid = '00c36da8-e22b-43a1-9a87-c3a67e863f49'
+
+    component = Component(
+        component_uuid,
+        Name('Generic Connector 1x27'),
+        Description('A 1x27 soldered wire connector.\n\nNext line'),
+        Keywords('connector, 1x27'),
+        Author('Test R.'),
+        Version('0.2'),
+        Created('2018-10-17T19:13:41Z'),
+        Deprecated(False),
+        GeneratedBy('black magic'),
+        [Category('d0618c29-0436-42da-a388-fdadf7b23892')],
+        SchematicOnly(False),
+        DefaultValue(''),
+        Prefix('J'),
+    )
+
+    component.serialize(str(tmp_path))
+
+    assert check_all_file_newlines_in_dir_are_unix(tmp_path.joinpath(component_uuid))
+
+
+def test_serialized_symbol_line_endings(tmp_path: Path) -> None:
+
+    symbol_uuid = '01b03c10-7334-4bd5-b2bc-942c18325d2b'
+
+    symbol = Symbol(
+        symbol_uuid,
+        Name('Sym name'),
+        Description('A multiline description.\n\nDescription'),
+        Keywords('my, keywords'),
+        Author('Test'),
+        Version('0.2'),
+        Created('2018-10-17T19:13:41Z'),
+        Deprecated(False),
+        GeneratedBy('black magic'),
+        [Category('d0618c29-0436-42da-a388-fdadf7b23892')],
+    )
+
+    symbol.serialize(str(tmp_path))
+
+    assert check_all_file_newlines_in_dir_are_unix(tmp_path.joinpath(symbol_uuid))
+
+
+def test_serialized_device_line_endings(tmp_path: Path) -> None:
+
+    device_uuid = '00652f30-9f89-4027-91f5-7bd684eee751'
+
+    device = Device(
+        device_uuid,
+        Name('Foo'),
+        Description('Bar'),
+        Keywords('foo, bar'),
+        Author('J. Rando'),
+        Version('0.1'),
+        Created('2018-10-17T19:13:41Z'),
+        Deprecated(False),
+        GeneratedBy('black magic'),
+        [Category('ade6d8ff-3c4f-4dac-a939-cc540c87c280')],
+        ComponentUUID('bc911fcc-8b5c-4728-b596-d644797c55da'),
+        PackageUUID('b4e92c64-18c4-44a6-aa39-d1be3e8c29bd'),
+    )
+
+    device.serialize(str(tmp_path))
+
+    assert check_all_file_newlines_in_dir_are_unix(tmp_path.joinpath(device_uuid))
+
+
+def test_serialized_package_line_endings(tmp_path: Path) -> None:
+
+    package_uuid = '009e35ef-1f50-4bf3-ab58-11eb85bf5503'
+
+    package = Package(
+        package_uuid,
+        Name('Soldered Wire Connector 1x19 1.0mm'),
+        Description('A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\n\nGenerated with librepcb-parts-generator (generate_connectors.py)'),
+        Keywords('connector, 1x19, d1.0, connector, soldering, generic'),
+        Author('Danilo B.'),
+        Version('0.1'),
+        Created('2018-10-17T19:13:41Z'),
+        Deprecated(False),
+        GeneratedBy('black magic'),
+        [Category('56a5773f-eeb4-4b39-8cb9-274f3da26f4f')],
+        AssemblyType.THT,
+    )
+
+    package.serialize(str(tmp_path))
+
+    assert check_all_file_newlines_in_dir_are_unix(tmp_path.joinpath(package_uuid))
