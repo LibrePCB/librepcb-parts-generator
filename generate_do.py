@@ -112,7 +112,7 @@ Generated with {GENERATOR_NAME}
         deprecated=Deprecated(False),
         generated_by=GeneratedBy(''),
         categories=[Category(pkgcat)],
-        assembly_type=AssemblyType.AUTO,
+        assembly_type=AssemblyType.SMT,
     )
 
     pads = [('c', 'C', -1), ('a', 'A', 1)] if polarity else [('1', '1', -1), ('2', '2', 1)]
@@ -159,7 +159,7 @@ Generated with {GENERATOR_NAME}
                 stop_mask=StopMaskConfig.AUTO,
                 solder_paste=SolderPasteConfig.AUTO,
                 copper_clearance=CopperClearance(0.0),
-                function=PadFunction.UNSPECIFIED,
+                function=PadFunction.STANDARD_PAD,
                 package_pad=PackagePadUuid(pad_uuid),
                 holes=[],
             ))
@@ -205,17 +205,17 @@ Generated with {GENERATOR_NAME}
         #
         # Documentation
         #
-        outline = Polygon(
-            uuid=_uuid(uuid_ns + 'outline'),
+        body = Polygon(
+            uuid=_uuid(uuid_ns + 'body'),
             layer=Layer('top_documentation'),
             width=Width(line_width),
             fill=Fill(False),
             grab_area=GrabArea(True),
         )
-        _rect(outline,
+        _rect(body,
               left_edge + line_offset, right_edge - line_offset,
               bottom_edge + line_offset, top_edge - line_offset)
-        footprint.add_polygon(outline)
+        footprint.add_polygon(body)
 
         if polarity:
             band = Polygon(
@@ -271,6 +271,35 @@ Generated with {GENERATOR_NAME}
             ss.add_vertex(Vertex(Position(x0, y0), Angle(0)))
             ss.add_vertex(Vertex(Position(x1, y0), Angle(0)))
             footprint.add_polygon(ss)
+
+        #
+        # Package outlines
+        #
+        lead_dx = config.total_length / 2
+        lead_dy = config.contact_width / 2
+        outline = Polygon(
+            uuid=_uuid(uuid_ns + 'outline'),
+            layer=Layer('top_package_outlines'),
+            width=Width(0.0),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(left_edge, top_edge), Angle(0)),
+                Vertex(Position(right_edge, top_edge), Angle(0)),
+                Vertex(Position(right_edge, lead_dy), Angle(0)),
+                Vertex(Position(lead_dx, lead_dy), Angle(0)),
+                Vertex(Position(lead_dx, -lead_dy), Angle(0)),
+                Vertex(Position(right_edge, -lead_dy), Angle(0)),
+                Vertex(Position(right_edge, bottom_edge), Angle(0)),
+                Vertex(Position(left_edge, bottom_edge), Angle(0)),
+                Vertex(Position(left_edge, -lead_dy), Angle(0)),
+                Vertex(Position(-lead_dx, -lead_dy), Angle(0)),
+                Vertex(Position(-lead_dx, lead_dy), Angle(0)),
+                Vertex(Position(left_edge, lead_dy), Angle(0)),
+            ],
+        )
+        _rect(outline, left_edge, right_edge, bottom_edge, top_edge)
+        footprint.add_polygon(outline)
 
         #
         # Courtyard
@@ -360,7 +389,7 @@ if __name__ == '__main__':
             config=config,
             polarity=True,
             pkgcat='dcaa6b6c-0c55-43fd-a320-5dd74a2cdc85',
-            version='0.1',
+            version='0.2',
             create_date='2023-08-15T22:33:08Z',
         )
         generate_pkg(
@@ -369,7 +398,7 @@ if __name__ == '__main__':
             config=config,
             polarity=False,
             pkgcat='dcaa6b6c-0c55-43fd-a320-5dd74a2cdc85',
-            version='0.1',
+            version='0.2',
             create_date='2023-08-15T22:33:08Z',
         )
 
