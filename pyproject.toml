@@ -18,6 +18,7 @@ test = [
     "flake8 ~= 4.0.1",
     "mypy == 1.10.0",
     "isort ~= 5.13.2",
+    "ruff ~= 0.4.7",
 ]
 
 [tool.setuptools.packages.find]
@@ -46,6 +47,13 @@ multi_line_output = 5
 balanced_wrapping = false
 known_typing = "typing"
 sections = "FUTURE,STDLIB,TYPING,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+
+[tool.ruff]
+target-version = "py38"
+line-length = 120
+
+[tool.ruff.format]
+quote-style = "single"
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules"

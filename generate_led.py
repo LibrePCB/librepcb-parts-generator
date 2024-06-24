@@ -1,6 +1,7 @@
 """
 Generate THT LED packages.
 """
+
 import sys
 from math import acos, asin, degrees, sqrt
 from os import path
@@ -11,15 +12,59 @@ from typing import Iterable, List, Optional, Tuple
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
-    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
+    Align,
+    Angle,
+    Author,
+    Category,
+    Circle,
+    Created,
+    Deprecated,
+    Description,
+    Diameter,
+    Fill,
+    GeneratedBy,
+    GrabArea,
+    Height,
+    Keywords,
+    Layer,
+    Name,
+    Polygon,
+    Position,
+    Position3D,
+    Rotation,
+    Rotation3D,
+    Value,
+    Version,
+    Vertex,
+    Width,
 )
 from entities.component import SignalUUID
 from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, Footprint3DModel, FootprintPad,
-    LetterSpacing, LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, PadHole,
-    Shape, ShapeRadius, Size, SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType,
+    AutoRotate,
+    ComponentSide,
+    CopperClearance,
+    DrillDiameter,
+    Footprint,
+    Footprint3DModel,
+    FootprintPad,
+    LetterSpacing,
+    LineSpacing,
+    Mirror,
+    Package,
+    Package3DModel,
+    PackagePad,
+    PackagePadUuid,
+    PadFunction,
+    PadHole,
+    Shape,
+    ShapeRadius,
+    Size,
+    SolderPasteConfig,
+    StopMaskConfig,
+    StrokeText,
+    StrokeWidth,
 )
 
 GENERATOR_NAME = 'librepcb-parts-generator (generate_led.py)'
@@ -81,13 +126,13 @@ class LedConfig:
             standoff_option=('S' + fd(standoff)) if standoff_in_name else '',
             body_color=body_color.upper(),
         )
-        self.pkg_description = \
-            'Generic through-hole LED with {top_diameter:.2f} mm' \
-            ' body diameter.\n\n' \
-            'Body height: {body_height:.2f} mm\n' \
-            'Lead spacing: {lead_spacing:.2f} mm\n' \
-            'Standoff: {standoff:.2f} mm\n' \
-            'Body color: {body_color}' \
+        self.pkg_description = (
+            'Generic through-hole LED with {top_diameter:.2f} mm'
+            ' body diameter.\n\n'
+            'Body height: {body_height:.2f} mm\n'
+            'Lead spacing: {lead_spacing:.2f} mm\n'
+            'Standoff: {standoff:.2f} mm\n'
+            'Body color: {body_color}'
             '\n\nGenerated with {generator}'.format(
                 top_diameter=top_diameter,
                 body_height=body_height,
@@ -96,6 +141,7 @@ class LedConfig:
                 body_color=body_color,
                 generator=GENERATOR_NAME,
             )
+        )
 
         self.dev_name = 'LED ⌀{top_diameter}x{body_height}{standoff_option}/{lead_spacing}mm {body_color}'.format(
             top_diameter=top_diameter,
@@ -170,22 +216,23 @@ def generate_pkg(
             # Footprint pads
             for pad, factor in [('a', 1), ('c', -1)]:
                 pad_uuid = _uuid('pad-{}'.format(pad))
-                footprint.add_pad(FootprintPad(
-                    uuid=pad_uuid,
-                    side=ComponentSide.TOP,
-                    shape=Shape.ROUNDED_RECT,
-                    position=Position(config.lead_spacing / 2 * factor, 0),
-                    rotation=Rotation(90),
-                    size=pad_size,
-                    radius=ShapeRadius(0.0 if pad == 'c' else 1.0),
-                    stop_mask=StopMaskConfig.AUTO,
-                    solder_paste=SolderPasteConfig.OFF,
-                    copper_clearance=CopperClearance(0.0),
-                    function=PadFunction.STANDARD_PAD,
-                    package_pad=PackagePadUuid(pad_uuid),
-                    holes=[PadHole(pad_uuid, DrillDiameter(pad_drill),
-                                   [Vertex(Position(0.0, 0.0), Angle(0.0))])],
-                ))
+                footprint.add_pad(
+                    FootprintPad(
+                        uuid=pad_uuid,
+                        side=ComponentSide.TOP,
+                        shape=Shape.ROUNDED_RECT,
+                        position=Position(config.lead_spacing / 2 * factor, 0),
+                        rotation=Rotation(90),
+                        size=pad_size,
+                        radius=ShapeRadius(0.0 if pad == 'c' else 1.0),
+                        stop_mask=StopMaskConfig.AUTO,
+                        solder_paste=SolderPasteConfig.OFF,
+                        copper_clearance=CopperClearance(0.0),
+                        function=PadFunction.STANDARD_PAD,
+                        package_pad=PackagePadUuid(pad_uuid),
+                        holes=[PadHole(pad_uuid, DrillDiameter(pad_drill), [Vertex(Position(0.0, 0.0), Angle(0.0))])],
+                    )
+                )
 
             # 3D model
             uuid_3d = _uuid(identifier_3d + '-3d')
@@ -195,8 +242,7 @@ def generate_pkg(
             # models were already added.
             if uuid_3d not in generated_3d_uuids:
                 if generate_3d_models:
-                    generate_3d(library, name_3d, uuid_pkg, uuid_3d, config,
-                                vertical, horizontal_offset)
+                    generate_3d(library, name_3d, uuid_pkg, uuid_3d, config, vertical, horizontal_offset)
                 package.add_3d_model(Package3DModel(uuid_3d, Name(name_3d)))
                 generated_3d_uuids.add(uuid_3d)
             footprint.add_3d_model(Footprint3DModel(uuid_3d))
@@ -242,19 +288,21 @@ def generate_pkg(
                 """
                 # Special case: If outer_radius == inner_radius, return a full circle.
                 if outer_radius == inner_radius:
-                    footprint.add_circle(Circle(
-                        uuid=_uuid(identifier),
-                        layer=Layer(layer),
-                        width=Width(line_width),
-                        position=Position(0, 0),
-                        diameter=Diameter(outer_radius * 2),
-                        fill=Fill(False),
-                        grab_area=GrabArea(False),
-                    ))
+                    footprint.add_circle(
+                        Circle(
+                            uuid=_uuid(identifier),
+                            layer=Layer(layer),
+                            width=Width(line_width),
+                            position=Position(0, 0),
+                            diameter=Diameter(outer_radius * 2),
+                            fill=Fill(False),
+                            grab_area=GrabArea(False),
+                        )
+                    )
                     return
 
                 # To calculate the y offset of the flat side, use Pythagoras
-                y = sqrt(outer_radius ** 2 - inner_radius ** 2)
+                y = sqrt(outer_radius**2 - inner_radius**2)
 
                 # Now we can calculate the angle of the circle segment
                 if reduced:
@@ -334,34 +382,38 @@ def generate_pkg(
             )
 
             # Text
-            footprint.add_text(StrokeText(
-                uuid=_uuid('text-name' + identifier_suffix),
-                layer=Layer('top_names'),
-                height=Height(1.0),
-                stroke_width=StrokeWidth(0.2),
-                letter_spacing=LetterSpacing.AUTO,
-                line_spacing=LineSpacing.AUTO,
-                align=Align('center bottom'),
-                position=Position(0.0, (config.bot_diameter / 2) + 0.8),
-                rotation=Rotation(0.0),
-                auto_rotate=AutoRotate(True),
-                mirror=Mirror(False),
-                value=Value('{{NAME}}'),
-            ))
-            footprint.add_text(StrokeText(
-                uuid=_uuid('text-value' + identifier_suffix),
-                layer=Layer('top_values'),
-                height=Height(1.0),
-                stroke_width=StrokeWidth(0.2),
-                letter_spacing=LetterSpacing.AUTO,
-                line_spacing=LineSpacing.AUTO,
-                align=Align('center top'),
-                position=Position(0.0, -(config.bot_diameter / 2) - 0.8),
-                rotation=Rotation(0.0),
-                auto_rotate=AutoRotate(True),
-                mirror=Mirror(False),
-                value=Value('{{VALUE}}'),
-            ))
+            footprint.add_text(
+                StrokeText(
+                    uuid=_uuid('text-name' + identifier_suffix),
+                    layer=Layer('top_names'),
+                    height=Height(1.0),
+                    stroke_width=StrokeWidth(0.2),
+                    letter_spacing=LetterSpacing.AUTO,
+                    line_spacing=LineSpacing.AUTO,
+                    align=Align('center bottom'),
+                    position=Position(0.0, (config.bot_diameter / 2) + 0.8),
+                    rotation=Rotation(0.0),
+                    auto_rotate=AutoRotate(True),
+                    mirror=Mirror(False),
+                    value=Value('{{NAME}}'),
+                )
+            )
+            footprint.add_text(
+                StrokeText(
+                    uuid=_uuid('text-value' + identifier_suffix),
+                    layer=Layer('top_values'),
+                    height=Height(1.0),
+                    stroke_width=StrokeWidth(0.2),
+                    letter_spacing=LetterSpacing.AUTO,
+                    line_spacing=LineSpacing.AUTO,
+                    align=Align('center top'),
+                    position=Position(0.0, -(config.bot_diameter / 2) - 0.8),
+                    rotation=Rotation(0.0),
+                    auto_rotate=AutoRotate(True),
+                    mirror=Mirror(False),
+                    value=Value('{{VALUE}}'),
+                )
+            )
 
         def _add_horizontal_footprint(
             package: Package,
@@ -498,55 +550,63 @@ def generate_pkg(
                     Vertex(Position(-leads_x, body_y_bot), Angle(0)),
                 ]
 
-            footprint.add_polygon(Polygon(
-                uuid=_uuid('polygon-outline' + identifier_suffix),
-                layer=Layer('top_package_outlines'),
-                width=Width(0.0),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                vertices=_generate_outline(),
-            ))
+            footprint.add_polygon(
+                Polygon(
+                    uuid=_uuid('polygon-outline' + identifier_suffix),
+                    layer=Layer('top_package_outlines'),
+                    width=Width(0.0),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=_generate_outline(),
+                )
+            )
 
             # Courtyard
             courtyard_offset = 0.5 if config.bot_diameter >= 10.0 else 0.4
-            footprint.add_polygon(Polygon(
-                uuid=_uuid('polygon-courtyard' + identifier_suffix),
-                layer=Layer('top_courtyard'),
-                width=Width(0.0),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                vertices=_generate_outline(courtyard_offset, 0.1),
-            ))
+            footprint.add_polygon(
+                Polygon(
+                    uuid=_uuid('polygon-courtyard' + identifier_suffix),
+                    layer=Layer('top_courtyard'),
+                    width=Width(0.0),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=_generate_outline(courtyard_offset, 0.1),
+                )
+            )
 
             # Text
-            footprint.add_text(StrokeText(
-                uuid=_uuid('text-name' + identifier_suffix),
-                layer=Layer('top_names'),
-                height=Height(1.0),
-                stroke_width=StrokeWidth(0.2),
-                letter_spacing=LetterSpacing.AUTO,
-                line_spacing=LineSpacing.AUTO,
-                align=Align('center top'),
-                position=Position(0.0, -1.27),
-                rotation=Rotation(0.0),
-                auto_rotate=AutoRotate(True),
-                mirror=Mirror(False),
-                value=Value('{{NAME}}'),
-            ))
-            footprint.add_text(StrokeText(
-                uuid=_uuid('text-value' + identifier_suffix),
-                layer=Layer('top_values'),
-                height=Height(1.0),
-                stroke_width=StrokeWidth(0.2),
-                letter_spacing=LetterSpacing.AUTO,
-                line_spacing=LineSpacing.AUTO,
-                align=Align('center top'),
-                position=Position(0.0, -3.0),
-                rotation=Rotation(0.0),
-                auto_rotate=AutoRotate(True),
-                mirror=Mirror(False),
-                value=Value('{{VALUE}}'),
-            ))
+            footprint.add_text(
+                StrokeText(
+                    uuid=_uuid('text-name' + identifier_suffix),
+                    layer=Layer('top_names'),
+                    height=Height(1.0),
+                    stroke_width=StrokeWidth(0.2),
+                    letter_spacing=LetterSpacing.AUTO,
+                    line_spacing=LineSpacing.AUTO,
+                    align=Align('center top'),
+                    position=Position(0.0, -1.27),
+                    rotation=Rotation(0.0),
+                    auto_rotate=AutoRotate(True),
+                    mirror=Mirror(False),
+                    value=Value('{{NAME}}'),
+                )
+            )
+            footprint.add_text(
+                StrokeText(
+                    uuid=_uuid('text-value' + identifier_suffix),
+                    layer=Layer('top_values'),
+                    height=Height(1.0),
+                    stroke_width=StrokeWidth(0.2),
+                    letter_spacing=LetterSpacing.AUTO,
+                    line_spacing=LineSpacing.AUTO,
+                    align=Align('center top'),
+                    position=Position(0.0, -3.0),
+                    rotation=Rotation(0.0),
+                    auto_rotate=AutoRotate(True),
+                    mirror=Mirror(False),
+                    value=Value('{{VALUE}}'),
+                )
+            )
 
         # Add footprints
         _add_vertical_footprint(
@@ -616,52 +676,72 @@ def generate_3d(
     standoff_height = min(config.standoff - standoff_clearance, 1.0)
     standoff_width = lead_width + 0.3
 
-    body = cq.Workplane('XY') \
-        .cylinder(ring_height, config.bot_diameter / 2, centered=(True, True, False)) \
-        .faces('>Z') \
-        .cylinder(cylinder_height, config.top_diameter / 2, centered=(True, True, False)) \
-        .faces('>Z') \
-        .sphere(config.top_diameter / 2) \
-        .center(-config.bot_diameter / 2, 0) \
+    body = (
+        cq.Workplane('XY')
+        .cylinder(ring_height, config.bot_diameter / 2, centered=(True, True, False))
+        .faces('>Z')
+        .cylinder(cylinder_height, config.top_diameter / 2, centered=(True, True, False))
+        .faces('>Z')
+        .sphere(config.top_diameter / 2)
+        .center(-config.bot_diameter / 2, 0)
         .box((config.bot_diameter - config.top_diameter - 0.1) / 2, 20, 20, centered=(False, True, True), combine='cut')
+    )
 
     if vertical:
         body = body.translate((0, 0, config.standoff))
-        leg = cq.Workplane('XY') \
-            .box(lead_width, lead_width, StepConstants.THT_LEAD_SOLDER_LENGTH + config.standoff + 0.1, centered=(True, True, False)) \
-            .faces('<Z') \
-            .workplane(offset=StepConstants.THT_LEAD_SOLDER_LENGTH, invert=True) \
+        leg = (
+            cq.Workplane('XY')
+            .box(
+                lead_width,
+                lead_width,
+                StepConstants.THT_LEAD_SOLDER_LENGTH + config.standoff + 0.1,
+                centered=(True, True, False),
+            )
+            .faces('<Z')
+            .workplane(offset=StepConstants.THT_LEAD_SOLDER_LENGTH, invert=True)
             .box(standoff_width, lead_width, standoff_height, centered=(True, True, False))
+        )
     else:
         bend_radius = lead_width
         horizontal_length = horizontal_offset - bend_radius
         extra_standoff = max(config.standoff - horizontal_length - (config.bot_diameter / 2), 0)
-        body = body.rotate((0, 0, 0), (1, 0, 0), angleDegrees=-90) \
-            .translate((0, horizontal_offset, (config.bot_diameter / 2) + extra_standoff))
-        leg_path = cq.Workplane('YZ') \
-            .vLine((config.bot_diameter / 2) - bend_radius + extra_standoff + StepConstants.THT_LEAD_SOLDER_LENGTH) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
+        body = body.rotate((0, 0, 0), (1, 0, 0), angleDegrees=-90).translate(
+            (0, horizontal_offset, (config.bot_diameter / 2) + extra_standoff)
+        )
+        leg_path = (
+            cq.Workplane('YZ')
+            .vLine((config.bot_diameter / 2) - bend_radius + extra_standoff + StepConstants.THT_LEAD_SOLDER_LENGTH)
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1)
             .hLine(horizontal_length + 0.1)
-        leg = cq.Workplane('XY') \
-            .rect(lead_width, lead_width) \
-            .sweep(leg_path)
+        )
+        leg = cq.Workplane('XY').rect(lead_width, lead_width).sweep(leg_path)
         if extra_standoff > 0:
-            leg = leg.faces('<Z') \
-                .workplane(offset=StepConstants.THT_LEAD_SOLDER_LENGTH, invert=True) \
+            leg = (
+                leg.faces('<Z')
+                .workplane(offset=StepConstants.THT_LEAD_SOLDER_LENGTH, invert=True)
                 .box(standoff_width, lead_width, standoff_height, centered=(True, True, False))
+            )
         if config.standoff < horizontal_length:
-            leg = leg.faces('>Z') \
-                .workplane(offset=-lead_width / 2) \
-                .center(0, horizontal_length + bend_radius - config.standoff) \
+            leg = (
+                leg.faces('>Z')
+                .workplane(offset=-lead_width / 2)
+                .center(0, horizontal_length + bend_radius - config.standoff)
                 .box(standoff_width, standoff_height, lead_width, centered=(True, False, True))
+            )
 
     assembly = StepAssembly(name)
     assembly.add_body(body, 'body', cq.Color(*config.body_color_rgba))
-    assembly.add_body(leg, 'leg-1', StepColor.LEAD_THT, location=cq.Location(
-        (-config.lead_spacing / 2, 0, -StepConstants.THT_LEAD_SOLDER_LENGTH))
+    assembly.add_body(
+        leg,
+        'leg-1',
+        StepColor.LEAD_THT,
+        location=cq.Location((-config.lead_spacing / 2, 0, -StepConstants.THT_LEAD_SOLDER_LENGTH)),
     )
-    assembly.add_body(leg, 'leg-2', StepColor.LEAD_THT, location=cq.Location(
-        (config.lead_spacing / 2, 0, -StepConstants.THT_LEAD_SOLDER_LENGTH))
+    assembly.add_body(
+        leg,
+        'leg-2',
+        StepColor.LEAD_THT,
+        location=cq.Location((config.lead_spacing / 2, 0, -StepConstants.THT_LEAD_SOLDER_LENGTH)),
     )
 
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
@@ -679,6 +759,7 @@ def generate_dev(
 ) -> None:
     category = 'dev'
     for config in configs:
+
         def _uuid(identifier: str) -> str:
             return uuid(category, config.dev_name, identifier)
 
@@ -700,14 +781,18 @@ def generate_dev(
             component_uuid=ComponentUUID('2b24b18d-bd95-4fb4-8fe6-bce1d020ead4'),
             package_uuid=PackageUUID(uuid('pkg', config.pkg_name, 'pkg')),
         )
-        device.add_pad(ComponentPad(
-            pad_uuid=uuid('pkg', config.pkg_name, 'pad-a'),
-            signal=SignalUUID('f1467b5c-cc7d-44b4-8076-d729f35b3a6a'),
-        ))
-        device.add_pad(ComponentPad(
-            pad_uuid=uuid('pkg', config.pkg_name, 'pad-c'),
-            signal=SignalUUID('7b023430-b68f-403a-80b8-c7deb12e7a0c'),
-        ))
+        device.add_pad(
+            ComponentPad(
+                pad_uuid=uuid('pkg', config.pkg_name, 'pad-a'),
+                signal=SignalUUID('f1467b5c-cc7d-44b4-8076-d729f35b3a6a'),
+            )
+        )
+        device.add_pad(
+            ComponentPad(
+                pad_uuid=uuid('pkg', config.pkg_name, 'pad-c'),
+                signal=SignalUUID('7b023430-b68f-403a-80b8-c7deb12e7a0c'),
+            )
+        )
 
         device.serialize(path.join('out', library, category))
 

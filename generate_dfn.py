@@ -2,6 +2,7 @@
 Generate DFN packages
 
 """
+
 from os import makedirs, path
 from uuid import uuid4
 
@@ -17,9 +18,9 @@ GENERATOR_NAME = 'librepcb-parts-generator (generate_dfn.py)'
 SILKSCREEN_OFFSET = 0.15
 SILKSCREEN_LINE_WIDTH = 0.254
 LABEL_OFFSET = 1.0
-TEXT_ATTRS = "(height 1.0) (stroke_width 0.2) (letter_spacing auto) (line_spacing auto)"
+TEXT_ATTRS = '(height 1.0) (stroke_width 0.2) (letter_spacing auto) (line_spacing auto)'
 
-MIN_CLEARANCE = 0.20    # For checking only --> warns if violated
+MIN_CLEARANCE = 0.20  # For checking only --> warns if violated
 MIN_TRACE = 0.10
 
 
@@ -77,40 +78,43 @@ def generate_pkg(
     category = 'pkg'
     lines = []
 
-    full_name = name.format(length=fd(config.length),
-                            width=fd(config.width),
-                            height=fd(config.height_nominal),
-                            pin_count=config.pin_count,
-                            pitch=fd(config.pitch))
+    full_name = name.format(
+        length=fd(config.length),
+        width=fd(config.width),
+        height=fd(config.height_nominal),
+        pin_count=config.pin_count,
+        pitch=fd(config.pitch),
+    )
 
     # Add pad length for otherwise identical names/packages
     if config.print_pad:
-        full_name += "P{:s}".format(fd(config.lead_length))
+        full_name += 'P{:s}'.format(fd(config.lead_length))
 
     if make_exposed:
         # According to: http://www.ocipcdc.org/archive/What_is_New_in_IPC-7351C_03_11_2015.pdf
         exp_width = fd(config.exposed_width)
         exp_length = fd(config.exposed_length)
         if exp_width == exp_length:
-            full_name += "T{}".format(exp_width)
+            full_name += 'T{}'.format(exp_width)
         else:
-            full_name += "T{}X{}".format(exp_width, exp_length)
+            full_name += 'T{}X{}'.format(exp_width, exp_length)
 
     # Override name if specified
     if config.name:
         full_name = config.name
 
-    full_description = description.format(height=config.height_nominal,
-                                          pin_count=config.pin_count,
-                                          pitch=config.pitch,
-                                          width=config.width,
-                                          length=config.length)
+    full_description = description.format(
+        height=config.height_nominal,
+        pin_count=config.pin_count,
+        pitch=config.pitch,
+        width=config.width,
+        length=config.length,
+    )
     if make_exposed:
-        full_description += "\\nExposed Pad: {:.2f} x {:.2f} mm".format(
-            config.exposed_width, config.exposed_length)
+        full_description += '\\nExposed Pad: {:.2f} x {:.2f} mm'.format(config.exposed_width, config.exposed_length)
 
     if config.print_pad:
-        full_description += "\\nPad length: {:.2f} mm".format(config.lead_length)
+        full_description += '\\nPad length: {:.2f} mm'.format(config.lead_length)
 
     def _uuid(identifier: str) -> str:
         return uuid(category, full_name, identifier)
@@ -126,8 +130,7 @@ def generate_pkg(
     # General info
     lines.append('(librepcb_package {}'.format(uuid_pkg))
     lines.append(' (name "{}")'.format(full_name))
-    lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_description,
-                                                                     GENERATOR_NAME))
+    lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_description, GENERATOR_NAME))
     if config.keywords:
         lines.append(' (keywords "dfn{},{},{}")'.format(config.pin_count, keywords, config.keywords.lower()))
     else:
@@ -160,14 +163,14 @@ def generate_pkg(
         if make_exposed:
             clearance = (config.width / 2) - config.lead_length - (exposed_length / 2)
             if clearance < MIN_CLEARANCE:
-                print("Increasing clearance from {:.2f} to {:.2f}".format(clearance, MIN_CLEARANCE))
+                print('Increasing clearance from {:.2f} to {:.2f}'.format(clearance, MIN_CLEARANCE))
                 d_clearance = (MIN_CLEARANCE - clearance) / 2
                 pad_length = pad_length - d_clearance
                 exposed_length = exposed_length - 2 * d_clearance
                 abs_pad_pos_x = abs_pad_pos_x + (d_clearance / 2)
 
             if exposed_length < MIN_TRACE:
-                print("Increasing exposed path width from {:.2f} to {:.2f}".format(exposed_length, MIN_TRACE))
+                print('Increasing exposed path width from {:.2f} to {:.2f}'.format(exposed_length, MIN_TRACE))
                 d_exp = MIN_TRACE - exposed_length
                 exposed_length = exposed_length + d_exp
                 pad_length = pad_length - (d_exp / 2)
@@ -179,35 +182,47 @@ def generate_pkg(
             pad_pos_y = get_y(pad_idx % half_n_pads + 1, half_n_pads, config.pitch, False)
 
             if pad_idx < (config.pin_count / 2):
-                pad_pos_x = - abs_pad_pos_x
+                pad_pos_x = -abs_pad_pos_x
             else:
                 pad_pos_x = abs_pad_pos_x
-                pad_pos_y = - pad_pos_y
+                pad_pos_y = -pad_pos_y
 
             lines.append('  (pad {} (side top) (shape rect)'.format(uuid_pads[pad_idx]))
-            lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                         ff(pad_pos_x), ff(pad_pos_y),
-                         ff(pad_length), ff(config.lead_width)))
+            lines.append(
+                '   (position {} {}) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
+                    ff(pad_pos_x), ff(pad_pos_y), ff(pad_length), ff(config.lead_width)
+                )
+            )
             lines.append('  )')
 
         # Make exposed pad, if required
         # TODO: Handle pin1_corner_dx_dy in config once custom pad shapes are possible
         if make_exposed:
             lines.append('  (pad {} (side top) (shape rect)'.format(uuid_exp))
-            lines.append('   (position 0.0 0.0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                         ff(exposed_length), ff(config.exposed_width)))
+            lines.append(
+                '   (position 0.0 0.0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
+                    ff(exposed_length), ff(config.exposed_width)
+                )
+            )
             lines.append('  )')
 
             # Measure clearance pad-exposed pad
             clearance = abs(pad_pos_x) - (pad_length / 2) - (exposed_length / 2)
             if round(clearance, ndigits=2) < MIN_CLEARANCE:
-                print("Warning: minimal clearance violated in {}: {:.4f} < {:.2f}".format(full_name, clearance, MIN_CLEARANCE))
+                print(
+                    'Warning: minimal clearance violated in {}: {:.4f} < {:.2f}'.format(
+                        full_name, clearance, MIN_CLEARANCE
+                    )
+                )
 
         # Create Silk Screen (lines and dot only)
-        silk_down = (config.length / 2 - SILKSCREEN_OFFSET -
-                     get_y(1, half_n_pads, config.pitch, False) -
-                     config.lead_width / 2 -
-                     SILKSCREEN_LINE_WIDTH / 2)    # required for round ending of line
+        silk_down = (
+            config.length / 2
+            - SILKSCREEN_OFFSET
+            - get_y(1, half_n_pads, config.pitch, False)
+            - config.lead_width / 2
+            - SILKSCREEN_LINE_WIDTH / 2
+        )  # required for round ending of line
 
         # Measure clearance silkscreen to exposed pad
         silk_top_line_height = config.length / 2
@@ -216,29 +231,36 @@ def generate_pkg(
             if round(silk_clearance, ndigits=2) < SILKSCREEN_OFFSET:
                 silk_top_line_height = silk_top_line_height + (SILKSCREEN_OFFSET - silk_clearance)
                 silk_down = silk_down + (SILKSCREEN_OFFSET - silk_clearance)
-                print("Increasing exp-silk clearance from {:.4f} to {:.2f}".format(silk_clearance, SILKSCREEN_OFFSET))
+                print('Increasing exp-silk clearance from {:.4f} to {:.2f}'.format(silk_clearance, SILKSCREEN_OFFSET))
 
         for idx, silkscreen_pos in enumerate([-1, 1]):
             uuid_silkscreen_poly = _uuid('polygon-silkscreen-{}-{}'.format(key, idx))
             lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_poly))
-            lines.append('   (width {}) (fill false) (grab_area false)'.format(
-                SILKSCREEN_LINE_WIDTH))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
-                         ff(-config.width / 2),
-                         ff(silkscreen_pos * (silk_top_line_height - silk_down))))
+            lines.append('   (width {}) (fill false) (grab_area false)'.format(SILKSCREEN_LINE_WIDTH))
+            lines.append(
+                '   (vertex (position {} {}) (angle 0.0))'.format(
+                    ff(-config.width / 2), ff(silkscreen_pos * (silk_top_line_height - silk_down))
+                )
+            )
             # If this is negative, the silkscreen line has to be moved away from
             # the real position, in order to keep the required distance to the
             # pad. We then only draw a single line, so we can omit the parts below.
             if silk_down > 0:
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
-                             ff(-config.width / 2),
-                             ff(silkscreen_pos * silk_top_line_height)))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
-                             ff(config.width / 2),
-                             ff(silkscreen_pos * silk_top_line_height)))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
-                         ff(config.width / 2),
-                         ff(silkscreen_pos * (silk_top_line_height - silk_down))))
+                lines.append(
+                    '   (vertex (position {} {}) (angle 0.0))'.format(
+                        ff(-config.width / 2), ff(silkscreen_pos * silk_top_line_height)
+                    )
+                )
+                lines.append(
+                    '   (vertex (position {} {}) (angle 0.0))'.format(
+                        ff(config.width / 2), ff(silkscreen_pos * silk_top_line_height)
+                    )
+                )
+            lines.append(
+                '   (vertex (position {} {}) (angle 0.0))'.format(
+                    ff(config.width / 2), ff(silkscreen_pos * (silk_top_line_height - silk_down))
+                )
+            )
 
             lines.append('  )')
 
@@ -251,14 +273,14 @@ def generate_pkg(
             half_n_pads = config.pin_count // 2
             pad_pos_y = get_y(pad_idx % half_n_pads + 1, half_n_pads, config.pitch, False)
             if pad_idx >= (config.pin_count / 2):
-                pad_pos_y = - pad_pos_y
+                pad_pos_y = -pad_pos_y
             y_min = pad_pos_y - config.lead_width / 2
             y_max = pad_pos_y + config.lead_width / 2
 
             x_max = config.width / 2
             x_min = x_max - config.lead_length
             if pad_idx < (config.pin_count / 2):
-                x_min, x_max = - x_min, - x_max
+                x_min, x_max = -x_min, -x_max
 
             # Convert numbers to librepcb format
             x_min_str, x_max_str = ff(x_min), ff(x_max)
@@ -277,8 +299,8 @@ def generate_pkg(
         if make_exposed:
             uuid_docu_exposed = _uuid('lead-exposed')
 
-            x_min, x_max = - config.exposed_length / 2, config.exposed_length / 2
-            y_min, y_max = - config.exposed_width / 2, config.exposed_width / 2
+            x_min, x_max = -config.exposed_length / 2, config.exposed_length / 2
+            y_min, y_max = -config.exposed_width / 2, config.exposed_width / 2
 
             lines.append('  (polygon {} (layer top_documentation)'.format(uuid_docu_exposed))
             lines.append('   (width 0.0) (fill true) (grab_area false)')
@@ -328,12 +350,11 @@ def generate_pkg(
 
         uuid_silkscreen_circ = _uuid('circle-silkscreen-{}'.format(key))
         lines.append('  (circle {} (layer top_placement)'.format(uuid_silkscreen_circ))
-        lines.append('   (width 0.0) (fill true) (grab_area false) '
-                     '(diameter {}) (position {} {})'.format(
-                         ff(silkscreen_circ_dia),
-                         ff(silk_circ_x),
-                         ff(silk_circ_y)
-                     ))
+        lines.append(
+            '   (width 0.0) (fill true) (grab_area false) ' '(diameter {}) (position {} {})'.format(
+                ff(silkscreen_circ_dia), ff(silk_circ_x), ff(silk_circ_y)
+            )
+        )
         lines.append('  )')
 
         # Add name and value labels
@@ -342,14 +363,14 @@ def generate_pkg(
 
         lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
         lines.append('   {}'.format(TEXT_ATTRS))
-        lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(
-            config.length / 2 + LABEL_OFFSET))
+        lines.append(
+            '   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(config.length / 2 + LABEL_OFFSET)
+        )
         lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
         lines.append('  )')
         lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
         lines.append('   {}'.format(TEXT_ATTRS))
-        lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(
-            -config.length / 2 - LABEL_OFFSET))
+        lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(-config.length / 2 - LABEL_OFFSET))
         lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
         lines.append('  )')
 
@@ -394,11 +415,11 @@ if __name__ == '__main__':
                 author='Hannes Badertscher',
                 name='DFN{pitch}P{length}X{width}X{height}-{pin_count}',
                 description='{pin_count}-pin Dual Flat No-Lead package (DFN), '
-                            'standardized by JEDEC MO-229F.\\n\\n'
-                            'Pitch: {pitch:.2f} mm\\n'
-                            'Nominal width: {width:.2f} mm\\n'
-                            'Nominal length: {length:.2f} mm\\n'
-                            'Height: {height:.2f}mm',
+                'standardized by JEDEC MO-229F.\\n\\n'
+                'Pitch: {pitch:.2f} mm\\n'
+                'Nominal width: {width:.2f} mm\\n'
+                'Nominal length: {length:.2f} mm\\n'
+                'Height: {height:.2f}mm',
                 pkgcat='88cbb15c-2b69-4612-8764-c5d323f88f13',
                 keywords='dfn,dual flat no-leads,mo-229f',
                 config=config,
@@ -408,7 +429,7 @@ if __name__ == '__main__':
             if name not in generated_packages:
                 generated_packages.append(name)
             else:
-                print("Duplicate name found: {}".format(name))
+                print('Duplicate name found: {}'.format(name))
 
     for config in THIRD_CONFIGS:
         # Find out which configs to create
@@ -425,10 +446,10 @@ if __name__ == '__main__':
                 author='Hannes Badertscher',
                 name='DFN{pitch}P{length}X{width}X{height}-{pin_count}',
                 description='{pin_count}-pin Dual Flat No-Lead package (DFN), '
-                            'Pitch: {pitch:.2f} mm\\n'
-                            'Nominal width: {width:.2f} mm\\n'
-                            'Nominal length: {length:.2f} mm\\n'
-                            'Height: {height:.2f}mm',
+                'Pitch: {pitch:.2f} mm\\n'
+                'Nominal width: {width:.2f} mm\\n'
+                'Nominal length: {length:.2f} mm\\n'
+                'Height: {height:.2f}mm',
                 pkgcat='88cbb15c-2b69-4612-8764-c5d323f88f13',
                 keywords='dfn,dual flat no-leads',
                 config=config,
@@ -438,6 +459,6 @@ if __name__ == '__main__':
             if name not in generated_packages:
                 generated_packages.append(name)
             else:
-                print("Duplicate name found: {}".format(name))
+                print('Duplicate name found: {}'.format(name))
 
     save_cache(uuid_cache_file, uuid_cache)
