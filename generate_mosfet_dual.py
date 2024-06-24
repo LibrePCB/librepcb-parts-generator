@@ -172,6 +172,7 @@ def generate_dev(
 
 if __name__ == '__main__':
     # Diodes Incorporated
+    # fmt: off
     generate_dev(
         library='Diodes_Incorporated.lplib',
         name='{name}',
@@ -255,4 +256,5 @@ if __name__ == '__main__':
                       'https://www.diodes.com/assets/Datasheets/DMG6602SVTQ.pdf'),
         ],
     )
+    # fmt: on
     save_cache(uuid_cache_file, uuid_cache)
