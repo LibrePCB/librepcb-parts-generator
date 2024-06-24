@@ -8,6 +8,7 @@ authors = [
 requires-python = ">=3.8"
 dependencies = [
     "cadquery == 2.3.1",
+    "numpy < 2",  # Dependency of cadquery, but not working with v2.x
 ]
 version = "0.1.0"
 
