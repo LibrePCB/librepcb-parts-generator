@@ -355,7 +355,9 @@ def generate_pkg(
         ))
 
         if config.extended_doc_fn:
-            config.extended_doc_fn(config, _uuid, footprint)
+            def _get_uuid(identifier: str) -> str:
+                return _uuid(identifier + '-' + key)
+            config.extended_doc_fn(config, _get_uuid, footprint)
 
         # As discussed in https://github.com/LibrePCB-Libraries/LibrePCB_Base.lplib/pull/16
         # the silkscreen circle should have size SILKSCREEN_LINE_WIDTH for small packages,

@@ -10124,7 +10124,8 @@ pkg-sensirion_sgp30_sgpc3-circle-silkscreen-reflow,be20887c-0061-4a13-b871-fc160
 pkg-sensirion_sgp30_sgpc3-exposed,302f3350-5ec8-4968-82cc-75e60e68e1bb
 pkg-sensirion_sgp30_sgpc3-footprint-hand-soldering,d26c3f69-c829-4c65-b7dd-a7d160ae7468
 pkg-sensirion_sgp30_sgpc3-footprint-reflow,218d0e63-5816-495f-9bbf-c9d4658d2f7b
-pkg-sensirion_sgp30_sgpc3-hole-circle-doc,cf1101a8-48b0-4cb4-b597-3190480488fe
+pkg-sensirion_sgp30_sgpc3-hole-circle-doc-hand-soldering,cf1101a8-48b0-4cb4-b597-3190480488fe
+pkg-sensirion_sgp30_sgpc3-hole-circle-doc-reflow,cf1101a8-48b0-4cb4-b597-3190480488fe
 pkg-sensirion_sgp30_sgpc3-lead-1,3179e830-16c0-41d2-a018-322320f05908
 pkg-sensirion_sgp30_sgpc3-lead-2,4b66ba03-4e9c-42e2-bd6f-e5ce61af3d89
 pkg-sensirion_sgp30_sgpc3-lead-3,95a77fd9-f149-4f6c-b689-785d873b3142
@@ -10158,7 +10159,8 @@ pkg-sensirion_sht2x-circle-silkscreen-reflow,43cc877d-700b-4849-a591-8fd56562e83
 pkg-sensirion_sht2x-exposed,57a25240-5688-4966-858b-c896110b189f
 pkg-sensirion_sht2x-footprint-hand-soldering,aa717618-140a-459e-89d0-8d6becef577e
 pkg-sensirion_sht2x-footprint-reflow,7b05587f-2094-4ae4-8bc4-d2f082fd7591
-pkg-sensirion_sht2x-hole-polygon-doc,372f6165-8416-4ced-8e42-31dd7a41799a
+pkg-sensirion_sht2x-hole-polygon-doc-hand-soldering,6e390cd2-1ccb-4705-acd0-fa9cc40a2c41
+pkg-sensirion_sht2x-hole-polygon-doc-reflow,372f6165-8416-4ced-8e42-31dd7a41799a
 pkg-sensirion_sht2x-lead-1,7fb3407e-aa0c-4896-8ca3-69e94302bd29
 pkg-sensirion_sht2x-lead-2,2d65cdfa-c0bf-4013-a74f-4ddfc89ee233
 pkg-sensirion_sht2x-lead-3,9629ad51-f9a7-4424-bae5-a754fcf2f34c
@@ -10192,7 +10194,8 @@ pkg-sensirion_shtcx-circle-silkscreen-reflow,8ddde6e6-1a44-4763-b294-acff9af3751
 pkg-sensirion_shtcx-exposed,66d250d4-62ee-41e5-b8ef-901bfa2ac00d
 pkg-sensirion_shtcx-footprint-hand-soldering,deaa3302-894a-494a-b4c4-e3223be6e721
 pkg-sensirion_shtcx-footprint-reflow,022e4e22-6a97-4ca1-836b-fa4d423db568
-pkg-sensirion_shtcx-hole-circle-doc,bbb1d564-b416-4cca-8b4b-2b8585edb624
+pkg-sensirion_shtcx-hole-circle-doc-hand-soldering,ac7deb14-27ed-4148-bf28-a520694da36e
+pkg-sensirion_shtcx-hole-circle-doc-reflow,bbb1d564-b416-4cca-8b4b-2b8585edb624
 pkg-sensirion_shtcx-lead-1,7cfbf512-2c22-460a-bd66-ed8df65fe11c
 pkg-sensirion_shtcx-lead-2,14d03173-a4fe-4c7d-8e5e-39538adf2500
 pkg-sensirion_shtcx-lead-3,3491f826-382f-4188-ae24-09d3a20fc6dd
