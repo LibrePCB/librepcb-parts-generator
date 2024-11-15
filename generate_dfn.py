@@ -12,7 +12,8 @@ from common import init_cache, now, save_cache
 from dfn_configs import JEDEC_CONFIGS, THIRD_CONFIGS, DfnConfig
 from entities.common import (
     Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
-    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
+    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width,
+    generate_courtyard
 )
 from entities.package import (
     AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
@@ -25,6 +26,7 @@ GENERATOR_NAME = 'librepcb-parts-generator (generate_dfn.py)'
 SILKSCREEN_OFFSET = 0.15
 SILKSCREEN_LINE_WIDTH = 0.254
 LABEL_OFFSET = 1.0
+COURTYARD_EXCESS = 0.2
 
 MIN_CLEARANCE = 0.20    # For checking only --> warns if violated
 MIN_TRACE = 0.10
@@ -141,12 +143,12 @@ def generate_pkg(
         description=Description(full_description),
         keywords=Keywords(full_keywords),
         author=Author(author),
-        version=Version('0.1.2'),
+        version=Version('0.2'),
         created=Created(create_date or now()),
         deprecated=Deprecated(False),
         generated_by=GeneratedBy(''),
         categories=[Category(pkgcat)],
-        assembly_type=AssemblyType.AUTO,
+        assembly_type=AssemblyType.SMT,
     )
 
     # Create pads
@@ -211,7 +213,7 @@ def generate_pkg(
                 stop_mask=StopMaskConfig.AUTO,
                 solder_paste=SolderPasteConfig.AUTO,
                 copper_clearance=CopperClearance(0.0),
-                function=PadFunction.UNSPECIFIED,
+                function=PadFunction.STANDARD_PAD,
                 package_pad=PackagePadUuid(uuid_pads[pad_idx]),
                 holes=[],
             ))
@@ -230,7 +232,7 @@ def generate_pkg(
                 stop_mask=StopMaskConfig.AUTO,
                 solder_paste=SolderPasteConfig.AUTO,
                 copper_clearance=CopperClearance(0.0),
-                function=PadFunction.UNSPECIFIED,
+                function=PadFunction.STANDARD_PAD,
                 package_pad=PackagePadUuid(uuid_exp),
                 holes=[],
             ))
@@ -382,6 +384,32 @@ def generate_pkg(
             GrabArea(False),
             Diameter(silkscreen_circ_dia),
             Position(silk_circ_x, silk_circ_y),
+        ))
+
+        # Package Outline
+        dx = config.width / 2
+        dy = config.length / 2
+        footprint.add_polygon(Polygon(
+            uuid=_uuid('polygon-outline-{}'.format(key)),
+            layer=Layer('top_package_outlines'),
+            width=Width(0),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(-dx, dy), Angle(0)),  # NW
+                Vertex(Position(dx, dy), Angle(0)),  # NE
+                Vertex(Position(dx, -dy), Angle(0)),  # SE
+                Vertex(Position(-dx, -dy), Angle(0)),  # SW
+            ],
+        ))
+
+        # Courtyard
+        footprint.add_polygon(generate_courtyard(
+            uuid=_uuid('polygon-courtyard-{}'.format(key)),
+            max_x=config.width / 2,
+            max_y=config.length / 2,
+            excess_x=COURTYARD_EXCESS,
+            excess_y=COURTYARD_EXCESS,
         ))
 
         # Add name and value labels
