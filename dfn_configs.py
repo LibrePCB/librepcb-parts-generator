@@ -5,7 +5,7 @@ Configuration file, containing all available DFN configs.
 
 from typing import Callable, Optional
 
-from entities.common import Circle, Diameter, Fill, GrabArea, Layer, Position, Width
+from entities.common import Angle, Circle, Diameter, Fill, GrabArea, Layer, Polygon, Position, Vertex, Width
 from entities.package import Footprint
 
 # Maximal lead width as a function of pitch, Table 4 in the JEDEC
@@ -285,6 +285,25 @@ def draw_circle(diameter: float) -> Callable[[DfnConfig, Callable[[str], str], F
     return _draw
 
 
+def draw_rect(x: float, y: float, width: float, height: float) -> Callable[[DfnConfig, Callable[[str], str], Footprint], None]:
+    def _draw(config: DfnConfig, uuid: Callable[[str], str], footprint: Footprint) -> None:
+        footprint.add_polygon(Polygon(
+            uuid=uuid('hole-polygon-doc'),
+            layer=Layer('top_documentation'),
+            width=Width(0),
+            fill=Fill(True),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(x - width / 2, y + height / 2), Angle(0)),
+                Vertex(Position(x + width / 2, y + height / 2), Angle(0)),
+                Vertex(Position(x + width / 2, y - height / 2), Angle(0)),
+                Vertex(Position(x - width / 2, y - height / 2), Angle(0)),
+                Vertex(Position(x - width / 2, y + height / 2), Angle(0)),
+            ],
+        ))
+    return _draw
+
+
 THIRD_CONFIGS = [
     # length, width, pitch, pin_count, height_nominal, height_max, lead_length, exposed_width, exposed_length, keywords
 
@@ -325,6 +344,7 @@ THIRD_CONFIGS = [
         library="Sensirion.lplib",
         no_exp=False,
         pin1_corner_dx_dy=0.2,
+        extended_doc_fn=draw_rect(x=0, y=-0.7, width=2.2, height=0.6),
     ),
     DfnConfig(
         length=2.45,
