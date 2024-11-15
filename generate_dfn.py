@@ -2,6 +2,7 @@
 Generate DFN packages
 
 """
+import sys
 from os import path
 from uuid import uuid4
 
@@ -16,9 +17,9 @@ from entities.common import (
     generate_courtyard
 )
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
-    Mirror, Package, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size, SolderPasteConfig,
-    StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, Footprint3DModel, FootprintPad, LetterSpacing,
+    LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size,
+    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
 
 GENERATOR_NAME = 'librepcb-parts-generator (generate_dfn.py)'
@@ -81,6 +82,7 @@ def generate_pkg(
     keywords: str,
     config: DfnConfig,
     make_exposed: bool,
+    generate_3d_models: bool,
     create_date: Optional[str] = None,
 ) -> str:
     category = 'pkg'
@@ -448,12 +450,96 @@ def generate_pkg(
     _generate_footprint('reflow', 'reflow', 0.0)
     _generate_footprint('hand-soldering', 'hand soldering', 0.3)
 
+    # Generate 3D models
+    uuid_3d = _uuid('3d')
+    if generate_3d_models:
+        generate_3d(full_name, uuid_pkg, uuid_3d, config, make_exposed)
+    package.add_3d_model(Package3DModel(uuid_3d, Name(full_name)))
+    for footprint in package.footprints:
+        footprint.add_3d_model(Footprint3DModel(uuid_3d))
+
     # Save package
     package.serialize(path.join('out', config.library, category))
     return full_name
 
 
+def generate_3d(
+    full_name: str,
+    uuid_pkg: str,
+    uuid_3d: str,
+    config: DfnConfig,
+    make_exposed: bool,
+) -> None:
+    import cadquery as cq
+
+    from cadquery_helpers import StepAssembly, StepColor
+
+    print(f'Generating pkg 3D model "{full_name}": {uuid_3d}')
+
+    dot_diameter = min(config.width * 0.2, 0.6)
+    dot_position = min(config.width * 0.2, 0.8)
+    dot_depth = 0.05
+    dot_x = -(config.width / 2) + dot_position
+    dot_y = (config.length / 2) - dot_position
+    lead_standoff = 0.02
+    lead_height = 0.2
+
+    body = cq.Workplane('XY', origin=(0, 0, lead_standoff + (config.height_nominal / 2))) \
+        .box(config.width, config.length, config.height_nominal)
+    surface = cq.Workplane('back', origin=(0, 0, lead_standoff + config.height_nominal + 0.05))
+    dot = surface.cylinder(0.5, dot_diameter / 2, centered=(True, True, False)) \
+        .translate((dot_x, dot_y, 0))
+    lead = cq.Workplane("ZY") \
+        .box(lead_height, config.lead_width, config.lead_length)
+    if make_exposed:
+        exposed_lead = cq.Workplane('XY', origin=(0, 0, (lead_height / 2))) \
+            .box(config.exposed_length, config.exposed_width, lead_height)
+
+    if config.step_modification_fn:
+        body, dot = config.step_modification_fn(body, dot, surface)
+
+    body = body.cut(dot)
+
+    assembly = StepAssembly(full_name)
+    assembly.add_body(body, 'body', StepColor.IC_BODY)
+    assembly.add_body(dot, 'dot', StepColor.IC_PIN1_DOT,
+                      location=cq.Location((0, 0, -0.05 - dot_depth)))
+    pins_per_side = config.pin_count // 2
+    for i in range(0, config.pin_count):
+        side = -1 if (i < pins_per_side) else 1
+        y1 = get_y(1 if (i < pins_per_side) else pins_per_side,
+                   pins_per_side, config.pitch, False)
+        y_index = i % pins_per_side
+        assembly.add_body(
+            lead,
+            'lead-{}'.format(i + 1), StepColor.LEAD_SMT,
+            location=cq.Location((
+                (((config.width - config.lead_length) / 2) + lead_standoff) * side,
+                y1 + y_index * config.pitch * side,
+                lead_height / 2,
+            ))
+        )
+    if make_exposed:
+        assembly.add_body(exposed_lead, 'lead-exposed', StepColor.LEAD_SMT)
+
+    # Save without fusing for massively better minification!
+    out_path = path.join('out', config.library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
+    assembly.save(out_path, fused=False)
+
+
 if __name__ == '__main__':
+    if '--help' in sys.argv or '-h' in sys.argv:
+        print(f'Usage: {sys.argv[0]} [--3d]')
+        print()
+        print('Options:')
+        print('  --3d    Generate 3D models using cadquery')
+        sys.exit(1)
+
+    generate_3d_models = '--3d' in sys.argv
+    if not generate_3d_models:
+        warning = 'Note: Not generating 3D models unless the "--3d" argument is passed in!'
+        print(f'\033[1;33m{warning}\033[0m')
+
     generated_packages: List[str] = []
 
     for config in JEDEC_CONFIGS:
@@ -480,6 +566,7 @@ if __name__ == '__main__':
                 keywords='dfn,dual flat no-leads,mo-229f',
                 config=config,
                 make_exposed=make_exposed,
+                generate_3d_models=generate_3d_models,
                 create_date='2019-01-17T06:11:43Z',
             )
             if name not in generated_packages:
@@ -510,6 +597,7 @@ if __name__ == '__main__':
                 keywords='dfn,dual flat no-leads',
                 config=config,
                 make_exposed=make_exposed,
+                generate_3d_models=generate_3d_models,
                 create_date=config.create_date,
             )
             if name not in generated_packages:

@@ -3,7 +3,7 @@ Configuration file, containing all available DFN configs.
 
 """
 
-from typing import Callable, Optional
+from typing import Any, Callable, Optional, Tuple
 
 from entities.common import Angle, Circle, Diameter, Fill, GrabArea, Layer, Polygon, Position, Vertex, Width
 from entities.package import Footprint
@@ -32,6 +32,9 @@ LEAD_TOE_HEEL = {
     0.35: 0.25
 }
 
+# The real CadQuery types are not known statically, thus allowing any type.
+StepModificationFn = Callable[[Any, Any, Any], Tuple[Any, Any]]
+
 
 class DfnConfig:
     def __init__(self,
@@ -53,6 +56,7 @@ class DfnConfig:
                  library: Optional[str] = None,
                  pin1_corner_dx_dy: Optional[float] = None,  # Some parts have a triangular pin1 marking
                  extended_doc_fn: Optional[Callable[['DfnConfig', Callable[[str], str], Footprint], None]] = None,
+                 step_modification_fn: Optional[StepModificationFn] = None,
                  ):
         self.length = length
         self.width = width
@@ -84,6 +88,7 @@ class DfnConfig:
         self.library = library or "LibrePCB_Base.lplib"
 
         self.extended_doc_fn = extended_doc_fn
+        self.step_modification_fn = step_modification_fn
 
 
 JEDEC_CONFIGS = [
@@ -304,6 +309,27 @@ def draw_rect(x: float, y: float, width: float, height: float) -> Callable[[DfnC
     return _draw
 
 
+def step_modification_sphere(diameter: float) -> StepModificationFn:
+    def _fn(body: Any, dot: Any, workplane: Any) -> Tuple[Any, Any]:
+        return body.cut(workplane.sphere(diameter / 2, centered=True)), dot
+    return _fn
+
+
+def step_modification_cylinder(x: float, y: float, diameter: float, length: float) -> StepModificationFn:
+    def _fn(body: Any, dot: Any, workplane: Any) -> Tuple[Any, Any]:
+        cutout = workplane.transformed(offset=(x, y, 0), rotate=(0, 90, 0)) \
+            .cylinder(length, diameter / 2, centered=True)
+        return body.cut(cutout), dot
+    return _fn
+
+
+def step_modification_sgp3x(body: Any, dot: Any, workplane: Any) -> Tuple[Any, Any]:
+    dot = workplane.cylinder(0.2, 0.6, centered=[True, True, False]) \
+        .transformed(offset=(0.5, 0.5, 0), rotate=(0, 0, 45)) \
+        .box(0.3, 0.3, 0.3, centered=[True, True, False])
+    return body, dot
+
+
 THIRD_CONFIGS = [
     # length, width, pitch, pin_count, height_nominal, height_max, lead_length, exposed_width, exposed_length, keywords
 
@@ -326,6 +352,7 @@ THIRD_CONFIGS = [
         no_exp=False,
         pin1_corner_dx_dy=0.2,
         extended_doc_fn=draw_circle(diameter=0.9),
+        step_modification_fn=step_modification_sphere(0.9),
     ),
     DfnConfig(
         length=3.0,
@@ -345,6 +372,7 @@ THIRD_CONFIGS = [
         no_exp=False,
         pin1_corner_dx_dy=0.2,
         extended_doc_fn=draw_rect(x=0, y=-0.7, width=2.2, height=0.6),
+        step_modification_fn=step_modification_cylinder(x=0, y=-0.7, diameter=0.6, length=2.2),
     ),
     DfnConfig(
         length=2.45,
@@ -364,6 +392,7 @@ THIRD_CONFIGS = [
         no_exp=False,
         pin1_corner_dx_dy=0.3,
         extended_doc_fn=draw_circle(diameter=1.1),
+        step_modification_fn=step_modification_sgp3x,
     ),
 
     # Microchip
