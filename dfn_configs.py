@@ -3,9 +3,10 @@ Configuration file, containing all available DFN configs.
 
 """
 
-from typing import Callable, List, Optional
+from typing import Callable, Optional
 
-from common import format_float as ff
+from entities.common import Circle, Diameter, Fill, GrabArea, Layer, Position, Width
+from entities.package import Footprint
 
 # Maximal lead width as a function of pitch, Table 4 in the JEDEC
 # standard MO-229F, available (with registration!) from
@@ -51,7 +52,7 @@ class DfnConfig:
                  create_date: Optional[str] = None,
                  library: Optional[str] = None,
                  pin1_corner_dx_dy: Optional[float] = None,  # Some parts have a triangular pin1 marking
-                 extended_doc_fn: Optional[Callable[['DfnConfig', Callable[[str], str], List[str]], None]] = None,
+                 extended_doc_fn: Optional[Callable[['DfnConfig', Callable[[str], str], Footprint], None]] = None,
                  ):
         self.length = length
         self.width = width
@@ -270,11 +271,17 @@ JEDEC_CONFIGS = [
 ]
 
 
-def draw_circle(diameter: float) -> Callable[[DfnConfig, Callable[[str], str], List[str]], None]:
-    def _draw(config: DfnConfig, uuid: Callable[[str], str], lines: List[str]) -> None:
-        lines.append('  (circle {} (layer top_documentation)'.format(uuid('hole-circle-doc')))
-        lines.append('   (width 0.1) (fill false) (grab_area false) (diameter {}) (position 0.0 0.0)'.format(ff(diameter)))
-        lines.append('  )')
+def draw_circle(diameter: float) -> Callable[[DfnConfig, Callable[[str], str], Footprint], None]:
+    def _draw(config: DfnConfig, uuid: Callable[[str], str], footprint: Footprint) -> None:
+        footprint.add_circle(Circle(
+            uuid('hole-circle-doc'),
+            Layer('top_documentation'),
+            Width(0.1),
+            Fill(False),
+            GrabArea(False),
+            Diameter(diameter),
+            Position(0, 0),
+        ))
     return _draw
 
 
@@ -332,6 +339,7 @@ THIRD_CONFIGS = [
         exposed_length=1.25,
         keywords='sensirion,sgp,sgp30,sgpc3',
         name='SENSIRION_SGPxx',
+        create_date='2019-12-27T19:39:48Z',
         library="Sensirion.lplib",
         no_exp=False,
         pin1_corner_dx_dy=0.3,
@@ -350,6 +358,7 @@ THIRD_CONFIGS = [
         exposed_width=1.45,
         exposed_length=1.75,
         keywords='microchip mc',
+        create_date='2020-11-01T17:32:01Z',
         no_exp=False,
     ),
 ]

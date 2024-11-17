@@ -2,22 +2,29 @@
 Generate DFN packages
 
 """
-from os import makedirs, path
+from os import path
 from uuid import uuid4
 
 from typing import List, Optional
 
-from common import format_float as ff
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
 from dfn_configs import JEDEC_CONFIGS, THIRD_CONFIGS, DfnConfig
+from entities.common import (
+    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
+    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
+)
+from entities.package import (
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
+    Mirror, Package, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size, SolderPasteConfig,
+    StopMaskConfig, StrokeText, StrokeWidth
+)
 
 GENERATOR_NAME = 'librepcb-parts-generator (generate_dfn.py)'
 
 SILKSCREEN_OFFSET = 0.15
 SILKSCREEN_LINE_WIDTH = 0.254
 LABEL_OFFSET = 1.0
-TEXT_ATTRS = "(height 1.0) (stroke_width 0.2) (letter_spacing auto) (line_spacing auto)"
 
 MIN_CLEARANCE = 0.20    # For checking only --> warns if violated
 MIN_TRACE = 0.10
@@ -75,7 +82,6 @@ def generate_pkg(
     create_date: Optional[str] = None,
 ) -> str:
     category = 'pkg'
-    lines = []
 
     full_name = name.format(length=fd(config.length),
                             width=fd(config.width),
@@ -106,11 +112,16 @@ def generate_pkg(
                                           width=config.width,
                                           length=config.length)
     if make_exposed:
-        full_description += "\\nExposed Pad: {:.2f} x {:.2f} mm".format(
+        full_description += "\nExposed Pad: {:.2f} x {:.2f} mm".format(
             config.exposed_width, config.exposed_length)
-
     if config.print_pad:
-        full_description += "\\nPad length: {:.2f} mm".format(config.lead_length)
+        full_description += "\nPad length: {:.2f} mm".format(config.lead_length)
+    full_description += "\n\nGenerated with {}".format(GENERATOR_NAME)
+
+    if config.keywords:
+        full_keywords = "dfn{},{},{}".format(config.pin_count, keywords, config.keywords.lower())
+    else:
+        full_keywords = "dfn{},{}".format(config.pin_count, keywords)
 
     def _uuid(identifier: str) -> str:
         return uuid(category, full_name, identifier)
@@ -123,34 +134,39 @@ def generate_pkg(
 
     print('Generating {}: {}'.format(full_name, uuid_pkg))
 
-    # General info
-    lines.append('(librepcb_package {}'.format(uuid_pkg))
-    lines.append(' (name "{}")'.format(full_name))
-    lines.append(' (description "{}\\n\\nGenerated with {}")'.format(full_description,
-                                                                     GENERATOR_NAME))
-    if config.keywords:
-        lines.append(' (keywords "dfn{},{},{}")'.format(config.pin_count, keywords, config.keywords.lower()))
-    else:
-        lines.append(' (keywords "dfn{},{}")'.format(config.pin_count, keywords))
-    lines.append(' (author "{}")'.format(author))
-    lines.append(' (version "0.1.2")')
-    lines.append(' (created {})'.format(create_date or now()))
-    lines.append(' (deprecated false)')
-    lines.append(' (category {})'.format(pkgcat))
+    # Create package
+    package = Package(
+        uuid=uuid_pkg,
+        name=Name(full_name),
+        description=Description(full_description),
+        keywords=Keywords(full_keywords),
+        author=Author(author),
+        version=Version('0.1.2'),
+        created=Created(create_date or now()),
+        deprecated=Deprecated(False),
+        generated_by=GeneratedBy(''),
+        categories=[Category(pkgcat)],
+        assembly_type=AssemblyType.AUTO,
+    )
 
-    # Create Pad UUIDs
+    # Create pads
     for p in range(1, config.pin_count + 1):
-        lines.append(' (pad {} (name "{}"))'.format(uuid_pads[p - 1], p))
+        package.add_pad(PackagePad(uuid_pads[p - 1], Name(str(p))))
     if make_exposed:
-        lines.append(' (pad {} (name "{}"))'.format(uuid_exp, 'ExposedPad'))
+        package.add_pad(PackagePad(uuid_exp, Name('ExposedPad')))
 
     # Create Footprint function
     def _generate_footprint(key: str, name: str, pad_extension: float) -> None:
         # Create Meta-data
         uuid_footprint = _uuid('footprint-{}'.format(key))
-        lines.append(' (footprint {}'.format(uuid_footprint))
-        lines.append('  (name "{}")'.format(name))
-        lines.append('  (description "")')
+        footprint = Footprint(
+            uuid=uuid_footprint,
+            name=Name(name),
+            description=Description(''),
+            position_3d=Position3D.zero(),
+            rotation_3d=Rotation3D.zero(),
+        )
+        package.add_footprint(footprint)
 
         pad_length = config.lead_length + config.toe_heel + pad_extension
         exposed_length = config.exposed_length
@@ -184,19 +200,40 @@ def generate_pkg(
                 pad_pos_x = abs_pad_pos_x
                 pad_pos_y = - pad_pos_y
 
-            lines.append('  (pad {} (side top) (shape rect)'.format(uuid_pads[pad_idx]))
-            lines.append('   (position {} {}) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                         ff(pad_pos_x), ff(pad_pos_y),
-                         ff(pad_length), ff(config.lead_width)))
-            lines.append('  )')
+            footprint.add_pad(FootprintPad(
+                uuid=uuid_pads[pad_idx],
+                side=ComponentSide.TOP,
+                shape=Shape.ROUNDED_RECT,
+                position=Position(pad_pos_x, pad_pos_y),
+                rotation=Rotation(0),
+                size=Size(pad_length, config.lead_width),
+                radius=ShapeRadius(0),
+                stop_mask=StopMaskConfig.AUTO,
+                solder_paste=SolderPasteConfig.AUTO,
+                copper_clearance=CopperClearance(0.0),
+                function=PadFunction.UNSPECIFIED,
+                package_pad=PackagePadUuid(uuid_pads[pad_idx]),
+                holes=[],
+            ))
 
         # Make exposed pad, if required
         # TODO: Handle pin1_corner_dx_dy in config once custom pad shapes are possible
         if make_exposed:
-            lines.append('  (pad {} (side top) (shape rect)'.format(uuid_exp))
-            lines.append('   (position 0.0 0.0) (rotation 0.0) (size {} {}) (drill 0.0)'.format(
-                         ff(exposed_length), ff(config.exposed_width)))
-            lines.append('  )')
+            footprint.add_pad(FootprintPad(
+                uuid=uuid_exp,
+                side=ComponentSide.TOP,
+                shape=Shape.ROUNDED_RECT,
+                position=Position(0, 0),
+                rotation=Rotation(0),
+                size=Size(exposed_length, config.exposed_width),
+                radius=ShapeRadius(0),
+                stop_mask=StopMaskConfig.AUTO,
+                solder_paste=SolderPasteConfig.AUTO,
+                copper_clearance=CopperClearance(0.0),
+                function=PadFunction.UNSPECIFIED,
+                package_pad=PackagePadUuid(uuid_exp),
+                holes=[],
+            ))
 
             # Measure clearance pad-exposed pad
             clearance = abs(pad_pos_x) - (pad_length / 2) - (exposed_length / 2)
@@ -218,29 +255,27 @@ def generate_pkg(
                 silk_down = silk_down + (SILKSCREEN_OFFSET - silk_clearance)
                 print("Increasing exp-silk clearance from {:.4f} to {:.2f}".format(silk_clearance, SILKSCREEN_OFFSET))
 
+        # Silkscreen
         for idx, silkscreen_pos in enumerate([-1, 1]):
             uuid_silkscreen_poly = _uuid('polygon-silkscreen-{}-{}'.format(key, idx))
-            lines.append('  (polygon {} (layer top_placement)'.format(uuid_silkscreen_poly))
-            lines.append('   (width {}) (fill false) (grab_area false)'.format(
-                SILKSCREEN_LINE_WIDTH))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
-                         ff(-config.width / 2),
-                         ff(silkscreen_pos * (silk_top_line_height - silk_down))))
+            vertices = [
+                Vertex(Position(-config.width / 2, silkscreen_pos * (silk_top_line_height - silk_down)), Angle(0)),
+            ]
             # If this is negative, the silkscreen line has to be moved away from
             # the real position, in order to keep the required distance to the
             # pad. We then only draw a single line, so we can omit the parts below.
             if silk_down > 0:
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
-                             ff(-config.width / 2),
-                             ff(silkscreen_pos * silk_top_line_height)))
-                lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
-                             ff(config.width / 2),
-                             ff(silkscreen_pos * silk_top_line_height)))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(
-                         ff(config.width / 2),
-                         ff(silkscreen_pos * (silk_top_line_height - silk_down))))
-
-            lines.append('  )')
+                vertices.append(Vertex(Position(-config.width / 2, silkscreen_pos * silk_top_line_height), Angle(0)))
+                vertices.append(Vertex(Position(config.width / 2, silkscreen_pos * silk_top_line_height), Angle(0)))
+            vertices.append(Vertex(Position(config.width / 2, silkscreen_pos * (silk_top_line_height - silk_down)), Angle(0)))
+            footprint.add_polygon(Polygon(
+                uuid=uuid_silkscreen_poly,
+                layer=Layer('top_legend'),
+                width=Width(SILKSCREEN_LINE_WIDTH),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=vertices,
+            ))
 
         # Create leads on docu
         uuid_leads = [_uuid('lead-{}'.format(p)) for p in range(1, config.pin_count + 1)]
@@ -260,51 +295,63 @@ def generate_pkg(
             if pad_idx < (config.pin_count / 2):
                 x_min, x_max = - x_min, - x_max
 
-            # Convert numbers to librepcb format
-            x_min_str, x_max_str = ff(x_min), ff(x_max)
-            y_min_str, y_max_str = ff(y_min), ff(y_max)
-
-            lines.append('  (polygon {} (layer top_documentation)'.format(lead_uuid))
-            lines.append('   (width 0.0) (fill true) (grab_area false)')
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min_str, y_max_str))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_max_str, y_max_str))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_max_str, y_min_str))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min_str, y_min_str))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min_str, y_max_str))
-            lines.append('  )')
+            footprint.add_polygon(Polygon(
+                uuid=lead_uuid,
+                layer=Layer('top_documentation'),
+                width=Width(0),
+                fill=Fill(True),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(x_min, y_max), Angle(0)),
+                    Vertex(Position(x_max, y_max), Angle(0)),
+                    Vertex(Position(x_max, y_min), Angle(0)),
+                    Vertex(Position(x_min, y_min), Angle(0)),
+                    Vertex(Position(x_min, y_max), Angle(0)),
+                ],
+            ))
 
         # Create exposed pad on docu
         if make_exposed:
             uuid_docu_exposed = _uuid('lead-exposed')
-
             x_min, x_max = - config.exposed_length / 2, config.exposed_length / 2
             y_min, y_max = - config.exposed_width / 2, config.exposed_width / 2
-
-            lines.append('  (polygon {} (layer top_documentation)'.format(uuid_docu_exposed))
-            lines.append('   (width 0.0) (fill true) (grab_area false)')
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_max))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_max, y_max))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_max, y_min))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_min))
-            lines.append('   (vertex (position {} {}) (angle 0.0))'.format(x_min, y_max))
-            lines.append('  )')
+            footprint.add_polygon(Polygon(
+                uuid=uuid_docu_exposed,
+                layer=Layer('top_documentation'),
+                width=Width(0),
+                fill=Fill(True),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(x_min, y_max), Angle(0)),
+                    Vertex(Position(x_max, y_max), Angle(0)),
+                    Vertex(Position(x_max, y_min), Angle(0)),
+                    Vertex(Position(x_min, y_min), Angle(0)),
+                    Vertex(Position(x_min, y_max), Angle(0)),
+                ],
+            ))
 
         # Create body outline on docu
         uuid_body_outline = _uuid('body-outline')
         outline_line_width = 0.2
         dx = config.width / 2 - outline_line_width / 2
         dy = config.length / 2 - outline_line_width / 2
-        lines.append('  (polygon {} (layer top_documentation)'.format(uuid_body_outline))
-        lines.append('   (width {}) (fill false) (grab_area false)'.format(outline_line_width))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-dx, dy))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, dy))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(dx, -dy))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-dx, -dy))
-        lines.append('   (vertex (position {} {}) (angle 0.0))'.format(-dx, dy))
-        lines.append('  )')
+        footprint.add_polygon(Polygon(
+            uuid=uuid_body_outline,
+            layer=Layer('top_documentation'),
+            width=Width(outline_line_width),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(-dx, dy), Angle(0)),
+                Vertex(Position(dx, dy), Angle(0)),
+                Vertex(Position(dx, -dy), Angle(0)),
+                Vertex(Position(-dx, -dy), Angle(0)),
+                Vertex(Position(-dx, dy), Angle(0)),
+            ],
+        ))
 
         if config.extended_doc_fn:
-            config.extended_doc_fn(config, _uuid, lines)
+            config.extended_doc_fn(config, _uuid, footprint)
 
         # As discussed in https://github.com/LibrePCB-Libraries/LibrePCB_Base.lplib/pull/16
         # the silkscreen circle should have size SILKSCREEN_LINE_WIDTH for small packages,
@@ -327,52 +374,54 @@ def generate_pkg(
             silk_circ_y = silk_circ_y - silk_down
 
         uuid_silkscreen_circ = _uuid('circle-silkscreen-{}'.format(key))
-        lines.append('  (circle {} (layer top_placement)'.format(uuid_silkscreen_circ))
-        lines.append('   (width 0.0) (fill true) (grab_area false) '
-                     '(diameter {}) (position {} {})'.format(
-                         ff(silkscreen_circ_dia),
-                         ff(silk_circ_x),
-                         ff(silk_circ_y)
-                     ))
-        lines.append('  )')
+        footprint.add_circle(Circle(
+            uuid_silkscreen_circ,
+            Layer('top_legend'),
+            Width(0.0),
+            Fill(True),
+            GrabArea(False),
+            Diameter(silkscreen_circ_dia),
+            Position(silk_circ_x, silk_circ_y),
+        ))
 
         # Add name and value labels
         uuid_text_name = _uuid('text-name-{}'.format(key))
         uuid_text_value = _uuid('text-value-{}'.format(key))
-
-        lines.append('  (stroke_text {} (layer top_names)'.format(uuid_text_name))
-        lines.append('   {}'.format(TEXT_ATTRS))
-        lines.append('   (align center bottom) (position 0.0 {}) (rotation 0.0)'.format(
-            config.length / 2 + LABEL_OFFSET))
-        lines.append('   (auto_rotate true) (mirror false) (value "{{NAME}}")')
-        lines.append('  )')
-        lines.append('  (stroke_text {} (layer top_values)'.format(uuid_text_value))
-        lines.append('   {}'.format(TEXT_ATTRS))
-        lines.append('   (align center top) (position 0.0 {}) (rotation 0.0)'.format(
-            -config.length / 2 - LABEL_OFFSET))
-        lines.append('   (auto_rotate true) (mirror false) (value "{{VALUE}}")')
-        lines.append('  )')
-
-        # Closing parenthese for footprint
-        lines.append(' )')
+        footprint.add_text(StrokeText(
+            uuid=uuid_text_name,
+            layer=Layer('top_names'),
+            height=Height(1),
+            stroke_width=StrokeWidth(0.2),
+            letter_spacing=LetterSpacing.AUTO,
+            line_spacing=LineSpacing.AUTO,
+            align=Align('center bottom'),
+            position=Position(0, config.length / 2 + LABEL_OFFSET),
+            rotation=Rotation(0),
+            auto_rotate=AutoRotate(True),
+            mirror=Mirror(False),
+            value=Value('{{NAME}}'),
+        ))
+        footprint.add_text(StrokeText(
+            uuid=uuid_text_value,
+            layer=Layer('top_values'),
+            height=Height(1),
+            stroke_width=StrokeWidth(0.2),
+            letter_spacing=LetterSpacing.AUTO,
+            line_spacing=LineSpacing.AUTO,
+            align=Align('center top'),
+            position=Position(0.0, -config.length / 2 - LABEL_OFFSET),
+            rotation=Rotation(0.0),
+            auto_rotate=AutoRotate(True),
+            mirror=Mirror(False),
+            value=Value('{{VALUE}}'),
+        ))
 
     # Apply function to available footprints
     _generate_footprint('reflow', 'reflow', 0.0)
     _generate_footprint('hand-soldering', 'hand soldering', 0.3)
 
-    # Final closing parenthese
-    lines.append(')')
-
     # Save package
-    pkg_dir_path = path.join('out', config.library, category, uuid_pkg)
-    if not (path.exists(pkg_dir_path) and path.isdir(pkg_dir_path)):
-        makedirs(pkg_dir_path)
-    with open(path.join(pkg_dir_path, '.librepcb-pkg'), 'w') as f:
-        f.write('0.1\n')
-    with open(path.join(pkg_dir_path, 'package.lp'), 'w') as f:
-        f.write('\n'.join(lines))
-        f.write('\n')
-
+    package.serialize(path.join('out', config.library, category))
     return full_name
 
 
@@ -394,10 +443,10 @@ if __name__ == '__main__':
                 author='Hannes Badertscher',
                 name='DFN{pitch}P{length}X{width}X{height}-{pin_count}',
                 description='{pin_count}-pin Dual Flat No-Lead package (DFN), '
-                            'standardized by JEDEC MO-229F.\\n\\n'
-                            'Pitch: {pitch:.2f} mm\\n'
-                            'Nominal width: {width:.2f} mm\\n'
-                            'Nominal length: {length:.2f} mm\\n'
+                            'standardized by JEDEC MO-229F.\n\n'
+                            'Pitch: {pitch:.2f} mm\n'
+                            'Nominal width: {width:.2f} mm\n'
+                            'Nominal length: {length:.2f} mm\n'
                             'Height: {height:.2f}mm',
                 pkgcat='88cbb15c-2b69-4612-8764-c5d323f88f13',
                 keywords='dfn,dual flat no-leads,mo-229f',
@@ -425,9 +474,9 @@ if __name__ == '__main__':
                 author='Hannes Badertscher',
                 name='DFN{pitch}P{length}X{width}X{height}-{pin_count}',
                 description='{pin_count}-pin Dual Flat No-Lead package (DFN), '
-                            'Pitch: {pitch:.2f} mm\\n'
-                            'Nominal width: {width:.2f} mm\\n'
-                            'Nominal length: {length:.2f} mm\\n'
+                            'Pitch: {pitch:.2f} mm\n'
+                            'Nominal width: {width:.2f} mm\n'
+                            'Nominal length: {length:.2f} mm\n'
                             'Height: {height:.2f}mm',
                 pkgcat='88cbb15c-2b69-4612-8764-c5d323f88f13',
                 keywords='dfn,dual flat no-leads',

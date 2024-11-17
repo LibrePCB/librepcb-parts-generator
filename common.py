@@ -97,43 +97,6 @@ def indent(level: int, lines: Iterable[str]) -> List[str]:
     return [' ' * level + line for line in lines]
 
 
-def generate_courtyard(
-    uuid: str,
-    max_x: float,
-    max_y: float,
-    excess_x: float,
-    excess_y: float,
-) -> List[str]:
-    """
-    Generate a rectangular courtyard polygon.
-
-    Args:
-        uuid:
-            The polygon UUID
-        max_x:
-            The half width (x) of the maximum boundary
-        max_y:
-            The half height (y) of the maximum boundary
-        excess_x:
-            Courtyard excess in x direction
-        excess_y:
-            Courtyard excess in y direction
-
-    """
-    dx = format_float(max_x + excess_x)
-    dy = format_float(max_y + excess_y)
-    return [
-        '(polygon {} (layer {})'.format(uuid, 'top_courtyard'),
-        ' (width {}) (fill false) (grab_area false)'.format(0.0),
-        ' (vertex (position -{} {}) (angle 0.0))'.format(dx, dy),  # NW
-        ' (vertex (position {} {}) (angle 0.0))'.format(dx, dy),  # NE
-        ' (vertex (position {} -{}) (angle 0.0))'.format(dx, dy),  # SE
-        ' (vertex (position -{} -{}) (angle 0.0))'.format(dx, dy),  # SW
-        ' (vertex (position -{} {}) (angle 0.0))'.format(dx, dy),  # NW
-        ')',
-    ]
-
-
 def sign(val: Union[int, float]) -> int:
     """
     Return 1 for positive or zero values, -1 otherwise.
