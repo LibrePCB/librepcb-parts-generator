@@ -1,10 +1,11 @@
 """
 Generate THT polarized radial electrolytic capacitors (CAPPRD).
 """
+import sys
 from os import path
 from uuid import uuid4
 
-from typing import Optional
+from typing import Any, Optional
 
 from common import format_ipc_dimension, init_cache, now, save_cache
 from entities.common import (
@@ -14,9 +15,9 @@ from entities.common import (
 from entities.component import SignalUUID
 from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, FootprintPad, LetterSpacing,
-    LineSpacing, Mirror, Package, PackagePad, PackagePadUuid, PadFunction, PadHole, Shape, ShapeRadius, Size,
-    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, Footprint3DModel, FootprintPad,
+    LetterSpacing, LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, PadHole,
+    Shape, ShapeRadius, Size, SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
 
 generator = 'librepcb-parts-generator (generate_capacitor_radial_tht.py)'
@@ -68,6 +69,7 @@ def generate_pkg(
     height: float,
     pitch: float,
     lead_width: float,
+    generate_3d_models: bool,
     author: str,
     version: str,
     create_date: Optional[str],
@@ -252,8 +254,9 @@ def generate_pkg(
         return footprint
 
     # package
+    uuid_pkg = _pkg_uuid('pkg')
     package = Package(
-        uuid=_pkg_uuid('pkg'),
+        uuid=uuid_pkg,
         name=Name(name),
         description=Description(
             'Polarized radial electrolytic capacitor.\n\n' +
@@ -279,9 +282,81 @@ def generate_pkg(
         name='default',
     ))
 
+    # Generate 3D models
+    uuid_3d = _pkg_uuid('3d')
+    if generate_3d_models:
+        generate_3d(library, name, uuid_pkg, uuid_3d, diameter, height,
+                    pitch, lead_width)
+    package.add_3d_model(Package3DModel(uuid_3d, Name(name)))
+    for footprint in package.footprints:
+        footprint.add_3d_model(Footprint3DModel(uuid_3d))
+
     # write files
     package.serialize(path.join('out', library, 'pkg'))
     print('Wrote package {}'.format(name))
+
+
+def generate_3d(
+    library: str,
+    name: str,
+    uuid_pkg: str,
+    uuid_3d: str,
+    diameter: float,
+    height: float,
+    pitch: float,
+    lead_width: float,
+) -> None:
+    import cadquery as cq
+
+    from cadquery_helpers import StepAssembly, StepColor, StepConstants
+
+    print(f'Generating pkg 3D model "{name}": {uuid_3d}')
+
+    body_fillet = min(diameter * 0.1, 1.0)
+    body_ring_radius = min(diameter * 0.05, 1.0)
+    body_ring_circle_radius = (diameter / 2) + (body_ring_radius / 2)
+    body_ring_z = body_fillet + body_ring_radius * 3
+    marking_angle = 40
+    core_radius = diameter * 0.35
+    core_depth = min(diameter * 0.02, 0.5)
+
+    body_ring_cutout = cq.Workplane('XZ', origin=(-body_ring_circle_radius, 0, body_ring_z)) \
+        .circle(body_ring_radius) \
+        .revolve(360, (body_ring_circle_radius, 0, 0), (body_ring_circle_radius, -1, 0))
+
+    def _make_body(start_angle: float, angle: float) -> Any:
+        return cq.Workplane("XZ") \
+            .transformed(rotate=(0, -start_angle, 0)) \
+            .transformed(offset=(core_radius, 0, 0)) \
+            .hLine((diameter / 2) - core_radius - body_fillet) \
+            .ellipseArc(x_radius=body_fillet, y_radius=body_fillet, angle1=270, angle2=360, sense=1) \
+            .vLine(height - (2 * body_fillet)) \
+            .ellipseArc(x_radius=body_fillet, y_radius=body_fillet, angle1=360, angle2=90, sense=1) \
+            .hLine(-(diameter / 2) + core_radius + body_fillet) \
+            .close() \
+            .revolve(angle, (-core_radius, 0, 0), (-core_radius, -1, 0)) \
+            .cut(body_ring_cutout)
+
+    body = _make_body(marking_angle / 2, 360 - marking_angle)
+    marking = _make_body(-marking_angle / 2, marking_angle)
+    core = cq.Workplane('XY', origin=(0, 0, core_depth)) \
+        .cylinder(height - 2 * core_depth, core_radius, centered=(True, True, False))
+    leg = cq.Workplane("XY").workplane(offset=(-core_depth - 1), invert=True) \
+        .cylinder(StepConstants.THT_LEAD_SOLDER_LENGTH + core_depth + 1, lead_width / 2,
+                  centered=(True, True, False))
+
+    assembly = StepAssembly(name)
+    assembly.add_body(body, 'body', cq.Color('gray16'))
+    assembly.add_body(marking, 'marking', cq.Color('gray60'))
+    assembly.add_body(core, 'core', cq.Color('ghostwhite'))
+    assembly.add_body(leg, 'leg-1', StepColor.LEAD_THT,
+                      location=cq.Location((-pitch / 2, 0, 0)))
+    assembly.add_body(leg, 'leg-2', StepColor.LEAD_THT,
+                      location=cq.Location((pitch / 2, 0, 0)))
+
+    # Save with fusing since there are not many reused assembly parts.
+    out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
+    assembly.save(out_path, fused=True)
 
 
 def generate_dev(
@@ -336,6 +411,17 @@ def generate_dev(
 
 
 if __name__ == '__main__':
+    if '--help' in sys.argv or '-h' in sys.argv:
+        print(f'Usage: {sys.argv[0]} [--3d]')
+        print()
+        print('Options:')
+        print('  --3d    Generate 3D models using cadquery')
+        sys.exit(1)
+
+    generate_3d_models = '--3d' in sys.argv
+    if not generate_3d_models:
+        warning = 'Note: Not generating 3D models unless the "--3d" argument is passed in!'
+        print(f'\033[1;33m{warning}\033[0m')
 
     CONFIGS = [
         # Some typical, frequently used configurations. The lead width depends
@@ -372,6 +458,7 @@ if __name__ == '__main__':
             height=config['height'],
             pitch=config['pitch'],
             lead_width=config['lead_width'],
+            generate_3d_models=generate_3d_models,
             author='U. Bruhin',
             version='0.2',
             create_date='2019-12-29T14:14:11Z',
