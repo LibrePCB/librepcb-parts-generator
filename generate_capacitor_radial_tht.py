@@ -147,7 +147,7 @@ def generate_pkg(
             stop_mask=StopMaskConfig.AUTO,
             solder_paste=SolderPasteConfig.OFF,
             copper_clearance=CopperClearance(0),
-            function=PadFunction.UNSPECIFIED,
+            function=PadFunction.STANDARD_PAD,
             package_pad=PackagePadUuid(uuid_plus),
             holes=[PadHole(uuid_plus, DrillDiameter(drill), pad_hole_path)],
         ))
@@ -163,7 +163,7 @@ def generate_pkg(
             stop_mask=StopMaskConfig.AUTO,
             solder_paste=SolderPasteConfig.OFF,
             copper_clearance=CopperClearance(0),
-            function=PadFunction.UNSPECIFIED,
+            function=PadFunction.STANDARD_PAD,
             package_pad=PackagePadUuid(uuid_minus),
             holes=[PadHole(uuid_minus, DrillDiameter(drill), pad_hole_path)],
         ))
@@ -196,6 +196,17 @@ def generate_pkg(
         footprint.add_polygon(_generate_fill_polygon(
             identifier='polygon-documentation-fill',
             layer='top_documentation',
+        ))
+
+        # package outline
+        footprint.add_circle(Circle(
+            uuid=_fpt_uuid('circle-outline'),
+            layer=Layer('top_package_outlines'),
+            width=Width(0.0),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            diameter=Diameter(diameter),
+            position=Position(0.0, 0.0),
         ))
 
         # courtyard
@@ -259,7 +270,7 @@ def generate_pkg(
         deprecated=Deprecated(False),
         generated_by=GeneratedBy(''),
         categories=[Category('ee75e31d-f231-41d9-8a3b-bea5114f41e3')],
-        assembly_type=AssemblyType.AUTO,
+        assembly_type=AssemblyType.THT,
     )
     package.add_pad(PackagePad(uuid=_pkg_uuid('pad-plus'), name=Name('+')))
     package.add_pad(PackagePad(uuid=_pkg_uuid('pad-minus'), name=Name('-')))
@@ -362,7 +373,7 @@ if __name__ == '__main__':
             pitch=config['pitch'],
             lead_width=config['lead_width'],
             author='U. Bruhin',
-            version='0.1',
+            version='0.2',
             create_date='2019-12-29T14:14:11Z',
         )
         generate_dev(
