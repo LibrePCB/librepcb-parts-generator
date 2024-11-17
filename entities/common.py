@@ -260,7 +260,7 @@ def generate_courtyard(
             Vertex(Position(dx, dy), Angle(0)),  # NE
             Vertex(Position(dx, -dy), Angle(0)),  # SE
             Vertex(Position(-dx, -dy), Angle(0)),  # SW
-            Vertex(Position(-dx, dy), Angle(0)),  # NW
+            # Note: Coultyards are implicitly closed, no 5th vertex needed.
         ],
     )
 
