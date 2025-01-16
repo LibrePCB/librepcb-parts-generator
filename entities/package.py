@@ -47,6 +47,16 @@ class Footprint3DModel():
         return self.uuid < other.uuid
 
 
+class AlternativeName():
+    def __init__(self, name: str, reference: str):
+        self.name = name
+        self.reference = reference
+
+    def __str__(self) -> str:
+        return '(alternative_name "{}" (reference "{}"))'.format(
+            self.name, self.reference)
+
+
 class AssemblyType(EnumValue):
     NONE = 'none'
     THT = 'tht'
@@ -305,11 +315,15 @@ class Package:
         self.deprecated = deprecated
         self.generated_by = generated_by
         self.categories = categories
+        self.alternative_names: List[AlternativeName] = []
         self.assembly_type = assembly_type
         self.pads: List[PackagePad] = []
         self.models_3d: List[Package3DModel] = []
         self.footprints: List[Footprint] = []
         self.approvals: List[str] = []
+
+    def add_alternative_name(self, alternative_name: AlternativeName) -> None:
+        self.alternative_names.append(alternative_name)
 
     def add_pad(self, pad: PackagePad) -> None:
         self.pads.append(pad)
@@ -334,6 +348,7 @@ class Package:
             ' {}\n'.format(self.deprecated) +\
             ' {}\n'.format(self.generated_by) +\
             ''.join([' {}\n'.format(cat) for cat in self.categories]) +\
+            ''.join([' {}\n'.format(alt) for alt in self.alternative_names]) +\
             ' {}\n'.format(self.assembly_type)
         ret += indent_entities(self.pads)
         ret += indent_entities(self.models_3d)
