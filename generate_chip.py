@@ -604,7 +604,7 @@ def generate_pkg(
             raise ValueError('Either gap or footprints must be set')
 
         # Generate 3D models (for certain package types)
-        if package_type in ['RESC', 'CAPC', 'INDC']:
+        if package_type in ['RESC', 'CAPC', 'CAPPM', 'INDC']:
             uuid_3d = uuid('pkg', full_name, '3d')
             if generate_3d_models:
                 generate_3d(library, package_type, full_name, uuid_pkg, uuid_3d, config)
@@ -651,25 +651,57 @@ def generate_3d(
     translation = (0, 0, height / 2)
     edge_offset = length / 2 - edge
 
-    inner = cq.Workplane("XY") \
-        .box(length - 2 * edge, width, height) \
-        .edges('+X').fillet(fillet) \
-        .translate(translation)
-    left = cq.Workplane("XY") \
-        .box(edge, width, height) \
-        .edges('+X or <X').fillet(fillet) \
-        .translate(translation) \
-        .translate((-edge_offset - edge / 2, 0, 0))
-    right = cq.Workplane("XY") \
-        .box(edge, width, height) \
-        .edges('+X or >X').fillet(fillet) \
-        .translate(translation) \
-        .translate((edge_offset + edge / 2, 0, 0))
+    if package_type != 'CAPPM': 
+        inner = cq.Workplane("XY") \
+            .box(length - 2 * edge, width, height) \
+            .edges('+X').fillet(fillet) \
+            .translate(translation)
+        left = cq.Workplane("XY") \
+            .box(edge, width, height) \
+            .edges('+X or <X').fillet(fillet) \
+            .translate(translation) \
+            .translate((-edge_offset - edge / 2, 0, 0))
+        right = cq.Workplane("XY") \
+            .box(edge, width, height) \
+            .edges('+X or >X').fillet(fillet) \
+            .translate(translation) \
+            .translate((edge_offset + edge / 2, 0, 0))
+    else:
+        lead_length = config.body.lead_length
+        lead_width = config.body.lead_width
+        lead_tickness=0.1
+
+        body_pts = [(0, 0), 
+                    (0, length / 2 - lead_length - lead_tickness),
+                    (lead_tickness, length / 2 - lead_length - lead_tickness),
+                    (lead_tickness, length / 2 - 2 * lead_tickness),
+                    (height * .6, length / 2 - lead_tickness),
+                    (height + lead_tickness, length / 2 - lead_tickness),
+                    (height + lead_tickness, 0)]
+        lead_pts = [(0, 0),
+                    (0, lead_length),
+                    (height * .6 + lead_tickness, lead_length),
+                    (height * .6 + lead_tickness, lead_length - lead_tickness),
+                    (lead_tickness, lead_length - lead_tickness),
+                    (lead_tickness, 0)]
+            
+        inner = cq.Workplane('ZX') \
+            .polyline(body_pts).mirrorX().extrude(width / 2, both=True) \
+            .edges("|Z").fillet(fillet)
+        left = cq.Workplane('ZX', origin = (length / 2 - lead_length, 0, 0)) \
+            .polyline(lead_pts).close().extrude(lead_width / 2, both = True) \
+            .edges('>X and |Y').fillet(lead_tickness / 1.1)
+        right = left.mirror(mirrorPlane = "ZY")
+        marking = cq.Workplane('XY', origin = (-(length * .4 - lead_tickness - 0.01), 0, lead_tickness + height)) \
+            .box(length * 0.2, width - 2 * fillet, 0.02)
+    
 
     if package_type == 'RESC':
         inner_color = cq.Color('gray16')
     elif package_type == 'CAPC':
         inner_color = cq.Color('bisque3')
+    elif package_type == 'CAPPM':
+        inner_color = cq.Color('orange')
     elif package_type == 'INDC':
         inner_color = cq.Color('lightsteelblue3')
     else:
@@ -679,6 +711,7 @@ def generate_3d(
     assembly.add_body(inner, 'inner', inner_color)
     assembly.add_body(left, 'left', StepColor.LEAD_SMT)
     assembly.add_body(right, 'right', StepColor.LEAD_SMT)
+    if package_type == 'CAPPM': assembly.add_body(marking, 'marking', cq.Color('brown'))
 
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
     assembly.save(out_path, fused=True)
@@ -695,7 +728,8 @@ def generate_dev(
     signals: Iterable[str],
     keywords: str,
     version: str,
-    create_date: Optional[str]
+    create_date: Optional[str],
+    pad_ids: Optional[Iterable] = range(1, 3)
 ) -> None:
     category = 'dev'
     for (size_metric, size_imperial, pkg_name) in packages:
@@ -714,7 +748,7 @@ def generate_dev(
         # UUIDs
         uuid_dev = _uuid('dev')
         pkg = uuid('pkg', pkg_name, 'pkg', create=False)
-        pads = [uuid('pkg', pkg_name, 'pad-{}'.format(i), create=False) for i in range(1, 3)]
+        pads = [uuid('pkg', pkg_name, 'pad-{}'.format(i), create=False) for i in pad_ids]
 
         print('Generating dev "{}": {}'.format(full_name, uuid_dev))
 
@@ -1035,5 +1069,35 @@ if __name__ == '__main__':
         keywords='l,inductor,ferrite,bead,smd,smt',
         version='0.1',
         create_date='2023-11-05T09:15:41Z',
+    )
+    generate_dev(
+        library='LibrePCB_Base.lplib',
+        author='eto-',
+        name='Tantalum Capacitor {size_metric}',
+        description='Generic SMD Tantalum Capacitor {size_metric}.',
+        packages=[
+            # code, nil, Name
+            ('3216-10', '', 'CAPPM320X160X100L80X120'),
+            ('3216-12', '', 'CAPPM320X160X120L80X120'),
+            ('3216-18', '', 'CAPPM320X160X180L80X120'),
+            ('3528-12', '', 'CAPPM350X280X120L80X220'),
+            ('3528-21', '', 'CAPPM350X280X210L80X220'),
+            ('6032-15', '', 'CAPPM600X320X150L130X220'),
+            ('6032-28', '', 'CAPPM600X320X280L130X220'),
+            ('7343-20', '', 'CAPPM730X430X200L130X240'),
+            ('7343-31', '', 'CAPPM730X430X310L130X240'),
+            ('7343-43', '', 'CAPPM730X430X430L130X240'),
+            ('7360-38', '', 'CAPPM730X600X380L130X410')
+        ],
+        cmp='c54375c5-7149-4ded-95c5-7462f7301ee7',
+        cat='c011cc6b-b762-498e-8494-d1994f3043cf',
+        signals=[
+            'e010ecbb-6210-4da3-9270-ebd58656dbf0',
+            'af3ffca8-0085-4edb-a775-fcb759f63411',
+        ],
+        keywords='c,capacitor,tantalum,smd,smt',
+        version='0.1',
+        create_date='2025-01-26T09:18:09Z',
+        pad_ids=['p', 'n']
     )
     save_cache(uuid_cache_file, uuid_cache)
