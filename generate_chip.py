@@ -9,7 +9,7 @@ import sys
 from os import path
 from uuid import uuid4
 
-from typing import Dict, Iterable, Optional, Tuple
+from typing import Dict, Iterable, Optional, Tuple, Union
 
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
@@ -731,7 +731,7 @@ def generate_dev(
     keywords: str,
     version: str,
     create_date: Optional[str],
-    pad_ids: Optional[Iterable[str | int]] = range(1, 3)
+    pad_ids: Optional[Iterable[Union[str | int]]] = range(1, 3)
 ) -> None:
     category = 'dev'
     for (size_metric, size_imperial, pkg_name) in packages:
