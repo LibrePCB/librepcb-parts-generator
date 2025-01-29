@@ -667,9 +667,11 @@ def generate_3d(
             .translate(translation) \
             .translate((edge_offset + edge / 2, 0, 0))
     else:
+        lead_tickness=0.1
         lead_length = config.body.lead_length
         lead_width = config.body.lead_width
-        lead_tickness=0.1
+        if lead_length is None or lead_width is None:
+	        raise RuntimeError('Generating 3D models for CAPPM not supported for configs without lead')
 
         body_pts = [(0, 0), 
                     (0, length / 2 - lead_length - lead_tickness),
@@ -701,7 +703,7 @@ def generate_3d(
     elif package_type == 'CAPC':
         inner_color = cq.Color('bisque3')
     elif package_type == 'CAPPM':
-        inner_color = cq.Color('orange')
+        inner_color = cq.Color('lightgoldenrod1')
     elif package_type == 'INDC':
         inner_color = cq.Color('lightsteelblue3')
     else:
@@ -711,7 +713,7 @@ def generate_3d(
     assembly.add_body(inner, 'inner', inner_color)
     assembly.add_body(left, 'left', StepColor.LEAD_SMT)
     assembly.add_body(right, 'right', StepColor.LEAD_SMT)
-    if package_type == 'CAPPM': assembly.add_body(marking, 'marking', cq.Color('brown'))
+    if package_type == 'CAPPM': assembly.add_body(marking, 'marking', cq.Color('darkgoldenrod1'))
 
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
     assembly.save(out_path, fused=True)
@@ -729,7 +731,7 @@ def generate_dev(
     keywords: str,
     version: str,
     create_date: Optional[str],
-    pad_ids: Optional[Iterable] = range(1, 3)
+    pad_ids: Optional[Iterable[str | int]] = range(1, 3)
 ) -> None:
     category = 'dev'
     for (size_metric, size_imperial, pkg_name) in packages:
@@ -882,7 +884,7 @@ if __name__ == '__main__':
     # (see Table 2: Land Dimensions / Courtyard)
     generate_pkg(
         library='LibrePCB_Base.lplib',
-        author='Danilo B.',
+        author='Danilo B., eto-',
         package_type='CAPPM',
         name='{package_type}{length}X{width}X{height}L{lead_length}X{lead_width}',
         description='Generic polarized molded inward-L capacitor (EIA {meta[eia]}).\n\n'
@@ -955,7 +957,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='414f873f-4099-47fd-8526-bdd8419de581',
         keywords='c,capacitor,j-lead,inward-l,molded,generic,kemet {meta[kemet]},avx {meta[avx]}',
-        version='0.2',
+        version='0.3',
         create_date='2019-11-18T21:56:00Z',
     )
     # Chip inductors (INDC)
