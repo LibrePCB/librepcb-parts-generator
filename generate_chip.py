@@ -731,7 +731,7 @@ def generate_dev(
     keywords: str,
     version: str,
     create_date: Optional[str],
-    pad_ids: Optional[Iterable[Union[str | int]]] = range(1, 3)
+    pad_ids: Optional[Iterable[str]] = ['1', '2']
 ) -> None:
     category = 'dev'
     for (size_metric, size_imperial, pkg_name) in packages:
