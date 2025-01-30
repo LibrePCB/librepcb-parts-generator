@@ -9,7 +9,7 @@ import sys
 from os import path
 from uuid import uuid4
 
-from typing import Dict, Iterable, Optional, Tuple, Union
+from typing import Dict, Iterable, Optional, Tuple
 
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
@@ -750,6 +750,8 @@ def generate_dev(
         # UUIDs
         uuid_dev = _uuid('dev')
         pkg = uuid('pkg', pkg_name, 'pkg', create=False)
+        if pad_ids is None:
+	        raise RuntimeError('pads ids should not be None');
         pads = [uuid('pkg', pkg_name, 'pad-{}'.format(i), create=False) for i in pad_ids]
 
         print('Generating dev "{}": {}'.format(full_name, uuid_dev))
