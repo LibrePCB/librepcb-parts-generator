@@ -651,7 +651,7 @@ def generate_3d(
     translation = (0, 0, height / 2)
     edge_offset = length / 2 - edge
 
-    if package_type != 'CAPPM': 
+    if package_type != 'CAPPM':
         inner = cq.Workplane("XY") \
             .box(length - 2 * edge, width, height) \
             .edges('+X').fillet(fillet) \
@@ -667,13 +667,13 @@ def generate_3d(
             .translate(translation) \
             .translate((edge_offset + edge / 2, 0, 0))
     else:
-        lead_tickness=0.1
+        lead_tickness = 0.1
         lead_length = config.body.lead_length
         lead_width = config.body.lead_width
         if lead_length is None or lead_width is None:
-	        raise RuntimeError('Generating 3D models for CAPPM not supported for configs without lead')
+            raise RuntimeError('Generating 3D models for CAPPM not supported for configs without lead')
 
-        body_pts = [(0, 0), 
+        body_pts = [(0, 0),
                     (0, length / 2 - lead_length - lead_tickness),
                     (lead_tickness, length / 2 - lead_length - lead_tickness),
                     (lead_tickness, length / 2 - 2 * lead_tickness),
@@ -686,17 +686,16 @@ def generate_3d(
                     (height * .6 + lead_tickness, lead_length - lead_tickness),
                     (lead_tickness, lead_length - lead_tickness),
                     (lead_tickness, 0)]
-            
+
         inner = cq.Workplane('ZX') \
             .polyline(body_pts).mirrorX().extrude(width / 2, both=True) \
             .edges("|Z").fillet(fillet)
-        left = cq.Workplane('ZX', origin = (length / 2 - lead_length, 0, 0)) \
-            .polyline(lead_pts).close().extrude(lead_width / 2, both = True) \
+        left = cq.Workplane('ZX', origin=(length / 2 - lead_length, 0, 0)) \
+            .polyline(lead_pts).close().extrude(lead_width / 2, both=True) \
             .edges('>X and |Y').fillet(lead_tickness / 1.1)
-        right = left.mirror(mirrorPlane = "ZY")
-        marking = cq.Workplane('XY', origin = (-(length * .4 - lead_tickness - 0.01), 0, lead_tickness + height)) \
+        right = left.mirror(mirrorPlane="ZY")
+        marking = cq.Workplane('XY', origin=(-(length * .4 - lead_tickness - 0.01), 0, lead_tickness + height)) \
             .box(length * 0.2, width - 2 * fillet, 0.02)
-    
 
     if package_type == 'RESC':
         inner_color = cq.Color('gray16')
@@ -713,7 +712,8 @@ def generate_3d(
     assembly.add_body(inner, 'inner', inner_color)
     assembly.add_body(left, 'left', StepColor.LEAD_SMT)
     assembly.add_body(right, 'right', StepColor.LEAD_SMT)
-    if package_type == 'CAPPM': assembly.add_body(marking, 'marking', cq.Color('darkgoldenrod1'))
+    if package_type == 'CAPPM':
+        assembly.add_body(marking, 'marking', cq.Color('darkgoldenrod1'))
 
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
     assembly.save(out_path, fused=True)
@@ -751,7 +751,7 @@ def generate_dev(
         uuid_dev = _uuid('dev')
         pkg = uuid('pkg', pkg_name, 'pkg', create=False)
         if pad_ids is None:
-	        raise RuntimeError('pads ids should not be None');
+            raise RuntimeError('pads ids should not be None')
         pads = [uuid('pkg', pkg_name, 'pad-{}'.format(i), create=False) for i in pad_ids]
 
         print('Generating dev "{}": {}'.format(full_name, uuid_dev))
