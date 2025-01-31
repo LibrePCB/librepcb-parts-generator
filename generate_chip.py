@@ -731,7 +731,7 @@ def generate_dev(
     keywords: str,
     version: str,
     create_date: Optional[str],
-    pad_ids: Optional[Iterable[str]] = ['1', '2']
+    pad_ids: Optional[Iterable[str]] = None,
 ) -> None:
     category = 'dev'
     for (size_metric, size_imperial, pkg_name) in packages:
@@ -750,9 +750,8 @@ def generate_dev(
         # UUIDs
         uuid_dev = _uuid('dev')
         pkg = uuid('pkg', pkg_name, 'pkg', create=False)
-        if pad_ids is None:
-            raise RuntimeError('pads ids should not be None')
-        pads = [uuid('pkg', pkg_name, 'pad-{}'.format(i), create=False) for i in pad_ids]
+        pads = [uuid('pkg', pkg_name, 'pad-{}'.format(i), create=False)
+                for i in (pad_ids or ['1', '2'])]
 
         print('Generating dev "{}": {}'.format(full_name, uuid_dev))
 
@@ -1102,6 +1101,6 @@ if __name__ == '__main__':
         keywords='c,capacitor,tantalum,smd,smt',
         version='0.1',
         create_date='2025-01-26T09:18:09Z',
-        pad_ids=['p', 'n']
+        pad_ids=['p', 'n'],
     )
     save_cache(uuid_cache_file, uuid_cache)
