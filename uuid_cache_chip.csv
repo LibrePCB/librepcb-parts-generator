@@ -29,6 +29,17 @@ dev-resistor~3225~(1210)-dev,a5153d16-a78b-439c-876b-12d12a607237
 dev-resistor~3246~(1218)-dev,3a5ce2ef-4c16-459f-a6b8-f914508a17a1
 dev-resistor~5025~(2010)-dev,5512ed40-604c-43fd-802c-1da10d419357
 dev-resistor~6432~(2512)-dev,52876458-2396-4ade-8280-6a033efa911f
+dev-tantalum~capacitor~3216-10-dev,8234fba8-16c4-4466-bf48-91b93dc9f24e
+dev-tantalum~capacitor~3216-12-dev,5cc5cdbb-1ce3-4a24-80cc-4ca33b18fb64
+dev-tantalum~capacitor~3216-18-dev,305d5ae4-ac13-42da-8e38-92bed6ff53dc
+dev-tantalum~capacitor~3528-12-dev,3910f629-01cf-4984-840f-2afb59921fe3
+dev-tantalum~capacitor~3528-21-dev,aedca092-27a4-40fb-9ebe-e5d79a598be4
+dev-tantalum~capacitor~6032-15-dev,c9848a45-9956-4602-9d9d-5c3d94d03709
+dev-tantalum~capacitor~6032-28-dev,f3afc765-3ac6-430b-8ad4-57f1128fdfd1
+dev-tantalum~capacitor~7343-20-dev,a06efab4-2442-4382-a821-6712935d5cc0
+dev-tantalum~capacitor~7343-31-dev,bba908c0-fdc8-4092-8288-a388fe489250
+dev-tantalum~capacitor~7343-43-dev,3e2637d9-9721-46b0-a0a1-2efe115dd261
+dev-tantalum~capacitor~7360-38-dev,d560469e-b70e-4be8-8a0a-fd916bff7584
 pkg-capc0402~(01005)-3d,73f34ee6-fd11-4980-a03b-127ee8ab9482
 pkg-capc0402~(01005)-footprint-density~a,5107f609-8a98-4335-b26f-494b7d2ccd85
 pkg-capc0402~(01005)-footprint-density~b,d5cb4794-090f-4c09-b02c-c77dce04ef34
@@ -389,6 +400,7 @@ pkg-capc9210~(3640)-text-name-density~a,a4127663-4824-453b-a5e8-1a795b169344
 pkg-capc9210~(3640)-text-name-density~b,8c05ec24-d992-4a5b-91f9-78c5dc5f0f7c
 pkg-capc9210~(3640)-text-value-density~a,42f70069-d854-46ca-aec1-09e4f3a03575
 pkg-capc9210~(3640)-text-value-density~b,980b858f-7456-4dc2-87aa-92dd1eb9408a
+pkg-cappm320x160x100l80x120-3d,44974f39-cc7d-4e25-8176-5af513f51adb
 pkg-cappm320x160x100l80x120-footprint-density~a,30785c63-1072-447e-8b11-25db9375fe81
 pkg-cappm320x160x100l80x120-footprint-density~b,b6c79a17-2287-41ef-b7ab-bd2a1110ee76
 pkg-cappm320x160x100l80x120-footprint-density~c,d72bcb69-c34e-4d2c-b0a2-f14cce74e62c
@@ -431,6 +443,7 @@ pkg-cappm320x160x100l80x120-text-name-density~c,4d68d435-3e0a-4d26-bdbb-b8f550d5
 pkg-cappm320x160x100l80x120-text-value-density~a,3ab6c2d0-fc34-41ba-ac83-55f608d144f0
 pkg-cappm320x160x100l80x120-text-value-density~b,6e9377bf-dddb-45fd-8a7c-ef9dd8278507
 pkg-cappm320x160x100l80x120-text-value-density~c,e3198c1c-e8a1-4b94-8649-147a05c15d01
+pkg-cappm320x160x120l80x120-3d,d30bcdab-7b69-4c4f-addf-96454d695083
 pkg-cappm320x160x120l80x120-footprint-density~a,0d735e5d-b013-49e9-9004-1781b979396c
 pkg-cappm320x160x120l80x120-footprint-density~b,26325914-842c-4002-a77f-1a0845a3ebc4
 pkg-cappm320x160x120l80x120-footprint-density~c,14a06a0e-c989-462d-aea4-324dada725a6
@@ -473,6 +486,7 @@ pkg-cappm320x160x120l80x120-text-name-density~c,b6e0f69e-9c04-4e06-bf69-0b7c1b80
 pkg-cappm320x160x120l80x120-text-value-density~a,fd29e410-46b9-41f1-93e7-52efc2246bd0
 pkg-cappm320x160x120l80x120-text-value-density~b,49a4d40d-d630-47b2-9990-c7470185d0f0
 pkg-cappm320x160x120l80x120-text-value-density~c,794b792d-2c7e-4f35-8688-4c34df9f69d2
+pkg-cappm320x160x180l80x120-3d,510f9be9-337b-4576-b227-7ed34cda38bb
 pkg-cappm320x160x180l80x120-footprint-density~a,0ed5a843-5fcf-4036-9003-fee5bddb5ef7
 pkg-cappm320x160x180l80x120-footprint-density~b,1ae6a035-f288-420f-8825-18d0cbbb1079
 pkg-cappm320x160x180l80x120-footprint-density~c,f68d3579-df24-4d0d-a4ba-d9542256a5af
@@ -515,6 +529,7 @@ pkg-cappm320x160x180l80x120-text-name-density~c,ae74f101-e68a-4fe0-8e4e-2a826322
 pkg-cappm320x160x180l80x120-text-value-density~a,46addb72-6052-4b36-b034-d89c1e4910c7
 pkg-cappm320x160x180l80x120-text-value-density~b,35d5c543-7d7c-46a1-94aa-01c1893a0202
 pkg-cappm320x160x180l80x120-text-value-density~c,b90f0afb-2611-4b14-b78b-2f318f02d4cb
+pkg-cappm350x280x120l80x220-3d,f1db7d2f-b8b1-455c-b1b5-c33b497c0867
 pkg-cappm350x280x120l80x220-footprint-density~a,3b07cd61-6271-43ee-80fa-a51b1c8c3b87
 pkg-cappm350x280x120l80x220-footprint-density~b,e51f9fc5-91cd-4a4c-967d-c6980dab51fb
 pkg-cappm350x280x120l80x220-footprint-density~c,a3483ae1-94ec-4cba-895a-91f02faa0142
@@ -557,6 +572,7 @@ pkg-cappm350x280x120l80x220-text-name-density~c,38f23b5c-24e0-4218-92cb-3731d1ce
 pkg-cappm350x280x120l80x220-text-value-density~a,9a634cff-cac3-4629-a412-c63a6bab9236
 pkg-cappm350x280x120l80x220-text-value-density~b,36bc4a57-fb15-4714-bd12-58b437dc1c50
 pkg-cappm350x280x120l80x220-text-value-density~c,dccbeddc-8d3e-4a80-9721-30bcf5e77558
+pkg-cappm350x280x210l80x220-3d,7f3d5887-cc2a-4448-afbc-c0faefe76634
 pkg-cappm350x280x210l80x220-footprint-density~a,74c60168-3df8-4da7-810f-33bf989c652d
 pkg-cappm350x280x210l80x220-footprint-density~b,7aeb48b8-2b6c-47fc-a5d2-8bbd80b42f21
 pkg-cappm350x280x210l80x220-footprint-density~c,30501531-7d5d-45f5-902f-6cd987fdee95
@@ -599,6 +615,7 @@ pkg-cappm350x280x210l80x220-text-name-density~c,6dd428f9-3fca-48b8-a0a2-0a8c13af
 pkg-cappm350x280x210l80x220-text-value-density~a,5262cb81-b33a-40ed-a91e-38529c0c0681
 pkg-cappm350x280x210l80x220-text-value-density~b,8ec56f55-9eb2-4a94-84db-e0c5e61a98a6
 pkg-cappm350x280x210l80x220-text-value-density~c,aa5db21a-a8a7-4f44-9432-3f831a4ee95d
+pkg-cappm600x320x150l130x220-3d,556cc425-2b94-4fa4-a68d-e91d0d1cd524
 pkg-cappm600x320x150l130x220-footprint-density~a,4b3b68fb-2a19-4a2f-a3ff-cefe21bdbeae
 pkg-cappm600x320x150l130x220-footprint-density~b,b88094de-82fa-4778-86a6-7180f5f484df
 pkg-cappm600x320x150l130x220-footprint-density~c,bdfd53b7-aed7-4e54-97e1-4dff04cb732a
@@ -641,6 +658,7 @@ pkg-cappm600x320x150l130x220-text-name-density~c,3083e0d6-a5a5-4200-9709-152ae19
 pkg-cappm600x320x150l130x220-text-value-density~a,d04c1bf6-35f8-44cf-9c03-36c080411b96
 pkg-cappm600x320x150l130x220-text-value-density~b,cc8aa303-fce3-4a0f-8cb6-664609c48aaf
 pkg-cappm600x320x150l130x220-text-value-density~c,0c157061-dc25-4995-88b9-0c23f44c06c8
+pkg-cappm600x320x280l130x220-3d,3f8476f3-2e1e-48c2-904e-0a101b9b594b
 pkg-cappm600x320x280l130x220-footprint-density~a,adab5798-5709-4565-81dd-e3981561dea9
 pkg-cappm600x320x280l130x220-footprint-density~b,3bc2261d-7bee-47ca-b2fd-0bf6d6c49e57
 pkg-cappm600x320x280l130x220-footprint-density~c,4717b174-6cda-41e7-9bf7-265f77e91351
@@ -683,6 +701,7 @@ pkg-cappm600x320x280l130x220-text-name-density~c,8a38033a-f1a9-470d-876f-c429f80
 pkg-cappm600x320x280l130x220-text-value-density~a,9f5fba5f-2a0f-40fa-8748-4e45f84b087f
 pkg-cappm600x320x280l130x220-text-value-density~b,edbe278d-db10-4c4b-b166-fd24bcc015ac
 pkg-cappm600x320x280l130x220-text-value-density~c,32ca7340-a63b-40e3-99ac-91817bbb8f91
+pkg-cappm730x430x200l130x240-3d,b8637794-0692-4ff2-962d-944c10c67dce
 pkg-cappm730x430x200l130x240-footprint-density~a,609686bd-1e52-4039-9f62-f427c06a5ecd
 pkg-cappm730x430x200l130x240-footprint-density~b,6a4e41bc-94c1-402a-b7ab-800a741f6bf4
 pkg-cappm730x430x200l130x240-footprint-density~c,5c23e776-4ad2-4c1f-a542-33feb51dba54
@@ -725,6 +744,7 @@ pkg-cappm730x430x200l130x240-text-name-density~c,41f5e38b-85b9-49b7-b98f-cf883fa
 pkg-cappm730x430x200l130x240-text-value-density~a,ff925b0f-6244-4b07-bd67-1019c17868b1
 pkg-cappm730x430x200l130x240-text-value-density~b,edfe59b9-e4d9-4ef9-9475-c560830c12ce
 pkg-cappm730x430x200l130x240-text-value-density~c,9f22d2b0-6410-41fc-b593-e9916858301b
+pkg-cappm730x430x310l130x240-3d,79465b6a-b9dd-43ee-a5b5-07c5c9c72013
 pkg-cappm730x430x310l130x240-footprint-density~a,73519808-1a6e-46e3-8400-f71d2e470701
 pkg-cappm730x430x310l130x240-footprint-density~b,0e183346-40fa-4393-91b8-080dab457ded
 pkg-cappm730x430x310l130x240-footprint-density~c,570f4819-09d3-4ea0-a652-4397ab26a51b
@@ -767,6 +787,7 @@ pkg-cappm730x430x310l130x240-text-name-density~c,7706ca9c-0ec0-4795-8558-e83410b
 pkg-cappm730x430x310l130x240-text-value-density~a,c2effc33-4841-45e8-82ca-351d3535b3da
 pkg-cappm730x430x310l130x240-text-value-density~b,9e4bb110-ced3-4ada-b14b-084d05a6483a
 pkg-cappm730x430x310l130x240-text-value-density~c,2d042d31-0505-428f-895f-159bf4f49b94
+pkg-cappm730x430x430l130x240-3d,8840b1f3-0af4-472b-a78b-bfc44b48853f
 pkg-cappm730x430x430l130x240-footprint-density~a,5259ea68-dfad-4640-8b3e-3a7f04ebf5e9
 pkg-cappm730x430x430l130x240-footprint-density~b,0ae22722-e7a0-428a-958e-84f781b4ead1
 pkg-cappm730x430x430l130x240-footprint-density~c,23bb9fd4-e619-4f0e-86c9-2fa2c39ea2db
@@ -809,6 +830,7 @@ pkg-cappm730x430x430l130x240-text-name-density~c,cecc8457-70da-4786-b93e-c830a00
 pkg-cappm730x430x430l130x240-text-value-density~a,720db91b-aa4c-43d2-bba7-6d3ed71ea57b
 pkg-cappm730x430x430l130x240-text-value-density~b,6b1b1cb1-1272-45b3-b177-62c14383cd72
 pkg-cappm730x430x430l130x240-text-value-density~c,ce76eee9-1189-4480-9d42-4529ea522a98
+pkg-cappm730x600x380l130x410-3d,5f61a9f2-ffff-4079-9b1c-182e05d628ee
 pkg-cappm730x600x380l130x410-footprint-density~a,fd28c915-566c-4554-8fae-90bebc2b2bec
 pkg-cappm730x600x380l130x410-footprint-density~b,1edd5b4f-054b-43dd-aedb-fe48b7cc00f1
 pkg-cappm730x600x380l130x410-footprint-density~c,e683133e-cdab-4fa9-93ac-9b0c958b7b2c
