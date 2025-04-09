@@ -158,7 +158,7 @@ Generated with {GENERATOR_NAME}
                 rotation=Rotation(0),
                 size=Size(_pad_length(), _pad_width()),
                 radius=ShapeRadius(0.0),
-                stop_mask=StopMaskConfig.AUTO,
+                stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
                 solder_paste=SolderPasteConfig.AUTO,
                 copper_clearance=CopperClearance(0.0),
                 function=PadFunction.STANDARD_PAD,
