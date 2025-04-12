@@ -227,7 +227,7 @@ def generate_pkg(config: Config) -> None:
             rotation=Rotation(0),
             size=Size(*config.pad_size),
             radius=ShapeRadius(0.5),
-            stop_mask=StopMaskConfig.AUTO,
+            stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
             solder_paste=SolderPasteConfig.AUTO,
             copper_clearance=CopperClearance(0),
             function=PadFunction.STANDARD_PAD,

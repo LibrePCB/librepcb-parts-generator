@@ -159,7 +159,7 @@ def footprint_add_support_pads(
                 rotation=Rotation(0),
                 size=Size(spec.support_pad_width, spec.support_pad_height),
                 radius=ShapeRadius(0.5),  # 0.5 is LibrePCB default
-                stop_mask=StopMaskConfig.AUTO,
+                stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
                 solder_paste=SolderPasteConfig.AUTO,
                 copper_clearance=CopperClearance(0),
                 function=PadFunction.STANDARD_PAD,
@@ -187,7 +187,7 @@ def footprint_add_pads(
                 rotation=Rotation(0),
                 size=Size(spec.pad_width, spec.pad_height),
                 radius=ShapeRadius(0.5),  # 0.5 is LibrePCB default
-                stop_mask=StopMaskConfig.AUTO,
+                stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
                 solder_paste=SolderPasteConfig.AUTO,
                 copper_clearance=CopperClearance(0),
                 function=PadFunction.STANDARD_PAD,

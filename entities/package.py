@@ -1,4 +1,4 @@
-from typing import Iterable, List
+from typing import Iterable, List, Optional, Union
 
 from common import format_float, serialize_common
 
@@ -165,12 +165,18 @@ class Size():
         return '(size {} {})'.format(format_float(self.width), format_float(self.height))
 
 
-class StopMaskConfig(EnumValue):
+class StopMaskConfig():
     AUTO = 'auto'
     OFF = 'off'
 
-    def get_name(self) -> str:
-        return 'stop_mask'
+    def __init__(self, value: Union[str, float]):
+        self.value = value
+
+    def __str__(self) -> str:
+        return '(stop_mask {})'.format(
+            format_float(self.value) if type(self.value) is float
+            else self.value
+        )
 
 
 class SolderPasteConfig(EnumValue):
@@ -209,6 +215,22 @@ class PadFunction(EnumValue):
 class DrillDiameter(FloatValue):
     def __init__(self, diameter: float):
         super().__init__('diameter', diameter)
+
+
+class Hole():
+    def __init__(self, uuid: str, diameter: DrillDiameter,
+                 vertices: List[Vertex], stop_mask: StopMaskConfig):
+        self.uuid = uuid
+        self.diameter = diameter
+        self.vertices = vertices
+        self.stop_mask = stop_mask
+
+    def __str__(self) -> str:
+        ret = '(hole {} {}\n'.format(self.uuid, self.diameter)
+        ret += ' {}\n'.format(self.stop_mask)
+        ret += indent_entities(self.vertices)
+        ret += ')'
+        return ret
 
 
 class PadHole():
@@ -256,6 +278,41 @@ class FootprintPad():
         return ret
 
 
+class Zone():
+    def __init__(self, uuid: str, top: bool, inner: bool, bottom: bool,
+                 no_copper: bool, no_planes: bool, no_exposure: bool,
+                 no_devices: bool, vertices: Optional[List[Vertex]] = None):
+        self.uuid = uuid
+        self.top = top
+        self.inner = inner
+        self.bottom = bottom
+        self.no_copper = no_copper
+        self.no_planes = no_planes
+        self.no_exposure = no_exposure
+        self.no_devices = no_devices
+        self.vertices = vertices or []
+
+    def add_vertex(self, vertex: Vertex) -> None:
+        self.vertices.append(vertex)
+
+    def __str__(self) -> str:
+        ret = '(zone {}\n'.format(self.uuid)
+        ret += ' {} {} {} {}\n'.format(
+            BoolValue('no_copper', self.no_copper),
+            BoolValue('no_planes', self.no_planes),
+            BoolValue('no_exposure', self.no_exposure),
+            BoolValue('no_devices', self.no_devices),
+        )
+        ret += ' {} {} {}\n'.format(
+            BoolValue('top', self.top),
+            BoolValue('inner', self.inner),
+            BoolValue('bottom', self.bottom),
+        )
+        ret += indent_entities(self.vertices)
+        ret += ')'
+        return ret
+
+
 class Footprint():
     def __init__(self, uuid: str, name: Name, description: Description,
                  position_3d: Position3D, rotation_3d: Rotation3D):
@@ -269,6 +326,8 @@ class Footprint():
         self.polygons: List[Polygon] = []
         self.circles: List[Circle] = []
         self.texts: List[StrokeText] = []
+        self.holes: List[Hole] = []
+        self.zones: List[Zone] = []
 
     def add_pad(self, pad: FootprintPad) -> None:
         self.pads.append(pad)
@@ -285,6 +344,12 @@ class Footprint():
     def add_text(self, text: StrokeText) -> None:
         self.texts.append(text)
 
+    def add_zone(self, zone: Zone) -> None:
+        self.zones.append(zone)
+
+    def add_hole(self, hole: Hole) -> None:
+        self.holes.append(hole)
+
     def __str__(self) -> str:
         ret = '(footprint {}\n'.format(self.uuid) +\
             ' {}\n'.format(self.name) +\
@@ -295,6 +360,8 @@ class Footprint():
         ret += indent_entities(self.polygons)
         ret += indent_entities(self.circles)
         ret += indent_entities(self.texts)
+        ret += indent_entities(self.zones)
+        ret += indent_entities(self.holes)
         ret += ')'
         return ret
 
