@@ -4,7 +4,8 @@ from common import escape_string, serialize_common
 from entities.attribute import Attribute
 
 from .common import (
-    Author, Category, Created, Deprecated, Description, GeneratedBy, Keywords, Name, StringValue, UUIDValue, Version
+    Author, Category, Created, Deprecated, Description, GeneratedBy, Keywords, Name, Resource, StringValue, UUIDValue,
+    Version
 )
 from .component import SignalUUID
 from .helper import indent_entities
@@ -70,6 +71,7 @@ class Device():
         self.package_uuid = package_uuid
         self.pads: List[ComponentPad] = []
         self.parts: List[Part] = []
+        self.resources: List[Resource] = []
         self.approvals: List[str] = []
 
     def add_pad(self, pad: ComponentPad) -> None:
@@ -77,6 +79,9 @@ class Device():
 
     def add_part(self, part: Part) -> None:
         self.parts.append(part)
+
+    def add_resource(self, resource: Resource) -> None:
+        self.resources.append(resource)
 
     def add_approval(self, approval: str) -> None:
         self.approvals.append(approval)
@@ -91,8 +96,9 @@ class Device():
             ' {}\n'.format(self.created) +\
             ' {}\n'.format(self.deprecated) +\
             ' {}\n'.format(self.generated_by) +\
-            ''.join([' {}\n'.format(cat) for cat in self.categories]) +\
-            ' {}\n'.format(self.component_uuid) +\
+            ''.join([' {}\n'.format(cat) for cat in self.categories])
+        ret += indent_entities(self.resources)
+        ret += ' {}\n'.format(self.component_uuid) +\
             ' {}\n'.format(self.package_uuid)
         ret += indent_entities(sorted(self.pads, key=lambda x: str(x.pad_uuid)))
         ret += indent_entities(self.parts)

@@ -316,3 +316,15 @@ class Text():
         return '(text {} {} {}\n'.format(self.uuid, self.layer, self.value) +\
                ' {} {} {} {}\n'.format(self.align, self.height, self.position, self.rotation) +\
                ')'
+
+
+class Resource():
+    def __init__(self, name: str, mediatype: str, url: str):
+        self.name = name
+        self.mediatype = mediatype
+        self.url = url
+
+    def __str__(self) -> str:
+        return '(resource "{}" (mediatype "{}")\n'.format(escape_string(self.name), escape_string(self.mediatype)) +\
+               ' (url "{}")\n'.format(escape_string(self.url)) +\
+               ')'
