@@ -3,12 +3,10 @@
 This is a collection of Python 3 based scripts to generate parts for the
 [LibrePCB](https://librepcb.org) default library.
 
-
 ## Requirements
 
-- Python 3.8+
+- Python 3.9+
 - Dependencies in `pyproject.toml`
-
 
 ## Introduction / Concepts
 
