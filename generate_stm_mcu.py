@@ -81,9 +81,8 @@ from entities.component import (
     Variant,
 )
 from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
-from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation
+from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation, Symbol
 from entities.symbol import Pin as SymbolPin
-from entities.symbol import Symbol
 
 grid = 2.54  # Grid size in mm
 width_regular = 10  # Symbol width in grid units

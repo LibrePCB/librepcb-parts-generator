@@ -53,7 +53,13 @@ max-line-length = 120
 select = [
     "E",
     "F",
+    "I",
 ]
+
+[tool.ruff.lint.isort]
+force-wrap-aliases = false
+sections = { typing = ["typing"] }
+section-order = ["future", "standard-library", "typing", "third-party", "first-party", "local-folder"]
 
 [tool.ruff.format]
 quote-style = "single"

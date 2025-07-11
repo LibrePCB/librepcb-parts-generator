@@ -76,9 +76,8 @@ from entities.package import (
     StrokeText,
     StrokeWidth,
 )
-from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation
+from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation, Symbol
 from entities.symbol import Pin as SymbolPin
-from entities.symbol import Symbol
 
 
 def test_name() -> None:
