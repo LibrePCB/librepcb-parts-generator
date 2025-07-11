@@ -160,7 +160,8 @@ class SymbolPinPlacement:
         Return all pins spaced with the specified grid size.
         """
         dx = (width + 2) * grid / 2
-        return [(l[0], Position(-dx, l[1] * grid), Rotation(0.0)) for l in self.left] + [
+
+        return [(l[0], Position(-dx, l[1] * grid), Rotation(0.0)) for l in self.left] + [  # noqa: E741
             (r[0], Position(dx, r[1] * grid), Rotation(180.0)) for r in self.right
         ]
 

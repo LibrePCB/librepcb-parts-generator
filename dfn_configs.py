@@ -287,8 +287,8 @@ JEDEC_CONFIGS = [
     DfnConfig(3.0, 2.0, 0.5, 8, 0.75, 0.80, 0.55, 2.20, 0.60, 'W3020D-1,W3020D-4,WECD-1,WECD-4'),
     # Commented out as they coincide with the V3020D-1, only the tolerances are different,
     # so we may need to re-add them again later.
-    # DfnConfig(3.0, 2.0, 0.5, 8, 0.95, 1.00, 0.40, 2.20, 0.60, 'V3020D-4,VECD-4', no_exp=False),     # no nominal exp_pad
-    # DfnConfig(3.0, 2.0, 0.5, 8, 0.75, 0.80, 0.40, 2.20, 0.60, 'W3020D-4,WECD-4', no_exp=False),     # no nominal exp_pad
+    # DfnConfig(3.0, 2.0, 0.5, 8, 0.95, 1.00, 0.40, 2.20, 0.60, 'V3020D-4,VECD-4', no_exp=False), # no nominal exp_pad
+    # DfnConfig(3.0, 2.0, 0.5, 8, 0.75, 0.80, 0.40, 2.20, 0.60, 'W3020D-4,WECD-4', no_exp=False), # no nominal exp_pad
     DfnConfig(3.0, 2.0, 0.5, 10, 0.95, 1.00, 0.55, 2.20, 0.60, 'V3020D-2,VECD-2', print_pad=True),
     DfnConfig(3.0, 2.0, 0.5, 10, 0.75, 0.80, 0.55, 2.20, 0.60, 'W3020D-2,WECD-2'),
     DfnConfig(3.0, 2.0, 0.5, 10, 0.95, 1.00, 0.30, 2.20, 0.60, 'V3020D-3,VECD-3', print_pad=True),
@@ -418,7 +418,6 @@ def step_modification_sgp3x(body: Any, dot: Any, workplane: Any) -> Tuple[Any, A
 
 
 THIRD_CONFIGS = [
-    # length, width, pitch, pin_count, height_nominal, height_max, lead_length, exposed_width, exposed_length, keywords
     # Sensirion
     DfnConfig(
         length=2.0,

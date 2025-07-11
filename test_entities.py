@@ -658,7 +658,8 @@ def test_package() -> None:
         '009e35ef-1f50-4bf3-ab58-11eb85bf5503',
         Name('Soldered Wire Connector 1x19 ⌀1.0mm'),
         Description(
-            'A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\n\nGenerated with librepcb-parts-generator (generate_connectors.py)'
+            'A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\n\n'
+            'Generated with librepcb-parts-generator (generate_connectors.py)'
         ),
         Keywords('connector, 1x19, d1.0, connector, soldering, generic'),
         Author('Danilo B.'),
@@ -681,10 +682,10 @@ def test_package() -> None:
     package.add_approval('(approval bar)')
 
     assert (
-        str(package)
-        == """(librepcb_package 009e35ef-1f50-4bf3-ab58-11eb85bf5503
+        str(package) == """(librepcb_package 009e35ef-1f50-4bf3-ab58-11eb85bf5503
  (name "Soldered Wire Connector 1x19 ⌀1.0mm")
- (description "A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\\n\\nGenerated with librepcb-parts-generator (generate_connectors.py)")
+ (description "A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\\n\\n"""
+        """Generated with librepcb-parts-generator (generate_connectors.py)")
  (keywords "connector, 1x19, d1.0, connector, soldering, generic")
  (author "Danilo B.")
  (version "0.1")
@@ -912,7 +913,8 @@ def test_serialized_package_line_endings(tmp_path: Path) -> None:
         package_uuid,
         Name('Soldered Wire Connector 1x19 1.0mm'),
         Description(
-            'A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\n\nGenerated with librepcb-parts-generator (generate_connectors.py)'
+            'A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\n\n'
+            'Generated with librepcb-parts-generator (generate_connectors.py)'
         ),
         Keywords('connector, 1x19, d1.0, connector, soldering, generic'),
         Author('Danilo B.'),

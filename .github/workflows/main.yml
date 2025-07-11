@@ -22,7 +22,7 @@ jobs:
         run: pytest
       - name: Run mypy
         run: mypy .
-      - name: Run flake8
-        run: flake8
+      - name: Run ruff check
+        run: ruff check .
       - name: Run ruff format
         run: ruff format --check

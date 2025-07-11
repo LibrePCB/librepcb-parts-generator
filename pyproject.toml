@@ -15,7 +15,6 @@ version = "0.1.0"
 [project.optional-dependencies]
 test = [
     "pytest ~= 8.2.1",
-    "flake8 ~= 4.0.1",
     "mypy == 1.10.0",
     "ruff ~= 0.12.2",
 ]
@@ -43,6 +42,18 @@ disallow_untyped_defs = false
 [tool.ruff]
 target-version = "py38"
 line-length = 100
+
+[tool.ruff.lint.pycodestyle]
+# When the autoformatter fails to reduce the line length or it is disabled,
+# allow for a bit more
+max-line-length = 120
+
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+]
 
 [tool.ruff.format]
 quote-style = "single"
