@@ -9,7 +9,7 @@ class AttributeUnit(EnumValue):
 
 
 class UnitlessUnit(AttributeUnit):
-    NONE = "none"
+    NONE = 'none'
 
 
 class AttributeType(EnumValue):
@@ -26,8 +26,14 @@ class AttributeType(EnumValue):
         return 'type'
 
 
-class Attribute():
-    def __init__(self, name: str, value: Union[Value, str], attribute_type: AttributeType, unit: Optional[AttributeUnit]) -> None:
+class Attribute:
+    def __init__(
+        self,
+        name: str,
+        value: Union[Value, str],
+        attribute_type: AttributeType,
+        unit: Optional[AttributeUnit],
+    ) -> None:
         self.name = name
 
         self.value = Value(value) if isinstance(value, str) else value
@@ -35,7 +41,9 @@ class Attribute():
         self.attribute_type = attribute_type
 
     def __str__(self) -> str:
-        return '(attribute "{}" {} {} {})'.format(self.name, self.attribute_type, self.unit, self.value)
+        return '(attribute "{}" {} {} {})'.format(
+            self.name, self.attribute_type, self.unit, self.value
+        )
 
 
 class CapacitanceUnit(AttributeUnit):

@@ -22,6 +22,7 @@ Example:
 +--------------------------------------+------------------+---------------+
 
 """
+
 import argparse
 import json
 import math
@@ -35,12 +36,49 @@ from typing import Any, DefaultDict, Dict, Iterable, Iterator, List, Optional, S
 import common
 from common import human_sort_key, init_cache, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
-    Layer, Length, Name, Polygon, Position, Rotation, Text, Value, Version, Vertex, Width
+    Align,
+    Angle,
+    Author,
+    Category,
+    Created,
+    Deprecated,
+    Description,
+    Fill,
+    GeneratedBy,
+    GrabArea,
+    Height,
+    Keywords,
+    Layer,
+    Length,
+    Name,
+    Polygon,
+    Position,
+    Rotation,
+    Text,
+    Value,
+    Version,
+    Vertex,
+    Width,
 )
 from entities.component import (
-    Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
-    Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
+    Clock,
+    Component,
+    DefaultValue,
+    ForcedNet,
+    Gate,
+    Negated,
+    Norm,
+    PinSignalMap,
+    Prefix,
+    Required,
+    Role,
+    SchematicOnly,
+    Signal,
+    SignalUUID,
+    Suffix,
+    SymbolUUID,
+    TextDesignator,
+    Variant,
 )
 from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation
@@ -122,8 +160,9 @@ class SymbolPinPlacement:
         Return all pins spaced with the specified grid size.
         """
         dx = (width + 2) * grid / 2
-        return [(l[0], Position(-dx, l[1] * grid), Rotation(0.0)) for l in self.left] + \
-            [(r[0], Position(dx, r[1] * grid), Rotation(180.0)) for r in self.right]
+        return [(l[0], Position(-dx, l[1] * grid), Rotation(0.0)) for l in self.left] + [
+            (r[0], Position(dx, r[1] * grid), Rotation(180.0)) for r in self.right
+        ]
 
     def maxmin_y(self, grid: float) -> Tuple[float, float]:
         """
@@ -220,8 +259,7 @@ class MCU:
 
         # Validate according to LibrePCB signal name rules
         # (libs/librepcb/common/circuitidentifier.h)
-        assert re.match(r'^[-a-zA-Z0-9_+/!?@#$]*$', val), \
-            'Invalid signal name: {}'.format(val)
+        assert re.match(r'^[-a-zA-Z0-9_+/!?@#$]*$', val), 'Invalid signal name: {}'.format(val)
 
         return val
 
@@ -286,10 +324,12 @@ class MCU:
         for pin in pins:
             if pin.name in known_names:
                 continue
-            result.append(PinName(
-                '{}{}'.format(pin_type, i),
-                pin.name,
-            ))
+            result.append(
+                PinName(
+                    '{}{}'.format(pin_type, i),
+                    pin.name,
+                )
+            )
             known_names.add(pin.name)
             i += 1
         return result
@@ -343,11 +383,10 @@ class MCU:
             'H': 1536,
             'I': 2048,
         }
-        assert size in flash_sizes, \
-            "{}: Flash size {} doesn't look valid".format(self.ref, size)
+        assert size in flash_sizes, "{}: Flash size {} doesn't look valid".format(self.ref, size)
 
         # Replace flash size character with 'x'
-        return self.ref[:offset] + 'x' + self.ref[offset + 1:]
+        return self.ref[:offset] + 'x' + self.ref[offset + 1 :]
 
     def ref_for_flash_variants(self, variants: List[str]) -> str:
         """
@@ -370,7 +409,7 @@ class MCU:
         # Ensure the offset is correct
         for variant in variants:
             assert variant[:offset] == self.ref[:offset]
-            assert variant[(offset + 1):] == self.ref[(offset + 1):]
+            assert variant[(offset + 1) :] == self.ref[(offset + 1) :]
 
         # Return merged name
         flash_variants = sorted([ref[offset] for ref in variants])
@@ -378,7 +417,7 @@ class MCU:
             return '{}[{}]{}'.format(
                 self.ref[:offset],
                 ''.join(flash_variants),
-                self.ref[(offset + 1):],
+                self.ref[(offset + 1) :],
             )
         else:
             return self.ref
@@ -399,18 +438,16 @@ class MCU:
         """
         Get the symbol identifier, used as a key for the UUID lookup.
         """
-        return self.symbol_name \
-            .lower() \
-            .replace(' ', '_') \
-            .replace('-', '~') \
-            .replace('/', '')
+        return self.symbol_name.lower().replace(' ', '_').replace('-', '~').replace('/', '')
 
     @property
     def symbol_description(self) -> str:
         """
         Get a description of the symbol.
         """
-        description = 'A {} MCU by ST Microelectronics with the following pins:\n\n'.format(self.family)
+        description = 'A {} MCU by ST Microelectronics with the following pins:\n\n'.format(
+            self.family
+        )
         for pin_type in sorted(self.pin_types()):
             count = len(self.get_pin_names_by_type(pin_type))
             description += '- {} {} pins\n'.format(count, pin_type)
@@ -442,7 +479,11 @@ class MCU:
     def description(self) -> str:
         description = 'A {} MCU by ST Microelectronics.\n\n'.format(self.name)
         description += 'Package: {}\nFlash: {}\nRAM: {}\nI/Os: {}\nFrequency: {}\n'.format(
-            self.package, self.flash, self.ram, self.io_count, self.frequency,
+            self.package,
+            self.flash,
+            self.ram,
+            self.io_count,
+            self.frequency,
         )
         if self.voltage:
             description += 'Voltage: {}\n'.format(self.voltage)
@@ -451,7 +492,9 @@ class MCU:
         description += '\nGenerated with {}'.format(generator)
         return description
 
-    def generate_placement_data(self, debug: bool = False) -> Tuple[SymbolPinPlacement, Dict[str, str]]:
+    def generate_placement_data(
+        self, debug: bool = False
+    ) -> Tuple[SymbolPinPlacement, Dict[str, str]]:
         """
         This method will generate placement data for the symbol.
 
@@ -501,10 +544,7 @@ class MCU:
         ]
         left_pins = [group for group in left_pins if len(group) > 0]
         left_count = sum(len(group) for group in left_pins)
-        right_pins = [
-            PinGroup(t, self.get_pin_names_by_type(t))
-            for t in ['IO']
-        ]
+        right_pins = [PinGroup(t, self.get_pin_names_by_type(t)) for t in ['IO']]
         right_pins = [group for group in right_pins if len(group) > 0]
         right_count = sum(len(group) for group in right_pins)
 
@@ -513,21 +553,27 @@ class MCU:
         # the groups. Finally, add some height for double spacing of power
         # pins. Do this calculation for both sides, and use the highest side.
         power_pin_spacing = max(len(self.get_pin_names_by_type('Power')) - 1, 0)
-        height = max([
-            left_count + len(left_pins) - 1 + power_pin_spacing,
-            right_count + len(right_pins) - 1,
-        ])
+        height = max(
+            [
+                left_count + len(left_pins) - 1 + power_pin_spacing,
+                right_count + len(right_pins) - 1,
+            ]
+        )
         max_y = math.ceil(height / 2)
         if debug:
             print('Placement info:')
-            print('  Left {} pins {} steps'.format(
-                left_count,
-                left_count + len(left_pins) - 1,
-            ))
-            print('  Right {} pins {} steps'.format(
-                right_count,
-                right_count + len(right_pins) - 1,
-            ))
+            print(
+                '  Left {} pins {} steps'.format(
+                    left_count,
+                    left_count + len(left_pins) - 1,
+                )
+            )
+            print(
+                '  Right {} pins {} steps'.format(
+                    right_count,
+                    right_count + len(right_pins) - 1,
+                )
+            )
             print('  Height: {} steps, max_y: {} steps'.format(height, max_y))
 
         # Generate placement info
@@ -562,10 +608,10 @@ class MCU:
         if debug:
             print('Placement:')
             print('  Left:')
-            for (pin_name_str, y) in placement.left:
+            for pin_name_str, y in placement.left:
                 print('    {} {}'.format(y, pin_name_str))
             print('  Right:')
-            for (pin_name_str, y) in placement.right:
+            for pin_name_str, y in placement.right:
                 print('    {} {}'.format(y, pin_name_str))
 
         return (placement, name_mapping)
@@ -607,17 +653,19 @@ def generate_sym(mcus: List[MCU], symbol_map: Dict[str, str], debug: bool = Fals
         placement_pins = placement.pins(width, grid)
         placement_pins.sort(key=lambda x: (x[1].x, x[1].y))
         for pin_name, position, rotation in placement.pins(width, grid):
-            symbol.add_pin(SymbolPin(
-                uuid('sym', mcu.symbol_identifier, 'pin-{}'.format(pin_name)),
-                Name(pin_name),
-                position,
-                rotation,
-                Length(grid),
-                NamePosition(3.81, 0.0),
-                NameRotation(0.0),
-                NameHeight(2.5),
-                NameAlign('left center')
-            ))
+            symbol.add_pin(
+                SymbolPin(
+                    uuid('sym', mcu.symbol_identifier, 'pin-{}'.format(pin_name)),
+                    Name(pin_name),
+                    position,
+                    rotation,
+                    Length(grid),
+                    NamePosition(3.81, 0.0),
+                    NameRotation(0.0),
+                    NameHeight(2.5),
+                    NameAlign('left center'),
+                )
+            )
         polygon = Polygon(
             uuid('sym', mcu.symbol_identifier, 'polygon'),
             Layer('sym_outlines'),
@@ -628,8 +676,8 @@ def generate_sym(mcus: List[MCU], symbol_map: Dict[str, str], debug: bool = Fals
         (max_y, min_y) = placement.maxmin_y(grid)
         dx = width * grid / 2
         polygon.add_vertex(Vertex(Position(-dx, max_y), Angle(0.0)))
-        polygon.add_vertex(Vertex(Position( dx, max_y), Angle(0.0)))
-        polygon.add_vertex(Vertex(Position( dx, min_y), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(dx, max_y), Angle(0.0)))
+        polygon.add_vertex(Vertex(Position(dx, min_y), Angle(0.0)))
         polygon.add_vertex(Vertex(Position(-dx, min_y), Angle(0.0)))
         polygon.add_vertex(Vertex(Position(-dx, max_y), Angle(0.0)))
         symbol.add_polygon(polygon)
@@ -714,18 +762,20 @@ def generate_cmp(
         # Add signals
         signals = sorted({pin.name for pin in mcu.pins}, key=human_sort_key)
         for signal in signals:
-            component.add_signal(Signal(
-                # Use original signal name, so that changing the cleanup function
-                # does not influence the identifier.
-                uuid('cmp', mcu.component_identifier, 'signal-{}'.format(signal)),
-                # Use cleaned up signal name for name
-                Name(signal),
-                Role.PASSIVE,
-                Required(False),
-                Negated(False),
-                Clock(False),
-                ForcedNet(''),
-            ))
+            component.add_signal(
+                Signal(
+                    # Use original signal name, so that changing the cleanup function
+                    # does not influence the identifier.
+                    uuid('cmp', mcu.component_identifier, 'signal-{}'.format(signal)),
+                    # Use cleaned up signal name for name
+                    Name(signal),
+                    Role.PASSIVE,
+                    Required(False),
+                    Negated(False),
+                    Clock(False),
+                    ForcedNet(''),
+                )
+            )
 
         # Add symbol variant
         gate = Gate(
@@ -737,18 +787,22 @@ def generate_cmp(
             Suffix(''),
         )
         for generic, concrete in pin_mapping.items():
-            gate.add_pin_signal_map(PinSignalMap(
-                uuid('sym', mcu.symbol_identifier, 'pin-{}'.format(generic)),
-                SignalUUID(uuid('cmp', mcu.component_identifier, 'signal-{}'.format(concrete))),
-                TextDesignator.SIGNAL_NAME,
-            ))
-        component.add_variant(Variant(
-            uuid('cmp', mcu.component_identifier, 'variant-single'),
-            Norm.EMPTY,
-            Name('single'),
-            Description('Symbol with all MCU pins'),
-            gate,
-        ))
+            gate.add_pin_signal_map(
+                PinSignalMap(
+                    uuid('sym', mcu.symbol_identifier, 'pin-{}'.format(generic)),
+                    SignalUUID(uuid('cmp', mcu.component_identifier, 'signal-{}'.format(concrete))),
+                    TextDesignator.SIGNAL_NAME,
+                )
+            )
+        component.add_variant(
+            Variant(
+                uuid('cmp', mcu.component_identifier, 'variant-single'),
+                Norm.EMPTY,
+                Name('single'),
+                Description('Symbol with all MCU pins'),
+                gate,
+            )
+        )
         components.append(component)
 
     # Make sure all grouped components are identical
@@ -757,7 +811,9 @@ def generate_cmp(
     print('Wrote cmp {}'.format(name))
 
 
-def generate_dev(mcu: MCU, symbol_map: Dict[str, str], base_lib_path: str, debug: bool = False) -> None:
+def generate_dev(
+    mcu: MCU, symbol_map: Dict[str, str], base_lib_path: str, debug: bool = False
+) -> None:
     """
     A device will be generated for every MCU ref.
     """
@@ -767,17 +823,17 @@ def generate_dev(mcu: MCU, symbol_map: Dict[str, str], base_lib_path: str, debug
     dev_version = '0.1'
 
     package_uuid_mapping = {
-        'LQFP32':  'd1944164-969d-421f-8b46-1e79fc368195',  # LQFP80P900X900X140-32
-        'LQFP44':  'b373f788-8d26-4e3d-9256-89851d962373',  # LQFP80P1200X1200X140-44
-        'LQFP48':  '584b7c26-5a8e-4a2b-807a-977edd1df991',  # LQFP50P900X900X140-48
-        'LQFP64':  '54cc857c-3af1-4af3-82b0-fba7a121bcb1',  # LQFP50P1200X1200X140-64
-        'LQFP80':  'fde7e4d0-0548-4c0a-aa3e-6f8ce25e751c',  # LQFP65P1600X1600X140-80
+        'LQFP32': 'd1944164-969d-421f-8b46-1e79fc368195',  # LQFP80P900X900X140-32
+        'LQFP44': 'b373f788-8d26-4e3d-9256-89851d962373',  # LQFP80P1200X1200X140-44
+        'LQFP48': '584b7c26-5a8e-4a2b-807a-977edd1df991',  # LQFP50P900X900X140-48
+        'LQFP64': '54cc857c-3af1-4af3-82b0-fba7a121bcb1',  # LQFP50P1200X1200X140-64
+        'LQFP80': 'fde7e4d0-0548-4c0a-aa3e-6f8ce25e751c',  # LQFP65P1600X1600X140-80
         'LQFP100': 'f74cdcb2-833d-4877-876f-56d4c15b5cb8',  # LQFP50P1600X1600X140-100
         'LQFP144': '2fc34b46-a86d-40e3-9dd1-def143ac3318',  # LQFP50P2200X2200X140-144
         'LQFP176': '43ab9eca-7912-433f-afaa-61d3ec6c84b2',  # LQFP50P2600X2600X140-176
         'LQFP208': '422600f0-a868-49b6-92f7-22c1874258bb',  # LQFP50P3000X3000X140-208
-        'SO8':     'ffbf2bed-9155-45a9-b154-2f766c7f9019',  # SOIC127P600X175-8
-        'SO8N':    'ffbf2bed-9155-45a9-b154-2f766c7f9019',  # SOIC127P600X175-8
+        'SO8': 'ffbf2bed-9155-45a9-b154-2f766c7f9019',  # SOIC127P600X175-8
+        'SO8N': 'ffbf2bed-9155-45a9-b154-2f766c7f9019',  # SOIC127P600X175-8
         'TSSOP14': 'fb8c2dc2-9812-4383-a810-b2fdbd525b4e',  # TSSOP14P65_500X640X120L100X30
         'TSSOP20': 'a040fccc-54e5-4f95-a5db-20044d8b37a5',  # TSSOP20P65_650X640X120L100X30
     }
@@ -803,10 +859,12 @@ def generate_dev(mcu: MCU, symbol_map: Dict[str, str], base_lib_path: str, debug
     )
     for pin in mcu.pins:
         pad_uuid = pad_uuid_mapping[pin.number]
-        device.add_pad(ComponentPad(
-            pad_uuid,
-            SignalUUID(uuid('cmp', mcu.component_identifier, 'signal-{}'.format(pin.name))),
-        ))
+        device.add_pad(
+            ComponentPad(
+                pad_uuid,
+                SignalUUID(uuid('cmp', mcu.component_identifier, 'signal-{}'.format(pin.name))),
+            )
+        )
 
     device.serialize(path.join(outdir, 'dev'))
     print('Wrote dev {}'.format(name))
@@ -850,11 +908,15 @@ def generate(data: Dict[str, MCU], base_lib_path: str, debug: bool = False) -> N
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate STM MCU library elements')
     parser.add_argument(
-        '--data-dir', metavar='path-to-data-dir', required=True,
+        '--data-dir',
+        metavar='path-to-data-dir',
+        required=True,
         help='path to the data dir from https://github.com/LibrePCB/stm-pinout',
     )
     parser.add_argument(
-        '--base-lib', metavar='path-to-base-lib', required=True,
+        '--base-lib',
+        metavar='path-to-base-lib',
+        required=True,
         help='path to the LibrePCB-Base.lplib library',
     )
     parser.add_argument(

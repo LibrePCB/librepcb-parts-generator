@@ -4,6 +4,7 @@ Generate DO packages.
 - JEDEC DO-214 https://www.jedec.org/system/files/docs/DO-214D.PDF
 
 """
+
 import sys
 from os import path
 from uuid import uuid4
@@ -13,13 +14,53 @@ from typing import Optional
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
-    Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
+    Align,
+    Angle,
+    Author,
+    Category,
+    Created,
+    Deprecated,
+    Description,
+    Fill,
+    GeneratedBy,
+    GrabArea,
+    Height,
+    Keywords,
+    Layer,
+    Name,
+    Polygon,
+    Position,
+    Position3D,
+    Rotation,
+    Rotation3D,
+    Value,
+    Version,
+    Vertex,
+    Width,
 )
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, Footprint3DModel, FootprintPad, LetterSpacing,
-    LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size,
-    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType,
+    AutoRotate,
+    ComponentSide,
+    CopperClearance,
+    Footprint,
+    Footprint3DModel,
+    FootprintPad,
+    LetterSpacing,
+    LineSpacing,
+    Mirror,
+    Package,
+    Package3DModel,
+    PackagePad,
+    PackagePadUuid,
+    PadFunction,
+    Shape,
+    ShapeRadius,
+    Size,
+    SolderPasteConfig,
+    StopMaskConfig,
+    StrokeText,
+    StrokeWidth,
 )
 
 GENERATOR_NAME = 'librepcb-parts-generator (generate_do.py)'
@@ -52,7 +93,6 @@ class DoConfig:
         contact_length_max: float,
         contact_width_min: float,
         contact_width_max: float,
-
         variant: str,
         common_name: str,
     ):
@@ -150,21 +190,23 @@ Generated with {GENERATOR_NAME}
     ) -> None:
         for pad, name, side in pads:
             pad_uuid = _uuid(f'pad-{pad}')
-            footprint.add_pad(FootprintPad(
-                uuid=pad_uuid,
-                side=ComponentSide.TOP,
-                shape=Shape.ROUNDED_RECT,
-                position=Position(_pad_center(side), 0),
-                rotation=Rotation(0),
-                size=Size(_pad_length(), _pad_width()),
-                radius=ShapeRadius(0.0),
-                stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
-                solder_paste=SolderPasteConfig.AUTO,
-                copper_clearance=CopperClearance(0.0),
-                function=PadFunction.STANDARD_PAD,
-                package_pad=PackagePadUuid(pad_uuid),
-                holes=[],
-            ))
+            footprint.add_pad(
+                FootprintPad(
+                    uuid=pad_uuid,
+                    side=ComponentSide.TOP,
+                    shape=Shape.ROUNDED_RECT,
+                    position=Position(_pad_center(side), 0),
+                    rotation=Rotation(0),
+                    size=Size(_pad_length(), _pad_width()),
+                    radius=ShapeRadius(0.0),
+                    stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
+                    solder_paste=SolderPasteConfig.AUTO,
+                    copper_clearance=CopperClearance(0.0),
+                    function=PadFunction.STANDARD_PAD,
+                    package_pad=PackagePadUuid(pad_uuid),
+                    holes=[],
+                )
+            )
             lead = Polygon(
                 uuid=_uuid(uuid_ns + 'pad-lead'),
                 layer=Layer('top_documentation'),
@@ -172,11 +214,13 @@ Generated with {GENERATOR_NAME}
                 fill=Fill(True),
                 grab_area=GrabArea(False),
             )
-            _rect(lead,
-                  config.total_length / 2 * side,
-                  config.total_length / 2 * side - config.contact_length * side,
-                  -config.contact_width / 2,
-                  config.contact_width / 2)
+            _rect(
+                lead,
+                config.total_length / 2 * side,
+                config.total_length / 2 * side - config.contact_length * side,
+                -config.contact_width / 2,
+                config.contact_width / 2,
+            )
             footprint.add_polygon(lead)
 
     def _add_footprint(
@@ -214,9 +258,13 @@ Generated with {GENERATOR_NAME}
             fill=Fill(False),
             grab_area=GrabArea(True),
         )
-        _rect(body,
-              left_edge + line_offset, right_edge - line_offset,
-              bottom_edge + line_offset, top_edge - line_offset)
+        _rect(
+            body,
+            left_edge + line_offset,
+            right_edge - line_offset,
+            bottom_edge + line_offset,
+            top_edge - line_offset,
+        )
         footprint.add_polygon(body)
 
         if polarity:
@@ -229,9 +277,7 @@ Generated with {GENERATOR_NAME}
             )
             x0 = _pad_center(-1) + _pad_length() / 2 + 0.2
             x1 = x0 + 0.3
-            _rect(band,
-                  x0, x1,
-                  bottom_edge + line_width, top_edge - line_width)
+            _rect(band, x0, x1, bottom_edge + line_width, top_edge - line_width)
             footprint.add_polygon(band)
 
         #
@@ -313,44 +359,50 @@ Generated with {GENERATOR_NAME}
             fill=Fill(False),
             grab_area=GrabArea(False),
         )
-        _rect(courtyard,
-              _pad_center(-1) - (_pad_length() / 2 + 0.4 + line_offset),
-              _pad_center(1) + (_pad_length() / 2 + 0.4 + line_offset),
-              bottom_edge - line_width,
-              top_edge + line_width)
+        _rect(
+            courtyard,
+            _pad_center(-1) - (_pad_length() / 2 + 0.4 + line_offset),
+            _pad_center(1) + (_pad_length() / 2 + 0.4 + line_offset),
+            bottom_edge - line_width,
+            top_edge + line_width,
+        )
         footprint.add_polygon(courtyard)
 
         #
         # Text
         #
-        footprint.add_text(StrokeText(
-            uuid=_uuid(uuid_ns + 'text-name'),
-            layer=Layer('top_names'),
-            height=Height(1.0),
-            stroke_width=StrokeWidth(0.2),
-            letter_spacing=LetterSpacing.AUTO,
-            line_spacing=LineSpacing.AUTO,
-            align=Align('center bottom'),
-            position=Position(0.0, top_edge + line_width + 0.5),
-            rotation=Rotation(0.0),
-            auto_rotate=AutoRotate(False),
-            mirror=Mirror(False),
-            value=Value('{{NAME}}'),
-        ))
-        footprint.add_text(StrokeText(
-            uuid=_uuid(uuid_ns + 'text-value'),
-            layer=Layer('top_values'),
-            height=Height(1.0),
-            stroke_width=StrokeWidth(0.2),
-            letter_spacing=LetterSpacing.AUTO,
-            line_spacing=LineSpacing.AUTO,
-            align=Align('center top'),
-            position=Position(0.0, bottom_edge - (line_width + 0.5)),
-            rotation=Rotation(0.0),
-            auto_rotate=AutoRotate(False),
-            mirror=Mirror(False),
-            value=Value('{{VALUE}}'),
-        ))
+        footprint.add_text(
+            StrokeText(
+                uuid=_uuid(uuid_ns + 'text-name'),
+                layer=Layer('top_names'),
+                height=Height(1.0),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center bottom'),
+                position=Position(0.0, top_edge + line_width + 0.5),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(False),
+                mirror=Mirror(False),
+                value=Value('{{NAME}}'),
+            )
+        )
+        footprint.add_text(
+            StrokeText(
+                uuid=_uuid(uuid_ns + 'text-value'),
+                layer=Layer('top_values'),
+                height=Height(1.0),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center top'),
+                position=Position(0.0, bottom_edge - (line_width + 0.5)),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(False),
+                mirror=Mirror(False),
+                value=Value('{{VALUE}}'),
+            )
+        )
 
     _add_footprint(package, Name('default'), 'default-')
 
@@ -390,31 +442,41 @@ def generate_3d(
     bar_height = 0.02
     bar_x = -(config.body_length - bar_length) / 2 + (2 * body_chamfer_xy)
 
-    body = cq.Workplane('XY', origin=(0, 0, body_standoff + (config.body_height / 2))) \
-        .box(config.body_length, config.body_width, config.body_height) \
-        .edges('|Y').chamfer(body_chamfer_z, body_chamfer_xy) \
-        .edges('|X').chamfer(body_chamfer_z, body_chamfer_xy)
-    bar = cq.Workplane('XY', origin=(bar_x, 0, body_standoff + config.body_height)) \
-        .box(bar_length, bar_width, bar_height)
-    leg_path = cq.Workplane("XZ") \
-        .hLine(-config.contact_length + (leg_height / 2) + bend_radius) \
-        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=180, angle2=270, sense=-1) \
-        .vLine(leg_z_top - leg_height - (2 * bend_radius)) \
-        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
+    body = (
+        cq.Workplane('XY', origin=(0, 0, body_standoff + (config.body_height / 2)))
+        .box(config.body_length, config.body_width, config.body_height)
+        .edges('|Y')
+        .chamfer(body_chamfer_z, body_chamfer_xy)
+        .edges('|X')
+        .chamfer(body_chamfer_z, body_chamfer_xy)
+    )
+    bar = cq.Workplane('XY', origin=(bar_x, 0, body_standoff + config.body_height)).box(
+        bar_length, bar_width, bar_height
+    )
+    leg_path = (
+        cq.Workplane('XZ')
+        .hLine(-config.contact_length + (leg_height / 2) + bend_radius)
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=180, angle2=270, sense=-1)
+        .vLine(leg_z_top - leg_height - (2 * bend_radius))
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1)
         .hLine(config.contact_length)
-    leg = cq.Workplane("ZY") \
-        .rect(leg_height, config.contact_width) \
-        .sweep(leg_path)
+    )
+    leg = cq.Workplane('ZY').rect(leg_height, config.contact_width).sweep(leg_path)
 
     assembly = StepAssembly(pkg_name)
     assembly.add_body(body, 'body', StepColor.IC_BODY)
     if polarity:
         assembly.add_body(bar, 'bar', StepColor.IC_PIN1_DOT)
     lead_x = (config.total_length / 2) - config.contact_length
-    assembly.add_body(leg, 'leg-1', StepColor.LEAD_SMT,
-                      location=cq.Location((-lead_x, 0, leg_height / 2)))
-    assembly.add_body(leg, 'leg-2', StepColor.LEAD_SMT,
-                      location=cq.Location((lead_x, 0, leg_height / 2), (0, 0, 1), 180))
+    assembly.add_body(
+        leg, 'leg-1', StepColor.LEAD_SMT, location=cq.Location((-lead_x, 0, leg_height / 2))
+    )
+    assembly.add_body(
+        leg,
+        'leg-2',
+        StepColor.LEAD_SMT,
+        location=cq.Location((lead_x, 0, leg_height / 2), (0, 0, 1), 180),
+    )
 
     # Save without fusing for slightly better minification.
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
@@ -440,25 +502,21 @@ if __name__ == '__main__':
     # total_length_nom (E); total_height_nom (A)
     # contact_length_min, contact_length_nom, contact_length_max (L); contact_width_min, contact_width_max (b)
     # variant; common_name
-    configs.append(DoConfig(4.30, 3.60, 2.15,
-                            5.40, 2.30,
-                            0.75, 1.15, 1.60, 1.95, 2.20,
-                            'AA', 'SMB'))
+    configs.append(
+        DoConfig(4.30, 3.60, 2.15, 5.40, 2.30, 0.75, 1.15, 1.60, 1.95, 2.20, 'AA', 'SMB')
+    )
 
-    configs.append(DoConfig(6.85, 5.90, 2.15,
-                            7.95, 2.30,
-                            0.75, 1.15, 1.60, 2.90, 3.20,
-                            'AB', 'SMC'))
+    configs.append(
+        DoConfig(6.85, 5.90, 2.15, 7.95, 2.30, 0.75, 1.15, 1.60, 2.90, 3.20, 'AB', 'SMC')
+    )
 
-    configs.append(DoConfig(4.30, 2.60, 2.30,
-                            5.20, 2.40,
-                            0.75, 1.15, 1.60, 1.25, 1.65,
-                            'AC', 'SMA'))
+    configs.append(
+        DoConfig(4.30, 2.60, 2.30, 5.20, 2.40, 0.75, 1.15, 1.60, 1.25, 1.65, 'AC', 'SMA')
+    )
 
-    configs.append(DoConfig(4.45, 2.60, 2.80,
-                            5.25, 2.95,
-                            0.75, 1.15, 1.60, 1.00, 1.70,
-                            'BA', 'GF1'))
+    configs.append(
+        DoConfig(4.45, 2.60, 2.80, 5.25, 2.95, 0.75, 1.15, 1.60, 1.00, 1.70, 'BA', 'GF1')
+    )
 
     for config in configs:
         generate_pkg(

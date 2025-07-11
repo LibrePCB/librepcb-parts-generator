@@ -4,6 +4,7 @@ Generate axial THT packages like diodes or capacitors.
 - JEDEC DO-204 https://www.jedec.org/system/files/docs/DO-204B-D.PDF
 
 """
+
 import sys
 from math import acos, asin, pi, sqrt
 from os import path
@@ -13,13 +14,57 @@ from typing import Iterable, List, Optional, Tuple
 
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
-    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
+    Align,
+    Angle,
+    Author,
+    Category,
+    Circle,
+    Created,
+    Deprecated,
+    Description,
+    Diameter,
+    Fill,
+    GeneratedBy,
+    GrabArea,
+    Height,
+    Keywords,
+    Layer,
+    Name,
+    Polygon,
+    Position,
+    Position3D,
+    Rotation,
+    Rotation3D,
+    Value,
+    Version,
+    Vertex,
+    Width,
 )
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, Footprint3DModel, FootprintPad,
-    LetterSpacing, LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, PadHole,
-    Shape, ShapeRadius, Size, SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType,
+    AutoRotate,
+    ComponentSide,
+    CopperClearance,
+    DrillDiameter,
+    Footprint,
+    Footprint3DModel,
+    FootprintPad,
+    LetterSpacing,
+    LineSpacing,
+    Mirror,
+    Package,
+    Package3DModel,
+    PackagePad,
+    PackagePadUuid,
+    PadFunction,
+    PadHole,
+    Shape,
+    ShapeRadius,
+    Size,
+    SolderPasteConfig,
+    StopMaskConfig,
+    StrokeText,
+    StrokeWidth,
 )
 
 generator = 'librepcb-parts-generator (generate_axial_tht.py)'
@@ -99,7 +144,9 @@ def generate_pkg(
     create_date: Optional[str],
     generate_3d_models: bool,
 ) -> None:
-    full_desc = description + f"""
+    full_desc = (
+        description
+        + f"""
 
 Body diameter: {body_diameter_nom:.2f} mm
 Body length: {body_length_nom:.2f} mm
@@ -107,6 +154,7 @@ Legs diameter: {leg_diameter_nom:.2f} mm
 
 Generated with {generator}
 """
+    )
 
     def _uuid(identifier: str) -> str:
         return uuid('pkg', pkg_identifier, identifier)
@@ -135,7 +183,9 @@ Generated with {generator}
     generated_3d_uuids = set()
     for variant in variants:
         uuid_ns = '{}{}-'.format('v' if variant.vertical else 'h', variant.pitch)
-        footprint_name = '{}, {}mm'.format('Vertical' if variant.vertical else 'Horizontal', variant.pitch)
+        footprint_name = '{}, {}mm'.format(
+            'Vertical' if variant.vertical else 'Horizontal', variant.pitch
+        )
 
         if variant.compact:
             uuid_ns += 'compact-'
@@ -155,118 +205,139 @@ Generated with {generator}
             pad_size = (pad_size[1], pad_size[0])
         for i, sign in enumerate([-1, 1]):
             uuid_pad = _uuid(uuid_ns + 'pad-{}'.format(i + 1))
-            footprint.add_pad(FootprintPad(
-                uuid=uuid_pad,
-                side=ComponentSide.TOP,
-                shape=Shape.ROUNDED_RECT,
-                position=Position(sign * variant.pitch / 2, 0),
-                rotation=Rotation(0),
-                size=Size(*pad_size),
-                radius=ShapeRadius(0 if (i == 0) else 1),
-                stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
-                solder_paste=SolderPasteConfig.OFF,
-                copper_clearance=CopperClearance(0),
-                function=PadFunction.STANDARD_PAD,
-                package_pad=PackagePadUuid(_uuid('pad-' + str(i + 1))),
-                holes=[PadHole(uuid_pad, DrillDiameter(pad_hole_diameter),
-                               [Vertex(Position(0.0, 0.0), Angle(0.0))])],
-            ))
+            footprint.add_pad(
+                FootprintPad(
+                    uuid=uuid_pad,
+                    side=ComponentSide.TOP,
+                    shape=Shape.ROUNDED_RECT,
+                    position=Position(sign * variant.pitch / 2, 0),
+                    rotation=Rotation(0),
+                    size=Size(*pad_size),
+                    radius=ShapeRadius(0 if (i == 0) else 1),
+                    stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
+                    solder_paste=SolderPasteConfig.OFF,
+                    copper_clearance=CopperClearance(0),
+                    function=PadFunction.STANDARD_PAD,
+                    package_pad=PackagePadUuid(_uuid('pad-' + str(i + 1))),
+                    holes=[
+                        PadHole(
+                            uuid_pad,
+                            DrillDiameter(pad_hole_diameter),
+                            [Vertex(Position(0.0, 0.0), Angle(0.0))],
+                        )
+                    ],
+                )
+            )
 
         # Documentation
         if variant.vertical:
-            footprint.add_circle(Circle(
-                uuid=_uuid(uuid_ns + 'circle-body'),
-                layer=Layer('top_documentation'),
-                width=Width(line_width),
-                fill=Fill(False),
-                grab_area=GrabArea(True),
-                diameter=Diameter(body_diameter_nom - line_width),
-                position=Position(-variant.pitch / 2, 0),
-            ))
-            dx = (variant.pitch / 2)
-            footprint.add_polygon(Polygon(
-                uuid=_uuid(uuid_ns + 'polygon-leg'),
-                layer=Layer('top_documentation'),
-                width=Width(leg_diameter_nom),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(-dx, 0), Angle(0)),
-                    Vertex(Position(dx, 0), Angle(0)),
-                ],
-            ))
+            footprint.add_circle(
+                Circle(
+                    uuid=_uuid(uuid_ns + 'circle-body'),
+                    layer=Layer('top_documentation'),
+                    width=Width(line_width),
+                    fill=Fill(False),
+                    grab_area=GrabArea(True),
+                    diameter=Diameter(body_diameter_nom - line_width),
+                    position=Position(-variant.pitch / 2, 0),
+                )
+            )
+            dx = variant.pitch / 2
+            footprint.add_polygon(
+                Polygon(
+                    uuid=_uuid(uuid_ns + 'polygon-leg'),
+                    layer=Layer('top_documentation'),
+                    width=Width(leg_diameter_nom),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(-dx, 0), Angle(0)),
+                        Vertex(Position(dx, 0), Angle(0)),
+                    ],
+                )
+            )
         else:
             dx = (body_length_nom / 2) - (line_width / 2)
             dy = (body_diameter_nom / 2) - (line_width / 2)
-            footprint.add_polygon(Polygon(
-                uuid=_uuid(uuid_ns + 'polygon-body'),
-                layer=Layer('top_documentation'),
-                width=Width(line_width),
-                fill=Fill(False),
-                grab_area=GrabArea(True),
-                vertices=[
-                    Vertex(Position(-dx, dy), Angle(0)),  # NW
-                    Vertex(Position(dx, dy), Angle(0)),  # NE
-                    Vertex(Position(dx, -dy), Angle(0)),  # SE
-                    Vertex(Position(-dx, -dy), Angle(0)),  # SW
-                    Vertex(Position(-dx, dy), Angle(0)),  # NW
-                ],
-            ))
+            footprint.add_polygon(
+                Polygon(
+                    uuid=_uuid(uuid_ns + 'polygon-body'),
+                    layer=Layer('top_documentation'),
+                    width=Width(line_width),
+                    fill=Fill(False),
+                    grab_area=GrabArea(True),
+                    vertices=[
+                        Vertex(Position(-dx, dy), Angle(0)),  # NW
+                        Vertex(Position(dx, dy), Angle(0)),  # NE
+                        Vertex(Position(dx, -dy), Angle(0)),  # SE
+                        Vertex(Position(-dx, -dy), Angle(0)),  # SW
+                        Vertex(Position(-dx, dy), Angle(0)),  # NW
+                    ],
+                )
+            )
             for i, sign in enumerate([-1, 1]):
                 x0 = sign * (variant.pitch / 2)
                 x1 = sign * (body_length_nom / 2)
                 dy = leg_diameter_nom / 2
-                footprint.add_polygon(Polygon(
-                    uuid=_uuid(uuid_ns + 'polygon-leg{}'.format(i + 1)),
-                    layer=Layer('top_documentation'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(True),
-                    vertices=[
-                        Vertex(Position(x0, dy), Angle(0)),
-                        Vertex(Position(x1, dy), Angle(0)),
-                        Vertex(Position(x1, -dy), Angle(0)),
-                        Vertex(Position(x0, -dy), Angle(sign * 180)),
-                        Vertex(Position(x0, dy), Angle(0)),
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=_uuid(uuid_ns + 'polygon-leg{}'.format(i + 1)),
+                        layer=Layer('top_documentation'),
+                        width=Width(0),
+                        fill=Fill(True),
+                        grab_area=GrabArea(True),
+                        vertices=[
+                            Vertex(Position(x0, dy), Angle(0)),
+                            Vertex(Position(x1, dy), Angle(0)),
+                            Vertex(Position(x1, -dy), Angle(0)),
+                            Vertex(Position(x0, -dy), Angle(sign * 180)),
+                            Vertex(Position(x0, dy), Angle(0)),
+                        ],
+                    )
+                )
 
         # Silkscreen
         if variant.vertical:
-            silk_pad_clearance_left = (body_diameter_nom / 2) - \
-                sqrt(pad_size[0] ** 2 + pad_size[1] ** 2) / 2
-            silk_pad_clearance_right = \
+            silk_pad_clearance_left = (body_diameter_nom / 2) - sqrt(
+                pad_size[0] ** 2 + pad_size[1] ** 2
+            ) / 2
+            silk_pad_clearance_right = (
                 variant.pitch - (body_diameter_nom / 2) - (pad_size[0] / 2) - line_width
+            )
             silk_pad_clearance = min(silk_pad_clearance_left, silk_pad_clearance_right)
             simple_silkscreen = silk_pad_clearance < 0.15
             if not simple_silkscreen:
-                footprint.add_circle(Circle(
-                    uuid=_uuid(uuid_ns + 'circle-legend'),
-                    layer=Layer('top_legend'),
-                    width=Width(line_width),
-                    fill=Fill(False),
-                    grab_area=GrabArea(True),
-                    diameter=Diameter(body_diameter_nom + line_width),
-                    position=Position(-variant.pitch / 2, 0),
-                ))
+                footprint.add_circle(
+                    Circle(
+                        uuid=_uuid(uuid_ns + 'circle-legend'),
+                        layer=Layer('top_legend'),
+                        width=Width(line_width),
+                        fill=Fill(False),
+                        grab_area=GrabArea(True),
+                        diameter=Diameter(body_diameter_nom + line_width),
+                        position=Position(-variant.pitch / 2, 0),
+                    )
+                )
             x0 = (-variant.pitch / 2) + (body_diameter_nom / 2) + (line_width / 2)
             x1 = (variant.pitch / 2) - (pad_size[0] / 2) - 0.15
             dy = leg_diameter_nom / 2
             if x1 - x0 >= 0.1:
-                footprint.add_polygon(Polygon(
-                    uuid=_uuid(uuid_ns + 'polygon-legend-leg'),
-                    layer=Layer('top_legend'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(x0, dy), Angle(0)),
-                        Vertex(Position(x1, dy), Angle(0)),
-                        Vertex(Position(x1, -dy), Angle(0)),
-                        Vertex(Position(x0, -dy), Angle(0)),
-                        Vertex(Position(x0, dy), Angle(0)),
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=_uuid(uuid_ns + 'polygon-legend-leg'),
+                        layer=Layer('top_legend'),
+                        width=Width(0),
+                        fill=Fill(True),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(x0, dy), Angle(0)),
+                            Vertex(Position(x1, dy), Angle(0)),
+                            Vertex(Position(x1, -dy), Angle(0)),
+                            Vertex(Position(x0, -dy), Angle(0)),
+                            Vertex(Position(x0, dy), Angle(0)),
+                        ],
+                    )
+                )
         else:
             silk_pad_clearance = (variant.pitch - pad_size[0] - body_length_nom) / 2
             if silk_pad_clearance < 0.25:  # 0.1mm line plus 0.15mm clearance
@@ -278,63 +349,71 @@ Generated with {generator}
             dx = (body_length_nom / 2) + (silkscreen_width / 2)
             dy = (body_diameter_nom / 2) + (silkscreen_width / 2)
             if split_silkscreen:
-                footprint.add_polygon(Polygon(
-                    uuid=_uuid(uuid_ns + 'polygon-legend-top'),
-                    layer=Layer('top_legend'),
-                    width=Width(silkscreen_width),
-                    fill=Fill(False),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(-dx, dy), Angle(0)),
-                        Vertex(Position(dx, dy), Angle(0)),
-                    ],
-                ))
-                footprint.add_polygon(Polygon(
-                    uuid=_uuid(uuid_ns + 'polygon-legend-bottom'),
-                    layer=Layer('top_legend'),
-                    width=Width(silkscreen_width),
-                    fill=Fill(False),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(-dx, -dy), Angle(0)),
-                        Vertex(Position(dx, -dy), Angle(0)),
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=_uuid(uuid_ns + 'polygon-legend-top'),
+                        layer=Layer('top_legend'),
+                        width=Width(silkscreen_width),
+                        fill=Fill(False),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(-dx, dy), Angle(0)),
+                            Vertex(Position(dx, dy), Angle(0)),
+                        ],
+                    )
+                )
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=_uuid(uuid_ns + 'polygon-legend-bottom'),
+                        layer=Layer('top_legend'),
+                        width=Width(silkscreen_width),
+                        fill=Fill(False),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(-dx, -dy), Angle(0)),
+                            Vertex(Position(dx, -dy), Angle(0)),
+                        ],
+                    )
+                )
             else:
-                footprint.add_polygon(Polygon(
-                    uuid=_uuid(uuid_ns + 'polygon-legend-body'),
-                    layer=Layer('top_legend'),
-                    width=Width(silkscreen_width),
-                    fill=Fill(False),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(-dx, dy), Angle(0)),  # NW
-                        Vertex(Position(dx, dy), Angle(0)),  # NE
-                        Vertex(Position(dx, -dy), Angle(0)),  # SE
-                        Vertex(Position(-dx, -dy), Angle(0)),  # SW
-                        Vertex(Position(-dx, dy), Angle(0)),  # NW
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=_uuid(uuid_ns + 'polygon-legend-body'),
+                        layer=Layer('top_legend'),
+                        width=Width(silkscreen_width),
+                        fill=Fill(False),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(-dx, dy), Angle(0)),  # NW
+                            Vertex(Position(dx, dy), Angle(0)),  # NE
+                            Vertex(Position(dx, -dy), Angle(0)),  # SE
+                            Vertex(Position(-dx, -dy), Angle(0)),  # SW
+                            Vertex(Position(-dx, dy), Angle(0)),  # NW
+                        ],
+                    )
+                )
             for i, sign in enumerate([-1, 1]):
                 x0 = sign * ((variant.pitch / 2) - (pad_size[0] / 2) - 0.2)
                 x1 = sign * ((body_length_nom / 2) + silkscreen_width)
                 if abs(x0) - abs(x1) < 0.1:
                     continue  # No space left for this polygon
                 dy = leg_diameter_nom / 2
-                footprint.add_polygon(Polygon(
-                    uuid=_uuid(uuid_ns + 'polygon-legend-leg{}'.format(i + 1)),
-                    layer=Layer('top_legend'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(x0, dy), Angle(0)),
-                        Vertex(Position(x1, dy), Angle(0)),
-                        Vertex(Position(x1, -dy), Angle(0)),
-                        Vertex(Position(x0, -dy), Angle(0)),
-                        Vertex(Position(x0, dy), Angle(0)),
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=_uuid(uuid_ns + 'polygon-legend-leg{}'.format(i + 1)),
+                        layer=Layer('top_legend'),
+                        width=Width(0),
+                        fill=Fill(True),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(x0, dy), Angle(0)),
+                            Vertex(Position(x1, dy), Angle(0)),
+                            Vertex(Position(x1, -dy), Angle(0)),
+                            Vertex(Position(x0, -dy), Angle(0)),
+                            Vertex(Position(x0, dy), Angle(0)),
+                        ],
+                    )
+                )
 
         # Pin-1 markings
         bar_width = 0.0
@@ -346,61 +425,67 @@ Generated with {generator}
                 r = (body_diameter_nom / 2) + (line_width if simple_silkscreen else 0.01)
                 h = r - ((pad_size[0] / 2) + 0.15)
                 x = -(variant.pitch / 2) - r + h
-                dy = sqrt(2 * r * h - h ** 2)
+                dy = sqrt(2 * r * h - h**2)
                 angle = 360 * acos(1 - (h / r)) / pi
-                footprint.add_polygon(Polygon(
-                    uuid=_uuid(uuid_ns + 'polygon-legend-bar'),
-                    layer=Layer('top_legend'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(x, dy), Angle(0)),
-                        Vertex(Position(x, -dy), Angle(-angle)),
-                        Vertex(Position(x, dy), Angle(0)),
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=_uuid(uuid_ns + 'polygon-legend-bar'),
+                        layer=Layer('top_legend'),
+                        width=Width(0),
+                        fill=Fill(True),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(x, dy), Angle(0)),
+                            Vertex(Position(x, -dy), Angle(-angle)),
+                            Vertex(Position(x, dy), Angle(0)),
+                        ],
+                    )
+                )
             else:
                 x = (-body_length_nom / 2) + bar_position * body_length_nom
                 x1 = x - (bar_width / 2)
                 x2 = x + (bar_width / 2)
                 dy = (body_diameter_nom / 2) - line_width
-                footprint.add_polygon(Polygon(
-                    uuid=_uuid(uuid_ns + 'polygon-bar'),
-                    layer=Layer('top_documentation'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(x1, dy), Angle(0)),  # NW
-                        Vertex(Position(x2, dy), Angle(0)),  # NE
-                        Vertex(Position(x2, -dy), Angle(0)),  # SE
-                        Vertex(Position(x1, -dy), Angle(0)),  # SW
-                        Vertex(Position(x1, dy), Angle(0)),  # NW
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=_uuid(uuid_ns + 'polygon-bar'),
+                        layer=Layer('top_documentation'),
+                        width=Width(0),
+                        fill=Fill(True),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(x1, dy), Angle(0)),  # NW
+                            Vertex(Position(x2, dy), Angle(0)),  # NE
+                            Vertex(Position(x2, -dy), Angle(0)),  # SE
+                            Vertex(Position(x1, -dy), Angle(0)),  # SW
+                            Vertex(Position(x1, dy), Angle(0)),  # NW
+                        ],
+                    )
+                )
                 dy = body_diameter_nom / 2
-                footprint.add_polygon(Polygon(
-                    uuid=_uuid(uuid_ns + 'polygon-legend-bar'),
-                    layer=Layer('top_legend'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(x1, dy), Angle(0)),  # NW
-                        Vertex(Position(x2, dy), Angle(0)),  # NE
-                        Vertex(Position(x2, -dy), Angle(0)),  # SE
-                        Vertex(Position(x1, -dy), Angle(0)),  # SW
-                        Vertex(Position(x1, dy), Angle(0)),  # NW
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=_uuid(uuid_ns + 'polygon-legend-bar'),
+                        layer=Layer('top_legend'),
+                        width=Width(0),
+                        fill=Fill(True),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(x1, dy), Angle(0)),  # NW
+                            Vertex(Position(x2, dy), Angle(0)),  # NE
+                            Vertex(Position(x2, -dy), Angle(0)),  # SE
+                            Vertex(Position(x1, -dy), Angle(0)),  # SW
+                            Vertex(Position(x1, dy), Angle(0)),  # NW
+                        ],
+                    )
+                )
 
         def _create_outline_vertices(offset: float = 0, around_pads: bool = False) -> List[Vertex]:
             if variant.vertical:
                 dy_body = (body_diameter_nom / 2) + offset
                 dy_leg = (leg_diameter_nom / 2) + offset
                 x0 = -variant.pitch / 2
-                h = dy_body - 0.5 * sqrt(4 * dy_body ** 2 - (2 * dy_leg) ** 2)
+                h = dy_body - 0.5 * sqrt(4 * dy_body**2 - (2 * dy_leg) ** 2)
                 x1 = x0 + dy_body - h
                 x2 = variant.pitch / 2
                 angle = 180 * asin(dy_leg / dy_body) / pi
@@ -439,67 +524,88 @@ Generated with {generator}
                 ]
 
         # Package outline
-        footprint.add_polygon(Polygon(
-            uuid=_uuid(uuid_ns + 'polygon-outline'),
-            layer=Layer('top_package_outlines'),
-            width=Width(0),
-            fill=Fill(False),
-            grab_area=GrabArea(False),
-            vertices=_create_outline_vertices(),
-        ))
+        footprint.add_polygon(
+            Polygon(
+                uuid=_uuid(uuid_ns + 'polygon-outline'),
+                layer=Layer('top_package_outlines'),
+                width=Width(0),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=_create_outline_vertices(),
+            )
+        )
 
         # Courtyard
-        footprint.add_polygon(Polygon(
-            uuid=_uuid(uuid_ns + 'polygon-courtyard'),
-            layer=Layer('top_courtyard'),
-            width=Width(0),
-            fill=Fill(False),
-            grab_area=GrabArea(False),
-            vertices=_create_outline_vertices(offset=courtyard_excess, around_pads=True),
-        ))
+        footprint.add_polygon(
+            Polygon(
+                uuid=_uuid(uuid_ns + 'polygon-courtyard'),
+                layer=Layer('top_courtyard'),
+                width=Width(0),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=_create_outline_vertices(offset=courtyard_excess, around_pads=True),
+            )
+        )
 
         # Text
         x = (-variant.pitch / 2) if variant.vertical else 0
-        footprint.add_text(StrokeText(
-            uuid=_uuid(uuid_ns + 'text-name'),
-            layer=Layer('top_names'),
-            height=Height(1.0),
-            stroke_width=StrokeWidth(0.2),
-            letter_spacing=LetterSpacing.AUTO,
-            line_spacing=LineSpacing.AUTO,
-            align=Align('center bottom'),
-            position=Position(x, (body_diameter_nom / 2) + line_width + 0.5),
-            rotation=Rotation(0.0),
-            auto_rotate=AutoRotate(False),
-            mirror=Mirror(False),
-            value=Value('{{NAME}}'),
-        ))
-        footprint.add_text(StrokeText(
-            uuid=_uuid(uuid_ns + 'text-value'),
-            layer=Layer('top_values'),
-            height=Height(1.0),
-            stroke_width=StrokeWidth(0.2),
-            letter_spacing=LetterSpacing.AUTO,
-            line_spacing=LineSpacing.AUTO,
-            align=Align('center top'),
-            position=Position(x, (-body_diameter_nom / 2) - (line_width + 0.5)),
-            rotation=Rotation(0.0),
-            auto_rotate=AutoRotate(False),
-            mirror=Mirror(False),
-            value=Value('{{VALUE}}'),
-        ))
+        footprint.add_text(
+            StrokeText(
+                uuid=_uuid(uuid_ns + 'text-name'),
+                layer=Layer('top_names'),
+                height=Height(1.0),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center bottom'),
+                position=Position(x, (body_diameter_nom / 2) + line_width + 0.5),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(False),
+                mirror=Mirror(False),
+                value=Value('{{NAME}}'),
+            )
+        )
+        footprint.add_text(
+            StrokeText(
+                uuid=_uuid(uuid_ns + 'text-value'),
+                layer=Layer('top_values'),
+                height=Height(1.0),
+                stroke_width=StrokeWidth(0.2),
+                letter_spacing=LetterSpacing.AUTO,
+                line_spacing=LineSpacing.AUTO,
+                align=Align('center top'),
+                position=Position(x, (-body_diameter_nom / 2) - (line_width + 0.5)),
+                rotation=Rotation(0.0),
+                auto_rotate=AutoRotate(False),
+                mirror=Mirror(False),
+                value=Value('{{VALUE}}'),
+            )
+        )
 
         # 3D model
         uuid_3d = _uuid('{}{}-3d'.format('v' if variant.vertical else 'h', variant.pitch))
-        name_3d = '{}, {} mm'.format('Vertical' if variant.vertical else 'Horizontal', variant.pitch)
+        name_3d = '{}, {} mm'.format(
+            'Vertical' if variant.vertical else 'Horizontal', variant.pitch
+        )
         # Note: Some 3D models are used by multiple footprints but they shall
         # be added to the package only once, thus we keep a list of which
         # models were already added.
         if uuid_3d not in generated_3d_uuids:
             if generate_3d_models:
-                generate_3d(library, pkg_type, name_3d, uuid_pkg, uuid_3d,
-                            body_diameter_nom, body_length_nom, leg_diameter_nom,
-                            variant.pitch, variant.vertical, bar_position, bar_width)
+                generate_3d(
+                    library,
+                    pkg_type,
+                    name_3d,
+                    uuid_pkg,
+                    uuid_3d,
+                    body_diameter_nom,
+                    body_length_nom,
+                    leg_diameter_nom,
+                    variant.pitch,
+                    variant.vertical,
+                    bar_position,
+                    bar_width,
+                )
             package.add_3d_model(Package3DModel(uuid_3d, Name(name_3d)))
             generated_3d_uuids.add(uuid_3d)
         footprint.add_3d_model(Footprint3DModel(uuid_3d))
@@ -535,65 +641,112 @@ def generate_3d(
         body_color = cq.Color('bisque3')
         outer_length = body_length * 0.25
         if vertical:
-            body_inner = cq.Workplane("XY") \
-                .cylinder(body_length - outer_length, body_diameter * 0.42, centered=(True, True, False)) \
+            body_inner = (
+                cq.Workplane('XY')
+                .cylinder(
+                    body_length - outer_length, body_diameter * 0.42, centered=(True, True, False)
+                )
                 .translate((-pitch / 2, 0, vertical_standoff + outer_length / 2))
-            body_outer = cq.Workplane("XY") \
-                .cylinder(outer_length, body_diameter / 2, centered=(True, True, False)) \
+            )
+            body_outer = (
+                cq.Workplane('XY')
+                .cylinder(outer_length, body_diameter / 2, centered=(True, True, False))
                 .fillet(body_diameter / 6)
-            assembly.add_body(body_outer, 'body_outer_1', body_color,
-                              location=cq.Location((-pitch / 2, 0, vertical_standoff)))
-            assembly.add_body(body_outer, 'body_outer_2', body_color,
-                              location=cq.Location((-pitch / 2, 0, vertical_standoff + body_length - outer_length)))
+            )
+            assembly.add_body(
+                body_outer,
+                'body_outer_1',
+                body_color,
+                location=cq.Location((-pitch / 2, 0, vertical_standoff)),
+            )
+            assembly.add_body(
+                body_outer,
+                'body_outer_2',
+                body_color,
+                location=cq.Location(
+                    (-pitch / 2, 0, vertical_standoff + body_length - outer_length)
+                ),
+            )
         else:
-            body_inner = cq.Workplane("YZ") \
-                .cylinder(body_length - outer_length, body_diameter * 0.42, centered=(True, True, True)) \
+            body_inner = (
+                cq.Workplane('YZ')
+                .cylinder(
+                    body_length - outer_length, body_diameter * 0.42, centered=(True, True, True)
+                )
                 .translate((0, 0, body_diameter / 2))
-            body_outer = cq.Workplane("YZ") \
-                .cylinder(outer_length, body_diameter / 2, centered=(True, False, True)) \
+            )
+            body_outer = (
+                cq.Workplane('YZ')
+                .cylinder(outer_length, body_diameter / 2, centered=(True, False, True))
                 .fillet(body_diameter / 6)
-            assembly.add_body(body_outer, 'body_outer_1', body_color,
-                              location=cq.Location((-(body_length - outer_length) / 2, 0, 0)))
-            assembly.add_body(body_outer, 'body_outer_2', body_color,
-                              location=cq.Location(((body_length - outer_length) / 2, 0, 0)))
+            )
+            assembly.add_body(
+                body_outer,
+                'body_outer_1',
+                body_color,
+                location=cq.Location((-(body_length - outer_length) / 2, 0, 0)),
+            )
+            assembly.add_body(
+                body_outer,
+                'body_outer_2',
+                body_color,
+                location=cq.Location(((body_length - outer_length) / 2, 0, 0)),
+            )
         assembly.add_body(body_inner, 'body_inner', body_color)
     elif pkg_type == 'DO':
         if vertical:
-            body = cq.Workplane("XY") \
-                .cylinder(body_length, body_diameter / 2, centered=(True, True, False)) \
+            body = (
+                cq.Workplane('XY')
+                .cylinder(body_length, body_diameter / 2, centered=(True, True, False))
                 .translate((-pitch / 2, 0, vertical_standoff))
+            )
         else:
-            body = cq.Workplane("YZ") \
-                .cylinder(body_length, body_diameter / 2, centered=(True, False, True))
+            body = cq.Workplane('YZ').cylinder(
+                body_length, body_diameter / 2, centered=(True, False, True)
+            )
         assembly.add_body(body, 'body', cq.Color('gray16'))
 
         marking_diameter = body_diameter + 0.05
         marking_offset = body_length * (0.5 - marking_position)
         if vertical:
-            marking = cq.Workplane("XY") \
-                .cylinder(marking_width, marking_diameter / 2, centered=(True, True, False)) \
+            marking = (
+                cq.Workplane('XY')
+                .cylinder(marking_width, marking_diameter / 2, centered=(True, True, False))
                 .translate((-pitch / 2, 0, vertical_standoff + (body_length / 2) - marking_offset))
+            )
         else:
-            marking = cq.Workplane("YZ") \
-                .cylinder(marking_width, marking_diameter / 2, centered=(True, False, True)) \
+            marking = (
+                cq.Workplane('YZ')
+                .cylinder(marking_width, marking_diameter / 2, centered=(True, False, True))
                 .translate((-marking_offset, 0, 0))
+            )
         assembly.add_body(marking, 'marking', cq.Color('gray80'))
     else:
         raise RuntimeError(f'Unsupported 3D package type: {pkg_type}')
 
-    leg_length = StepConstants.THT_LEAD_SOLDER_LENGTH - bend_radius + \
-        ((body_length + 2 * vertical_standoff + (leg_diameter / 2)) if vertical
-         else (body_diameter / 2))
-    leg_path = cq.Workplane("XZ") \
-        .vLine(leg_length) \
-        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
-        .hLine(pitch - 2 * bend_radius) \
-        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1) \
+    leg_length = (
+        StepConstants.THT_LEAD_SOLDER_LENGTH
+        - bend_radius
+        + (
+            (body_length + 2 * vertical_standoff + (leg_diameter / 2))
+            if vertical
+            else (body_diameter / 2)
+        )
+    )
+    leg_path = (
+        cq.Workplane('XZ')
+        .vLine(leg_length)
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1)
+        .hLine(pitch - 2 * bend_radius)
+        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1)
         .vLine(-leg_length)
-    leg = cq.Workplane("XY") \
-        .circle(leg_diameter / 2) \
-        .sweep(leg_path) \
+    )
+    leg = (
+        cq.Workplane('XY')
+        .circle(leg_diameter / 2)
+        .sweep(leg_path)
         .translate((-pitch / 2, 0, -StepConstants.THT_LEAD_SOLDER_LENGTH))
+    )
     assembly.add_body(leg, 'leg', StepColor.LEAD_THT)
 
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
@@ -705,8 +858,8 @@ if __name__ == '__main__':
         pkg_type='DO',
         pkg_identifier='do204aa',
         name='DO-204AA',
-        description='Diode outline package as specified by JEDEC DO-204AA. ' +
-                    'Also known as DO-7.',
+        description='Diode outline package as specified by JEDEC DO-204AA. '
+        + 'Also known as DO-7.',
         keywords='do204aa,do7,do-7',
         leg_diameter_nom=(0.46 + 0.55) / 2,  # b
         body_diameter_nom=(2.16 + 2.71) / 2,  # D
@@ -735,8 +888,8 @@ if __name__ == '__main__':
         pkg_type='DO',
         pkg_identifier='do204ac',
         name='DO-204AC',
-        description='Diode outline package as specified by JEDEC DO-204AC. ' +
-                    'Also known as DO-15.',
+        description='Diode outline package as specified by JEDEC DO-204AC. '
+        + 'Also known as DO-15.',
         keywords='do204ac,do15,do-15',
         leg_diameter_nom=(0.69 + 0.88) / 2,  # b
         body_diameter_nom=(2.65 + 3.55) / 2,  # D
@@ -765,8 +918,8 @@ if __name__ == '__main__':
         pkg_type='DO',
         pkg_identifier='do204ag',
         name='DO-204AG',
-        description='Diode outline package as specified by JEDEC DO-204AG. ' +
-                    'Also known as DO-34.',
+        description='Diode outline package as specified by JEDEC DO-204AG. '
+        + 'Also known as DO-34.',
         keywords='do204ag,do43,do-34',
         leg_diameter_nom=(0.46 + 0.55) / 2,  # b
         body_diameter_nom=(1.27 + 1.9) / 2,  # D
@@ -794,8 +947,8 @@ if __name__ == '__main__':
         pkg_type='DO',
         pkg_identifier='do204ah',
         name='DO-204AH',
-        description='Diode outline package as specified by JEDEC DO-204AH. ' +
-                    'Also known as DO-35.',
+        description='Diode outline package as specified by JEDEC DO-204AH. '
+        + 'Also known as DO-35.',
         keywords='do204ah,do35,do-35',
         leg_diameter_nom=(0.46 + 0.55) / 2,  # b
         body_diameter_nom=(1.53 + 2.28) / 2,  # D
@@ -823,8 +976,8 @@ if __name__ == '__main__':
         pkg_type='DO',
         pkg_identifier='do204al',
         name='DO-204AL',
-        description='Diode outline package as specified by JEDEC DO-204AL. ' +
-                    'Also known as DO-41.',
+        description='Diode outline package as specified by JEDEC DO-204AL. '
+        + 'Also known as DO-41.',
         keywords='do204al,do41,do-41',
         leg_diameter_nom=(0.72 + 0.86) / 2,  # b
         body_diameter_nom=(2.04 + 2.71) / 2,  # D

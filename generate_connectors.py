@@ -12,6 +12,7 @@ Generate pin header and socket packages.
              +---+
 
 """
+
 import math
 import sys
 from functools import partial
@@ -22,18 +23,79 @@ from typing import Callable, Iterable, Optional, Tuple
 
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
-    Height, Keywords, Layer, Length, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Text, Value, Version,
-    Vertex, Width
+    Align,
+    Angle,
+    Author,
+    Category,
+    Circle,
+    Created,
+    Deprecated,
+    Description,
+    Diameter,
+    Fill,
+    GeneratedBy,
+    GrabArea,
+    Height,
+    Keywords,
+    Layer,
+    Length,
+    Name,
+    Polygon,
+    Position,
+    Position3D,
+    Rotation,
+    Rotation3D,
+    Text,
+    Value,
+    Version,
+    Vertex,
+    Width,
 )
 from entities.component import (
-    Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
-    Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
+    Clock,
+    Component,
+    DefaultValue,
+    ForcedNet,
+    Gate,
+    Negated,
+    Norm,
+    PinSignalMap,
+    Prefix,
+    Required,
+    Role,
+    SchematicOnly,
+    Signal,
+    SignalUUID,
+    Suffix,
+    SymbolUUID,
+    TextDesignator,
+    Variant,
 )
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, Footprint3DModel, FootprintPad,
-    LetterSpacing, LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, PadHole,
-    Shape, ShapeRadius, Size, SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType,
+    AutoRotate,
+    ComponentSide,
+    CopperClearance,
+    DrillDiameter,
+    Footprint,
+    Footprint3DModel,
+    FootprintPad,
+    LetterSpacing,
+    LineSpacing,
+    Mirror,
+    Package,
+    Package3DModel,
+    PackagePad,
+    PackagePadUuid,
+    PadFunction,
+    PadHole,
+    Shape,
+    ShapeRadius,
+    Size,
+    SolderPasteConfig,
+    StopMaskConfig,
+    StrokeText,
+    StrokeWidth,
 )
 from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation
 from entities.symbol import Pin as SymbolPin
@@ -164,9 +226,11 @@ def generate_pkg(
             uuid_text_value = _uuid('text-value')
 
             full_name = f'{name} {rows}x{per_row:02d} ⌀{drill:.1f}mm'
-            full_description = f'A generic {rows}x{per_row} {name_lower} ' + \
-                               f'with {spacing}mm pin spacing and {drill:.1f}mm drill holes.' \
-                               f'\n\nGenerated with {generator}'
+            full_description = (
+                f'A generic {rows}x{per_row} {name_lower} '
+                + f'with {spacing}mm pin spacing and {drill:.1f}mm drill holes.'
+                f'\n\nGenerated with {generator}'
+            )
 
             # Define package
             package = Package(
@@ -206,27 +270,29 @@ def generate_pkg(
                     x = spacing / 2 if (p % rows == 0) else -spacing / 2
                 y = get_y(p, i, rows, spacing, False)
                 corner_radius = 0.0 if p == 1 else 1.0
-                footprint.add_pad(FootprintPad(
-                    uuid=pad_uuid,
-                    side=ComponentSide.TOP,
-                    shape=Shape.ROUNDED_RECT,
-                    position=Position(x, y),
-                    rotation=Rotation(0),
-                    size=Size(pad_size[0], pad_size[1]),
-                    radius=ShapeRadius(corner_radius),
-                    stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
-                    solder_paste=SolderPasteConfig.OFF,
-                    copper_clearance=CopperClearance(0.0),
-                    function=PadFunction.STANDARD_PAD,
-                    package_pad=PackagePadUuid(pad_uuid),
-                    holes=[
-                        PadHole(
-                            pad_uuid,
-                            DrillDiameter(drill),
-                            [Vertex(Position(0.0, 0.0), Angle(0.0))],
-                        )
-                    ],
-                ))
+                footprint.add_pad(
+                    FootprintPad(
+                        uuid=pad_uuid,
+                        side=ComponentSide.TOP,
+                        shape=Shape.ROUNDED_RECT,
+                        position=Position(x, y),
+                        rotation=Rotation(0),
+                        size=Size(pad_size[0], pad_size[1]),
+                        radius=ShapeRadius(corner_radius),
+                        stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
+                        solder_paste=SolderPasteConfig.OFF,
+                        copper_clearance=CopperClearance(0.0),
+                        function=PadFunction.STANDARD_PAD,
+                        package_pad=PackagePadUuid(pad_uuid),
+                        holes=[
+                            PadHole(
+                                pad_uuid,
+                                DrillDiameter(drill),
+                                [Vertex(Position(0.0, 0.0), Angle(0.0))],
+                            )
+                        ],
+                    )
+                )
 
             # Add silkscreen to footprint
             silkscreen = generate_silkscreen(category, kind, variant, i, rows)
@@ -235,67 +301,75 @@ def generate_pkg(
             # Package outline
             dx = (width + (rows - 1) * spacing) / 2
             dy = (width + (per_row - 1) * spacing) / 2
-            footprint.add_polygon(Polygon(
-                uuid=uuid_outline,
-                layer=Layer('top_package_outlines'),
-                width=Width(0),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(-dx, dy), Angle(0)),
-                    Vertex(Position(dx, dy), Angle(0)),
-                    Vertex(Position(dx, -dy), Angle(0)),
-                    Vertex(Position(-dx, -dy), Angle(0)),
-                ],
-            ))
+            footprint.add_polygon(
+                Polygon(
+                    uuid=uuid_outline,
+                    layer=Layer('top_package_outlines'),
+                    width=Width(0),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(-dx, dy), Angle(0)),
+                        Vertex(Position(dx, dy), Angle(0)),
+                        Vertex(Position(dx, -dy), Angle(0)),
+                        Vertex(Position(-dx, -dy), Angle(0)),
+                    ],
+                )
+            )
 
             # Courtyard
             dx += courtyard_offset
             dy += courtyard_offset
-            footprint.add_polygon(Polygon(
-                uuid=uuid_courtyard,
-                layer=Layer('top_courtyard'),
-                width=Width(0),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(-dx, dy), Angle(0)),
-                    Vertex(Position(dx, dy), Angle(0)),
-                    Vertex(Position(dx, -dy), Angle(0)),
-                    Vertex(Position(-dx, -dy), Angle(0)),
-                ],
-            ))
+            footprint.add_polygon(
+                Polygon(
+                    uuid=uuid_courtyard,
+                    layer=Layer('top_courtyard'),
+                    width=Width(0),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(-dx, dy), Angle(0)),
+                        Vertex(Position(dx, dy), Angle(0)),
+                        Vertex(Position(dx, -dy), Angle(0)),
+                        Vertex(Position(-dx, -dy), Angle(0)),
+                    ],
+                )
+            )
 
             # Labels
             y_max, y_min = get_rectangle_bounds(i, rows, spacing, top_offset + 1.27, False)
-            footprint.add_text(StrokeText(
-                uuid=uuid_text_name,
-                layer=Layer('top_names'),
-                height=Height(pkg_text_height),
-                stroke_width=StrokeWidth(0.2),
-                letter_spacing=LetterSpacing.AUTO,
-                line_spacing=LineSpacing.AUTO,
-                align=Align('center bottom'),
-                position=Position(0.0, y_max),
-                rotation=Rotation(0.0),
-                auto_rotate=AutoRotate(True),
-                mirror=Mirror(False),
-                value=Value('{{NAME}}'),
-            ))
-            footprint.add_text(StrokeText(
-                uuid=uuid_text_value,
-                layer=Layer('top_values'),
-                height=Height(pkg_text_height),
-                stroke_width=StrokeWidth(0.2),
-                letter_spacing=LetterSpacing.AUTO,
-                line_spacing=LineSpacing.AUTO,
-                align=Align('center top'),
-                position=Position(0.0, y_min),
-                rotation=Rotation(0.0),
-                auto_rotate=AutoRotate(True),
-                mirror=Mirror(False),
-                value=Value('{{VALUE}}'),
-            ))
+            footprint.add_text(
+                StrokeText(
+                    uuid=uuid_text_name,
+                    layer=Layer('top_names'),
+                    height=Height(pkg_text_height),
+                    stroke_width=StrokeWidth(0.2),
+                    letter_spacing=LetterSpacing.AUTO,
+                    line_spacing=LineSpacing.AUTO,
+                    align=Align('center bottom'),
+                    position=Position(0.0, y_max),
+                    rotation=Rotation(0.0),
+                    auto_rotate=AutoRotate(True),
+                    mirror=Mirror(False),
+                    value=Value('{{NAME}}'),
+                )
+            )
+            footprint.add_text(
+                StrokeText(
+                    uuid=uuid_text_value,
+                    layer=Layer('top_values'),
+                    height=Height(pkg_text_height),
+                    stroke_width=StrokeWidth(0.2),
+                    letter_spacing=LetterSpacing.AUTO,
+                    line_spacing=LineSpacing.AUTO,
+                    align=Align('center top'),
+                    position=Position(0.0, y_min),
+                    rotation=Rotation(0.0),
+                    auto_rotate=AutoRotate(True),
+                    mirror=Mirror(False),
+                    value=Value('{{VALUE}}'),
+                )
+            )
 
             # Generate 3D models (for some packages)
             if generate_3d_model is not None:
@@ -310,11 +384,15 @@ def generate_pkg(
             if assembly_type == AssemblyType.NONE:
                 # Assembly type is reported as suspicious because there are
                 # some pads, but this is intended for soldered wire connectors.
-                package.add_approval("(approved suspicious_assembly_type)")
+                package.add_approval('(approved suspicious_assembly_type)')
 
             package.serialize(path.join('out', library, category))
 
-            print('{}x{:02d} {} ⌀{:.1f}mm: Wrote package {}'.format(rows, per_row, kind, drill, uuid_pkg))
+            print(
+                '{}x{:02d} {} ⌀{:.1f}mm: Wrote package {}'.format(
+                    rows, per_row, kind, drill, uuid_pkg
+                )
+            )
 
 
 def generate_silkscreen_female(
@@ -430,24 +508,31 @@ def generate_3d_model_generic(
     # Insulator
     if model_type == 'female':
         hole_offset = 1.0
-        insulator = cq.Workplane('XY') \
-            .box(spacing, spacing + a_little, insulator_height, centered=(True, True, False)) \
-            .transformed(offset=(0, 0, hole_offset)) \
-            .rect(spacing / 1.5, spacing / 1.5) \
-            .offset2D(spacing / 20) \
+        insulator = (
+            cq.Workplane('XY')
+            .box(spacing, spacing + a_little, insulator_height, centered=(True, True, False))
+            .transformed(offset=(0, 0, hole_offset))
+            .rect(spacing / 1.5, spacing / 1.5)
+            .offset2D(spacing / 20)
             .cutBlind(insulator_height - hole_offset)
+        )
     else:
-        insulator = cq.Workplane('XY') \
-            .box(spacing, spacing + a_little, standoff_height, centered=(True, True, False))
+        insulator = cq.Workplane('XY').box(
+            spacing, spacing + a_little, standoff_height, centered=(True, True, False)
+        )
 
     # Lead
     if model_type == 'female':
         total_lead_length = lead_length_bottom
     else:
         total_lead_length = lead_length_bottom + standoff_height + lead_length_top_exposed
-    lead = cq.Workplane('XY') \
-        .transformed(offset=(0, 0, -lead_length_bottom)) \
-        .box(lead_dimensions[0], lead_dimensions[1], total_lead_length, centered=(True, True, False))
+    lead = (
+        cq.Workplane('XY')
+        .transformed(offset=(0, 0, -lead_length_bottom))
+        .box(
+            lead_dimensions[0], lead_dimensions[1], total_lead_length, centered=(True, True, False)
+        )
+    )
 
     # Combine into assembly
     assembly = StepAssembly(full_name)
@@ -508,8 +593,9 @@ def generate_sym(
         symbol = Symbol(
             uuid_sym,
             Name('{} {}x{:02d}'.format(name, rows, per_row)),
-            Description('A {}x{} {}.\n\n'
-                        'Generated with {}'.format(rows, per_row, name_lower, generator)),
+            Description(
+                'A {}x{} {}.\n\nGenerated with {}'.format(rows, per_row, name_lower, generator)
+            ),
             Keywords('connector, {}x{}, {}'.format(rows, per_row, keywords)),
             Author(author),
             Version(version),
@@ -537,11 +623,7 @@ def generate_sym(
         # Polygons
         y_max, y_min = get_rectangle_bounds(i, rows, spacing, spacing, True)
         polygon = Polygon(
-            uuid_polygon,
-            Layer('sym_outlines'),
-            Width(line_width),
-            Fill(False),
-            GrabArea(True)
+            uuid_polygon, Layer('sym_outlines'), Width(line_width), Fill(False), GrabArea(True)
         )
         polygon.add_vertex(Vertex(Position(-w, y_max), Angle(0.0)))
         polygon.add_vertex(Vertex(Position(w, y_max), Angle(0.0)))
@@ -564,7 +646,7 @@ def generate_sym(
                     Layer('sym_outlines'),
                     Width(line_width),
                     Fill(True),
-                    GrabArea(True)
+                    GrabArea(True),
                 )
                 polygon.add_vertex(Vertex(Position(x_offset - dx, y + dy), Angle(0.0)))
                 polygon.add_vertex(Vertex(Position(x_offset + dx, y + dy), Angle(0.0)))
@@ -584,7 +666,7 @@ def generate_sym(
                     Layer('sym_outlines'),
                     Width(line_width * 0.75),
                     Fill(False),
-                    GrabArea(False)
+                    GrabArea(False),
                 )
                 polygon.add_vertex(Vertex(Position(x_offset, y - dy), Angle(x_sign * 135.0)))
                 polygon.add_vertex(Vertex(Position(x_offset, y + dy), Angle(0.0)))
@@ -597,21 +679,23 @@ def generate_sym(
                 diam = 1.6
                 x_offset = w - (diam / 2) - pin_length_inside
                 pos = Position(x_offset, y)
-                symbol.add_circle(Circle(
-                    uuid_decoration,
-                    Layer('sym_outlines'),
-                    Width(line_width * 0.75),
-                    Fill(False),
-                    GrabArea(False),
-                    Diameter(diam),
-                    pos,
-                ))
+                symbol.add_circle(
+                    Circle(
+                        uuid_decoration,
+                        Layer('sym_outlines'),
+                        Width(line_width * 0.75),
+                        Fill(False),
+                        GrabArea(False),
+                        Diameter(diam),
+                        pos,
+                    )
+                )
                 line_dx = (diam / 2) * math.cos(math.pi / 4 - math.pi / 16)
                 line_dy = (diam / 2) * math.sin(math.pi / 4 - math.pi / 16)
                 line1 = Polygon(
                     uuid_decoration_2,
                     Layer('sym_outlines'),
-                    Width(line_width * .5),
+                    Width(line_width * 0.5),
                     Fill(False),
                     GrabArea(False),
                 )
@@ -621,7 +705,7 @@ def generate_sym(
                 line2 = Polygon(
                     uuid_decoration_3,
                     Layer('sym_outlines'),
-                    Width(line_width * .5),
+                    Width(line_width * 0.5),
                     Fill(False),
                     GrabArea(False),
                 )
@@ -631,10 +715,26 @@ def generate_sym(
 
         # Text
         y_max, y_min = get_rectangle_bounds(i, rows, spacing, spacing, True)
-        text = Text(uuid_text_name, Layer('sym_names'), Value('{{NAME}}'), Align('center bottom'), Height(sym_text_height), Position(0.0, y_max), Rotation(0.0))
+        text = Text(
+            uuid_text_name,
+            Layer('sym_names'),
+            Value('{{NAME}}'),
+            Align('center bottom'),
+            Height(sym_text_height),
+            Position(0.0, y_max),
+            Rotation(0.0),
+        )
         symbol.add_text(text)
 
-        text = Text(uuid_text_value, Layer('sym_values'), Value('{{VALUE}}'), Align('center top'), Height(sym_text_height), Position(0.0, y_min), Rotation(0.0))
+        text = Text(
+            uuid_text_value,
+            Layer('sym_values'),
+            Value('{{VALUE}}'),
+            Align('center top'),
+            Height(sym_text_height),
+            Position(0.0, y_min),
+            Rotation(0.0),
+        )
         symbol.add_text(text)
 
         symbol.serialize(path.join('out', library, category))
@@ -676,8 +776,9 @@ def generate_cmp(
         component = Component(
             uuid_cmp,
             Name('{} {}x{:02d}'.format(name, rows, per_row)),
-            Description('A {}x{} {}.\n\n'
-                        'Generated with {}'.format(rows, per_row, name_lower, generator)),
+            Description(
+                'A {}x{} {}.\n\nGenerated with {}'.format(rows, per_row, name_lower, generator)
+            ),
             Keywords('connector, {}x{}, {}'.format(rows, per_row, keywords)),
             Author(author),
             Version(version),
@@ -691,15 +792,17 @@ def generate_cmp(
         )
 
         for p in range(1, i + 1):
-            component.add_signal(Signal(
-                uuid_signals[p - 1],
-                Name(str(p)),
-                Role.PASSIVE,
-                Required(False),
-                Negated(False),
-                Clock(False),
-                ForcedNet(''),
-            ))
+            component.add_signal(
+                Signal(
+                    uuid_signals[p - 1],
+                    Name(str(p)),
+                    Role.PASSIVE,
+                    Required(False),
+                    Negated(False),
+                    Clock(False),
+                    ForcedNet(''),
+                )
+            )
 
         gate = Gate(
             uuid_gate,
@@ -710,18 +813,22 @@ def generate_cmp(
             Suffix(''),
         )
         for p in range(1, i + 1):
-            gate.add_pin_signal_map(PinSignalMap(
-                uuid_pins[p - 1],
-                SignalUUID(uuid_signals[p - 1]),
-                TextDesignator.SYMBOL_PIN_NAME,
-            ))
+            gate.add_pin_signal_map(
+                PinSignalMap(
+                    uuid_pins[p - 1],
+                    SignalUUID(uuid_signals[p - 1]),
+                    TextDesignator.SYMBOL_PIN_NAME,
+                )
+            )
 
-        component.add_variant(Variant(uuid_variant, Norm.EMPTY, Name('default'), Description(''), gate))
+        component.add_variant(
+            Variant(uuid_variant, Norm.EMPTY, Name('default'), Description(''), gate)
+        )
 
         # Message approvals
         if len(default_value) == 0:
             # Approve the "no default value set" message.
-            component.add_approval("(approved empty_default_value)")
+            component.add_approval('(approved empty_default_value)')
 
         component.serialize(path.join('out', library, category))
         print('{}x{} {}: Wrote component {}'.format(rows, per_row, kind, uuid_cmp))
@@ -756,17 +863,23 @@ def generate_dev(
 
             uuid_dev = _uuid('dev')
             uuid_cmp = uuid('cmp', kind, broad_variant, 'cmp')
-            uuid_signals = [uuid('cmp', kind, broad_variant, 'signal-{}'.format(p)) for p in range(i)]
+            uuid_signals = [
+                uuid('cmp', kind, broad_variant, 'signal-{}'.format(p)) for p in range(i)
+            ]
             uuid_pkg = uuid('pkg', kind, variant, 'pkg')
             uuid_pads = [uuid('pkg', kind, variant, 'pad-{}'.format(p)) for p in range(i)]
 
             # General info
             lines.append('(librepcb_device {}'.format(uuid_dev))
             lines.append(' (name "{} {}x{:02d} ⌀{:.1f}mm")'.format(name, rows, per_row, drill))
-            lines.append(' (description "A {}x{} {} with {}mm pin spacing '
-                         'and {:.1f}mm drill holes.\\n\\n'
-                         'Generated with {}")'.format(rows, per_row, name_lower, spacing, drill, generator))
-            lines.append(' (keywords "connector, {}x{}, d{:.1f}, {}")'.format(rows, per_row, drill, keywords))
+            lines.append(
+                ' (description "A {}x{} {} with {}mm pin spacing '
+                'and {:.1f}mm drill holes.\\n\\n'
+                'Generated with {}")'.format(rows, per_row, name_lower, spacing, drill, generator)
+            )
+            lines.append(
+                ' (keywords "connector, {}x{}, d{:.1f}, {}")'.format(rows, per_row, drill, keywords)
+            )
             lines.append(' (author "{}")'.format(author))
             lines.append(' (version "0.1.1")')
             lines.append(' (created {})'.format(create_date or now()))
@@ -777,9 +890,11 @@ def generate_dev(
             lines.append(' (package {})'.format(uuid_pkg))
             signalmappings = []
             for p in range(1, i + 1):
-                signalmappings.append(' (pad {} (signal {}))'.format(uuid_pads[p - 1], uuid_signals[p - 1]))
+                signalmappings.append(
+                    ' (pad {} (signal {}))'.format(uuid_pads[p - 1], uuid_signals[p - 1])
+                )
             lines.extend(sorted(signalmappings))
-            lines.append(" (approved no_parts)")
+            lines.append(' (approved no_parts)')
             lines.append(')')
 
             dev_dir_path = path.join('out', library, category, uuid_dev)
@@ -791,7 +906,9 @@ def generate_dev(
                 f.write('\n'.join(lines))
                 f.write('\n')
 
-            print('{}x{} {} ⌀{:.1f}mm: Wrote device {}'.format(rows, per_row, kind, drill, uuid_dev))
+            print(
+                '{}x{} {} ⌀{:.1f}mm: Wrote device {}'.format(rows, per_row, kind, drill, uuid_dev)
+            )
 
 
 if __name__ == '__main__':
