@@ -17,7 +17,6 @@ test = [
     "pytest ~= 8.2.1",
     "flake8 ~= 4.0.1",
     "mypy == 1.10.0",
-    "isort ~= 5.13.2",
     "ruff ~= 0.12.2",
 ]
 
@@ -40,13 +39,6 @@ module = [
     'test_generate_stm_mcu',
 ]
 disallow_untyped_defs = false
-
-[tool.isort]
-line_length = 120
-multi_line_output = 5
-balanced_wrapping = false
-known_typing = "typing"
-sections = "FUTURE,STDLIB,TYPING,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
 [tool.ruff]
 target-version = "py38"
