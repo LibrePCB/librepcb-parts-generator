@@ -5,6 +5,7 @@ Generate the following packages:
 - Chip capacitors SMT
 
 """
+
 import sys
 from os import path
 from uuid import uuid4
@@ -14,15 +15,56 @@ from typing import Dict, Iterable, Optional, Tuple
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
-    Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width, generate_courtyard
+    Align,
+    Angle,
+    Author,
+    Category,
+    Created,
+    Deprecated,
+    Description,
+    Fill,
+    GeneratedBy,
+    GrabArea,
+    Height,
+    Keywords,
+    Layer,
+    Name,
+    Polygon,
+    Position,
+    Position3D,
+    Rotation,
+    Rotation3D,
+    Value,
+    Version,
+    Vertex,
+    Width,
+    generate_courtyard,
 )
 from entities.component import SignalUUID
 from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, Footprint3DModel, FootprintPad, LetterSpacing,
-    LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size,
-    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType,
+    AutoRotate,
+    ComponentSide,
+    CopperClearance,
+    Footprint,
+    Footprint3DModel,
+    FootprintPad,
+    LetterSpacing,
+    LineSpacing,
+    Mirror,
+    Package,
+    Package3DModel,
+    PackagePad,
+    PackagePadUuid,
+    PadFunction,
+    Shape,
+    ShapeRadius,
+    Size,
+    SolderPasteConfig,
+    StopMaskConfig,
+    StrokeText,
+    StrokeWidth,
 )
 
 generator = 'librepcb-parts-generator (generate_chip.py)'
@@ -90,6 +132,7 @@ class BodyDimensions:
     """
     Dimensions of the physical body.
     """
+
     def __init__(
         self,
         length: float,
@@ -107,7 +150,7 @@ class BodyDimensions:
     @property
     def gap(self) -> Optional[float]:
         if self.lead_length:
-            return (self.length - 2 * self.lead_length)
+            return self.length - 2 * self.lead_length
         return None
 
 
@@ -123,6 +166,7 @@ class FootprintDimensions:
     L = Length, W = Width, G = Gap
 
     """
+
     def __init__(self, pad_length: float, pad_width: float, pad_gap: float):
         self.pad_length = pad_length
         self.pad_width = pad_width
@@ -136,6 +180,7 @@ class ChipConfig:
     Note: Specify either footprints or gap, but not both.
 
     """
+
     def __init__(
         self,
         size_imperial: str,  # String, e.g. "1206"
@@ -143,7 +188,7 @@ class ChipConfig:
         *,
         footprints: Optional[Dict[str, FootprintDimensions]] = None,
         gap: Optional[float] = None,
-        meta: Optional[Dict[str, str]] = None  # Metadata that can be used in description
+        meta: Optional[Dict[str, str]] = None,  # Metadata that can be used in description
     ):
         self._size_imperial = size_imperial
         self.body = body
@@ -160,22 +205,16 @@ class ChipConfig:
                     raise ValueError('Invalid density level: {}'.format(density_level))
 
     def size_metric(self) -> str:
-        return str(int(self.body.length * 10)).rjust(2, '0') + \
-            str(int(self.body.width * 10 if self.body.width < 10 else self.body.width)).rjust(2, '0')
+        return str(int(self.body.length * 10)).rjust(2, '0') + str(
+            int(self.body.width * 10 if self.body.width < 10 else self.body.width)
+        ).rjust(2, '0')
 
     def size_imperial(self) -> str:
         return self._size_imperial
 
 
 class PolarizationConfig:
-    def __init__(
-        self,
-        *,
-        name_marked: str,
-        id_marked: str,
-        name_unmarked: str,
-        id_unmarked: str
-    ):
+    def __init__(self, *, name_marked: str, id_marked: str, name_unmarked: str, id_unmarked: str):
         self.name_marked = name_marked
         self.id_marked = id_marked
         self.name_unmarked = name_unmarked
@@ -194,7 +233,7 @@ def generate_pkg(
     pkgcat: str,
     keywords: str,
     version: str,
-    create_date: Optional[str]
+    create_date: Optional[str],
 ) -> None:
     category = 'pkg'
     for config in configs:
@@ -219,12 +258,19 @@ def generate_pkg(
             'meta': config.meta,
         }
         full_name = name.format(**fmt_params_name)
-        full_desc = description.format(**fmt_params_desc) + \
-            "\n\nGenerated with {}".format(generator)
-        full_keywords = ",".join(filter(None, [
-            config.size_metric(), config.size_imperial(),
-            keywords.format(**fmt_params_desc).lower(),
-        ]))
+        full_desc = description.format(**fmt_params_desc) + '\n\nGenerated with {}'.format(
+            generator
+        )
+        full_keywords = ','.join(
+            filter(
+                None,
+                [
+                    config.size_metric(),
+                    config.size_imperial(),
+                    keywords.format(**fmt_params_desc).lower(),
+                ],
+            )
+        )
 
         def _uuid(identifier: str) -> str:
             return uuid(category, full_name, identifier)
@@ -255,8 +301,12 @@ def generate_pkg(
             assembly_type=AssemblyType.SMT,
         )
 
-        package.add_pad(PackagePad(uuid_pads[0], Name(polarization.name_marked if polarization else '1')))
-        package.add_pad(PackagePad(uuid_pads[1], Name(polarization.name_unmarked if polarization else '2')))
+        package.add_pad(
+            PackagePad(uuid_pads[0], Name(polarization.name_marked if polarization else '1'))
+        )
+        package.add_pad(
+            PackagePad(uuid_pads[1], Name(polarization.name_unmarked if polarization else '2'))
+        )
 
         def add_footprint_variant(
             key: str,
@@ -264,7 +314,7 @@ def generate_pkg(
             density_level: str,
             *,
             gap: Optional[float] = None,
-            dimensions: Optional[FootprintDimensions] = None
+            dimensions: Optional[FootprintDimensions] = None,
         ) -> None:
             """
             Generate a footprint variant.
@@ -318,33 +368,37 @@ def generate_pkg(
                 pad_width = dimensions.pad_width
                 pad_length = dimensions.pad_length
                 pad_gap = dimensions.pad_gap
-                pad_dx = (pad_gap / 2 + pad_length / 2)  # x offset (delta-x)
+                pad_dx = pad_gap / 2 + pad_length / 2  # x offset (delta-x)
             elif gap is not None:
                 pad_gap = gap
-                pad_width = config.body.width + get_by_density(config.body.length, density_level, 'side')
+                pad_width = config.body.width + get_by_density(
+                    config.body.length, density_level, 'side'
+                )
                 pad_toe = get_by_density(config.body.length, density_level, 'toe')
                 pad_length = (config.body.length - gap) / 2 + pad_toe
-                pad_dx = (gap / 2 + pad_length / 2)  # x offset (delta-x)
+                pad_dx = gap / 2 + pad_length / 2  # x offset (delta-x)
             else:
                 raise ValueError('Either dimensions or gap must be set')
             for p in [0, 1]:
                 pad_uuid = uuid_pads[p - 1]
                 sign = -1 if p == 1 else 1
-                footprint.add_pad(FootprintPad(
-                    uuid=pad_uuid,
-                    side=ComponentSide.TOP,
-                    shape=Shape.ROUNDED_RECT,
-                    position=Position(sign * pad_dx, 0),
-                    rotation=Rotation(0),
-                    size=Size(pad_length, pad_width),
-                    radius=ShapeRadius(0),
-                    stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
-                    solder_paste=SolderPasteConfig.AUTO,
-                    copper_clearance=CopperClearance(0.0),
-                    function=PadFunction.STANDARD_PAD,
-                    package_pad=PackagePadUuid(pad_uuid),
-                    holes=[],
-                ))
+                footprint.add_pad(
+                    FootprintPad(
+                        uuid=pad_uuid,
+                        side=ComponentSide.TOP,
+                        shape=Shape.ROUNDED_RECT,
+                        position=Position(sign * pad_dx, 0),
+                        rotation=Rotation(0),
+                        size=Size(pad_length, pad_width),
+                        radius=ShapeRadius(0),
+                        stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
+                        solder_paste=SolderPasteConfig.AUTO,
+                        copper_clearance=CopperClearance(0.0),
+                        function=PadFunction.STANDARD_PAD,
+                        package_pad=PackagePadUuid(pad_uuid),
+                        holes=[],
+                    )
+                )
                 max_x = max(max_x, pad_length / 2 + sign * pad_dx)
             max_y = max(max_y, config.body.width / 2)
             max_y = max(max_y, pad_width / 2)
@@ -355,125 +409,141 @@ def generate_pkg(
                 # We assume that leads are across the entire width of the part (e.g. MLCC)
                 dx = config.body.length / 2
                 dy = config.body.width / 2
-                footprint.add_polygon(Polygon(
-                    uuid=uuid_body_left,
-                    layer=Layer('top_documentation'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(-dx, dy), Angle(0)),  # NW
-                        Vertex(Position(-half_gap, dy), Angle(0)),  # NE
-                        Vertex(Position(-half_gap, -dy), Angle(0)),  # SE
-                        Vertex(Position(-dx, -dy), Angle(0)),  # SW
-                        Vertex(Position(-dx, dy), Angle(0)),  # NW
-                    ],
-                ))
-                footprint.add_polygon(Polygon(
-                    uuid=uuid_body_right,
-                    layer=Layer('top_documentation'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(dx, dy), Angle(0)),  # NE
-                        Vertex(Position(half_gap, dy), Angle(0)),  # NW
-                        Vertex(Position(half_gap, -dy), Angle(0)),  # SW
-                        Vertex(Position(dx, -dy), Angle(0)),  # SE
-                        Vertex(Position(dx, dy), Angle(0)),  # NE
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=uuid_body_left,
+                        layer=Layer('top_documentation'),
+                        width=Width(0),
+                        fill=Fill(True),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(-dx, dy), Angle(0)),  # NW
+                            Vertex(Position(-half_gap, dy), Angle(0)),  # NE
+                            Vertex(Position(-half_gap, -dy), Angle(0)),  # SE
+                            Vertex(Position(-dx, -dy), Angle(0)),  # SW
+                            Vertex(Position(-dx, dy), Angle(0)),  # NW
+                        ],
+                    )
+                )
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=uuid_body_right,
+                        layer=Layer('top_documentation'),
+                        width=Width(0),
+                        fill=Fill(True),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(dx, dy), Angle(0)),  # NE
+                            Vertex(Position(half_gap, dy), Angle(0)),  # NW
+                            Vertex(Position(half_gap, -dy), Angle(0)),  # SW
+                            Vertex(Position(dx, -dy), Angle(0)),  # SE
+                            Vertex(Position(dx, dy), Angle(0)),  # NE
+                        ],
+                    )
+                )
                 dy = config.body.width / 2 - doc_lw / 2
-                footprint.add_polygon(Polygon(
-                    uuid=uuid_body_top,
-                    layer=Layer('top_documentation'),
-                    width=Width(doc_lw),
-                    fill=Fill(False),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(-half_gap, dy), Angle(0)),
-                        Vertex(Position(half_gap, dy), Angle(0)),
-                    ],
-                ))
-                footprint.add_polygon(Polygon(
-                    uuid=uuid_body_bot,
-                    layer=Layer('top_documentation'),
-                    width=Width(doc_lw),
-                    fill=Fill(False),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(-half_gap, -dy), Angle(0)),
-                        Vertex(Position(half_gap, -dy), Angle(0)),
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=uuid_body_top,
+                        layer=Layer('top_documentation'),
+                        width=Width(doc_lw),
+                        fill=Fill(False),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(-half_gap, dy), Angle(0)),
+                            Vertex(Position(half_gap, dy), Angle(0)),
+                        ],
+                    )
+                )
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=uuid_body_bot,
+                        layer=Layer('top_documentation'),
+                        width=Width(doc_lw),
+                        fill=Fill(False),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(-half_gap, -dy), Angle(0)),
+                            Vertex(Position(half_gap, -dy), Angle(0)),
+                        ],
+                    )
+                )
             else:
                 # We have more precise information about the lead (e.g. molded
                 # packages where leads are not the full width of the package).
                 dx = config.body.length / 2 - doc_lw / 2
                 dy = config.body.width / 2 - doc_lw / 2
-                footprint.add_polygon(Polygon(
-                    uuid=uuid_body_around,
-                    layer=Layer('top_documentation'),
-                    width=Width(doc_lw),
-                    fill=Fill(False),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(-dx, dy), Angle(0)),
-                        Vertex(Position(dx, dy), Angle(0)),
-                        Vertex(Position(dx, -dy), Angle(0)),
-                        Vertex(Position(-dx, -dy), Angle(0)),
-                        Vertex(Position(-dx, dy), Angle(0)),
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=uuid_body_around,
+                        layer=Layer('top_documentation'),
+                        width=Width(doc_lw),
+                        fill=Fill(False),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(-dx, dy), Angle(0)),
+                            Vertex(Position(dx, dy), Angle(0)),
+                            Vertex(Position(dx, -dy), Angle(0)),
+                            Vertex(Position(-dx, -dy), Angle(0)),
+                            Vertex(Position(-dx, dy), Angle(0)),
+                        ],
+                    )
+                )
                 dx = config.body.length / 2
                 dy = (config.body.lead_width or dimensions.pad_width) / 2
-                footprint.add_polygon(Polygon(
-                    uuid=uuid_body_left,
-                    layer=Layer('top_documentation'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(-dx, dy), Angle(0)),
-                        Vertex(Position(-half_gap, dy), Angle(0)),
-                        Vertex(Position(-half_gap, -dy), Angle(0)),
-                        Vertex(Position(-dx, -dy), Angle(0)),
-                        Vertex(Position(-dx, dy), Angle(0)),
-                    ],
-                ))
-                footprint.add_polygon(Polygon(
-                    uuid=uuid_body_right,
-                    layer=Layer('top_documentation'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(dx, dy), Angle(0)),
-                        Vertex(Position(half_gap, dy), Angle(0)),
-                        Vertex(Position(half_gap, -dy), Angle(0)),
-                        Vertex(Position(dx, -dy), Angle(0)),
-                        Vertex(Position(dx, dy), Angle(0)),
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=uuid_body_left,
+                        layer=Layer('top_documentation'),
+                        width=Width(0),
+                        fill=Fill(True),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(-dx, dy), Angle(0)),
+                            Vertex(Position(-half_gap, dy), Angle(0)),
+                            Vertex(Position(-half_gap, -dy), Angle(0)),
+                            Vertex(Position(-dx, -dy), Angle(0)),
+                            Vertex(Position(-dx, dy), Angle(0)),
+                        ],
+                    )
+                )
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=uuid_body_right,
+                        layer=Layer('top_documentation'),
+                        width=Width(0),
+                        fill=Fill(True),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(dx, dy), Angle(0)),
+                            Vertex(Position(half_gap, dy), Angle(0)),
+                            Vertex(Position(half_gap, -dy), Angle(0)),
+                            Vertex(Position(dx, -dy), Angle(0)),
+                            Vertex(Position(dx, dy), Angle(0)),
+                        ],
+                    )
+                )
             if polarization:
                 polarization_mark_width = config.body.width / 8
                 dx_outer = half_gap - polarization_mark_width / 2
                 dx_inner = half_gap - polarization_mark_width * 1.5
                 dy = config.body.width / 2 - doc_lw
-                footprint.add_polygon(Polygon(
-                    uuid=uuid_polarization_mark,
-                    layer=Layer('top_documentation'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(True),
-                    vertices=[
-                        Vertex(Position(-dx_outer, dy), Angle(0)),
-                        Vertex(Position(-dx_inner, dy), Angle(0)),
-                        Vertex(Position(-dx_inner, -dy), Angle(0)),
-                        Vertex(Position(-dx_outer, -dy), Angle(0)),
-                        Vertex(Position(-dx_outer, dy), Angle(0)),
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=uuid_polarization_mark,
+                        layer=Layer('top_documentation'),
+                        width=Width(0),
+                        fill=Fill(True),
+                        grab_area=GrabArea(True),
+                        vertices=[
+                            Vertex(Position(-dx_outer, dy), Angle(0)),
+                            Vertex(Position(-dx_inner, dy), Angle(0)),
+                            Vertex(Position(-dx_inner, -dy), Angle(0)),
+                            Vertex(Position(-dx_outer, -dy), Angle(0)),
+                            Vertex(Position(-dx_outer, dy), Angle(0)),
+                        ],
+                    )
+                )
 
             # Silkscreen
             if config.body.length > 1.0:
@@ -484,73 +554,84 @@ def generate_pkg(
                         config.body.width / 2 + silk_lw / 2,  # Based on body width
                         pad_width / 2 + silk_lw / 2 + silkscreen_clearance,  # Based on pad width
                     )
-                    footprint.add_polygon(Polygon(
-                        uuid=uuid_silkscreen_top,
-                        layer=Layer('top_legend'),
-                        width=Width(silk_lw),
-                        fill=Fill(False),
-                        grab_area=GrabArea(False),
-                        vertices=[
-                            Vertex(Position(dx_unmarked, dy), Angle(0)),
-                            Vertex(Position(-dx_marked, dy), Angle(0)),
-                            Vertex(Position(-dx_marked, -dy), Angle(0)),
-                            Vertex(Position(dx_unmarked, -dy), Angle(0)),
-                        ],
-                    ))
+                    footprint.add_polygon(
+                        Polygon(
+                            uuid=uuid_silkscreen_top,
+                            layer=Layer('top_legend'),
+                            width=Width(silk_lw),
+                            fill=Fill(False),
+                            grab_area=GrabArea(False),
+                            vertices=[
+                                Vertex(Position(dx_unmarked, dy), Angle(0)),
+                                Vertex(Position(-dx_marked, dy), Angle(0)),
+                                Vertex(Position(-dx_marked, -dy), Angle(0)),
+                                Vertex(Position(dx_unmarked, -dy), Angle(0)),
+                            ],
+                        )
+                    )
                 else:
-                    assert gap is not None, \
-                        "Support for non-polarized packages with irregular pads not yet fully implemented"
+                    assert gap is not None, (
+                        'Support for non-polarized packages with irregular pads not yet fully implemented'
+                    )
                     dx = gap / 2 - silk_lw / 2 - silkscreen_clearance
                     dy = config.body.width / 2 + silk_lw / 2
-                    footprint.add_polygon(Polygon(
-                        uuid=uuid_silkscreen_top,
-                        layer=Layer('top_legend'),
-                        width=Width(silk_lw),
-                        fill=Fill(False),
-                        grab_area=GrabArea(False),
-                        vertices=[
-                            Vertex(Position(-dx, dy), Angle(0)),
-                            Vertex(Position(dx, dy), Angle(0)),
-                        ],
-                    ))
-                    footprint.add_polygon(Polygon(
-                        uuid=uuid_silkscreen_bot,
-                        layer=Layer('top_legend'),
-                        width=Width(silk_lw),
-                        fill=Fill(False),
-                        grab_area=GrabArea(False),
-                        vertices=[
-                            Vertex(Position(-dx, -dy), Angle(0)),
-                            Vertex(Position(dx, -dy), Angle(0)),
-                        ],
-                    ))
+                    footprint.add_polygon(
+                        Polygon(
+                            uuid=uuid_silkscreen_top,
+                            layer=Layer('top_legend'),
+                            width=Width(silk_lw),
+                            fill=Fill(False),
+                            grab_area=GrabArea(False),
+                            vertices=[
+                                Vertex(Position(-dx, dy), Angle(0)),
+                                Vertex(Position(dx, dy), Angle(0)),
+                            ],
+                        )
+                    )
+                    footprint.add_polygon(
+                        Polygon(
+                            uuid=uuid_silkscreen_bot,
+                            layer=Layer('top_legend'),
+                            width=Width(silk_lw),
+                            fill=Fill(False),
+                            grab_area=GrabArea(False),
+                            vertices=[
+                                Vertex(Position(-dx, -dy), Angle(0)),
+                                Vertex(Position(dx, -dy), Angle(0)),
+                            ],
+                        )
+                    )
 
             # Package outlines
             dx = config.body.length / 2
             dy = config.body.width / 2
-            footprint.add_polygon(Polygon(
-                uuid=uuid_outline,
-                layer=Layer('top_package_outlines'),
-                width=Width(0),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(-dx, dy), Angle(0)),  # NW
-                    Vertex(Position(dx, dy), Angle(0)),  # NE
-                    Vertex(Position(dx, -dy), Angle(0)),  # SE
-                    Vertex(Position(-dx, -dy), Angle(0)),  # SW
-                ],
-            ))
+            footprint.add_polygon(
+                Polygon(
+                    uuid=uuid_outline,
+                    layer=Layer('top_package_outlines'),
+                    width=Width(0),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(-dx, dy), Angle(0)),  # NW
+                        Vertex(Position(dx, dy), Angle(0)),  # NE
+                        Vertex(Position(dx, -dy), Angle(0)),  # SE
+                        Vertex(Position(-dx, -dy), Angle(0)),  # SW
+                    ],
+                )
+            )
 
             # Courtyard
             courtyard_excess = get_by_density(config.body.length, density_level, 'courtyard')
-            footprint.add_polygon(generate_courtyard(
-                uuid=uuid_courtyard,
-                max_x=max_x,
-                max_y=max_y,
-                excess_x=courtyard_excess,
-                excess_y=courtyard_excess,
-            ))
+            footprint.add_polygon(
+                generate_courtyard(
+                    uuid=uuid_courtyard,
+                    max_x=max_x,
+                    max_y=max_y,
+                    excess_x=courtyard_excess,
+                    excess_y=courtyard_excess,
+                )
+            )
 
             # Labels
             if config.body.width < 2.0:
@@ -558,48 +639,62 @@ def generate_pkg(
             else:
                 offset = label_offset
             dy = config.body.width / 2 + offset  # y offset (delta-y)
-            footprint.add_text(StrokeText(
-                uuid=uuid_text_name,
-                layer=Layer('top_names'),
-                height=Height(pkg_text_height),
-                stroke_width=StrokeWidth(0.2),
-                letter_spacing=LetterSpacing.AUTO,
-                line_spacing=LineSpacing.AUTO,
-                align=Align('center bottom'),
-                position=Position(0.0, dy),
-                rotation=Rotation(0.0),
-                auto_rotate=AutoRotate(True),
-                mirror=Mirror(False),
-                value=Value('{{NAME}}'),
-            ))
-            footprint.add_text(StrokeText(
-                uuid=uuid_text_value,
-                layer=Layer('top_values'),
-                height=Height(pkg_text_height),
-                stroke_width=StrokeWidth(0.2),
-                letter_spacing=LetterSpacing.AUTO,
-                line_spacing=LineSpacing.AUTO,
-                align=Align('center top'),
-                position=Position(0.0, -dy),
-                rotation=Rotation(0.0),
-                auto_rotate=AutoRotate(True),
-                mirror=Mirror(False),
-                value=Value('{{VALUE}}'),
-            ))
+            footprint.add_text(
+                StrokeText(
+                    uuid=uuid_text_name,
+                    layer=Layer('top_names'),
+                    height=Height(pkg_text_height),
+                    stroke_width=StrokeWidth(0.2),
+                    letter_spacing=LetterSpacing.AUTO,
+                    line_spacing=LineSpacing.AUTO,
+                    align=Align('center bottom'),
+                    position=Position(0.0, dy),
+                    rotation=Rotation(0.0),
+                    auto_rotate=AutoRotate(True),
+                    mirror=Mirror(False),
+                    value=Value('{{NAME}}'),
+                )
+            )
+            footprint.add_text(
+                StrokeText(
+                    uuid=uuid_text_value,
+                    layer=Layer('top_values'),
+                    height=Height(pkg_text_height),
+                    stroke_width=StrokeWidth(0.2),
+                    letter_spacing=LetterSpacing.AUTO,
+                    line_spacing=LineSpacing.AUTO,
+                    align=Align('center top'),
+                    position=Position(0.0, -dy),
+                    rotation=Rotation(0.0),
+                    auto_rotate=AutoRotate(True),
+                    mirror=Mirror(False),
+                    value=Value('{{VALUE}}'),
+                )
+            )
 
         if config.gap:
-            add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B', gap=config.gap)
-            add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A', gap=config.gap)
+            add_footprint_variant(
+                'density~b', 'Density Level B (median protrusion)', 'B', gap=config.gap
+            )
+            add_footprint_variant(
+                'density~a', 'Density Level A (max protrusion)', 'A', gap=config.gap
+            )
         elif config.footprints:
             a = config.footprints.get('A')
             b = config.footprints.get('B')
             c = config.footprints.get('C')
             if b:
-                add_footprint_variant('density~b', 'Density Level B (median protrusion)', 'B', dimensions=b)
+                add_footprint_variant(
+                    'density~b', 'Density Level B (median protrusion)', 'B', dimensions=b
+                )
             if a:
-                add_footprint_variant('density~a', 'Density Level A (max protrusion)', 'A', dimensions=a)
+                add_footprint_variant(
+                    'density~a', 'Density Level A (max protrusion)', 'A', dimensions=a
+                )
             if c:
-                add_footprint_variant('density~c', 'Density Level C (min protrusion)', 'C', dimensions=c)
+                add_footprint_variant(
+                    'density~c', 'Density Level C (min protrusion)', 'C', dimensions=c
+                )
         else:
             raise ValueError('Either gap or footprints must be set')
 
@@ -615,9 +710,9 @@ def generate_pkg(
             # For unsupported package types, approve the warnings
             for footprint in package.footprints:
                 package.add_approval(
-                    "(approved missing_footprint_3d_model\n" +
-                    " (footprint {})\n".format(footprint.uuid) +
-                    ")"
+                    '(approved missing_footprint_3d_model\n'
+                    + ' (footprint {})\n'.format(footprint.uuid)
+                    + ')'
                 )
 
         package.serialize(path.join('out', library, category))
@@ -652,50 +747,76 @@ def generate_3d(
     edge_offset = length / 2 - edge
 
     if package_type != 'CAPPM':
-        inner = cq.Workplane("XY") \
-            .box(length - 2 * edge, width, height) \
-            .edges('+X').fillet(fillet) \
+        inner = (
+            cq.Workplane('XY')
+            .box(length - 2 * edge, width, height)
+            .edges('+X')
+            .fillet(fillet)
             .translate(translation)
-        left = cq.Workplane("XY") \
-            .box(edge, width, height) \
-            .edges('+X or <X').fillet(fillet) \
-            .translate(translation) \
+        )
+        left = (
+            cq.Workplane('XY')
+            .box(edge, width, height)
+            .edges('+X or <X')
+            .fillet(fillet)
+            .translate(translation)
             .translate((-edge_offset - edge / 2, 0, 0))
-        right = cq.Workplane("XY") \
-            .box(edge, width, height) \
-            .edges('+X or >X').fillet(fillet) \
-            .translate(translation) \
+        )
+        right = (
+            cq.Workplane('XY')
+            .box(edge, width, height)
+            .edges('+X or >X')
+            .fillet(fillet)
+            .translate(translation)
             .translate((edge_offset + edge / 2, 0, 0))
+        )
     else:
         lead_tickness = 0.1
         lead_length = config.body.lead_length
         lead_width = config.body.lead_width
         if lead_length is None or lead_width is None:
-            raise RuntimeError('Generating 3D models for CAPPM not supported for configs without lead')
+            raise RuntimeError(
+                'Generating 3D models for CAPPM not supported for configs without lead'
+            )
 
-        body_pts = [(0, 0),
-                    (0, length / 2 - lead_length - lead_tickness),
-                    (lead_tickness, length / 2 - lead_length - lead_tickness),
-                    (lead_tickness, length / 2 - 2 * lead_tickness),
-                    (height * .6, length / 2 - lead_tickness),
-                    (height + lead_tickness, length / 2 - lead_tickness),
-                    (height + lead_tickness, 0)]
-        lead_pts = [(0, 0),
-                    (0, lead_length),
-                    (height * .6 + lead_tickness, lead_length),
-                    (height * .6 + lead_tickness, lead_length - lead_tickness),
-                    (lead_tickness, lead_length - lead_tickness),
-                    (lead_tickness, 0)]
+        body_pts = [
+            (0, 0),
+            (0, length / 2 - lead_length - lead_tickness),
+            (lead_tickness, length / 2 - lead_length - lead_tickness),
+            (lead_tickness, length / 2 - 2 * lead_tickness),
+            (height * 0.6, length / 2 - lead_tickness),
+            (height + lead_tickness, length / 2 - lead_tickness),
+            (height + lead_tickness, 0),
+        ]
+        lead_pts = [
+            (0, 0),
+            (0, lead_length),
+            (height * 0.6 + lead_tickness, lead_length),
+            (height * 0.6 + lead_tickness, lead_length - lead_tickness),
+            (lead_tickness, lead_length - lead_tickness),
+            (lead_tickness, 0),
+        ]
 
-        inner = cq.Workplane('ZX') \
-            .polyline(body_pts).mirrorX().extrude(width / 2, both=True) \
-            .edges("|Z").fillet(fillet)
-        left = cq.Workplane('ZX', origin=(length / 2 - lead_length, 0, 0)) \
-            .polyline(lead_pts).close().extrude(lead_width / 2, both=True) \
-            .edges('>X and |Y').fillet(lead_tickness / 1.1)
-        right = left.mirror(mirrorPlane="ZY")
-        marking = cq.Workplane('XY', origin=(-(length * .4 - lead_tickness - 0.01), 0, lead_tickness + height)) \
-            .box(length * 0.2, width - 2 * fillet, 0.02)
+        inner = (
+            cq.Workplane('ZX')
+            .polyline(body_pts)
+            .mirrorX()
+            .extrude(width / 2, both=True)
+            .edges('|Z')
+            .fillet(fillet)
+        )
+        left = (
+            cq.Workplane('ZX', origin=(length / 2 - lead_length, 0, 0))
+            .polyline(lead_pts)
+            .close()
+            .extrude(lead_width / 2, both=True)
+            .edges('>X and |Y')
+            .fillet(lead_tickness / 1.1)
+        )
+        right = left.mirror(mirrorPlane='ZY')
+        marking = cq.Workplane(
+            'XY', origin=(-(length * 0.4 - lead_tickness - 0.01), 0, lead_tickness + height)
+        ).box(length * 0.2, width - 2 * fillet, 0.02)
 
     if package_type == 'RESC':
         inner_color = cq.Color('gray16')
@@ -734,15 +855,14 @@ def generate_dev(
     pad_ids: Optional[Iterable[str]] = None,
 ) -> None:
     category = 'dev'
-    for (size_metric, size_imperial, pkg_name) in packages:
+    for size_metric, size_imperial, pkg_name in packages:
         fmt_params: Dict[str, str] = {
             'size_metric': size_metric,
             'size_imperial': size_imperial,
         }
         full_name = name.format(**fmt_params)
-        full_desc = description.format(**fmt_params) + \
-            "\n\nGenerated with {}".format(generator)
-        full_keywords = "{},{},{}".format(size_metric, size_imperial, keywords)
+        full_desc = description.format(**fmt_params) + '\n\nGenerated with {}'.format(generator)
+        full_keywords = '{},{},{}'.format(size_metric, size_imperial, keywords)
 
         def _uuid(identifier: str) -> str:
             return uuid(category, full_name, identifier)
@@ -750,8 +870,9 @@ def generate_dev(
         # UUIDs
         uuid_dev = _uuid('dev')
         pkg = uuid('pkg', pkg_name, 'pkg', create=False)
-        pads = [uuid('pkg', pkg_name, 'pad-{}'.format(i), create=False)
-                for i in (pad_ids or ['1', '2'])]
+        pads = [
+            uuid('pkg', pkg_name, 'pad-{}'.format(i), create=False) for i in (pad_ids or ['1', '2'])
+        ]
 
         print('Generating dev "{}": {}'.format(full_name, uuid_dev))
 
@@ -770,11 +891,11 @@ def generate_dev(
             package_uuid=PackageUUID(pkg),
         )
 
-        for (pad, signal) in sorted(zip(pads, signals)):
+        for pad, signal in sorted(zip(pads, signals)):
             device.add_pad(ComponentPad(pad_uuid=pad, signal=SignalUUID(signal)))
 
         # Approve "no parts" warning because it's a generic device
-        device.add_approval("(approved no_parts)")
+        device.add_approval('(approved no_parts)')
 
         device.serialize(path.join('out', library, category))
 
@@ -799,20 +920,20 @@ if __name__ == '__main__':
         package_type='RESC',
         name='{package_type}{size_metric} ({size_imperial})',
         description='Generic chip resistor {size_metric} (imperial {size_imperial}).\n\n'
-                    'Length: {length}mm\nWidth: {width}mm',
+        'Length: {length}mm\nWidth: {width}mm',
         polarization=None,
         configs=[
             # Configuration: Values taken from Samsung specs.
-            ChipConfig('01005', BodyDimensions(.4,   .2,  0.15), gap=0.2),   # noqa
-            ChipConfig('0201',  BodyDimensions(.6,   .3,  0.26), gap=0.28),  # noqa
-            ChipConfig('0402',  BodyDimensions(1.0,  .5,  0.35), gap=0.5),   # noqa
-            ChipConfig('0603',  BodyDimensions(1.6,  .8,  0.55), gap=0.8),   # noqa
-            ChipConfig('0805',  BodyDimensions(2.0, 1.25, 0.70), gap=1.2),   # noqa
-            ChipConfig('1206',  BodyDimensions(3.2, 1.6,  0.70), gap=1.8),   # noqa
-            ChipConfig('1210',  BodyDimensions(3.2, 2.55, 0.70), gap=1.8),   # noqa
-            ChipConfig('1218',  BodyDimensions(3.2, 4.6,  0.70), gap=1.8),   # noqa
-            ChipConfig('2010',  BodyDimensions(5.0, 2.5,  0.70), gap=3.3),   # noqa
-            ChipConfig('2512',  BodyDimensions(6.4, 3.2,  0.70), gap=4.6),   # noqa
+            ChipConfig('01005', BodyDimensions(0.4, 0.2, 0.15), gap=0.2),  # noqa
+            ChipConfig('0201', BodyDimensions(0.6, 0.3, 0.26), gap=0.28),  # noqa
+            ChipConfig('0402', BodyDimensions(1.0, 0.5, 0.35), gap=0.5),  # noqa
+            ChipConfig('0603', BodyDimensions(1.6, 0.8, 0.55), gap=0.8),  # noqa
+            ChipConfig('0805', BodyDimensions(2.0, 1.25, 0.70), gap=1.2),  # noqa
+            ChipConfig('1206', BodyDimensions(3.2, 1.6, 0.70), gap=1.8),  # noqa
+            ChipConfig('1210', BodyDimensions(3.2, 2.55, 0.70), gap=1.8),  # noqa
+            ChipConfig('1218', BodyDimensions(3.2, 4.6, 0.70), gap=1.8),  # noqa
+            ChipConfig('2010', BodyDimensions(5.0, 2.5, 0.70), gap=3.3),  # noqa
+            ChipConfig('2512', BodyDimensions(6.4, 3.2, 0.70), gap=4.6),  # noqa
         ],
         generate_3d_models=generate_3d_models,
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
@@ -827,7 +948,7 @@ if __name__ == '__main__':
         package_type='RESJ',
         name='{package_type}{size_metric} ({size_imperial})',
         description='Generic J-lead resistor {size_metric} (imperial {size_imperial}).\n\n'
-                    'Length: {length}mm\nWidth: {width}mm',
+        'Length: {length}mm\nWidth: {width}mm',
         polarization=None,
         configs=[
             ChipConfig('4527', BodyDimensions(11.56, 6.98, 5.84), gap=5.2),
@@ -845,7 +966,7 @@ if __name__ == '__main__':
         package_type='CAPC',
         name='{package_type}{size_metric} ({size_imperial})',
         description='Generic chip capacitor {size_metric} (imperial {size_imperial}).\n\n'
-                    'Length: {length}mm\nWidth: {width}mm',
+        'Length: {length}mm\nWidth: {width}mm',
         polarization=None,
         configs=[
             # C0402
@@ -889,9 +1010,9 @@ if __name__ == '__main__':
         package_type='CAPPM',
         name='{package_type}{length}X{width}X{height}L{lead_length}X{lead_width}',
         description='Generic polarized molded inward-L capacitor (EIA {meta[eia]}).\n\n'
-                    'Length: {length}mm\nWidth: {width}mm\nMax height: {height}mm\n\n'
-                    'EIA Size Code: {meta[eia]}\n'
-                    'KEMET Case Code: {meta[kemet]}\nAVX Case Code: {meta[avx]}',
+        'Length: {length}mm\nWidth: {width}mm\nMax height: {height}mm\n\n'
+        'EIA Size Code: {meta[eia]}\n'
+        'KEMET Case Code: {meta[kemet]}\nAVX Case Code: {meta[avx]}',
         polarization=PolarizationConfig(
             name_marked='+',
             id_marked='p',
@@ -899,61 +1020,116 @@ if __name__ == '__main__':
             id_unmarked='n',
         ),
         configs=[
-            ChipConfig('', BodyDimensions(3.2, 1.6, 1.0, 0.8, 1.2), footprints={
-                'A': FootprintDimensions(2.20, 1.35, 0.62),
-                'B': FootprintDimensions(1.80, 1.23, 0.82),
-                'C': FootprintDimensions(1.42, 1.13, 0.98),
-            }, meta={'eia': '3216-10', 'kemet': 'I', 'avx': 'K'}),
-            ChipConfig('', BodyDimensions(3.2, 1.6, 1.2, 0.8, 1.2), footprints={
-                'A': FootprintDimensions(2.20, 1.35, 0.62),
-                'B': FootprintDimensions(1.80, 1.23, 0.82),
-                'C': FootprintDimensions(1.42, 1.13, 0.98),
-            }, meta={'eia': '3216-12', 'kemet': 'S', 'avx': 'S'}),
-            ChipConfig('', BodyDimensions(3.2, 1.6, 1.8, 0.8, 1.2), footprints={
-                'A': FootprintDimensions(2.20, 1.35, 0.62),
-                'B': FootprintDimensions(1.80, 1.23, 0.82),
-                'C': FootprintDimensions(1.42, 1.13, 0.98),
-            }, meta={'eia': '3216-18', 'kemet': 'A', 'avx': 'A'}),
-            ChipConfig('', BodyDimensions(3.5, 2.8, 1.2, 0.8, 2.2), footprints={
-                'A': FootprintDimensions(2.20, 2.35, 0.92),
-                'B': FootprintDimensions(1.80, 2.23, 1.12),
-                'C': FootprintDimensions(1.42, 2.13, 1.28),
-            }, meta={'eia': '3528-12', 'kemet': 'T', 'avx': 'T'}),
-            ChipConfig('', BodyDimensions(3.5, 2.8, 2.1, 0.8, 2.2), footprints={
-                'A': FootprintDimensions(2.21, 2.35, 0.92),
-                'B': FootprintDimensions(1.80, 2.23, 1.12),
-                'C': FootprintDimensions(1.42, 2.13, 1.28),
-            }, meta={'eia': '3528-21', 'kemet': 'B', 'avx': 'B'}),
-            ChipConfig('', BodyDimensions(6.0, 3.2, 1.5, 1.3, 2.2), footprints={
-                'A': FootprintDimensions(2.77, 2.35, 2.37),
-                'B': FootprintDimensions(2.37, 2.23, 2.57),
-                'C': FootprintDimensions(1.99, 2.13, 2.73),
-            }, meta={'eia': '6032-15', 'kemet': 'U', 'avx': 'W'}),
-            ChipConfig('', BodyDimensions(6.0, 3.2, 2.8, 1.3, 2.2), footprints={
-                'A': FootprintDimensions(2.77, 2.35, 2.37),
-                'B': FootprintDimensions(2.37, 2.23, 2.57),
-                'C': FootprintDimensions(1.99, 2.13, 2.73),
-            }, meta={'eia': '6032-28', 'kemet': 'C', 'avx': 'C'}),
-            ChipConfig('', BodyDimensions(7.3, 6.0, 3.8, 1.3, 4.1), footprints={
-                'A': FootprintDimensions(2.77, 4.25, 3.68),
-                'B': FootprintDimensions(2.37, 4.13, 3.87),
-                'C': FootprintDimensions(1.99, 4.03, 4.03),
-            }, meta={'eia': '7360-38', 'kemet': 'E', 'avx': 'V'}),
-            ChipConfig('', BodyDimensions(7.3, 4.3, 2.0, 1.3, 2.4), footprints={
-                'A': FootprintDimensions(2.77, 2.55, 3.67),
-                'B': FootprintDimensions(2.37, 2.43, 3.87),
-                'C': FootprintDimensions(1.99, 2.33, 4.03),
-            }, meta={'eia': '7343-20', 'kemet': 'V', 'avx': 'Y'}),
-            ChipConfig('', BodyDimensions(7.3, 4.3, 3.1, 1.3, 2.4), footprints={
-                'A': FootprintDimensions(2.77, 2.55, 3.67),
-                'B': FootprintDimensions(2.37, 2.43, 3.87),
-                'C': FootprintDimensions(1.99, 2.33, 4.03),
-            }, meta={'eia': '7343-31', 'kemet': 'D', 'avx': 'D'}),
-            ChipConfig('', BodyDimensions(7.3, 4.3, 4.3, 1.3, 2.4), footprints={
-                'A': FootprintDimensions(2.77, 2.55, 3.67),
-                'B': FootprintDimensions(2.37, 2.43, 3.87),
-                'C': FootprintDimensions(1.99, 2.33, 4.03),
-            }, meta={'eia': '7343-43', 'kemet': 'X', 'avx': 'E'}),
+            ChipConfig(
+                '',
+                BodyDimensions(3.2, 1.6, 1.0, 0.8, 1.2),
+                footprints={
+                    'A': FootprintDimensions(2.20, 1.35, 0.62),
+                    'B': FootprintDimensions(1.80, 1.23, 0.82),
+                    'C': FootprintDimensions(1.42, 1.13, 0.98),
+                },
+                meta={'eia': '3216-10', 'kemet': 'I', 'avx': 'K'},
+            ),
+            ChipConfig(
+                '',
+                BodyDimensions(3.2, 1.6, 1.2, 0.8, 1.2),
+                footprints={
+                    'A': FootprintDimensions(2.20, 1.35, 0.62),
+                    'B': FootprintDimensions(1.80, 1.23, 0.82),
+                    'C': FootprintDimensions(1.42, 1.13, 0.98),
+                },
+                meta={'eia': '3216-12', 'kemet': 'S', 'avx': 'S'},
+            ),
+            ChipConfig(
+                '',
+                BodyDimensions(3.2, 1.6, 1.8, 0.8, 1.2),
+                footprints={
+                    'A': FootprintDimensions(2.20, 1.35, 0.62),
+                    'B': FootprintDimensions(1.80, 1.23, 0.82),
+                    'C': FootprintDimensions(1.42, 1.13, 0.98),
+                },
+                meta={'eia': '3216-18', 'kemet': 'A', 'avx': 'A'},
+            ),
+            ChipConfig(
+                '',
+                BodyDimensions(3.5, 2.8, 1.2, 0.8, 2.2),
+                footprints={
+                    'A': FootprintDimensions(2.20, 2.35, 0.92),
+                    'B': FootprintDimensions(1.80, 2.23, 1.12),
+                    'C': FootprintDimensions(1.42, 2.13, 1.28),
+                },
+                meta={'eia': '3528-12', 'kemet': 'T', 'avx': 'T'},
+            ),
+            ChipConfig(
+                '',
+                BodyDimensions(3.5, 2.8, 2.1, 0.8, 2.2),
+                footprints={
+                    'A': FootprintDimensions(2.21, 2.35, 0.92),
+                    'B': FootprintDimensions(1.80, 2.23, 1.12),
+                    'C': FootprintDimensions(1.42, 2.13, 1.28),
+                },
+                meta={'eia': '3528-21', 'kemet': 'B', 'avx': 'B'},
+            ),
+            ChipConfig(
+                '',
+                BodyDimensions(6.0, 3.2, 1.5, 1.3, 2.2),
+                footprints={
+                    'A': FootprintDimensions(2.77, 2.35, 2.37),
+                    'B': FootprintDimensions(2.37, 2.23, 2.57),
+                    'C': FootprintDimensions(1.99, 2.13, 2.73),
+                },
+                meta={'eia': '6032-15', 'kemet': 'U', 'avx': 'W'},
+            ),
+            ChipConfig(
+                '',
+                BodyDimensions(6.0, 3.2, 2.8, 1.3, 2.2),
+                footprints={
+                    'A': FootprintDimensions(2.77, 2.35, 2.37),
+                    'B': FootprintDimensions(2.37, 2.23, 2.57),
+                    'C': FootprintDimensions(1.99, 2.13, 2.73),
+                },
+                meta={'eia': '6032-28', 'kemet': 'C', 'avx': 'C'},
+            ),
+            ChipConfig(
+                '',
+                BodyDimensions(7.3, 6.0, 3.8, 1.3, 4.1),
+                footprints={
+                    'A': FootprintDimensions(2.77, 4.25, 3.68),
+                    'B': FootprintDimensions(2.37, 4.13, 3.87),
+                    'C': FootprintDimensions(1.99, 4.03, 4.03),
+                },
+                meta={'eia': '7360-38', 'kemet': 'E', 'avx': 'V'},
+            ),
+            ChipConfig(
+                '',
+                BodyDimensions(7.3, 4.3, 2.0, 1.3, 2.4),
+                footprints={
+                    'A': FootprintDimensions(2.77, 2.55, 3.67),
+                    'B': FootprintDimensions(2.37, 2.43, 3.87),
+                    'C': FootprintDimensions(1.99, 2.33, 4.03),
+                },
+                meta={'eia': '7343-20', 'kemet': 'V', 'avx': 'Y'},
+            ),
+            ChipConfig(
+                '',
+                BodyDimensions(7.3, 4.3, 3.1, 1.3, 2.4),
+                footprints={
+                    'A': FootprintDimensions(2.77, 2.55, 3.67),
+                    'B': FootprintDimensions(2.37, 2.43, 3.87),
+                    'C': FootprintDimensions(1.99, 2.33, 4.03),
+                },
+                meta={'eia': '7343-31', 'kemet': 'D', 'avx': 'D'},
+            ),
+            ChipConfig(
+                '',
+                BodyDimensions(7.3, 4.3, 4.3, 1.3, 2.4),
+                footprints={
+                    'A': FootprintDimensions(2.77, 2.55, 3.67),
+                    'B': FootprintDimensions(2.37, 2.43, 3.87),
+                    'C': FootprintDimensions(1.99, 2.33, 4.03),
+                },
+                meta={'eia': '7343-43', 'kemet': 'X', 'avx': 'E'},
+            ),
         ],
         generate_3d_models=generate_3d_models,
         pkgcat='414f873f-4099-47fd-8526-bdd8419de581',
@@ -968,7 +1144,7 @@ if __name__ == '__main__':
         package_type='INDC',
         name='{package_type}{size_metric} ({size_imperial})',
         description='Generic chip inductor {size_metric} (imperial {size_imperial}).\n\n'
-                    'Length: {length}mm\nWidth: {width}mm',
+        'Length: {length}mm\nWidth: {width}mm',
         polarization=None,
         configs=[
             # Configuration: Values taken from Taiyo Yuden, TDK and Murata specs.
@@ -1090,7 +1266,7 @@ if __name__ == '__main__':
             ('7343-20', '', 'CAPPM730X430X200L130X240'),
             ('7343-31', '', 'CAPPM730X430X310L130X240'),
             ('7343-43', '', 'CAPPM730X430X430L130X240'),
-            ('7360-38', '', 'CAPPM730X600X380L130X410')
+            ('7360-38', '', 'CAPPM730X600X380L130X410'),
         ],
         cmp='c54375c5-7149-4ded-95c5-7462f7301ee7',
         cat='c011cc6b-b762-498e-8494-d1994f3043cf',

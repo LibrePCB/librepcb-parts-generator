@@ -7,10 +7,11 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.8"
           - "3.9"
           - "3.10"
           - "3.11"
+          - "3.12"
+          - "3.13"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -22,7 +23,7 @@ jobs:
         run: pytest
       - name: Run mypy
         run: mypy .
-      - name: Run flake8
-        run: flake8
-      - name: Run isort
-        run: isort --check --diff .
+      - name: Run ruff check
+        run: ruff check .
+      - name: Run ruff format
+        run: ruff format --check

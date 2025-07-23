@@ -1,6 +1,7 @@
 """
 Generate dual mosfet devices.
 """
+
 from os import makedirs, path
 from uuid import uuid4
 
@@ -145,7 +146,9 @@ def generate_dev(
         print('Generating dev "{}": {}'.format(full_name, uuid_dev))
         lines.append('(librepcb_device {}'.format(uuid_dev))
         lines.append(' (name "{}")'.format(full_name))
-        lines.append(' (description "{}\\n\\n{}Generated with {}")'.format(full_desc, datasheet, generator))
+        lines.append(
+            ' (description "{}\\n\\n{}Generated with {}")'.format(full_desc, datasheet, generator)
+        )
         lines.append(' (keywords "{}")'.format(keywords))
         lines.append(' (author "{}")'.format(author))
         lines.append(' (version "{}")'.format(version))
@@ -155,7 +158,7 @@ def generate_dev(
         lines.append(' (component {})'.format(uuid_cmp))
         lines.append(' (package {})'.format(uuid_pkg))
         pad_signal_mappings = []
-        for (pad, signal) in zip(uuid_pads, uuid_signals):
+        for pad, signal in zip(uuid_pads, uuid_signals):
             pad_signal_mappings.append(' (pad {} (signal {}))'.format(pad, signal))
         lines.extend(sorted(pad_signal_mappings))
         lines.append(')')
@@ -172,6 +175,7 @@ def generate_dev(
 
 if __name__ == '__main__':
     # Diodes Incorporated
+    # fmt: off
     generate_dev(
         library='Diodes_Incorporated.lplib',
         name='{name}',
@@ -255,4 +259,5 @@ if __name__ == '__main__':
                       'https://www.diodes.com/assets/Datasheets/DMG6602SVTQ.pdf'),
         ],
     )
+    # fmt: on
     save_cache(uuid_cache_file, uuid_cache)
