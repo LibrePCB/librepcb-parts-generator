@@ -598,6 +598,7 @@ if __name__ == '__main__':
         datasheet_name='PTS645',
         keywords=[],
     )
+    # fmt: off
     models = [
         # 4.3mm
         Model(name='PTS645Sx432', actuator_height=4.3, parts=[
@@ -704,6 +705,7 @@ if __name__ == '__main__':
             Attribute('HEIGHT', '9.5mm', AttributeType.STRING, None),
         ]),
     ]
+    # fmt: on
     for model in models:
         generate_pkg(
             library='CK.lplib',
@@ -746,6 +748,7 @@ if __name__ == '__main__':
         datasheet_name='PTS645',
         keywords=[],
     )
+    # fmt: off
     models = [
         Model(name='PTS645SJx732', actuator_height=7.3, parts=[
             Part('PTS645SJK432LFS', Manufacturer('C&K'), [
@@ -773,6 +776,7 @@ if __name__ == '__main__':
             Attribute('HEIGHT', '7.3mm', AttributeType.STRING, None),
         ]),
     ]
+    # fmt: on
     for model in models:
         generate_pkg(
             library='CK.lplib',
@@ -815,6 +819,7 @@ if __name__ == '__main__':
         datasheet_name='PTS645',
         keywords=[],
     )
+    # fmt: off
     models = [
         # 4.3mm
         Model(name='PTS645Sx43SMTR92', actuator_height=4.3, parts=[
@@ -973,6 +978,7 @@ if __name__ == '__main__':
             Attribute('HEIGHT', '13mm', AttributeType.STRING, None),
         ]),
     ]
+    # fmt: on
     for model in models:
         generate_pkg(
             library='CK.lplib',
@@ -1015,6 +1021,7 @@ if __name__ == '__main__':
         datasheet_name='PTS645',
         keywords=[],
     )
+    # fmt: off
     models = [
         Model(name='PTS645SJx73SMTR92', actuator_height=7.3, parts=[
             Part('PTS645SJK43SMTR92LFS', Manufacturer('C&K'), [
@@ -1042,6 +1049,7 @@ if __name__ == '__main__':
             Attribute('HEIGHT', '7.3mm', AttributeType.STRING, None),
         ]),
     ]
+    # fmt: on
     for model in models:
         generate_pkg(
             library='CK.lplib',
@@ -1083,6 +1091,7 @@ if __name__ == '__main__':
         datasheet_name='PTS645',
         keywords=[],
     )
+    # fmt: off
     models = [
         # 4.3mm
         Model(name='PTS645Sx43JSMTR92', actuator_height=4.3, parts=[
@@ -1241,6 +1250,7 @@ if __name__ == '__main__':
             Attribute('HEIGHT', '13mm', AttributeType.STRING, None),
         ]),
     ]
+    # fmt: on
     for model in models:
         generate_pkg(
             library='CK.lplib',
@@ -1282,6 +1292,7 @@ if __name__ == '__main__':
         datasheet_name='PTS645',
         keywords=[],
     )
+    # fmt: off
     models = [
         Model(name='PTS645SJx73JSMTR92', actuator_height=7.3, parts=[
             Part('PTS645SJK43JSMTR92LFS', Manufacturer('C&K'), [
@@ -1309,6 +1320,7 @@ if __name__ == '__main__':
             Attribute('HEIGHT', '7.3mm', AttributeType.STRING, None),
         ]),
     ]
+    # fmt: on
     for model in models:
         generate_pkg(
             library='CK.lplib',

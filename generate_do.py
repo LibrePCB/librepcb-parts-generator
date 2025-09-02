@@ -440,25 +440,24 @@ if __name__ == '__main__':
     # total_length_nom (E); total_height_nom (A)
     # contact_length_min, contact_length_nom, contact_length_max (L); contact_width_min, contact_width_max (b)
     # variant; common_name
+    # fmt: off
     configs.append(DoConfig(4.30, 3.60, 2.15,
                             5.40, 2.30,
                             0.75, 1.15, 1.60, 1.95, 2.20,
                             'AA', 'SMB'))
-
     configs.append(DoConfig(6.85, 5.90, 2.15,
                             7.95, 2.30,
                             0.75, 1.15, 1.60, 2.90, 3.20,
                             'AB', 'SMC'))
-
     configs.append(DoConfig(4.30, 2.60, 2.30,
                             5.20, 2.40,
                             0.75, 1.15, 1.60, 1.25, 1.65,
                             'AC', 'SMA'))
-
     configs.append(DoConfig(4.45, 2.60, 2.80,
                             5.25, 2.95,
                             0.75, 1.15, 1.60, 1.00, 1.70,
                             'BA', 'GF1'))
+    # fmt: on
 
     for config in configs:
         generate_pkg(

@@ -16,7 +16,7 @@ LEAD_WIDTH = {
     0.8: 0.35,
     0.65: 0.35,
     0.5: 0.30,
-    0.4: 0.25
+    0.4: 0.25,
 }
 
 # Toe and heel length as a function of pitch
@@ -29,7 +29,7 @@ LEAD_TOE_HEEL = {
     0.65: 0.31,
     0.50: 0.29,
     0.40: 0.27,
-    0.35: 0.25
+    0.35: 0.25,
 }
 
 # The real CadQuery types are not known statically, thus allowing any type.
@@ -91,6 +91,7 @@ class DfnConfig:
         self.step_modification_fn = step_modification_fn
 
 
+# fmt: off
 JEDEC_CONFIGS = [
     # Table 6
     # Square, 1.5 x 1.5
@@ -128,8 +129,8 @@ JEDEC_CONFIGS = [
     DfnConfig(3.0, 3.0, 0.5, 8, 0.75, 0.80, 0.40, 2.70, 1.75, 'W3030D-4,WEED-4', no_exp=False),     # no nominal exp_pad
     DfnConfig(3.0, 3.0, 0.5, 8, 0.95, 1.00, 0.55, 2.50, 1.50, 'V3030D-6,VEED-6', no_exp=False),     # no nominal exp_pad
     DfnConfig(3.0, 3.0, 0.5, 8, 0.75, 0.80, 0.55, 2.50, 1.50, 'W3030D-6,WEED-6', no_exp=False),     # no nominal exp_pad
-    DfnConfig(3.0, 3.0, 0.5, 8, 0.95, 1.00, 0.45, 1.60, 1.60, 'V3030D-7,VEED-7', no_exp=False),     # no nominal pad length and exp_pad
-    DfnConfig(3.0, 3.0, 0.5, 8, 0.75, 0.80, 0.45, 1.60, 1.60, 'W3030D-7,WEED-7', no_exp=False),     # no nominal pad length and exp_pad
+    DfnConfig(3.0, 3.0, 0.5, 8, 0.95, 1.00, 0.45, 1.60, 1.60, 'V3030D-7,VEED-7', no_exp=False),     # no nominal pad length and exp_pad  # noqa: E501
+    DfnConfig(3.0, 3.0, 0.5, 8, 0.75, 0.80, 0.45, 1.60, 1.60, 'W3030D-7,WEED-7', no_exp=False),     # no nominal pad length and exp_pad  # noqa: E501
     DfnConfig(3.0, 3.0, 0.5, 10, 0.95, 1.00, 0.55, 2.20, 1.60, 'V3030D-2,VEED-2', print_pad=True),
     DfnConfig(3.0, 3.0, 0.5, 10, 0.75, 0.80, 0.55, 2.00, 1.20, 'W3030D-2,WEED-2'),
     DfnConfig(3.0, 3.0, 0.5, 10, 0.95, 1.00, 0.30, 2.20, 1.60, 'V3030D-3,VEED-3', print_pad=True),
@@ -171,9 +172,9 @@ JEDEC_CONFIGS = [
     DfnConfig(2.0, 3.0, 0.5, 6, 0.75, 0.80, 0.40, 1.00, 1.20, 'W2030D-1,WCED-1', no_exp=False),    # no nominal exp_pad
     DfnConfig(2.0, 3.0, 0.5, 8, 0.95, 1.00, 0.40, 1.75, 1.90, 'V2030D-2,VCED-2', no_exp=False),    # no nominal exp_pad
     DfnConfig(2.0, 3.0, 0.5, 8, 0.75, 0.80, 0.40, 1.75, 1.90, 'W2030D-2,WCED-2', no_exp=False),    # no nominal exp_pad
-    DfnConfig(2.0, 3.0, 0.5, 8, 0.95, 1.00, 0.45, 1.60, 1.60, 'V2030D-3,VCED-3', no_exp=False),    # no nominal pad length and exp_pad
-    DfnConfig(2.0, 3.0, 0.5, 8, 0.75, 0.80, 0.45, 1.60, 1.60, 'W2030D-3,WCED-3', no_exp=False),    # no nominal pad length and exp_pad
-    DfnConfig(2.0, 3.0, 0.5, 8, 0.55, 0.65, 0.45, 1.60, 1.60, 'U2030D', no_exp=False),      # no nominal pad length and exp_pad
+    DfnConfig(2.0, 3.0, 0.5, 8, 0.95, 1.00, 0.45, 1.60, 1.60, 'V2030D-3,VCED-3', no_exp=False),    # no nominal pad length and exp_pad  # noqa: E501
+    DfnConfig(2.0, 3.0, 0.5, 8, 0.75, 0.80, 0.45, 1.60, 1.60, 'W2030D-3,WCED-3', no_exp=False),    # no nominal pad length and exp_pad  # noqa: E501
+    DfnConfig(2.0, 3.0, 0.5, 8, 0.55, 0.65, 0.45, 1.60, 1.60, 'U2030D', no_exp=False),      # no nominal pad length and exp_pad  # noqa: E501
     # Rectangular, Type 1, 2.5 x 3.0
     DfnConfig(2.5, 3.0, 0.8, 6, 0.95, 1.00, 0.55, 1.50, 1.20, 'V2530B,VDEB'),
     DfnConfig(2.5, 3.0, 0.8, 6, 0.75, 0.80, 0.55, 1.50, 1.20, 'W2530B,WDEB'),
@@ -221,8 +222,8 @@ JEDEC_CONFIGS = [
     DfnConfig(3.0, 1.5, 0.5, 10, 0.95, 1.00, 0.55, 2.20, 0.10, 'W3015D-2,VEBD-2'),
     DfnConfig(3.0, 1.5, 0.5, 10, 0.75, 0.80, 0.55, 2.20, 0.10, 'W3015D-2,WEBD-2'),
     # Rectangular, Type 2, 3.0 x 2.0
-    DfnConfig(3.0, 2.0, 0.95, 6, 0.95, 1.00, 0.30, 2.20, 0.60, 'V3020A,VECA'),    # no nominal exp_pad, using manual values
-    DfnConfig(3.0, 2.0, 0.65, 8, 0.95, 1.00, 0.30, 2.20, 0.60, 'V3020C,VECC'),    # no nominal exp_pad, using manual values
+    DfnConfig(3.0, 2.0, 0.95, 6, 0.95, 1.00, 0.30, 2.20, 0.60, 'V3020A,VECA'),    # no nominal exp_pad, using manual values  # noqa: E501
+    DfnConfig(3.0, 2.0, 0.65, 8, 0.95, 1.00, 0.30, 2.20, 0.60, 'V3020C,VECC'),    # no nominal exp_pad, using manual values  # noqa: E501
     DfnConfig(3.0, 2.0, 0.5, 8, 0.95, 1.00, 0.55, 2.20, 0.60, 'V3020D-1,V3020D-4,VECD-1,VECD-4'),
     DfnConfig(3.0, 2.0, 0.5, 8, 0.75, 0.80, 0.55, 2.20, 0.60, 'W3020D-1,W3020D-4,WECD-1,WECD-4'),
     # Commented out as they coincide with the V3020D-1, only the tolerances are different,
@@ -274,6 +275,7 @@ JEDEC_CONFIGS = [
     DfnConfig(6.0, 5.0, 0.5, 18, 0.95, 1.00, 0.55, 4.70, 3.40, 'V6050D-2,VLJD-2', no_exp=False),    # no nominal exp_pad
     DfnConfig(6.0, 5.0, 0.5, 18, 0.75, 0.80, 0.55, 4.70, 3.40, 'W6050D-2,WLJD-2', no_exp=False),    # no nominal exp_pad
 ]
+# fmt: on
 
 
 def draw_circle(diameter: float) -> Callable[[DfnConfig, Callable[[str], str], Footprint], None]:
@@ -330,6 +332,7 @@ def step_modification_sgp3x(body: Any, dot: Any, workplane: Any) -> Tuple[Any, A
     return body, dot
 
 
+# fmt: off
 THIRD_CONFIGS = [
     # Sensirion
     DfnConfig(
@@ -409,3 +412,4 @@ THIRD_CONFIGS = [
         no_exp=False,
     ),
 ]
+# fmt: on

@@ -49,14 +49,14 @@ DENSITY_LEVEL_A = {  # Most
     0.80: Excess(0.30, 0.40,  0.05, 0.40),
     0.65: Excess(0.25, 0.35,  0.03, 0.40),
     0.50: Excess(0.20, 0.30,  0.00, 0.40),
-    0.40: Excess(0.20, 0.30, -0.01, 0.40)
+    0.40: Excess(0.20, 0.30, -0.01, 0.40),
 }
 DENSITY_LEVEL_B = {  # Nominal
     1.00: Excess(0.30, 0.40,  0.05, 0.20),
     0.80: Excess(0.25, 0.35,  0.04, 0.20),
     0.65: Excess(0.20, 0.30,  0.02, 0.20),
     0.50: Excess(0.15, 0.25, -0.01, 0.20),
-    0.40: Excess(0.15, 0.25, -0.02, 0.20)
+    0.40: Excess(0.15, 0.25, -0.02, 0.20),
 }
 DENSITY_LEVEL_C = {  # Least
     1.00: Excess(0.25, 0.35,  0.04, 0.10),
@@ -191,6 +191,7 @@ class LTQfpConfig:
         return configs
 
 
+# fmt: off
 JEDEC_CONFIGS = [  # May contain any type that has a `get_configs(self) -> List[QfpConfig]` method
     # Datasheet designators       D1    E1       A   e           D     E    b
     # Description                 body-x,y           ptch   pin  span-x,y
@@ -239,6 +240,7 @@ JEDEC_CONFIGS = [  # May contain any type that has a `get_configs(self) -> List[
     LTQfpConfig(QfpConfig('QFP', 28.0, 28.0, -1, -1, 0.50, 208, 30.0, 30.0, 0.22, ''),  None, 'BJB'),
     LTQfpConfig(QfpConfig('QFP', 28.0, 28.0, -1, -1, 0.40, 256, 30.0, 30.0, 0.18, ''),  None, 'BJC'),
 ]
+# fmt: on
 
 
 def uuid(category: str, full_name: str, identifier: str) -> str:
