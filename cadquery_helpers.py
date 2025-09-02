@@ -21,7 +21,6 @@ class StepAssembly:
     """
     A STEP assembly.
     """
-
     def __init__(self, name: str):
         self.assembly = cq.Assembly(name=name)
 
@@ -29,9 +28,8 @@ class StepAssembly:
         for printer in Message.DefaultMessenger_s().Printers():
             printer.SetTraceLevel(Message_Gravity.Message_Fail)
 
-    def add_body(
-        self, body: cq.Workplane, name: str, color: cq.Color, location: Optional[cq.Location] = None
-    ) -> None:
+    def add_body(self, body: cq.Workplane, name: str, color: cq.Color,
+                 location: Optional[cq.Location] = None) -> None:
         """
         Add a body to the assembly.
 

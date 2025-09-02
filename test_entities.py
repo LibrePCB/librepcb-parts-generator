@@ -1,92 +1,32 @@
 from pathlib import Path
 
 from entities.common import (
-    Align,
-    Angle,
-    Author,
-    Category,
-    Circle,
-    Created,
-    Deprecated,
-    Description,
-    Diameter,
-    Fill,
-    GeneratedBy,
-    GrabArea,
-    Height,
-    Keywords,
-    Layer,
-    Length,
-    Name,
-    Polygon,
-    Position,
-    Position3D,
-    Rotation,
-    Rotation3D,
-    Text,
-    Value,
-    Version,
-    Vertex,
-    Width,
+    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
+    Height, Keywords, Layer, Length, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Text, Value, Version,
+    Vertex, Width
 )
 from entities.component import (
-    Clock,
-    Component,
-    DefaultValue,
-    ForcedNet,
-    Gate,
-    Negated,
-    Norm,
-    PinSignalMap,
-    Prefix,
-    Required,
-    Role,
-    SchematicOnly,
-    Signal,
-    SignalUUID,
-    Suffix,
-    SymbolUUID,
-    TextDesignator,
-    Variant,
+    Clock, Component, DefaultValue, ForcedNet, Gate, Negated, Norm, PinSignalMap, Prefix, Required, Role, SchematicOnly,
+    Signal, SignalUUID, Suffix, SymbolUUID, TextDesignator, Variant
 )
 from entities.device import ComponentPad, ComponentUUID, Device, Manufacturer, PackageUUID, Part
 from entities.package import (
-    AssemblyType,
-    AutoRotate,
-    ComponentSide,
-    CopperClearance,
-    DrillDiameter,
-    Footprint,
-    Footprint3DModel,
-    FootprintPad,
-    LetterSpacing,
-    LineSpacing,
-    Mirror,
-    Package,
-    Package3DModel,
-    PackagePad,
-    PackagePadUuid,
-    PadFunction,
-    PadHole,
-    Shape,
-    ShapeRadius,
-    Size,
-    SolderPasteConfig,
-    StopMaskConfig,
-    StrokeText,
-    StrokeWidth,
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, Footprint3DModel, FootprintPad,
+    LetterSpacing, LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, PadHole,
+    Shape, ShapeRadius, Size, SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
-from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation, Symbol
+from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation
 from entities.symbol import Pin as SymbolPin
+from entities.symbol import Symbol
 
 
 def test_name() -> None:
-    name_s_exp = str(Name('bar'))
+    name_s_exp = str(Name("bar"))
     assert name_s_exp == '(name "bar")'
 
 
 def test_description() -> None:
-    description = str(Description('My Description\nWith two " lines'))
+    description = str(Description("My Description\nWith two \" lines"))
     assert description == '(description "My Description\\nWith two \\" lines")'
 
 
@@ -106,28 +46,23 @@ def test_length() -> None:
 
 
 def test_symbol_pin() -> None:
-    symbol_pin_s_exp = str(
-        SymbolPin(
-            'my_uuid',
-            Name('foo'),
-            Position(1.0, 2.0),
-            Rotation(180.0),
-            Length(3.81),
-            NamePosition(3.0, 4.0),
-            NameRotation(270.0),
-            NameHeight(2.5),
-            NameAlign('left center'),
-        )
-    )
+    symbol_pin_s_exp = str(SymbolPin(
+        'my_uuid',
+        Name('foo'),
+        Position(1.0, 2.0),
+        Rotation(180.0),
+        Length(3.81),
+        NamePosition(3.0, 4.0),
+        NameRotation(270.0),
+        NameHeight(2.5),
+        NameAlign('left center'),
+    ))
 
-    assert (
-        symbol_pin_s_exp
-        == '(pin my_uuid (name "foo")\n'
-        + ' (position 1.0 2.0) (rotation 180.0) (length 3.81)\n'
-        + ' (name_position 3.0 4.0) (name_rotation 270.0) (name_height 2.5)\n'
-        + ' (name_align left center)\n'
-        + ')'
-    )
+    assert symbol_pin_s_exp == '(pin my_uuid (name "foo")\n' + \
+        ' (position 1.0 2.0) (rotation 180.0) (length 3.81)\n' + \
+        ' (name_position 3.0 4.0) (name_rotation 270.0) (name_height 2.5)\n' + \
+        ' (name_align left center)\n' + \
+        ')'
 
 
 def test_vertex() -> None:
@@ -136,50 +71,30 @@ def test_vertex() -> None:
 
 
 def test_polygon() -> None:
-    polygon = Polygon(
-        '743dbf3d-98e8-46f0-9a32-00e00d0e811f',
-        Layer('sym_outlines'),
-        Width(0.25),
-        Fill(False),
-        GrabArea(True),
-    )
+    polygon = Polygon('743dbf3d-98e8-46f0-9a32-00e00d0e811f', Layer('sym_outlines'), Width(0.25), Fill(False), GrabArea(True))
     polygon.add_vertex(Vertex(Position(-2.54, 22.86), Angle(0.0)))
-    polygon.add_vertex(Vertex(Position(2.54, 22.86), Angle(0.0)))
-    polygon.add_vertex(Vertex(Position(2.54, -25.4), Angle(0.0)))
+    polygon.add_vertex(Vertex(Position( 2.54, 22.86), Angle(0.0)))
+    polygon.add_vertex(Vertex(Position( 2.54, -25.4), Angle(0.0)))
     polygon.add_vertex(Vertex(Position(-2.54, -25.4), Angle(0.0)))
     polygon.add_vertex(Vertex(Position(-2.54, 22.86), Angle(0.0)))
 
-    assert (
-        str(polygon)
-        == '(polygon 743dbf3d-98e8-46f0-9a32-00e00d0e811f (layer sym_outlines)\n'
-        + ' (width 0.25) (fill false) (grab_area true)\n'
-        + ' (vertex (position -2.54 22.86) (angle 0.0))\n'
-        + ' (vertex (position 2.54 22.86) (angle 0.0))\n'
-        + ' (vertex (position 2.54 -25.4) (angle 0.0))\n'
-        + ' (vertex (position -2.54 -25.4) (angle 0.0))\n'
-        + ' (vertex (position -2.54 22.86) (angle 0.0))\n'
-        + ')'
-    )
+    assert str(polygon) == '(polygon 743dbf3d-98e8-46f0-9a32-00e00d0e811f (layer sym_outlines)\n' +\
+        ' (width 0.25) (fill false) (grab_area true)\n' +\
+        ' (vertex (position -2.54 22.86) (angle 0.0))\n' +\
+        ' (vertex (position 2.54 22.86) (angle 0.0))\n' +\
+        ' (vertex (position 2.54 -25.4) (angle 0.0))\n' +\
+        ' (vertex (position -2.54 -25.4) (angle 0.0))\n' +\
+        ' (vertex (position -2.54 22.86) (angle 0.0))\n' +\
+        ')'
 
 
 def test_text() -> None:
-    text = str(
-        Text(
-            'b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e',
-            Layer('sym_names'),
-            Value('{{NAME}}'),
-            Align('center bottom'),
-            Height(2.54),
-            Position(0.0, 22.86),
-            Rotation(0.0),
-        )
-    )
-    assert (
-        text
-        == '(text b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e (layer sym_names) (value "{{NAME}}")\n'
-        + ' (align center bottom) (height 2.54) (position 0.0 22.86) (rotation 0.0)\n'
-        + ')'
-    )
+    text = str(Text('b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e', Layer('sym_names'),
+                    Value('{{NAME}}'), Align('center bottom'), Height(2.54),
+                    Position(0.0, 22.86), Rotation(0.0)))
+    assert text == '(text b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e (layer sym_names) (value "{{NAME}}")\n' +\
+        ' (align center bottom) (height 2.54) (position 0.0 22.86) (rotation 0.0)\n' +\
+        ')'
 
 
 def test_symbol() -> None:
@@ -195,58 +110,28 @@ def test_symbol() -> None:
         GeneratedBy('black magic'),
         [Category('d0618c29-0436-42da-a388-fdadf7b23892')],
     )
-    symbol.add_pin(
-        SymbolPin(
-            '6da06b2b-7806-4e68-bd0c-e9f18eb2f9d8',
-            Name('1'),
-            Position(5.08, 20.32),
-            Rotation(180.0),
-            Length(3.81),
-            NamePosition(1.0, 2.0),
-            NameRotation(270.0),
-            NameHeight(2.5),
-            NameAlign('left center'),
-        )
-    )
-    polygon = Polygon(
-        '743dbf3d-98e8-46f0-9a32-00e00d0e811f',
-        Layer('sym_outlines'),
-        Width(0.25),
-        Fill(False),
-        GrabArea(True),
-    )
+    symbol.add_pin(SymbolPin(
+        '6da06b2b-7806-4e68-bd0c-e9f18eb2f9d8',
+        Name('1'),
+        Position(5.08, 20.32),
+        Rotation(180.0),
+        Length(3.81),
+        NamePosition(1.0, 2.0),
+        NameRotation(270.0),
+        NameHeight(2.5),
+        NameAlign('left center'),
+    ))
+    polygon = Polygon('743dbf3d-98e8-46f0-9a32-00e00d0e811f', Layer('sym_outlines'), Width(0.25), Fill(False), GrabArea(True))
     polygon.add_vertex(Vertex(Position(-2.54, 22.86), Angle(0.0)))
     polygon.add_vertex(Vertex(Position(-2.54, -25.4), Angle(0.0)))
     polygon.add_vertex(Vertex(Position(-2.54, 22.86), Angle(0.0)))
     symbol.add_polygon(polygon)
-    symbol.add_circle(
-        Circle(
-            'b5599e68-ff6a-464b-9a40-c6ba8ef8daf5',
-            Layer('sym_outlines'),
-            Width(0.254),
-            Fill(False),
-            GrabArea(False),
-            Diameter(1.27),
-            Position(5.715, 0.0),
-        )
-    )
-    symbol.add_text(
-        Text(
-            'b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e',
-            Layer('sym_names'),
-            Value('{{NAME}}'),
-            Align('center bottom'),
-            Height(2.54),
-            Position(0.0, 22.86),
-            Rotation(0.0),
-        )
-    )
+    symbol.add_circle(Circle('b5599e68-ff6a-464b-9a40-c6ba8ef8daf5', Layer('sym_outlines'), Width(0.254), Fill(False), GrabArea(False), Diameter(1.27), Position(5.715, 0.0)))
+    symbol.add_text(Text('b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e', Layer('sym_names'), Value('{{NAME}}'), Align('center bottom'), Height(2.54), Position(0.0, 22.86), Rotation(0.0)))
     symbol.add_approval('(approval foo)')
     symbol.add_approval('(approval bar)')
 
-    assert (
-        str(symbol)
-        == """(librepcb_symbol 01b03c10-7334-4bd5-b2bc-942c18325d2b
+    assert str(symbol) == """(librepcb_symbol 01b03c10-7334-4bd5-b2bc-942c18325d2b
  (name "Sym name")
  (description "A multiline description.\\n\\nDescription")
  (keywords "my, keywords")
@@ -276,7 +161,6 @@ def test_symbol() -> None:
  (approval bar)
  (approval foo)
 )"""
-    )
 
 
 def test_component_role() -> None:
@@ -286,84 +170,33 @@ def test_component_role() -> None:
 
 
 def test_component_signal() -> None:
-    signal = Signal(
-        'f46a4643-fc68-4593-a889-3d987bfe3544',
-        Name('1'),
-        Role.PASSIVE,
-        Required(False),
-        Negated(False),
-        Clock(False),
-        ForcedNet(''),
-    )
-    assert (
-        str(signal)
-        == """(signal f46a4643-fc68-4593-a889-3d987bfe3544 (name "1") (role passive)
+    signal = Signal('f46a4643-fc68-4593-a889-3d987bfe3544', Name('1'), Role.PASSIVE, Required(False), Negated(False), Clock(False), ForcedNet(''))
+    assert str(signal) == """(signal f46a4643-fc68-4593-a889-3d987bfe3544 (name "1") (role passive)
  (required false) (negated false) (clock false) (forced_net "")
 )"""
-    )
 
 
 def test_component_pin_signal_map() -> None:
-    pin_signal_map = PinSignalMap(
-        '0189aafc-f88a-4e65-8fb4-09a047a3e334',
-        SignalUUID('46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c'),
-        TextDesignator.SYMBOL_PIN_NAME,
-    )
+    pin_signal_map = PinSignalMap('0189aafc-f88a-4e65-8fb4-09a047a3e334', SignalUUID('46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c'), TextDesignator.SYMBOL_PIN_NAME)
 
-    assert (
-        str(pin_signal_map)
-        == '(pin 0189aafc-f88a-4e65-8fb4-09a047a3e334 (signal 46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c) (text pin))'
-    )
+    assert str(pin_signal_map) == '(pin 0189aafc-f88a-4e65-8fb4-09a047a3e334 (signal 46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c) (text pin))'
 
 
 def test_component_gate() -> None:
-    gate = Gate(
-        'c1e4b542-a1b1-44d5-bec3-070776143a29',
-        SymbolUUID('8f1a97f2-4cdf-43da-b38d-b3787c47b5ad'),
-        Position(0.0, 0.0),
-        Rotation(0.0),
-        Required(True),
-        Suffix(''),
-    )
-    gate.add_pin_signal_map(
-        PinSignalMap(
-            '0189aafc-f88a-4e65-8fb4-09a047a3e334',
-            SignalUUID('46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c'),
-            TextDesignator.SYMBOL_PIN_NAME,
-        )
-    )
-    assert (
-        str(gate)
-        == """(gate c1e4b542-a1b1-44d5-bec3-070776143a29
+    gate = Gate('c1e4b542-a1b1-44d5-bec3-070776143a29', SymbolUUID('8f1a97f2-4cdf-43da-b38d-b3787c47b5ad'), Position(0.0, 0.0), Rotation(0.0), Required(True), Suffix(''))
+    gate.add_pin_signal_map(PinSignalMap('0189aafc-f88a-4e65-8fb4-09a047a3e334', SignalUUID('46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c'), TextDesignator.SYMBOL_PIN_NAME))
+    assert str(gate) == """(gate c1e4b542-a1b1-44d5-bec3-070776143a29
  (symbol 8f1a97f2-4cdf-43da-b38d-b3787c47b5ad)
  (position 0.0 0.0) (rotation 0.0) (required true) (suffix "")
  (pin 0189aafc-f88a-4e65-8fb4-09a047a3e334 (signal 46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c) (text pin))
 )"""
-    )
 
 
 def test_component_variant() -> None:
-    gate = Gate(
-        'c1e4b542-a1b1-44d5-bec3-070776143a29',
-        SymbolUUID('8f1a97f2-4cdf-43da-b38d-b3787c47b5ad'),
-        Position(0.0, 0.0),
-        Rotation(0.0),
-        Required(True),
-        Suffix(''),
-    )
-    gate.add_pin_signal_map(
-        PinSignalMap(
-            '0189aafc-f88a-4e65-8fb4-09a047a3e334',
-            SignalUUID('46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c'),
-            TextDesignator.SYMBOL_PIN_NAME,
-        )
-    )
-    variant = Variant(
-        'abeeeed0-6e9a-4fdc-bc2b-e2c5b06bbe3a', Norm.EMPTY, Name('default'), Description(''), gate
-    )
-    assert (
-        str(variant)
-        == """(variant abeeeed0-6e9a-4fdc-bc2b-e2c5b06bbe3a (norm "")
+    gate = Gate('c1e4b542-a1b1-44d5-bec3-070776143a29', SymbolUUID('8f1a97f2-4cdf-43da-b38d-b3787c47b5ad'), Position(0.0, 0.0), Rotation(0.0), Required(True), Suffix(''))
+    gate.add_pin_signal_map(PinSignalMap('0189aafc-f88a-4e65-8fb4-09a047a3e334', SignalUUID('46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c'), TextDesignator.SYMBOL_PIN_NAME))
+    variant = Variant('abeeeed0-6e9a-4fdc-bc2b-e2c5b06bbe3a', Norm.EMPTY, Name('default'), Description(''), gate)
+    assert str(variant) == """(variant abeeeed0-6e9a-4fdc-bc2b-e2c5b06bbe3a (norm "")
  (name "default")
  (description "")
  (gate c1e4b542-a1b1-44d5-bec3-070776143a29
@@ -372,7 +205,6 @@ def test_component_variant() -> None:
   (pin 0189aafc-f88a-4e65-8fb4-09a047a3e334 (signal 46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c) (text pin))
  )
 )"""
-    )
 
 
 def test_component() -> None:
@@ -391,44 +223,17 @@ def test_component() -> None:
         DefaultValue(''),
         Prefix('J'),
     )
-    component.add_signal(
-        Signal(
-            'f46a4643-fc68-4593-a889-3d987bfe3544',
-            Name('1'),
-            Role.PASSIVE,
-            Required(False),
-            Negated(False),
-            Clock(False),
-            ForcedNet(''),
-        )
-    )
+    component.add_signal(Signal('f46a4643-fc68-4593-a889-3d987bfe3544', Name('1'), Role.PASSIVE, Required(False), Negated(False), Clock(False), ForcedNet('')))
 
-    gate = Gate(
-        'c1e4b542-a1b1-44d5-bec3-070776143a29',
-        SymbolUUID('8f1a97f2-4cdf-43da-b38d-b3787c47b5ad'),
-        Position(0.0, 0.0),
-        Rotation(0.0),
-        Required(True),
-        Suffix(''),
-    )
-    gate.add_pin_signal_map(
-        PinSignalMap(
-            '0189aafc-f88a-4e65-8fb4-09a047a3e334',
-            SignalUUID('46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c'),
-            TextDesignator.SYMBOL_PIN_NAME,
-        )
-    )
-    variant = Variant(
-        'abeeeed0-6e9a-4fdc-bc2b-e2c5b06bbe3a', Norm.EMPTY, Name('default'), Description(''), gate
-    )
+    gate = Gate('c1e4b542-a1b1-44d5-bec3-070776143a29', SymbolUUID('8f1a97f2-4cdf-43da-b38d-b3787c47b5ad'), Position(0.0, 0.0), Rotation(0.0), Required(True), Suffix(''))
+    gate.add_pin_signal_map(PinSignalMap('0189aafc-f88a-4e65-8fb4-09a047a3e334', SignalUUID('46f7e0e2-74a6-442b-9a5c-1bd4ea3da59c'), TextDesignator.SYMBOL_PIN_NAME))
+    variant = Variant('abeeeed0-6e9a-4fdc-bc2b-e2c5b06bbe3a', Norm.EMPTY, Name('default'), Description(''), gate)
     component.add_variant(variant)
 
     component.add_approval('(approval foo)')
     component.add_approval('(approval bar)')
 
-    assert (
-        str(component)
-        == """(librepcb_component 00c36da8-e22b-43a1-9a87-c3a67e863f49
+    assert str(component) == """(librepcb_component 00c36da8-e22b-43a1-9a87-c3a67e863f49
  (name "Generic Connector 1x27")
  (description "A 1x27 soldered wire connector.\\n\\nNext line")
  (keywords "connector, 1x27")
@@ -456,7 +261,6 @@ def test_component() -> None:
  (approval bar)
  (approval foo)
 )"""
-    )
 
 
 def test_package_pad() -> None:
@@ -482,13 +286,11 @@ def test_footprint_pad() -> None:
             PadHole(
                 '5c4d39d3-35cc-4836-a082-693143ee9135',
                 DrillDiameter(1.0),
-                [Vertex(Position(0.0, 0.0), Angle(0.0))],
+                [Vertex(Position(0.0, 0.0), Angle(0.0))]
             ),
         ],
     )
-    assert (
-        str(footprint_pad)
-        == """(pad 5c4d39d3-35cc-4836-a082-693143ee9135 (side top) (shape roundrect)
+    assert str(footprint_pad) == """(pad 5c4d39d3-35cc-4836-a082-693143ee9135 (side top) (shape roundrect)
  (position 0.0 22.86) (rotation 0.0) (size 2.54 1.587) (radius 0.5)
  (stop_mask auto) (solder_paste off) (clearance 0.1) (function unspecified)
  (package_pad 5c4d39d3-35cc-4836-a082-693143ee9135)
@@ -496,32 +298,15 @@ def test_footprint_pad() -> None:
   (vertex (position 0.0 0.0) (angle 0.0))
  )
 )"""
-    )
 
 
 def test_stroke_text() -> None:
-    stroke_text = StrokeText(
-        'f16d1604-8a82-4688-bc58-be1c1375873f',
-        Layer('top_names'),
-        Height(1.0),
-        StrokeWidth(0.2),
-        LetterSpacing.AUTO,
-        LineSpacing.AUTO,
-        Align('center bottom'),
-        Position(0.0, 25.63),
-        Rotation(0.0),
-        AutoRotate(True),
-        Mirror(False),
-        Value('{{NAME}}'),
-    )
-    assert (
-        str(stroke_text)
-        == """(stroke_text f16d1604-8a82-4688-bc58-be1c1375873f (layer top_names)
+    stroke_text = StrokeText('f16d1604-8a82-4688-bc58-be1c1375873f', Layer('top_names'), Height(1.0), StrokeWidth(0.2), LetterSpacing.AUTO, LineSpacing.AUTO, Align('center bottom'), Position(0.0, 25.63), Rotation(0.0), AutoRotate(True), Mirror(False), Value('{{NAME}}'))
+    assert str(stroke_text) == """(stroke_text f16d1604-8a82-4688-bc58-be1c1375873f (layer top_names)
  (height 1.0) (stroke_width 0.2) (letter_spacing auto) (line_spacing auto)
  (align center bottom) (position 0.0 25.63) (rotation 0.0)
  (auto_rotate true) (mirror false) (value "{{NAME}}")
 )"""
-    )
 
 
 def create_footprint() -> Footprint:
@@ -533,88 +318,63 @@ def create_footprint() -> Footprint:
         Rotation3D(10.0, 20.0, 30.0),
     )
     footprint.add_3d_model(Footprint3DModel('ea459880-68df-4929-b796-b5c8686a1862'))
-    footprint.add_pad(
-        FootprintPad(
-            '5c4d39d3-35cc-4836-a082-693143ee9135',
-            ComponentSide.TOP,
-            Shape.ROUNDED_RECT,
-            Position(0.0, 22.86),
-            Rotation(0.0),
-            Size(2.54, 1.5875),
-            ShapeRadius(0.5),
-            StopMaskConfig(StopMaskConfig.AUTO),
-            SolderPasteConfig.OFF,
-            CopperClearance(0.1),
-            PadFunction.UNSPECIFIED,
-            PackagePadUuid('5c4d39d3-35cc-4836-a082-693143ee9135'),
-            [
-                PadHole(
-                    '5c4d39d3-35cc-4836-a082-693143ee9135',
-                    DrillDiameter(1.0),
-                    [Vertex(Position(0.0, 0.0), Angle(0.0))],
-                ),
-            ],
-        )
-    )
-    footprint.add_pad(
-        FootprintPad(
-            '6100dd55-d3b3-4139-9085-d5a75e783c37',
-            ComponentSide.TOP,
-            Shape.ROUNDED_RECT,
-            Position(0.0, 20.32),
-            Rotation(0.0),
-            Size(2.54, 1.5875),
-            ShapeRadius(0.5),
-            StopMaskConfig(StopMaskConfig.AUTO),
-            SolderPasteConfig.OFF,
-            CopperClearance(0.1),
-            PadFunction.UNSPECIFIED,
-            PackagePadUuid('6100dd55-d3b3-4139-9085-d5a75e783c37'),
-            [
-                PadHole(
-                    '6100dd55-d3b3-4139-9085-d5a75e783c37',
-                    DrillDiameter(1.0),
-                    [Vertex(Position(0.0, 0.0), Angle(0.0))],
-                ),
-            ],
-        )
-    )
-    polygon = Polygon(
-        '5e18e4ea-5667-42b3-b60f-fcc91b0461d3',
-        Layer('top_placement'),
-        Width(0.25),
-        Fill(False),
-        GrabArea(True),
-    )
+    footprint.add_pad(FootprintPad(
+        '5c4d39d3-35cc-4836-a082-693143ee9135',
+        ComponentSide.TOP,
+        Shape.ROUNDED_RECT,
+        Position(0.0, 22.86),
+        Rotation(0.0),
+        Size(2.54, 1.5875),
+        ShapeRadius(0.5),
+        StopMaskConfig(StopMaskConfig.AUTO),
+        SolderPasteConfig.OFF,
+        CopperClearance(0.1),
+        PadFunction.UNSPECIFIED,
+        PackagePadUuid('5c4d39d3-35cc-4836-a082-693143ee9135'),
+        [
+            PadHole(
+                '5c4d39d3-35cc-4836-a082-693143ee9135',
+                DrillDiameter(1.0),
+                [Vertex(Position(0.0, 0.0), Angle(0.0))]
+            ),
+        ],
+    ))
+    footprint.add_pad(FootprintPad(
+        '6100dd55-d3b3-4139-9085-d5a75e783c37',
+        ComponentSide.TOP,
+        Shape.ROUNDED_RECT,
+        Position(0.0, 20.32),
+        Rotation(0.0),
+        Size(2.54, 1.5875),
+        ShapeRadius(0.5),
+        StopMaskConfig(StopMaskConfig.AUTO),
+        SolderPasteConfig.OFF,
+        CopperClearance(0.1),
+        PadFunction.UNSPECIFIED,
+        PackagePadUuid('6100dd55-d3b3-4139-9085-d5a75e783c37'),
+        [
+            PadHole(
+                '6100dd55-d3b3-4139-9085-d5a75e783c37',
+                DrillDiameter(1.0),
+                [Vertex(Position(0.0, 0.0), Angle(0.0))]
+            ),
+        ],
+    ))
+    polygon = Polygon('5e18e4ea-5667-42b3-b60f-fcc91b0461d3', Layer('top_placement'), Width(0.25), Fill(False), GrabArea(True))
     polygon.add_vertex(Vertex(Position(-1.27, +24.36), Angle(0.0)))
     polygon.add_vertex(Vertex(Position(+1.27, +24.36), Angle(0.0)))
     polygon.add_vertex(Vertex(Position(+1.27, -24.36), Angle(0.0)))
     polygon.add_vertex(Vertex(Position(-1.27, -24.36), Angle(0.0)))
     polygon.add_vertex(Vertex(Position(-1.27, +24.36), Angle(0.0)))
     footprint.add_polygon(polygon)
-    stroke_text = StrokeText(
-        'f16d1604-8a82-4688-bc58-be1c1375873f',
-        Layer('top_names'),
-        Height(1.0),
-        StrokeWidth(0.2),
-        LetterSpacing.AUTO,
-        LineSpacing.AUTO,
-        Align('center bottom'),
-        Position(0.0, 25.63),
-        Rotation(0.0),
-        AutoRotate(True),
-        Mirror(False),
-        Value('{{NAME}}'),
-    )
+    stroke_text = StrokeText('f16d1604-8a82-4688-bc58-be1c1375873f', Layer('top_names'), Height(1.0), StrokeWidth(0.2), LetterSpacing.AUTO, LineSpacing.AUTO, Align('center bottom'), Position(0.0, 25.63), Rotation(0.0), AutoRotate(True), Mirror(False), Value('{{NAME}}'))
     footprint.add_text(stroke_text)
     return footprint
 
 
 def test_footprint() -> None:
     footprint = create_footprint()
-    assert (
-        str(footprint)
-        == """(footprint 17b9f232-2b15-4281-a07d-ad0db5213f92
+    assert str(footprint) == """(footprint 17b9f232-2b15-4281-a07d-ad0db5213f92
  (name "default")
  (description "")
  (3d_position 1.0 2.0 3.0) (3d_rotation 10.0 20.0 30.0)
@@ -649,7 +409,6 @@ def test_footprint() -> None:
   (auto_rotate true) (mirror false) (value "{{NAME}}")
  )
 )"""
-    )
 
 
 def test_package() -> None:
@@ -680,11 +439,10 @@ def test_package() -> None:
     package.add_approval('(approval foo)')
     package.add_approval('(approval bar)')
 
-    assert (
-        str(package) == """(librepcb_package 009e35ef-1f50-4bf3-ab58-11eb85bf5503
+    assert str(package) == """(librepcb_package 009e35ef-1f50-4bf3-ab58-11eb85bf5503
  (name "Soldered Wire Connector 1x19 ⌀1.0mm")
- (description "A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\\n\\n"""
-        """Generated with librepcb-parts-generator (generate_connectors.py)")
+ (description "A 1x19 soldered wire connector with 2.54mm pin spacing and 1.0mm drill holes.\\n\\n\
+Generated with librepcb-parts-generator (generate_connectors.py)")
  (keywords "connector, 1x19, d1.0, connector, soldering, generic")
  (author "Danilo B.")
  (version "0.1")
@@ -734,17 +492,11 @@ def test_package() -> None:
  (approval bar)
  (approval foo)
 )"""
-    )
 
 
 def test_component_pad() -> None:
-    component_pad = ComponentPad(
-        '67a7b034-b30b-4644-b8d3-d7a99606efdc', SignalUUID('9bccea5e-e23f-4b88-9de1-4be00dc0c12a')
-    )
-    assert (
-        str(component_pad)
-        == '(pad 67a7b034-b30b-4644-b8d3-d7a99606efdc (signal 9bccea5e-e23f-4b88-9de1-4be00dc0c12a))'
-    )
+    component_pad = ComponentPad('67a7b034-b30b-4644-b8d3-d7a99606efdc', SignalUUID('9bccea5e-e23f-4b88-9de1-4be00dc0c12a'))
+    assert str(component_pad) == '(pad 67a7b034-b30b-4644-b8d3-d7a99606efdc (signal 9bccea5e-e23f-4b88-9de1-4be00dc0c12a))'
 
 
 def test_device() -> None:
@@ -762,18 +514,8 @@ def test_device() -> None:
         ComponentUUID('bc911fcc-8b5c-4728-b596-d644797c55da'),
         PackageUUID('b4e92c64-18c4-44a6-aa39-d1be3e8c29bd'),
     )
-    device.add_pad(
-        ComponentPad(
-            'aec3f475-28c4-4508-ab4f-e1b618a0d77d',
-            SignalUUID('726fd1ce-a01b-4287-bb61-e3ff165a0644'),
-        )
-    )
-    device.add_pad(
-        ComponentPad(
-            '67a7b034-b30b-4644-b8d3-d7a99606efdc',
-            SignalUUID('9bccea5e-e23f-4b88-9de1-4be00dc0c12a'),
-        )
-    )
+    device.add_pad(ComponentPad('aec3f475-28c4-4508-ab4f-e1b618a0d77d', SignalUUID('726fd1ce-a01b-4287-bb61-e3ff165a0644')))
+    device.add_pad(ComponentPad('67a7b034-b30b-4644-b8d3-d7a99606efdc', SignalUUID('9bccea5e-e23f-4b88-9de1-4be00dc0c12a')))
 
     device.add_part(Part(mpn='mpn1', manufacturer=Manufacturer('man1')))
     device.add_part(Part(mpn='mpn2', manufacturer=Manufacturer('man2')))
@@ -781,9 +523,7 @@ def test_device() -> None:
     device.add_approval('(approval foo)')
     device.add_approval('(approval bar)')
 
-    assert (
-        str(device)
-        == """(librepcb_device 00652f30-9f89-4027-91f5-7bd684eee751
+    assert str(device) == """(librepcb_device 00652f30-9f89-4027-91f5-7bd684eee751
  (name "Foo")
  (description "Bar")
  (keywords "foo, bar")
@@ -804,7 +544,6 @@ def test_device() -> None:
  (approval bar)
  (approval foo)
 )"""
-    )
 
 
 def test_sort_package_3d_models() -> None:
@@ -828,7 +567,7 @@ def check_all_file_newlines_in_dir_are_unix(dir_with_files: Path) -> bool:
     Helper function, not a test!
     """
     for temp_file in dir_with_files.iterdir():
-        with temp_file.open(mode='r', newline='') as file_under_test:
+        with temp_file.open(mode="r", newline='') as file_under_test:
             file_under_test.readlines()  # read all lines to populate file_under_test.newlines
             if file_under_test.newlines is None:
                 return False
@@ -838,6 +577,7 @@ def check_all_file_newlines_in_dir_are_unix(dir_with_files: Path) -> bool:
 
 
 def test_serialized_component_line_endings(tmp_path: Path) -> None:
+
     component_uuid = '00c36da8-e22b-43a1-9a87-c3a67e863f49'
 
     component = Component(
@@ -862,6 +602,7 @@ def test_serialized_component_line_endings(tmp_path: Path) -> None:
 
 
 def test_serialized_symbol_line_endings(tmp_path: Path) -> None:
+
     symbol_uuid = '01b03c10-7334-4bd5-b2bc-942c18325d2b'
 
     symbol = Symbol(
@@ -883,6 +624,7 @@ def test_serialized_symbol_line_endings(tmp_path: Path) -> None:
 
 
 def test_serialized_device_line_endings(tmp_path: Path) -> None:
+
     device_uuid = '00652f30-9f89-4027-91f5-7bd684eee751'
 
     device = Device(
@@ -906,6 +648,7 @@ def test_serialized_device_line_endings(tmp_path: Path) -> None:
 
 
 def test_serialized_package_line_endings(tmp_path: Path) -> None:
+
     package_uuid = '009e35ef-1f50-4bf3-ab58-11eb85bf5503'
 
     package = Package(

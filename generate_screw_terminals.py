@@ -1,7 +1,6 @@
 """
 Generate screw terminal packages & devices
 """
-
 import math
 import sys
 from os import path
@@ -12,60 +11,16 @@ from typing import Any, Callable, List, Optional
 from common import init_cache, now, save_cache
 from entities.attribute import Attribute, AttributeType
 from entities.common import (
-    Align,
-    Angle,
-    Author,
-    Category,
-    Circle,
-    Created,
-    Deprecated,
-    Description,
-    Diameter,
-    Fill,
-    GeneratedBy,
-    GrabArea,
-    Height,
-    Keywords,
-    Layer,
-    Name,
-    Polygon,
-    Position,
-    Position3D,
-    Resource,
-    Rotation,
-    Rotation3D,
-    Value,
-    Version,
-    Vertex,
-    Width,
+    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
+    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Resource, Rotation, Rotation3D, Value, Version,
+    Vertex, Width
 )
 from entities.component import SignalUUID
 from entities.device import ComponentPad, ComponentUUID, Device, Manufacturer, PackageUUID, Part
 from entities.package import (
-    AssemblyType,
-    AutoRotate,
-    ComponentSide,
-    CopperClearance,
-    DrillDiameter,
-    Footprint,
-    Footprint3DModel,
-    FootprintPad,
-    LetterSpacing,
-    LineSpacing,
-    Mirror,
-    Package,
-    Package3DModel,
-    PackagePad,
-    PackagePadUuid,
-    PadFunction,
-    PadHole,
-    Shape,
-    ShapeRadius,
-    Size,
-    SolderPasteConfig,
-    StopMaskConfig,
-    StrokeText,
-    StrokeWidth,
+    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, Footprint3DModel, FootprintPad,
+    LetterSpacing, LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, PadHole,
+    Shape, ShapeRadius, Size, SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
 
 generator = 'librepcb-parts-generator (generate_screw_terminals.py)'
@@ -105,32 +60,16 @@ class Nipple:
 
 
 class Family:
-    def __init__(
-        self,
-        manufacturer: str,
-        pkg_name_prefix: str,
-        dev_name_prefix: str,
-        pitch: float,
-        drill: float,
-        pad_diameter: float,
-        top: float,
-        bottom: float,
-        left: float,
-        right: float,
-        height: float,
-        lead_diameter: float,
-        lead_length: float,
-        opening_width_bottom: float,
-        opening_width: float,
-        opening_height: float,
-        screw_hole_diameter: float,
-        conductor_cross_section: str,
-        walls_length: float,
-        nipples_bottom: List[Nipple],
-        datasheet: Optional[str],
-        keywords: List[str],
-        draw_body_sketch_fn: Callable[[Any], Any],
-    ) -> None:
+    def __init__(self, manufacturer: str, pkg_name_prefix: str,
+                 dev_name_prefix: str, pitch: float, drill: float,
+                 pad_diameter: float, top: float, bottom: float, left: float,
+                 right: float, height: float, lead_diameter: float,
+                 lead_length: float, opening_width_bottom: float,
+                 opening_width: float, opening_height: float,
+                 screw_hole_diameter: float, conductor_cross_section: str,
+                 walls_length: float, nipples_bottom: List[Nipple],
+                 datasheet: Optional[str], keywords: List[str],
+                 draw_body_sketch_fn: Callable[[Any], Any]) -> None:
         self.manufacturer = manufacturer
         self.pkg_name_prefix = pkg_name_prefix
         self.dev_name_prefix = dev_name_prefix
@@ -157,19 +96,16 @@ class Family:
 
 
 class Model:
-    def __init__(self, name: str, mpn: str, circuits: int, datasheet: Optional[str] = None) -> None:
+    def __init__(self, name: str, mpn: str, circuits: int,
+                 datasheet: Optional[str] = None) -> None:
         self.name = name
         self.mpn = mpn
         self.circuits = circuits
         self.datasheet = datasheet
 
     def uuid_key(self, family: Family) -> str:
-        return (
-            '{}-{}'.format(family.pkg_name_prefix, model.name)
-            .lower()
-            .replace(' ', '')
-            .replace(',', 'p')
-        )
+        return '{}-{}'.format(family.pkg_name_prefix, model.name) \
+            .lower().replace(' ', '').replace(',', 'p')
 
     def get_description(self, family: Family) -> str:
         return f"""Screw terminal from {family.manufacturer}:
@@ -183,16 +119,13 @@ Generated with {generator}
 """
 
     def get_keywords(self, family: Family) -> str:
-        return ','.join(
-            [
-                'screw',
-                'terminal',
-                'block',
-                '{:g}mm'.format(family.pitch),
-                '1x{}'.format(self.circuits),
-            ]
-            + family.keywords
-        )
+        return ','.join([
+            'screw',
+            'terminal',
+            'block',
+            '{:g}mm'.format(family.pitch),
+            '1x{}'.format(self.circuits),
+        ] + family.keywords)
 
     def get_datasheet(self, family: Family) -> Optional[str]:
         ds = self.datasheet
@@ -253,82 +186,67 @@ def generate_pkg(
         uuid_fpt_pad = _uuid('default-pad-{}'.format(pad_name))
         package.add_pad(PackagePad(uuid=uuid_pkg_pad, name=Name(pad_name)))
         y = pad_1_y - (i * family.pitch)
-        footprint.add_pad(
-            FootprintPad(
-                uuid=uuid_fpt_pad,
-                side=ComponentSide.TOP,
-                shape=Shape.ROUNDED_RECT,
-                position=Position(0, y),
-                rotation=Rotation(0),
-                size=Size(family.pad_diameter, family.pad_diameter),
-                radius=ShapeRadius(0.0 if (i == 0) else 1.0),
-                stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
-                solder_paste=SolderPasteConfig.OFF,
-                copper_clearance=CopperClearance(0),
-                function=PadFunction.STANDARD_PAD,
-                package_pad=PackagePadUuid(uuid_pkg_pad),
-                holes=[
-                    PadHole(
-                        uuid_fpt_pad,
-                        DrillDiameter(family.drill),
-                        [Vertex(Position(0.0, 0.0), Angle(0.0))],
-                    )
-                ],
-            )
-        )
-        footprint.add_circle(
-            Circle(
-                uuid=_uuid('default-circle-{}'.format(pad_name)),
-                layer=Layer('top_documentation'),
-                width=Width(line_width * 0.75),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                diameter=Diameter(family.screw_hole_diameter),
-                position=Position(0, y),
-            )
-        )
-        footprint.add_polygon(
-            Polygon(
-                uuid=_uuid('default-screw-upper-{}'.format(pad_name)),
-                layer=Layer('top_documentation'),
-                width=Width(line_width * 0.75),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                vertices=create_screw_diagonal(y, family.screw_hole_diameter, 1),
-            )
-        )
-        footprint.add_polygon(
-            Polygon(
-                uuid=_uuid('default-screw-lower-{}'.format(pad_name)),
-                layer=Layer('top_documentation'),
-                width=Width(line_width * 0.75),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                vertices=create_screw_diagonal(y, family.screw_hole_diameter, -1),
-            )
-        )
+        footprint.add_pad(FootprintPad(
+            uuid=uuid_fpt_pad,
+            side=ComponentSide.TOP,
+            shape=Shape.ROUNDED_RECT,
+            position=Position(0, y),
+            rotation=Rotation(0),
+            size=Size(family.pad_diameter, family.pad_diameter),
+            radius=ShapeRadius(0.0 if (i == 0) else 1.0),
+            stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
+            solder_paste=SolderPasteConfig.OFF,
+            copper_clearance=CopperClearance(0),
+            function=PadFunction.STANDARD_PAD,
+            package_pad=PackagePadUuid(uuid_pkg_pad),
+            holes=[PadHole(uuid_fpt_pad, DrillDiameter(family.drill),
+                           [Vertex(Position(0.0, 0.0), Angle(0.0))])],
+        ))
+        footprint.add_circle(Circle(
+            uuid=_uuid('default-circle-{}'.format(pad_name)),
+            layer=Layer('top_documentation'),
+            width=Width(line_width * 0.75),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            diameter=Diameter(family.screw_hole_diameter),
+            position=Position(0, y),
+        ))
+        footprint.add_polygon(Polygon(
+            uuid=_uuid('default-screw-upper-{}'.format(pad_name)),
+            layer=Layer('top_documentation'),
+            width=Width(line_width * 0.75),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            vertices=create_screw_diagonal(y, family.screw_hole_diameter, 1),
+        ))
+        footprint.add_polygon(Polygon(
+            uuid=_uuid('default-screw-lower-{}'.format(pad_name)),
+            layer=Layer('top_documentation'),
+            width=Width(line_width * 0.75),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            vertices=create_screw_diagonal(y, family.screw_hole_diameter, -1),
+        ))
 
     # Documentation outline
     top = pad_1_y + family.top - (line_width / 2)
     bottom = -pad_1_y - family.bottom + (line_width / 2)
     left = -family.left + (line_width / 2)
     right = family.right - (line_width / 2)
-    footprint.add_polygon(
-        Polygon(
-            uuid=_uuid('default-polygon-documentation'),
-            layer=Layer('top_documentation'),
-            width=Width(line_width),
-            fill=Fill(False),
-            grab_area=GrabArea(False),
-            vertices=[
-                Vertex(Position(left, top), Angle(0)),
-                Vertex(Position(right, top), Angle(0)),
-                Vertex(Position(right, bottom), Angle(0)),
-                Vertex(Position(left, bottom), Angle(0)),
-                Vertex(Position(left, top), Angle(0)),
-            ],
-        )
-    )
+    footprint.add_polygon(Polygon(
+        uuid=_uuid('default-polygon-documentation'),
+        layer=Layer('top_documentation'),
+        width=Width(line_width),
+        fill=Fill(False),
+        grab_area=GrabArea(False),
+        vertices=[
+            Vertex(Position(left, top), Angle(0)),
+            Vertex(Position(right, top), Angle(0)),
+            Vertex(Position(right, bottom), Angle(0)),
+            Vertex(Position(left, bottom), Angle(0)),
+            Vertex(Position(left, top), Angle(0)),
+        ],
+    ))
 
     # Documentation walls
     if family.walls_length > 0:
@@ -339,32 +257,8 @@ def generate_pkg(
             bottom = max(y - walls_dy / 2, -pad_1_y - family.bottom + (line_width / 2))
             left = -family.left - family.walls_length
             right = -family.left
-            footprint.add_polygon(
-                Polygon(
-                    uuid=_uuid('default-polygon-documentation-wall-{}'.format(i + 1)),
-                    layer=Layer('top_documentation'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(left, top), Angle(0)),
-                        Vertex(Position(right, top), Angle(0)),
-                        Vertex(Position(right, bottom), Angle(0)),
-                        Vertex(Position(left, bottom), Angle(0)),
-                        Vertex(Position(left, top), Angle(0)),
-                    ],
-                )
-            )
-
-    # Documentation nipples
-    for i, nipple in enumerate(family.nipples_bottom):
-        top = -pad_1_y - family.bottom
-        bottom = top - nipple.height
-        left = nipple.x - (nipple.width / 2)
-        right = nipple.x + (nipple.width / 2)
-        footprint.add_polygon(
-            Polygon(
-                uuid=_uuid('default-polygon-documentation-nipple-bottom-{}'.format(i + 1)),
+            footprint.add_polygon(Polygon(
+                uuid=_uuid('default-polygon-documentation-wall-{}'.format(i + 1)),
                 layer=Layer('top_documentation'),
                 width=Width(0),
                 fill=Fill(True),
@@ -376,8 +270,28 @@ def generate_pkg(
                     Vertex(Position(left, bottom), Angle(0)),
                     Vertex(Position(left, top), Angle(0)),
                 ],
-            )
-        )
+            ))
+
+    # Documentation nipples
+    for i, nipple in enumerate(family.nipples_bottom):
+        top = -pad_1_y - family.bottom
+        bottom = top - nipple.height
+        left = nipple.x - (nipple.width / 2)
+        right = nipple.x + (nipple.width / 2)
+        footprint.add_polygon(Polygon(
+            uuid=_uuid('default-polygon-documentation-nipple-bottom-{}'.format(i + 1)),
+            layer=Layer('top_documentation'),
+            width=Width(0),
+            fill=Fill(True),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(left, top), Angle(0)),
+                Vertex(Position(right, top), Angle(0)),
+                Vertex(Position(right, bottom), Angle(0)),
+                Vertex(Position(left, bottom), Angle(0)),
+                Vertex(Position(left, top), Angle(0)),
+            ],
+        ))
 
     # Legend outline
     top = pad_1_y + family.top + (line_width / 2)
@@ -404,72 +318,64 @@ def generate_pkg(
         Vertex(Position(left, bottom), Angle(0)),
         Vertex(Position(left, -dy), Angle(0)),
     ]
-    footprint.add_polygon(
-        Polygon(
-            uuid=_uuid('default-polygon-legend'),
+    footprint.add_polygon(Polygon(
+        uuid=_uuid('default-polygon-legend'),
+        layer=Layer('top_legend'),
+        width=Width(line_width),
+        fill=Fill(False),
+        grab_area=GrabArea(False),
+        vertices=legend_outline_vertices,
+    ))
+    for i in range(model.circuits - 1):
+        top = pad_1_y - (i * family.pitch) - (family.opening_width_bottom / 2)
+        bottom = top - (family.pitch - family.opening_width_bottom)
+        footprint.add_polygon(Polygon(
+            uuid=_uuid('default-polygon-legend-{}'.format(i + 1)),
             layer=Layer('top_legend'),
             width=Width(line_width),
             fill=Fill(False),
             grab_area=GrabArea(False),
-            vertices=legend_outline_vertices,
-        )
-    )
-    for i in range(model.circuits - 1):
-        top = pad_1_y - (i * family.pitch) - (family.opening_width_bottom / 2)
-        bottom = top - (family.pitch - family.opening_width_bottom)
-        footprint.add_polygon(
-            Polygon(
-                uuid=_uuid('default-polygon-legend-{}'.format(i + 1)),
-                layer=Layer('top_legend'),
-                width=Width(line_width),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(left, top - (line_width / 2)), Angle(0)),
-                    Vertex(Position(left, bottom + (line_width / 2)), Angle(0)),
-                ],
-            )
-        )
+            vertices=[
+                Vertex(Position(left, top - (line_width / 2)), Angle(0)),
+                Vertex(Position(left, bottom + (line_width / 2)), Angle(0)),
+            ],
+        ))
 
     # Pin-1 marking
     triangle_right = -family.screw_hole_diameter / 2
     for layer in ['legend', 'documentation']:
-        footprint.add_polygon(
-            Polygon(
-                uuid=_uuid('default-triangle-' + layer),
-                layer=Layer('top_' + layer),
-                width=Width(0),
-                fill=Fill(True),
-                grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(triangle_right - 0.7, pad_1_y + 0.6), Angle(0)),
-                    Vertex(Position(triangle_right, pad_1_y), Angle(0)),
-                    Vertex(Position(triangle_right - 0.7, pad_1_y - 0.6), Angle(0)),
-                    Vertex(Position(triangle_right - 0.7, pad_1_y + 0.6), Angle(0)),
-                ],
-            )
-        )
+        footprint.add_polygon(Polygon(
+            uuid=_uuid('default-triangle-' + layer),
+            layer=Layer('top_' + layer),
+            width=Width(0),
+            fill=Fill(True),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(triangle_right - 0.7, pad_1_y + 0.6), Angle(0)),
+                Vertex(Position(triangle_right, pad_1_y), Angle(0)),
+                Vertex(Position(triangle_right - 0.7, pad_1_y - 0.6), Angle(0)),
+                Vertex(Position(triangle_right - 0.7, pad_1_y + 0.6), Angle(0)),
+            ],
+        ))
 
     # Package outline
     top = pad_1_y + family.top
     bottom = -pad_1_y - family.bottom
     left = -family.left
     right = family.right
-    footprint.add_polygon(
-        Polygon(
-            uuid=_uuid('default-polygon-outline'),
-            layer=Layer('top_package_outlines'),
-            width=Width(0),
-            fill=Fill(False),
-            grab_area=GrabArea(False),
-            vertices=[
-                Vertex(Position(left, top), Angle(0)),
-                Vertex(Position(right, top), Angle(0)),
-                Vertex(Position(right, bottom), Angle(0)),
-                Vertex(Position(left, bottom), Angle(0)),
-            ],
-        )
-    )
+    footprint.add_polygon(Polygon(
+        uuid=_uuid('default-polygon-outline'),
+        layer=Layer('top_package_outlines'),
+        width=Width(0),
+        fill=Fill(False),
+        grab_area=GrabArea(False),
+        vertices=[
+            Vertex(Position(left, top), Angle(0)),
+            Vertex(Position(right, top), Angle(0)),
+            Vertex(Position(right, bottom), Angle(0)),
+            Vertex(Position(left, bottom), Angle(0)),
+        ],
+    ))
 
     # Courtyard
     top = max(legend_outline_vertices, key=lambda v: v.position.y).position.y
@@ -478,57 +384,51 @@ def generate_pkg(
     bottom -= courtyard_excess - (line_width / 2)
     left = -family.left - family.walls_length - courtyard_excess
     right = family.right + courtyard_excess
-    footprint.add_polygon(
-        Polygon(
-            uuid=_uuid('default-polygon-courtyard'),
-            layer=Layer('top_courtyard'),
-            width=Width(0),
-            fill=Fill(False),
-            grab_area=GrabArea(False),
-            vertices=[
-                Vertex(Position(left, top), Angle(0)),
-                Vertex(Position(right, top), Angle(0)),
-                Vertex(Position(right, bottom), Angle(0)),
-                Vertex(Position(left, bottom), Angle(0)),
-            ],
-        )
-    )
+    footprint.add_polygon(Polygon(
+        uuid=_uuid('default-polygon-courtyard'),
+        layer=Layer('top_courtyard'),
+        width=Width(0),
+        fill=Fill(False),
+        grab_area=GrabArea(False),
+        vertices=[
+            Vertex(Position(left, top), Angle(0)),
+            Vertex(Position(right, top), Angle(0)),
+            Vertex(Position(right, bottom), Angle(0)),
+            Vertex(Position(left, bottom), Angle(0)),
+        ],
+    ))
 
     # Labels
     top = max(legend_outline_vertices, key=lambda v: v.position.y).position.y
     bottom = min(legend_outline_vertices, key=lambda v: v.position.y).position.y
-    footprint.add_text(
-        StrokeText(
-            uuid=_uuid('default-text-name'),
-            layer=Layer('top_names'),
-            height=Height(1.0),
-            stroke_width=StrokeWidth(0.2),
-            letter_spacing=LetterSpacing.AUTO,
-            line_spacing=LineSpacing.AUTO,
-            align=Align('center bottom'),
-            position=Position(0.0, top + 0.4),
-            rotation=Rotation(0.0),
-            auto_rotate=AutoRotate(True),
-            mirror=Mirror(False),
-            value=Value('{{NAME}}'),
-        )
-    )
-    footprint.add_text(
-        StrokeText(
-            uuid=_uuid('default-text-value'),
-            layer=Layer('top_values'),
-            height=Height(1.0),
-            stroke_width=StrokeWidth(0.2),
-            letter_spacing=LetterSpacing.AUTO,
-            line_spacing=LineSpacing.AUTO,
-            align=Align('center top'),
-            position=Position(0.0, bottom - 0.4),
-            rotation=Rotation(0.0),
-            auto_rotate=AutoRotate(True),
-            mirror=Mirror(False),
-            value=Value('{{VALUE}}'),
-        )
-    )
+    footprint.add_text(StrokeText(
+        uuid=_uuid('default-text-name'),
+        layer=Layer('top_names'),
+        height=Height(1.0),
+        stroke_width=StrokeWidth(0.2),
+        letter_spacing=LetterSpacing.AUTO,
+        line_spacing=LineSpacing.AUTO,
+        align=Align('center bottom'),
+        position=Position(0.0, top + 0.4),
+        rotation=Rotation(0.0),
+        auto_rotate=AutoRotate(True),
+        mirror=Mirror(False),
+        value=Value('{{NAME}}'),
+    ))
+    footprint.add_text(StrokeText(
+        uuid=_uuid('default-text-value'),
+        layer=Layer('top_values'),
+        height=Height(1.0),
+        stroke_width=StrokeWidth(0.2),
+        letter_spacing=LetterSpacing.AUTO,
+        line_spacing=LineSpacing.AUTO,
+        align=Align('center top'),
+        position=Position(0.0, bottom - 0.4),
+        rotation=Rotation(0.0),
+        auto_rotate=AutoRotate(True),
+        mirror=Mirror(False),
+        value=Value('{{VALUE}}'),
+    ))
 
     # Generate 3D model
     uuid_3d = _uuid('3d')
@@ -558,58 +458,45 @@ def generate_3d_model(
     pad1_y = ((model.circuits - 1) * family.pitch) / 2
     body_length = 2 * pad1_y + family.top + family.bottom
 
-    body = cq.Workplane('XZ').transformed(offset=(0, 0, -pad1_y - family.bottom)).tag('top')
+    body = cq.Workplane('XZ') \
+        .transformed(offset=(0, 0, -pad1_y - family.bottom)) \
+        .tag('top')
     body = family.draw_body_sketch_fn(body).close().extrude(body_length)
     for nipple in family.nipples_bottom:
-        body = (
-            body.workplaneFromTagged('top')
-            .workplane(offset=body_length)
-            .transformed(offset=(nipple.x, family.height - 1.5, 0))
+        body = body.workplaneFromTagged('top') \
+            .workplane(offset=body_length) \
+            .transformed(offset=(nipple.x, family.height - 1.5, 0)) \
             .box(nipple.width, 3.0, 2 * nipple.height, centered=True)
-        )
     for i in range(model.circuits):
         y = pad1_y - (i * family.pitch)
-        body = body.cut(
-            cq.Workplane('XY', origin=(0.0, y, 0.0)).cylinder(100, family.screw_hole_diameter / 2)
-        )
-        body = body.cut(
-            cq.Workplane('YZ', origin=(-family.left, y, (family.opening_height / 2) + 0.5)).box(
-                family.opening_width, family.opening_height - 1.0, 2 * family.left
-            )
-        )
-        body = body.cut(
-            cq.Workplane('YZ', origin=(-family.left, y, 0.0)).box(
-                family.opening_width_bottom, 2.2, 2 * family.left
-            )
-        )
+        body = body.cut(cq.Workplane('XY', origin=(0.0, y, 0.0))
+                        .cylinder(100, family.screw_hole_diameter / 2))
+        body = body.cut(cq.Workplane('YZ', origin=(-family.left, y, (family.opening_height / 2) + 0.5))
+                        .box(family.opening_width, family.opening_height - 1.0, 2 * family.left))
+        body = body.cut(cq.Workplane('YZ', origin=(-family.left, y, 0.0))
+                        .box(family.opening_width_bottom, 2.2, 2 * family.left))
 
-    screw = (
-        cq.Workplane('XY')
-        .tag('bottom')
-        .cylinder(family.height - 0.2, family.screw_hole_diameter / 2, centered=(True, True, False))
-        .workplane(offset=(family.height / 2))
-        .box(100, family.screw_hole_diameter * 0.2, 1.0, combine='cut')
-        .rotate((0.0, 0.0, 0.0), (0.0, 0.0, 1.0), 45.0)
-        .workplaneFromTagged('bottom')
-        .workplane(offset=(((family.opening_height - 1.5) / 2) + 1.0))
+    screw = cq.Workplane("XY").tag('bottom') \
+        .cylinder(family.height - 0.2, family.screw_hole_diameter / 2,
+                  centered=(True, True, False)) \
+        .workplane(offset=(family.height / 2)) \
+        .box(100, family.screw_hole_diameter * 0.2, 1.0, combine='cut') \
+        .rotate((0.0, 0.0, 0.0), (0.0, 0.0, 1.0), 45.0) \
+        .workplaneFromTagged('bottom') \
+        .workplane(offset=(((family.opening_height - 1.5) / 2) + 1.0)) \
         .box(100, family.opening_width - 0.8, family.opening_height - 4.0, combine='cut')
-    )
-    leg = (
-        cq.Workplane('XY')
-        .workplane(offset=(-1), invert=True)
-        .cylinder(family.lead_length + 1, family.lead_diameter / 2, centered=(True, True, False))
-    )
+    leg = cq.Workplane("XY").workplane(offset=(-1), invert=True) \
+        .cylinder(family.lead_length + 1, family.lead_diameter / 2,
+                  centered=(True, True, False))
 
     assembly = StepAssembly(full_name)
     assembly.add_body(body, 'body', cq.Color('green3'))
     for i in range(model.circuits):
         y = pad1_y - (i * family.pitch)
-        assembly.add_body(
-            screw, 'screw-{}'.format(i + 1), StepColor.LEAD_THT, location=cq.Location((0, y, 0))
-        )
-        assembly.add_body(
-            leg, 'leg-{}'.format(i + 1), StepColor.LEAD_THT, location=cq.Location((0, y, 0))
-        )
+        assembly.add_body(screw, 'screw-{}'.format(i + 1), StepColor.LEAD_THT,
+                          location=cq.Location((0, y, 0)))
+        assembly.add_body(leg, 'leg-{}'.format(i + 1), StepColor.LEAD_THT,
+                          location=cq.Location((0, y, 0)))
 
     # Save without fusing for massively better minification!
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
@@ -624,7 +511,7 @@ def generate_dev(
     family: Family,
     model: Model,
 ) -> None:
-    full_name = f'{family.dev_name_prefix} {model.name}'
+    full_name = f"{family.dev_name_prefix} {model.name}"
 
     def _uuid(identifier: str) -> str:
         return uuid('dev', model.uuid_key(family), identifier)
@@ -635,9 +522,8 @@ def generate_dev(
 
     connector_uuid_stub = f'cmp-screwterminal-1x{model.circuits}'
     component_uuid = uuid_cache_connectors[f'{connector_uuid_stub}-cmp']
-    signal_uuids = [
-        uuid_cache_connectors[f'{connector_uuid_stub}-signal-{i}'] for i in range(model.circuits)
-    ]
+    signal_uuids = [uuid_cache_connectors[f'{connector_uuid_stub}-signal-{i}']
+                    for i in range(model.circuits)]
 
     device = Device(
         uuid=uuid_dev,
@@ -658,28 +544,18 @@ def generate_dev(
         pad_uuid = uuid('pkg', model.uuid_key(family), 'pad-{}'.format(i + 1))
         device.add_pad(ComponentPad(pad_uuid, SignalUUID(signal_uuids[i])))
 
-    device.add_part(
-        Part(
-            model.mpn,
-            Manufacturer(family.manufacturer),
-            [
-                Attribute('PITCH', f'{family.pitch:.2f} mm', AttributeType.STRING, None),
-                Attribute(
-                    'CONDUCTOR', f'{family.conductor_cross_section}', AttributeType.STRING, None
-                ),
-            ],
-        )
-    )
+    device.add_part(Part(model.mpn, Manufacturer(family.manufacturer), [
+        Attribute('PITCH', f'{family.pitch:.2f} mm', AttributeType.STRING, None),
+        Attribute('CONDUCTOR', f'{family.conductor_cross_section}', AttributeType.STRING, None),
+    ]))
 
     datasheet = model.get_datasheet(family)
     if datasheet:
-        device.add_resource(
-            Resource(
-                name='Datasheet {}'.format(model.name),
-                mediatype='application/pdf',
-                url=datasheet,
-            )
-        )
+        device.add_resource(Resource(
+            name='Datasheet {}'.format(model.name),
+            mediatype='application/pdf',
+            url=datasheet,
+        ))
 
     device.serialize(path.join('out', library, 'dev'))
 
@@ -724,17 +600,18 @@ if __name__ == '__main__':
         ],
         datasheet='https://www.phoenixcontact.com/us/products/{mpn}/pdf',
         keywords=[],
-        draw_body_sketch_fn=lambda workplane: workplane.moveTo(4.0, 0.0)
-        .lineTo(4.0, 3.5)
-        .lineTo(2.5, 11.4)
-        .lineTo(-2.5, 11.4)
-        .lineTo(-3.8, 6.5)
-        .lineTo(-4.5, 6.5)
-        .ellipseArc(x_radius=0.5, y_radius=0.5, angle1=90, angle2=180, sense=1)
-        .lineTo(-5.0, 4.0)
-        .ellipseArc(x_radius=0.5, y_radius=0.5, angle1=180, angle2=270, sense=1)
-        .lineTo(-4.3, 3.5)
-        .lineTo(-4.3, 0.0),
+        draw_body_sketch_fn=lambda workplane:
+            workplane.moveTo(4.0, 0.0)
+            .lineTo(4.0, 3.5)
+            .lineTo(2.5, 11.4)
+            .lineTo(-2.5, 11.4)
+            .lineTo(-3.8, 6.5)
+            .lineTo(-4.5, 6.5)
+            .ellipseArc(x_radius=0.5, y_radius=0.5, angle1=90, angle2=180, sense=1)
+            .lineTo(-5.0, 4.0)
+            .ellipseArc(x_radius=0.5, y_radius=0.5, angle1=180, angle2=270, sense=1)
+            .lineTo(-4.3, 3.5)
+            .lineTo(-4.3, 0.0)
     )
     models = [
         Model(name='PT 1,5/2-5,0-H', mpn='1935161', circuits=2),
@@ -798,13 +675,14 @@ if __name__ == '__main__':
         ],
         datasheet='https://www.phoenixcontact.com/us/products/{mpn}/pdf',
         keywords=[],
-        draw_body_sketch_fn=lambda workplane: workplane.moveTo(4.5, 0.0)
-        .lineTo(4.5, 13.5)
-        .lineTo(-2.5, 13.5)
-        .lineTo(-3.5, 6.5)
-        .lineTo(-4.0, 6.5)
-        .ellipseArc(x_radius=0.5, y_radius=0.5, angle1=90, angle2=180, sense=1)
-        .lineTo(-4.5, 0.0),
+        draw_body_sketch_fn=lambda workplane:
+            workplane.moveTo(4.5, 0.0)
+            .lineTo(4.5, 13.5)
+            .lineTo(-2.5, 13.5)
+            .lineTo(-3.5, 6.5)
+            .lineTo(-4.0, 6.5)
+            .ellipseArc(x_radius=0.5, y_radius=0.5, angle1=90, angle2=180, sense=1)
+            .lineTo(-4.5, 0.0)
     )
     models = [
         Model(name='PT 2,5/2-5,0-H', mpn='1935776', circuits=2),
