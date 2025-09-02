@@ -1,10 +1,11 @@
 """
-    Generate JST SH wire-to-board female connectors
+Generate JST SH wire-to-board female connectors
 
-    see
-        https://en.wikipedia.org/wiki/JST_connector, https://jst.de/product-family/show/65/sh
+see
+    https://en.wikipedia.org/wiki/JST_connector, https://jst.de/product-family/show/65/sh
 
 """
+
 import math
 from os import path
 from uuid import uuid4
@@ -14,15 +15,53 @@ from typing import Iterable, Optional
 from common import init_cache, now, save_cache
 from entities.attribute import StringAttribute
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
-    Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
+    Align,
+    Angle,
+    Author,
+    Category,
+    Created,
+    Deprecated,
+    Description,
+    Fill,
+    GeneratedBy,
+    GrabArea,
+    Height,
+    Keywords,
+    Layer,
+    Name,
+    Polygon,
+    Position,
+    Position3D,
+    Rotation,
+    Rotation3D,
+    Value,
+    Version,
+    Vertex,
+    Width,
 )
 from entities.component import SignalUUID
 from entities.device import ComponentPad, ComponentUUID, Device, Manufacturer, PackageUUID, Part
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, FootprintPad, LetterSpacing, LineSpacing,
-    Mirror, Package, PackagePad, PackagePadUuid, PadFunction, Shape, ShapeRadius, Size, SolderPasteConfig,
-    StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType,
+    AutoRotate,
+    ComponentSide,
+    CopperClearance,
+    Footprint,
+    FootprintPad,
+    LetterSpacing,
+    LineSpacing,
+    Mirror,
+    Package,
+    PackagePad,
+    PackagePadUuid,
+    PadFunction,
+    Shape,
+    ShapeRadius,
+    Size,
+    SolderPasteConfig,
+    StopMaskConfig,
+    StrokeText,
+    StrokeWidth,
 )
 
 generator = 'librepcb-parts-generator (generate_jst_sh_connectors.py)'
@@ -55,21 +94,22 @@ class Connector:
 
 
 class FootprintSpecification:
-    def __init__(self,
-                 pad_width: float,
-                 pad_height: float,
-                 lead_width: float,
-                 lead_height: float,
-                 support_pad_width: float,
-                 support_pad_height: float,
-                 smallest_header_width: float,
-                 header_width_increase_per_pin: float,
-                 header_height: float,
-                 pad_distance_mid_to_mid_x: float,
-                 pad_first_x_center: float,
-                 pad_first_y_center: float,
-                 header_y: float
-                 ):
+    def __init__(
+        self,
+        pad_width: float,
+        pad_height: float,
+        lead_width: float,
+        lead_height: float,
+        support_pad_width: float,
+        support_pad_height: float,
+        smallest_header_width: float,
+        header_width_increase_per_pin: float,
+        header_height: float,
+        pad_distance_mid_to_mid_x: float,
+        pad_first_x_center: float,
+        pad_first_y_center: float,
+        header_y: float,
+    ):
         self.pad_width = pad_width
         self.pad_height = pad_height
         self.lead_width = lead_width
@@ -96,17 +136,25 @@ class FootprintSpecification:
         return self.smallest_header_width + (circuits - 2) * self.header_width_increase_per_pin
 
     def support_pad_distance_x(self, circuits: int) -> float:
-        return self.pad_first_x_center + (circuits - 1) * self.pad_distance_mid_to_mid_x + self.support_pad_edge_to_pad_edge
+        return (
+            self.pad_first_x_center
+            + (circuits - 1) * self.pad_distance_mid_to_mid_x
+            + self.support_pad_edge_to_pad_edge
+        )
 
     def header_x(self, circuits: int) -> float:
-        return (self.support_pad_width + self.support_pad_distance_x(circuits) - self.header_width(circuits)) / 2
+        return (
+            self.support_pad_width
+            + self.support_pad_distance_x(circuits)
+            - self.header_width(circuits)
+        ) / 2
 
     def header_x_center(self, circuits: int) -> float:
         return self.header_x(circuits) + (self.header_width(circuits) / 2)
 
 
 def variant(mounting_variant: str, circuits: int) -> str:
-    return f"{mounting_variant}{circuits}"
+    return f'{mounting_variant}{circuits}'
 
 
 def uuid(category: str, kind: str, variant: str, identifier: str) -> str:
@@ -117,19 +165,21 @@ def uuid(category: str, kind: str, variant: str, identifier: str) -> str:
 
 
 def connector_uuid(category: str, connector: Connector, identifier: str) -> str:
-    return uuid(category, connector.type, variant(connector.subtype, connector.circuits), identifier)
+    return uuid(
+        category, connector.type, variant(connector.subtype, connector.circuits), identifier
+    )
 
 
 def pkg_uuid(connector: Connector, identifier: str) -> str:
-    return connector_uuid("pkg", connector, identifier)
+    return connector_uuid('pkg', connector, identifier)
 
 
 def footprint_uuid(connector: Connector, identifier: str) -> str:
-    return connector_uuid("footprint", connector, identifier)
+    return connector_uuid('footprint', connector, identifier)
 
 
 def dev_uuid(connector: Connector, identifier: str) -> str:
-    return connector_uuid("dev", connector, identifier)
+    return connector_uuid('dev', connector, identifier)
 
 
 def vertex(x: float, y: float) -> Vertex:
@@ -145,9 +195,7 @@ def polygon_rect(polygon: Polygon, x: float, y: float, w: float, h: float) -> No
 
 
 def footprint_add_support_pads(
-    footprint: Footprint,
-    connector: Connector,
-    spec: FootprintSpecification
+    footprint: Footprint, connector: Connector, spec: FootprintSpecification
 ) -> None:
     for i in range(2):
         footprint.add_pad(
@@ -155,7 +203,11 @@ def footprint_add_support_pads(
                 uuid=footprint_uuid(connector, support_pad_uuid_pattern.format(i)),
                 side=ComponentSide.TOP,
                 shape=Shape.ROUNDED_RECT,
-                position=Position(spec.support_pad_first_x_center + i * spec.support_pad_distance_x(connector.circuits), spec.support_pad_first_y_center),
+                position=Position(
+                    spec.support_pad_first_x_center
+                    + i * spec.support_pad_distance_x(connector.circuits),
+                    spec.support_pad_first_y_center,
+                ),
                 rotation=Rotation(0),
                 size=Size(spec.support_pad_width, spec.support_pad_height),
                 radius=ShapeRadius(0.5),  # 0.5 is LibrePCB default
@@ -163,8 +215,8 @@ def footprint_add_support_pads(
                 solder_paste=SolderPasteConfig.AUTO,
                 copper_clearance=CopperClearance(0),
                 function=PadFunction.STANDARD_PAD,
-                package_pad=PackagePadUuid("none"),  # not connected, mechanical pad
-                holes=[]
+                package_pad=PackagePadUuid('none'),  # not connected, mechanical pad
+                holes=[],
             )
         )
 
@@ -173,7 +225,7 @@ def footprint_add_pads(
     footprint: Footprint,
     connector: Connector,
     spec: FootprintSpecification,
-    reverse_pad_order: bool
+    reverse_pad_order: bool,
 ) -> None:
     for i in range(connector.circuits):
         pad_number = i if not reverse_pad_order else (connector.circuits - 1) - i
@@ -183,7 +235,10 @@ def footprint_add_pads(
                 uuid=footprint_uuid(connector, pad_uuid_identifier),
                 side=ComponentSide.TOP,
                 shape=Shape.ROUNDED_RECT,
-                position=Position(spec.pad_first_x_center + i * spec.pad_distance_mid_to_mid_x, spec.pad_first_y_center),
+                position=Position(
+                    spec.pad_first_x_center + i * spec.pad_distance_mid_to_mid_x,
+                    spec.pad_first_y_center,
+                ),
                 rotation=Rotation(0),
                 size=Size(spec.pad_width, spec.pad_height),
                 radius=ShapeRadius(0.5),  # 0.5 is LibrePCB default
@@ -192,53 +247,49 @@ def footprint_add_pads(
                 copper_clearance=CopperClearance(0),
                 function=PadFunction.STANDARD_PAD,
                 package_pad=PackagePadUuid(pkg_uuid(connector, pad_uuid_identifier)),
-                holes=[]
+                holes=[],
             )
         )
 
 
 def footprint_add_header(
-    footprint: Footprint,
-    connector: Connector,
-    spec: FootprintSpecification
+    footprint: Footprint, connector: Connector, spec: FootprintSpecification
 ) -> None:
     header_half_line_width = header_line_width / 2
 
     header_polygon = Polygon(
         uuid=footprint_uuid(connector, 'polygonheader'),
-        layer=Layer("top_documentation"),
+        layer=Layer('top_documentation'),
         width=Width(header_line_width),
         fill=Fill(False),
-        grab_area=GrabArea(True)
+        grab_area=GrabArea(True),
     )
 
     # NOTE: lines in librePCB expand equally on each
     # side if drawn with a width of > 0
-    polygon_rect(header_polygon,
-                 spec.header_x(connector.circuits) + header_half_line_width,
-                 spec.header_y + header_half_line_width,
-                 spec.header_width(connector.circuits) - header_half_line_width * 2,
-                 spec.header_height - header_half_line_width * 2)
+    polygon_rect(
+        header_polygon,
+        spec.header_x(connector.circuits) + header_half_line_width,
+        spec.header_y + header_half_line_width,
+        spec.header_width(connector.circuits) - header_half_line_width * 2,
+        spec.header_height - header_half_line_width * 2,
+    )
 
     footprint.add_polygon(header_polygon)
 
 
 def footprint_add_text(
-    footprint: Footprint,
-    connector: Connector,
-    spec: FootprintSpecification,
-    rotation: int
+    footprint: Footprint, connector: Connector, spec: FootprintSpecification, rotation: int
 ) -> None:
-
     # TODO: use match expression when python 3.10 is min required version for librePCB
     if rotation == 0:
-        value_align, name_align = "left center", "right center"
+        value_align, name_align = 'left center', 'right center'
     elif rotation == 90:
-        value_align, name_align = "center top", "center bottom"
+        value_align, name_align = 'center top', 'center bottom'
     elif rotation == 180:
-        value_align, name_align = "right center", "left center"
+        value_align, name_align = 'right center', 'left center'
     else:  # rotation == 270 and fallback
-        value_align, name_align = "center bottom", "center top"
+        value_align, name_align = 'center bottom', 'center top'
 
     name_text = StrokeText(
         uuid=footprint_uuid(connector, 'textname'),
@@ -248,11 +299,16 @@ def footprint_add_text(
         letter_spacing=LetterSpacing.AUTO,
         line_spacing=LineSpacing.AUTO,
         align=Align(name_align),
-        position=Position(spec.header_x_center(connector.circuits) - (spec.header_width(connector.circuits) / 2) - text_header_spacing, spec.header_y_center),
+        position=Position(
+            spec.header_x_center(connector.circuits)
+            - (spec.header_width(connector.circuits) / 2)
+            - text_header_spacing,
+            spec.header_y_center,
+        ),
         rotation=Rotation(0),
         auto_rotate=AutoRotate(True),
         mirror=Mirror(False),
-        value=Value('{{NAME}}')
+        value=Value('{{NAME}}'),
     )
 
     value_text = StrokeText(
@@ -263,14 +319,21 @@ def footprint_add_text(
         letter_spacing=LetterSpacing.AUTO,
         line_spacing=LineSpacing.AUTO,
         align=Align(value_align),
-        position=Position(spec.header_x_center(connector.circuits) + (spec.header_width(connector.circuits) / 2) + text_header_spacing, spec.header_y_center),
+        position=Position(
+            spec.header_x_center(connector.circuits)
+            + (spec.header_width(connector.circuits) / 2)
+            + text_header_spacing,
+            spec.header_y_center,
+        ),
         rotation=Rotation(0),
         auto_rotate=AutoRotate(True),
         mirror=Mirror(False),
-        value=Value('{{VALUE}}')
+        value=Value('{{VALUE}}'),
     )
 
-    if rotation > 90:  # swap positions and alignemnts to always keep the name either left or top and the value always right or down
+    if (
+        rotation > 90
+    ):  # swap positions and alignemnts to always keep the name either left or top and the value always right or down
         name_text.position, value_text.position = value_text.position, name_text.position
         name_text.align, value_text.align = value_text.align, name_text.align
 
@@ -279,37 +342,31 @@ def footprint_add_text(
 
 
 def footprint_add_leads(
-    footprint: Footprint,
-    connector: Connector,
-    spec: FootprintSpecification
+    footprint: Footprint, connector: Connector, spec: FootprintSpecification
 ) -> None:
-
     for i in range(connector.circuits):
-
         lead_polygon = Polygon(
-            uuid=footprint_uuid(connector, f"lead{i}"),
+            uuid=footprint_uuid(connector, f'lead{i}'),
             layer=Layer('top_documentation'),
             width=Width(0),
             fill=Fill(True),
-            grab_area=GrabArea(False)
+            grab_area=GrabArea(False),
         )
 
-        polygon_rect(lead_polygon,
-                     spec.pad_first_x_center - (spec.lead_width / 2) + i * spec.pad_distance_mid_to_mid_x,
-                     spec.header_y + spec.header_height,
-                     spec.lead_width,
-                     spec.lead_height
-                     )
+        polygon_rect(
+            lead_polygon,
+            spec.pad_first_x_center - (spec.lead_width / 2) + i * spec.pad_distance_mid_to_mid_x,
+            spec.header_y + spec.header_height,
+            spec.lead_width,
+            spec.lead_height,
+        )
 
         footprint.add_polygon(lead_polygon)
 
 
 def footprint_add_outline(
-    footprint: Footprint,
-    connector: Connector,
-    spec: FootprintSpecification
+    footprint: Footprint, connector: Connector, spec: FootprintSpecification
 ) -> None:
-
     outline_polygon = Polygon(
         uuid=footprint_uuid(connector, 'polygonoutline'),
         layer=Layer('top_package_outlines'),
@@ -320,28 +377,47 @@ def footprint_add_outline(
             # left bottom
             vertex(spec.header_x(connector.circuits), spec.header_y),
             # right bottom
-            vertex(spec.header_x(connector.circuits) + spec.header_width(connector.circuits), spec.header_y),
+            vertex(
+                spec.header_x(connector.circuits) + spec.header_width(connector.circuits),
+                spec.header_y,
+            ),
             # right top
-            vertex(spec.header_x(connector.circuits) + spec.header_width(connector.circuits), spec.header_y + spec.header_height),
+            vertex(
+                spec.header_x(connector.circuits) + spec.header_width(connector.circuits),
+                spec.header_y + spec.header_height,
+            ),
             # leads
-            vertex(spec.pad_first_x_center + (spec.pad_distance_mid_to_mid_x * (connector.circuits - 1)) + (spec.pad_width / 2), spec.header_y + spec.header_height),
-            vertex(spec.pad_first_x_center + (spec.pad_distance_mid_to_mid_x * (connector.circuits - 1)) + (spec.pad_width / 2), spec.header_y + spec.header_height + spec.lead_height),
-            vertex(spec.pad_first_x_center - (spec.pad_width / 2), spec.header_y + spec.lead_height + spec.header_height),
-            vertex(spec.pad_first_x_center - (spec.pad_width / 2), spec.header_y + spec.header_height),
+            vertex(
+                spec.pad_first_x_center
+                + (spec.pad_distance_mid_to_mid_x * (connector.circuits - 1))
+                + (spec.pad_width / 2),
+                spec.header_y + spec.header_height,
+            ),
+            vertex(
+                spec.pad_first_x_center
+                + (spec.pad_distance_mid_to_mid_x * (connector.circuits - 1))
+                + (spec.pad_width / 2),
+                spec.header_y + spec.header_height + spec.lead_height,
+            ),
+            vertex(
+                spec.pad_first_x_center - (spec.pad_width / 2),
+                spec.header_y + spec.lead_height + spec.header_height,
+            ),
+            vertex(
+                spec.pad_first_x_center - (spec.pad_width / 2), spec.header_y + spec.header_height
+            ),
             # left top
             vertex(spec.header_x(connector.circuits), spec.header_y + spec.header_height),
             # left bottom
-            vertex(spec.header_x(connector.circuits), spec.header_y)
-        ]
+            vertex(spec.header_x(connector.circuits), spec.header_y),
+        ],
     )
 
     footprint.add_polygon(outline_polygon)
 
 
 def footprint_add_courtyard(
-    footprint: Footprint,
-    connector: Connector,
-    spec: FootprintSpecification
+    footprint: Footprint, connector: Connector, spec: FootprintSpecification
 ) -> None:
     courtyard_polygon = Polygon(
         uuid=footprint_uuid(connector, 'polygoncourtyard'),
@@ -353,30 +429,55 @@ def footprint_add_courtyard(
             # left bottom
             vertex(0 - courtyard_excess, 0 - courtyard_excess),
             # right bottom
-            vertex(spec.support_pad_distance_x(connector.circuits) + spec.support_pad_width + courtyard_excess, 0 - courtyard_excess),
+            vertex(
+                spec.support_pad_distance_x(connector.circuits)
+                + spec.support_pad_width
+                + courtyard_excess,
+                0 - courtyard_excess,
+            ),
             # right top
-            vertex(spec.support_pad_distance_x(connector.circuits) + spec.support_pad_width + courtyard_excess, spec.header_y + spec.header_height + courtyard_excess),
+            vertex(
+                spec.support_pad_distance_x(connector.circuits)
+                + spec.support_pad_width
+                + courtyard_excess,
+                spec.header_y + spec.header_height + courtyard_excess,
+            ),
             # leads
-            vertex(spec.pad_first_x_center + (spec.pad_distance_mid_to_mid_x * (connector.circuits - 1)) + (spec.pad_width / 2) + courtyard_excess, spec.header_y + spec.header_height + courtyard_excess),
-            vertex(spec.pad_first_x_center + (spec.pad_distance_mid_to_mid_x * (connector.circuits - 1)) + (spec.pad_width / 2) + courtyard_excess, spec.pad_first_y_center + (spec.pad_height / 2) + courtyard_excess),
-            vertex(spec.pad_first_x_center - (spec.pad_width / 2) - courtyard_excess, spec.pad_first_y_center + (spec.pad_height / 2) + courtyard_excess),
-            vertex(spec.pad_first_x_center - (spec.pad_width / 2) - courtyard_excess, spec.header_y + spec.header_height + courtyard_excess),
+            vertex(
+                spec.pad_first_x_center
+                + (spec.pad_distance_mid_to_mid_x * (connector.circuits - 1))
+                + (spec.pad_width / 2)
+                + courtyard_excess,
+                spec.header_y + spec.header_height + courtyard_excess,
+            ),
+            vertex(
+                spec.pad_first_x_center
+                + (spec.pad_distance_mid_to_mid_x * (connector.circuits - 1))
+                + (spec.pad_width / 2)
+                + courtyard_excess,
+                spec.pad_first_y_center + (spec.pad_height / 2) + courtyard_excess,
+            ),
+            vertex(
+                spec.pad_first_x_center - (spec.pad_width / 2) - courtyard_excess,
+                spec.pad_first_y_center + (spec.pad_height / 2) + courtyard_excess,
+            ),
+            vertex(
+                spec.pad_first_x_center - (spec.pad_width / 2) - courtyard_excess,
+                spec.header_y + spec.header_height + courtyard_excess,
+            ),
             # left top
             vertex(0 - courtyard_excess, spec.header_y + spec.header_height + courtyard_excess),
             # left bottom
-            vertex(0 - courtyard_excess, 0 - courtyard_excess)
-        ]
+            vertex(0 - courtyard_excess, 0 - courtyard_excess),
+        ],
     )
 
     footprint.add_polygon(courtyard_polygon)
 
 
 def footprint_add_legend(
-    footprint: Footprint,
-    connector: Connector,
-    spec: FootprintSpecification
+    footprint: Footprint, connector: Connector, spec: FootprintSpecification
 ) -> None:
-
     half_line_width = legend_line_width / 2
     min_copper_clearance = 0.15
 
@@ -389,17 +490,23 @@ def footprint_add_legend(
         vertices=[
             vertex(
                 spec.header_x(connector.circuits) - legend_header_spacing - half_line_width,
-                spec.support_pad_first_y_center + (spec.support_pad_height / 2) + half_line_width + max(min_copper_clearance, legend_line_width)
+                spec.support_pad_first_y_center
+                + (spec.support_pad_height / 2)
+                + half_line_width
+                + max(min_copper_clearance, legend_line_width),
             ),
             vertex(
                 spec.header_x(connector.circuits) - legend_header_spacing - half_line_width,
-                spec.header_y + spec.header_height + legend_header_spacing + half_line_width
+                spec.header_y + spec.header_height + legend_header_spacing + half_line_width,
             ),
             vertex(
-                spec.pad_first_x_center - (spec.pad_width / 2) - half_line_width - max(min_copper_clearance, legend_line_width),
-                spec.header_y + spec.header_height + legend_header_spacing + half_line_width
-            )
-        ]
+                spec.pad_first_x_center
+                - (spec.pad_width / 2)
+                - half_line_width
+                - max(min_copper_clearance, legend_line_width),
+                spec.header_y + spec.header_height + legend_header_spacing + half_line_width,
+            ),
+        ],
     )
 
     footprint.add_polygon(top_left_legend_polygon)
@@ -412,18 +519,31 @@ def footprint_add_legend(
         grab_area=GrabArea(False),
         vertices=[
             vertex(
-                spec.header_x(connector.circuits) + spec.header_width(connector.circuits) + legend_header_spacing + half_line_width,
-                spec.support_pad_first_y_center + (spec.support_pad_height / 2) + half_line_width + max(min_copper_clearance, legend_line_width)
+                spec.header_x(connector.circuits)
+                + spec.header_width(connector.circuits)
+                + legend_header_spacing
+                + half_line_width,
+                spec.support_pad_first_y_center
+                + (spec.support_pad_height / 2)
+                + half_line_width
+                + max(min_copper_clearance, legend_line_width),
             ),
             vertex(
-                spec.header_x(connector.circuits) + spec.header_width(connector.circuits) + legend_header_spacing + half_line_width,
-                spec.header_y + spec.header_height + legend_header_spacing + half_line_width
+                spec.header_x(connector.circuits)
+                + spec.header_width(connector.circuits)
+                + legend_header_spacing
+                + half_line_width,
+                spec.header_y + spec.header_height + legend_header_spacing + half_line_width,
             ),
             vertex(
-                spec.pad_first_x_center + spec.pad_distance_mid_to_mid_x * (connector.circuits - 1) + (spec.pad_width / 2) + half_line_width + max(min_copper_clearance, legend_line_width),
-                spec.header_y + spec.header_height + legend_header_spacing + half_line_width
-            )
-        ]
+                spec.pad_first_x_center
+                + spec.pad_distance_mid_to_mid_x * (connector.circuits - 1)
+                + (spec.pad_width / 2)
+                + half_line_width
+                + max(min_copper_clearance, legend_line_width),
+                spec.header_y + spec.header_height + legend_header_spacing + half_line_width,
+            ),
+        ],
     )
 
     footprint.add_polygon(top_right_legend_polygon)
@@ -436,14 +556,19 @@ def footprint_add_legend(
         grab_area=GrabArea(False),
         vertices=[
             vertex(
-                spec.support_pad_first_x_center + (spec.support_pad_width / 2) + half_line_width + max(min_copper_clearance, legend_line_width),
-                spec.header_y - half_line_width - legend_header_spacing
+                spec.support_pad_first_x_center
+                + (spec.support_pad_width / 2)
+                + half_line_width
+                + max(min_copper_clearance, legend_line_width),
+                spec.header_y - half_line_width - legend_header_spacing,
             ),
             vertex(
-                spec.support_pad_distance_x(connector.circuits) - half_line_width - max(min_copper_clearance, legend_line_width),
-                spec.header_y - half_line_width - legend_header_spacing
-            )
-        ]
+                spec.support_pad_distance_x(connector.circuits)
+                - half_line_width
+                - max(min_copper_clearance, legend_line_width),
+                spec.header_y - half_line_width - legend_header_spacing,
+            ),
+        ],
     )
 
     footprint.add_polygon(bottom_center_legend_polygon)
@@ -454,15 +579,14 @@ def generate_footprint(
     spec: FootprintSpecification,
     description: str,
     reverse_pad_order: bool,
-    rotation: int
+    rotation: int,
 ) -> Footprint:
-
     footprint = Footprint(
         uuid=footprint_uuid(connector, 'footprint'),
-        name=Name("default"),
+        name=Name('default'),
         description=Description(description),
         position_3d=Position3D.zero(),
-        rotation_3d=Rotation3D.zero()
+        rotation_3d=Rotation3D.zero(),
     )
 
     footprint_add_support_pads(footprint, connector, spec)
@@ -484,8 +608,9 @@ def generate_footprint(
 
 # shift all members inside a Footprint with a position to the center
 # ASSUMES that the current origin/center is in the first quadrant
-def footprint_shift_to_center(footprint: Footprint, connector: Connector, spec: FootprintSpecification) -> None:
-
+def footprint_shift_to_center(
+    footprint: Footprint, connector: Connector, spec: FootprintSpecification
+) -> None:
     def _center(p: Position) -> None:
         p.x -= spec.header_x_center(connector.circuits)
         p.y -= spec.header_y_center
@@ -505,7 +630,6 @@ def footprint_shift_to_center(footprint: Footprint, connector: Connector, spec: 
 
 
 def footprint_rotate_around_center(footprint: Footprint, angle_deg: int) -> None:
-
     angle_rad = math.radians(angle_deg)
 
     def _rotate(p: Position) -> None:
@@ -528,7 +652,9 @@ def footprint_rotate_around_center(footprint: Footprint, angle_deg: int) -> None
         _rotate(circle.position)
 
 
-def approve_footprint_warnings(package: Package, footprint: Footprint, connector: Connector) -> None:
+def approve_footprint_warnings(
+    package: Package, footprint: Footprint, connector: Connector
+) -> None:
     """
     THIS FUNCTIONS APPROVES "missing_footprint_3d_model" AND "suspicious_pad_function" WARNINGS IN THE PACKAGE EDITOR
     TO MAKE THE CI PASS
@@ -536,16 +662,13 @@ def approve_footprint_warnings(package: Package, footprint: Footprint, connector
     TODO: Remove the 3D models approval once we have 3D models
     TODO: Use "Approval" entity once it gets added
     """
-    footprint_str = f" (footprint {footprint.uuid})\n"
+    footprint_str = f' (footprint {footprint.uuid})\n'
 
-    approval_missing_3d_model = "(approved missing_footprint_3d_model\n" +\
-                                footprint_str +\
-                                ")"
+    approval_missing_3d_model = '(approved missing_footprint_3d_model\n' + footprint_str + ')'
 
-    approval_suspicious_pad = "(approved suspicious_pad_function\n" +\
-        footprint_str +\
-        " (pad {})\n" +\
-        ")"
+    approval_suspicious_pad = (
+        '(approved suspicious_pad_function\n' + footprint_str + ' (pad {})\n' + ')'
+    )
 
     for i in range(2):
         pad_uuid = footprint_uuid(connector, support_pad_uuid_pattern.format(i))
@@ -565,12 +688,11 @@ def generate_pkg(
     generated_by: str,
     footprint_spec: FootprintSpecification,
     reverse_pad_order: bool,
-    rotation: int
+    rotation: int,
 ) -> Package:
-
     package = Package(
         uuid=pkg_uuid(connector, 'pkg'),
-        name=Name(f"JST_{connector.type}-{connector.subtype}-{connector.circuits:02d}"),
+        name=Name(f'JST_{connector.type}-{connector.subtype}-{connector.circuits:02d}'),
         description=Description(description),
         keywords=Keywords(keywords),
         author=Author(author),
@@ -579,13 +701,17 @@ def generate_pkg(
         deprecated=Deprecated(False),
         generated_by=GeneratedBy(generated_by),
         categories=[Category(pkgcat) for pkgcat in sorted(pkgcats)],
-        assembly_type=AssemblyType.SMT
+        assembly_type=AssemblyType.SMT,
     )
 
     for i in range(connector.circuits):
-        package.add_pad(PackagePad(pkg_uuid(connector, pad_uuid_name_pattern.format(i)), Name(str(i + 1))))
+        package.add_pad(
+            PackagePad(pkg_uuid(connector, pad_uuid_name_pattern.format(i)), Name(str(i + 1)))
+        )
 
-    footprint = generate_footprint(connector, footprint_spec, description, reverse_pad_order, rotation)
+    footprint = generate_footprint(
+        connector, footprint_spec, description, reverse_pad_order, rotation
+    )
 
     approve_footprint_warnings(package, footprint, connector)
 
@@ -606,12 +732,14 @@ def generate_dev(
     create_date: Optional[str],
     generated_by: str,
     dev_name: str,
-    suction_cap_variant_available: bool
+    suction_cap_variant_available: bool,
 ) -> Device:
-
     connector_uuid_stub = f'cmp-pinheader-1x{connector.circuits}'
     component_uuid = uuid_cache_connectors[f'{connector_uuid_stub}-cmp']
-    signal_uuids = [uuid_cache_connectors[f'{connector_uuid_stub}-signal-{i}'] for i in range(connector.circuits)]
+    signal_uuids = [
+        uuid_cache_connectors[f'{connector_uuid_stub}-signal-{i}']
+        for i in range(connector.circuits)
+    ]
 
     dev = Device(
         uuid=dev_uuid(connector, 'dev'),
@@ -631,13 +759,17 @@ def generate_dev(
     # only connect actual circuits (pins) to signals
     # the support pads are left unconnected (as per library conventions)
     for i in range(connector.circuits):
-        dev.add_pad(ComponentPad(pkg_uuid(connector, pad_uuid_name_pattern.format(i)), SignalUUID(signal_uuids[i])))
+        dev.add_pad(
+            ComponentPad(
+                pkg_uuid(connector, pad_uuid_name_pattern.format(i)), SignalUUID(signal_uuids[i])
+            )
+        )
 
-    dev.add_part(Part(dev_name, Manufacturer("JST")))
+    dev.add_part(Part(dev_name, Manufacturer('JST')))
 
     if suction_cap_variant_available:
-        part_with_suction_cap = Part(dev_name + 'T', Manufacturer("JST"))
-        part_with_suction_cap.add_attribute(StringAttribute("FEATURES", "Suction Cap"))
+        part_with_suction_cap = Part(dev_name + 'T', Manufacturer('JST'))
+        part_with_suction_cap.add_attribute(StringAttribute('FEATURES', 'Suction Cap'))
         dev.add_part(part_with_suction_cap)
 
     return dev
@@ -660,13 +792,11 @@ def generate_jst(
     suction_cap_variant_available: bool,
     device_naming_pattern: str,
     reverse_pad_order: bool,
-    rotation: int
+    rotation: int,
 ) -> None:
-
-    assert (rotation >= 0 and rotation <= 270 and rotation % 90 == 0)
+    assert rotation >= 0 and rotation <= 270 and rotation % 90 == 0
 
     for circuits in available_circuits:
-
         conn = Connector(pkg_type, pkg_subtype, circuits)
 
         pkg = generate_pkg(
@@ -680,7 +810,7 @@ def generate_jst(
             generated_by=generated_by,
             footprint_spec=footprint_spec,
             reverse_pad_order=reverse_pad_order,
-            rotation=rotation
+            rotation=rotation,
         )
 
         dev = generate_dev(
@@ -693,8 +823,8 @@ def generate_jst(
             version=version,
             create_date=create_date,
             generated_by=generated_by,
-            dev_name=device_naming_pattern.format(f"{circuits:02d}").upper(),
-            suction_cap_variant_available=suction_cap_variant_available
+            dev_name=device_naming_pattern.format(f'{circuits:02d}').upper(),
+            suction_cap_variant_available=suction_cap_variant_available,
         )
 
         pkg.serialize(path.join('out', library, 'pkg'))
@@ -704,22 +834,24 @@ def generate_jst(
         print(f'wrote device {dev.name.value}: {dev.uuid}')
 
 
-if __name__ == "__main__":
-
+if __name__ == '__main__':
     create_date = '2024-05-03T17:19:09Z'
 
     # units in mm
     generate_jst(
-        library="JST.lplib",
-        pkg_type="SH",
-        pkg_subtype="SM",
-        description="Header SR 1.0 SMT side entry, 1mm pitch",
-        keywords="connector,jst",  # taken from https://jst.de/product-family/show/65/sh
-        author="nbes4",
-        generated_by="",  # leave empty, not used yet
-        pkgcats=["e4d3a6bf-af32-48a2-b427-5e794bed949a", "3f0f5992-67fd-4ce9-a510-7679870d6271"],  # Pin Headers (male), JST
-        devcat="4a4e3c72-94fb-45f9-a6d8-122d2af16fb1",  # Pin Headers (male)
-        version="0.2",
+        library='JST.lplib',
+        pkg_type='SH',
+        pkg_subtype='SM',
+        description='Header SR 1.0 SMT side entry, 1mm pitch',
+        keywords='connector,jst',  # taken from https://jst.de/product-family/show/65/sh
+        author='nbes4',
+        generated_by='',  # leave empty, not used yet
+        pkgcats=[
+            'e4d3a6bf-af32-48a2-b427-5e794bed949a',
+            '3f0f5992-67fd-4ce9-a510-7679870d6271',
+        ],  # Pin Headers (male), JST
+        devcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',  # Pin Headers (male)
+        version='0.2',
         footprint_spec=FootprintSpecification(
             pad_width=0.6,
             pad_height=1.55,
@@ -739,23 +871,26 @@ if __name__ == "__main__":
         ),
         available_circuits=[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20],
         suction_cap_variant_available=False,
-        device_naming_pattern="SM{}B-SRSS-TB",
+        device_naming_pattern='SM{}B-SRSS-TB',
         create_date=create_date,
         reverse_pad_order=True,
-        rotation=270
+        rotation=270,
     )
 
     generate_jst(
-        library="JST.lplib",
-        pkg_type="SH",
-        pkg_subtype="BM",
-        description="Header SR 1.0 SMT top entry, 1mm pitch",
-        keywords="connector,jst",
-        author="nbes4",
-        generated_by="",  # leave empty, not used yet
-        pkgcats=["e4d3a6bf-af32-48a2-b427-5e794bed949a", "3f0f5992-67fd-4ce9-a510-7679870d6271"],  # Pin Headers (male), JST
-        devcat="4a4e3c72-94fb-45f9-a6d8-122d2af16fb1",  # Pin Headers (male)
-        version="0.2",
+        library='JST.lplib',
+        pkg_type='SH',
+        pkg_subtype='BM',
+        description='Header SR 1.0 SMT top entry, 1mm pitch',
+        keywords='connector,jst',
+        author='nbes4',
+        generated_by='',  # leave empty, not used yet
+        pkgcats=[
+            'e4d3a6bf-af32-48a2-b427-5e794bed949a',
+            '3f0f5992-67fd-4ce9-a510-7679870d6271',
+        ],  # Pin Headers (male), JST
+        devcat='4a4e3c72-94fb-45f9-a6d8-122d2af16fb1',  # Pin Headers (male)
+        version='0.2',
         footprint_spec=FootprintSpecification(
             pad_width=0.6,
             pad_height=1.55,
@@ -775,10 +910,10 @@ if __name__ == "__main__":
         ),
         available_circuits=[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
         suction_cap_variant_available=True,  # see https://github.com/LibrePCB/librepcb-parts-generator/pull/127#issuecomment-2079003507
-        device_naming_pattern="BM{}B-SRSS-TB",
+        device_naming_pattern='BM{}B-SRSS-TB',
         create_date=create_date,
         reverse_pad_order=False,
-        rotation=90
+        rotation=90,
     )
 
     save_cache(uuid_cache_jst_file, uuid_cache_jst)

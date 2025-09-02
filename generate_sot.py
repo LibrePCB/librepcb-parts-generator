@@ -1,6 +1,7 @@
 """
 Generate only the 3D models for SOT packages
 """
+
 from os import path
 
 from typing import Iterable, Tuple
@@ -38,44 +39,59 @@ def generate(
     dot_center = (
         -(body_width / 2) + dot_position,
         (body_length / 2) - dot_position,
-        body_standoff + body_height - dot_depth
+        body_standoff + body_height - dot_depth,
     )
 
-    body = cq.Workplane('XY', origin=(0, 0, body_standoff + (body_height / 2))) \
-        .box(body_width, body_length, body_height) \
-        .edges().chamfer(body_chamfer)
+    body = (
+        cq.Workplane('XY', origin=(0, 0, body_standoff + (body_height / 2)))
+        .box(body_width, body_length, body_height)
+        .edges()
+        .chamfer(body_chamfer)
+    )
     if pin1_indicator:
-        body = body.workplane(origin=(dot_center[0], dot_center[1]), offset=(body_height / 2) - dot_depth) \
-            .cylinder(5, dot_diameter / 2, centered=(True, True, False), combine='cut')
+        body = body.workplane(
+            origin=(dot_center[0], dot_center[1]), offset=(body_height / 2) - dot_depth
+        ).cylinder(5, dot_diameter / 2, centered=(True, True, False), combine='cut')
     assembly.add_body(body, 'body', StepColor.IC_BODY)
 
     if pin1_indicator:
-        dot = cq.Workplane('XY', origin=dot_center) \
-            .cylinder(0.05, dot_diameter / 2, centered=(True, True, False))
+        dot = cq.Workplane('XY', origin=dot_center).cylinder(
+            0.05, dot_diameter / 2, centered=(True, True, False)
+        )
         assembly.add_body(dot, 'dot', StepColor.IC_PIN1_DOT)
 
     leads_by_width = dict()
     for x_sgn, rotation, leads in [(-1, 0, leads_left), (1, 180, leads_right)]:
         for lead_name, lead_y, lead_width in leads:
             if lead_width not in leads_by_width:
-                lead_path = cq.Workplane("XZ") \
-                    .hLine(lead_contact_length - (lead_height / 2) - bend_radius) \
-                    .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=270, angle2=360, sense=1) \
-                    .vLine(lead_z_top - lead_height - (2 * bend_radius)) \
-                    .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
+                lead_path = (
+                    cq.Workplane('XZ')
+                    .hLine(lead_contact_length - (lead_height / 2) - bend_radius)
+                    .ellipseArc(
+                        x_radius=bend_radius, y_radius=bend_radius, angle1=270, angle2=360, sense=1
+                    )
+                    .vLine(lead_z_top - lead_height - (2 * bend_radius))
+                    .ellipseArc(
+                        x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1
+                    )
                     .hLine((lead_span / 2) - bend_radius - lead_contact_length + (lead_height / 2))
-                leads_by_width[lead_width] = cq.Workplane('ZY') \
-                    .rect(lead_height, lead_width) \
-                    .sweep(lead_path)
+                )
+                leads_by_width[lead_width] = (
+                    cq.Workplane('ZY').rect(lead_height, lead_width).sweep(lead_path)
+                )
             assembly.add_body(
                 leads_by_width[lead_width],
                 'lead-{}'.format(lead_name),
                 StepColor.LEAD_SMT,
-                location=cq.Location((
-                    x_sgn * lead_span / 2,
-                    lead_y,
-                    lead_height / 2,
-                ), (0, 0, 1), rotation)
+                location=cq.Location(
+                    (
+                        x_sgn * lead_span / 2,
+                        lead_y,
+                        lead_height / 2,
+                    ),
+                    (0, 0, 1),
+                    rotation,
+                ),
             )
 
     # Save without fusing for massively better minification!

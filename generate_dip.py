@@ -157,6 +157,7 @@ Only some variants are listed.
 +----+-------------+-----------+------------+------------------+
 
 """
+
 from os import path
 from uuid import uuid4
 
@@ -165,13 +166,55 @@ from typing import Iterable, Optional, Tuple
 from common import format_ipc_dimension as ipc
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
-    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width
+    Align,
+    Angle,
+    Author,
+    Category,
+    Circle,
+    Created,
+    Deprecated,
+    Description,
+    Diameter,
+    Fill,
+    GeneratedBy,
+    GrabArea,
+    Height,
+    Keywords,
+    Layer,
+    Name,
+    Polygon,
+    Position,
+    Position3D,
+    Rotation,
+    Rotation3D,
+    Value,
+    Version,
+    Vertex,
+    Width,
 )
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, FootprintPad, LetterSpacing,
-    LineSpacing, Mirror, Package, PackagePad, PackagePadUuid, PadFunction, PadHole, Shape, ShapeRadius, Size,
-    SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType,
+    AutoRotate,
+    ComponentSide,
+    CopperClearance,
+    DrillDiameter,
+    Footprint,
+    FootprintPad,
+    LetterSpacing,
+    LineSpacing,
+    Mirror,
+    Package,
+    PackagePad,
+    PackagePadUuid,
+    PadFunction,
+    PadHole,
+    Shape,
+    ShapeRadius,
+    Size,
+    SolderPasteConfig,
+    StopMaskConfig,
+    StrokeText,
+    StrokeWidth,
 )
 
 generator = 'librepcb-parts-generator (generate_dip.py)'
@@ -277,25 +320,25 @@ def generate_pkg(
         L = ipc(config.body_length)
         H = ipc(config.height)
         Q = pin_count
-        ipc_name = "DIP{}W{}P{:.0f}L{}H{}Q{}".format(DIP, W, P, L, H, Q)
+        ipc_name = 'DIP{}W{}P{:.0f}L{}H{}Q{}'.format(DIP, W, P, L, H, Q)
 
         # Description
-        description = "{}-lead DIP (Dual In-Line) package".format(pin_count)
+        description = '{}-lead DIP (Dual In-Line) package'.format(pin_count)
         if config.standard:
-            description += " ({})".format(config.standard)
-        description += "\n\n"
-        description += "Pitch: {:.2f}mm\n".format(pitch)
-        description += "Lead span: {:.2f}mm\n".format(config.lead_span)
-        description += "Body length: {:.2f}mm\n".format(config.body_length)
-        description += "Lead width: {:.2f}mm\n".format(lead_width)
-        description += "Max height: {:.2f}mm\n".format(config.height)
-        description += "\nGenerated with {}".format(generator)
+            description += ' ({})'.format(config.standard)
+        description += '\n\n'
+        description += 'Pitch: {:.2f}mm\n'.format(pitch)
+        description += 'Lead span: {:.2f}mm\n'.format(config.lead_span)
+        description += 'Body length: {:.2f}mm\n'.format(config.body_length)
+        description += 'Lead width: {:.2f}mm\n'.format(lead_width)
+        description += 'Max height: {:.2f}mm\n'.format(config.height)
+        description += '\nGenerated with {}'.format(generator)
 
         package = Package(
             uuid=uuid_pkg,
             name=Name(ipc_name),
             description=Description(description),
-            keywords=Keywords("dip{},pdip{},{}".format(pin_count, pin_count, keywords)),
+            keywords=Keywords('dip{},pdip{},{}'.format(pin_count, pin_count, keywords)),
             author=Author(author),
             version=Version(version),
             created=Created(create_date or now()),
@@ -333,41 +376,55 @@ def generate_pkg(
             for p in range(1, pin_count // 2 + 1):
                 # Down on the left
                 y = get_y(p, pin_count // 2, pitch, False)
-                footprint.add_pad(FootprintPad(
-                    uuid_pads[p - 1],
-                    ComponentSide.TOP,
-                    Shape.ROUNDED_RECT,
-                    Position(-pad_x_offset, y),
-                    Rotation(0.0),
-                    Size(pad_size[0], pad_size[1]),
-                    ShapeRadius(0 if p == 1 else 1),
-                    StopMaskConfig(StopMaskConfig.AUTO),
-                    SolderPasteConfig.OFF,
-                    CopperClearance(0),
-                    PadFunction.STANDARD_PAD,
-                    PackagePadUuid(uuid_pads[p - 1]),
-                    [PadHole(uuid_pads[p - 1], DrillDiameter(drill_diameter),
-                             [Vertex(Position(0, 0), Angle(0))])],
-                ))
+                footprint.add_pad(
+                    FootprintPad(
+                        uuid_pads[p - 1],
+                        ComponentSide.TOP,
+                        Shape.ROUNDED_RECT,
+                        Position(-pad_x_offset, y),
+                        Rotation(0.0),
+                        Size(pad_size[0], pad_size[1]),
+                        ShapeRadius(0 if p == 1 else 1),
+                        StopMaskConfig(StopMaskConfig.AUTO),
+                        SolderPasteConfig.OFF,
+                        CopperClearance(0),
+                        PadFunction.STANDARD_PAD,
+                        PackagePadUuid(uuid_pads[p - 1]),
+                        [
+                            PadHole(
+                                uuid_pads[p - 1],
+                                DrillDiameter(drill_diameter),
+                                [Vertex(Position(0, 0), Angle(0))],
+                            )
+                        ],
+                    )
+                )
             for p in range(1, pin_count // 2 + 1):
                 # Up on the right
                 y = -get_y(p, pin_count // 2, pitch, False)
-                footprint.add_pad(FootprintPad(
-                    uuid_pads[p + pin_count // 2 - 1],
-                    ComponentSide.TOP,
-                    Shape.ROUNDED_RECT,
-                    Position(pad_x_offset, y),
-                    Rotation(0.0),
-                    Size(pad_size[0], pad_size[1]),
-                    ShapeRadius(1),
-                    StopMaskConfig(StopMaskConfig.AUTO),
-                    SolderPasteConfig.OFF,
-                    CopperClearance(0),
-                    PadFunction.STANDARD_PAD,
-                    PackagePadUuid(uuid_pads[p + pin_count // 2 - 1]),
-                    [PadHole(uuid_pads[p + pin_count // 2 - 1], DrillDiameter(drill_diameter),
-                             [Vertex(Position(0, 0), Angle(0))])],
-                ))
+                footprint.add_pad(
+                    FootprintPad(
+                        uuid_pads[p + pin_count // 2 - 1],
+                        ComponentSide.TOP,
+                        Shape.ROUNDED_RECT,
+                        Position(pad_x_offset, y),
+                        Rotation(0.0),
+                        Size(pad_size[0], pad_size[1]),
+                        ShapeRadius(1),
+                        StopMaskConfig(StopMaskConfig.AUTO),
+                        SolderPasteConfig.OFF,
+                        CopperClearance(0),
+                        PadFunction.STANDARD_PAD,
+                        PackagePadUuid(uuid_pads[p + pin_count // 2 - 1]),
+                        [
+                            PadHole(
+                                uuid_pads[p + pin_count // 2 - 1],
+                                DrillDiameter(drill_diameter),
+                                [Vertex(Position(0, 0), Angle(0))],
+                            )
+                        ],
+                    )
+                )
 
             # Silkscreen
             silkscreen_top = Polygon(
@@ -388,23 +445,25 @@ def generate_pkg(
             dx = body_width / 2 + line_width / 2
             dx_pin1 = config.lead_span / 2 + pad_size[0] / 2 - line_width / 2
             notch_dx = dx / 4
-            dy1 = get_y(1, pin_count // 2, pitch, False) \
-                + pad_size[1] / 2 \
-                + line_width / 2 \
+            dy1 = (
+                get_y(1, pin_count // 2, pitch, False)
+                + pad_size[1] / 2
+                + line_width / 2
                 + silkscreen_offset
+            )
             dy2 = config.body_length / 2 + line_width / 2
             silkscreen_top.add_vertex(Vertex(Position(-dx_pin1, dy1), Angle(0.0)))
             silkscreen_top.add_vertex(Vertex(Position(-dx, dy1), Angle(0.0)))
             silkscreen_top.add_vertex(Vertex(Position(-dx, dy2), Angle(0.0)))
             silkscreen_top.add_vertex(Vertex(Position(-notch_dx, dy2), Angle(180.0)))
-            silkscreen_top.add_vertex(Vertex(Position( notch_dx, dy2), Angle(0.0)))
-            silkscreen_top.add_vertex(Vertex(Position( dx, dy2), Angle(0.0)))
-            silkscreen_top.add_vertex(Vertex(Position( dx, dy1), Angle(0.0)))
+            silkscreen_top.add_vertex(Vertex(Position(notch_dx, dy2), Angle(0.0)))
+            silkscreen_top.add_vertex(Vertex(Position(dx, dy2), Angle(0.0)))
+            silkscreen_top.add_vertex(Vertex(Position(dx, dy1), Angle(0.0)))
             footprint.add_polygon(silkscreen_top)
             silkscreen_bot.add_vertex(Vertex(Position(-dx, -dy1), Angle(0.0)))
             silkscreen_bot.add_vertex(Vertex(Position(-dx, -dy2), Angle(0.0)))
-            silkscreen_bot.add_vertex(Vertex(Position( dx, -dy2), Angle(0.0)))
-            silkscreen_bot.add_vertex(Vertex(Position( dx, -dy1), Angle(0.0)))
+            silkscreen_bot.add_vertex(Vertex(Position(dx, -dy2), Angle(0.0)))
+            silkscreen_bot.add_vertex(Vertex(Position(dx, -dy1), Angle(0.0)))
             footprint.add_polygon(silkscreen_bot)
 
             # Documentation
@@ -452,18 +511,18 @@ def generate_pkg(
             dx_outer = config.lead_span / 2 + outline_hole_offset
             dy_inner = get_y(1, pin_count // 2, pitch, False) + pad_size[1] / 2
             dy_outer = config.body_length / 2
-            outline.add_vertex(Vertex(Position(-dx_inner,  dy_outer), Angle(0.0)))  # Top left
-            outline.add_vertex(Vertex(Position( dx_inner,  dy_outer), Angle(0.0)))  # CW
-            outline.add_vertex(Vertex(Position( dx_inner,  dy_inner), Angle(0.0)))
-            outline.add_vertex(Vertex(Position( dx_outer,  dy_inner), Angle(0.0)))
-            outline.add_vertex(Vertex(Position( dx_outer, -dy_inner), Angle(0.0)))
-            outline.add_vertex(Vertex(Position( dx_inner, -dy_inner), Angle(0.0)))
-            outline.add_vertex(Vertex(Position( dx_inner, -dy_outer), Angle(0.0)))
+            outline.add_vertex(Vertex(Position(-dx_inner, dy_outer), Angle(0.0)))  # Top left
+            outline.add_vertex(Vertex(Position(dx_inner, dy_outer), Angle(0.0)))  # CW
+            outline.add_vertex(Vertex(Position(dx_inner, dy_inner), Angle(0.0)))
+            outline.add_vertex(Vertex(Position(dx_outer, dy_inner), Angle(0.0)))
+            outline.add_vertex(Vertex(Position(dx_outer, -dy_inner), Angle(0.0)))
+            outline.add_vertex(Vertex(Position(dx_inner, -dy_inner), Angle(0.0)))
+            outline.add_vertex(Vertex(Position(dx_inner, -dy_outer), Angle(0.0)))
             outline.add_vertex(Vertex(Position(-dx_inner, -dy_outer), Angle(0.0)))
             outline.add_vertex(Vertex(Position(-dx_inner, -dy_inner), Angle(0.0)))
             outline.add_vertex(Vertex(Position(-dx_outer, -dy_inner), Angle(0.0)))
-            outline.add_vertex(Vertex(Position(-dx_outer,  dy_inner), Angle(0.0)))
-            outline.add_vertex(Vertex(Position(-dx_inner,  dy_inner), Angle(0.0)))
+            outline.add_vertex(Vertex(Position(-dx_outer, dy_inner), Angle(0.0)))
+            outline.add_vertex(Vertex(Position(-dx_inner, dy_inner), Angle(0.0)))
             footprint.add_polygon(outline)
 
             # Courtyard
@@ -479,18 +538,18 @@ def generate_pkg(
             dx_outer = pad_x_offset + pad_size[0] / 2 + offset
             dy_inner = get_y(1, pin_count // 2, pitch, False) + pad_size[1] / 2 + offset
             dy_outer = config.body_length / 2 + offset
-            courtyard.add_vertex(Vertex(Position(-dx_inner,  dy_outer), Angle(0.0)))  # Top left
-            courtyard.add_vertex(Vertex(Position( dx_inner,  dy_outer), Angle(0.0)))  # CW
-            courtyard.add_vertex(Vertex(Position( dx_inner,  dy_inner), Angle(0.0)))
-            courtyard.add_vertex(Vertex(Position( dx_outer,  dy_inner), Angle(0.0)))
-            courtyard.add_vertex(Vertex(Position( dx_outer, -dy_inner), Angle(0.0)))
-            courtyard.add_vertex(Vertex(Position( dx_inner, -dy_inner), Angle(0.0)))
-            courtyard.add_vertex(Vertex(Position( dx_inner, -dy_outer), Angle(0.0)))
+            courtyard.add_vertex(Vertex(Position(-dx_inner, dy_outer), Angle(0.0)))  # Top left
+            courtyard.add_vertex(Vertex(Position(dx_inner, dy_outer), Angle(0.0)))  # CW
+            courtyard.add_vertex(Vertex(Position(dx_inner, dy_inner), Angle(0.0)))
+            courtyard.add_vertex(Vertex(Position(dx_outer, dy_inner), Angle(0.0)))
+            courtyard.add_vertex(Vertex(Position(dx_outer, -dy_inner), Angle(0.0)))
+            courtyard.add_vertex(Vertex(Position(dx_inner, -dy_inner), Angle(0.0)))
+            courtyard.add_vertex(Vertex(Position(dx_inner, -dy_outer), Angle(0.0)))
             courtyard.add_vertex(Vertex(Position(-dx_inner, -dy_outer), Angle(0.0)))
             courtyard.add_vertex(Vertex(Position(-dx_inner, -dy_inner), Angle(0.0)))
             courtyard.add_vertex(Vertex(Position(-dx_outer, -dy_inner), Angle(0.0)))
-            courtyard.add_vertex(Vertex(Position(-dx_outer,  dy_inner), Angle(0.0)))
-            courtyard.add_vertex(Vertex(Position(-dx_inner,  dy_inner), Angle(0.0)))
+            courtyard.add_vertex(Vertex(Position(-dx_outer, dy_inner), Angle(0.0)))
+            courtyard.add_vertex(Vertex(Position(-dx_inner, dy_inner), Angle(0.0)))
             footprint.add_polygon(courtyard)
 
             # Labels
@@ -504,28 +563,32 @@ def generate_pkg(
                 'auto_rotate': AutoRotate(True),
                 'mirror': Mirror(False),
             }
-            footprint.add_text(StrokeText(
-                uuid_text_name,
-                Layer('top_names'),
-                align=Align('center bottom'),
-                position=Position(0.0, dy),
-                value=Value('{{NAME}}'),
-                **text_attrs,  # type: ignore # (mypy cannot deal with kwargs)
-            ))
-            footprint.add_text(StrokeText(
-                uuid_text_value,
-                Layer('top_values'),
-                align=Align('center top'),
-                position=Position(0.0, -dy),
-                value=Value('{{VALUE}}'),
-                **text_attrs,  # type: ignore # (mypy cannot deal with kwargs)
-            ))
+            footprint.add_text(
+                StrokeText(
+                    uuid_text_name,
+                    Layer('top_names'),
+                    align=Align('center bottom'),
+                    position=Position(0.0, dy),
+                    value=Value('{{NAME}}'),
+                    **text_attrs,  # type: ignore # (mypy cannot deal with kwargs)
+                )
+            )
+            footprint.add_text(
+                StrokeText(
+                    uuid_text_value,
+                    Layer('top_values'),
+                    align=Align('center top'),
+                    position=Position(0.0, -dy),
+                    value=Value('{{VALUE}}'),
+                    **text_attrs,  # type: ignore # (mypy cannot deal with kwargs)
+                )
+            )
 
             # Approvals
             package.add_approval(
-                "(approved missing_footprint_3d_model\n" +
-                " (footprint {})\n".format(uuid_footprint) +
-                ")"
+                '(approved missing_footprint_3d_model\n'
+                + ' (footprint {})\n'.format(uuid_footprint)
+                + ')'
             )
 
         add_footprint_variant('handsoldering', 'hand soldering', (2.54, 1.27))

@@ -1,6 +1,7 @@
 """
 Generate SOD diode packages
 """
+
 import sys
 from os import path
 from uuid import uuid4
@@ -9,13 +10,55 @@ from typing import Dict, Iterable, Optional
 
 from common import init_cache, now, save_cache
 from entities.common import (
-    Align, Angle, Author, Category, Created, Deprecated, Description, Fill, GeneratedBy, GrabArea, Height, Keywords,
-    Layer, Name, Polygon, Position, Position3D, Rotation, Rotation3D, Value, Version, Vertex, Width, generate_courtyard
+    Align,
+    Angle,
+    Author,
+    Category,
+    Created,
+    Deprecated,
+    Description,
+    Fill,
+    GeneratedBy,
+    GrabArea,
+    Height,
+    Keywords,
+    Layer,
+    Name,
+    Polygon,
+    Position,
+    Position3D,
+    Rotation,
+    Rotation3D,
+    Value,
+    Version,
+    Vertex,
+    Width,
+    generate_courtyard,
 )
 from entities.package import (
-    AlternativeName, AssemblyType, AutoRotate, ComponentSide, CopperClearance, Footprint, Footprint3DModel,
-    FootprintPad, LetterSpacing, LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction,
-    Shape, ShapeRadius, Size, SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
+    AlternativeName,
+    AssemblyType,
+    AutoRotate,
+    ComponentSide,
+    CopperClearance,
+    Footprint,
+    Footprint3DModel,
+    FootprintPad,
+    LetterSpacing,
+    LineSpacing,
+    Mirror,
+    Package,
+    Package3DModel,
+    PackagePad,
+    PackagePadUuid,
+    PadFunction,
+    Shape,
+    ShapeRadius,
+    Size,
+    SolderPasteConfig,
+    StopMaskConfig,
+    StrokeText,
+    StrokeWidth,
 )
 
 generator = 'librepcb-parts-generator (generate_sod.py)'
@@ -66,6 +109,7 @@ class FootprintConfig:
     L = Length, W = Width, G = Gap
 
     """
+
     def __init__(
         self,
         key: str,
@@ -95,7 +139,7 @@ class Config:
         lead_thickness: float,
         footprints: Iterable[FootprintConfig],
         flat: bool,
-        meta: Optional[Dict[str, str]] = None  # Metadata that can be used in description
+        meta: Optional[Dict[str, str]] = None,  # Metadata that can be used in description
     ):
         self.name = name
         self.alternative_names = alternative_names
@@ -120,7 +164,7 @@ def generate_pkg(
     pkgcat: str,
     keywords: str,
     version: str,
-    create_date: Optional[str]
+    create_date: Optional[str],
 ) -> None:
     category = 'pkg'
     for config in configs:
@@ -132,11 +176,17 @@ def generate_pkg(
             'meta': config.meta,
         }
         full_name = config.name  # Not generated due to non-standard rounding
-        full_desc = description.format(**fmt_params_desc) + \
-            "\n\nGenerated with {}".format(generator)
-        full_keywords = ",".join(filter(None, [
-            keywords.format(**fmt_params_desc).lower(),
-        ]))
+        full_desc = description.format(**fmt_params_desc) + '\n\nGenerated with {}'.format(
+            generator
+        )
+        full_keywords = ','.join(
+            filter(
+                None,
+                [
+                    keywords.format(**fmt_params_desc).lower(),
+                ],
+            )
+        )
 
         def _uuid(identifier: str) -> str:
             return uuid(category, full_name, identifier)
@@ -198,76 +248,84 @@ def generate_pkg(
             package.add_footprint(footprint)
 
             # Pads
-            pad_dx = (fpt_config.pad_gap / 2 + fpt_config.pad_length / 2)  # x offset (delta-x)
+            pad_dx = fpt_config.pad_gap / 2 + fpt_config.pad_length / 2  # x offset (delta-x)
             for p in [(uuid_pad_c, -1), (uuid_pad_a, 1)]:
-                footprint.add_pad(FootprintPad(
-                    uuid=p[0],
-                    side=ComponentSide.TOP,
-                    shape=Shape.ROUNDED_RECT,
-                    position=Position(p[1] * pad_dx, 0),
-                    rotation=Rotation(0),
-                    size=Size(fpt_config.pad_length, fpt_config.pad_width),
-                    radius=ShapeRadius(0),
-                    stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
-                    solder_paste=SolderPasteConfig.AUTO,
-                    copper_clearance=CopperClearance(0.0),
-                    function=PadFunction.STANDARD_PAD,
-                    package_pad=PackagePadUuid(p[0]),
-                    holes=[],
-                ))
+                footprint.add_pad(
+                    FootprintPad(
+                        uuid=p[0],
+                        side=ComponentSide.TOP,
+                        shape=Shape.ROUNDED_RECT,
+                        position=Position(p[1] * pad_dx, 0),
+                        rotation=Rotation(0),
+                        size=Size(fpt_config.pad_length, fpt_config.pad_width),
+                        radius=ShapeRadius(0),
+                        stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
+                        solder_paste=SolderPasteConfig.AUTO,
+                        copper_clearance=CopperClearance(0.0),
+                        function=PadFunction.STANDARD_PAD,
+                        package_pad=PackagePadUuid(p[0]),
+                        holes=[],
+                    )
+                )
 
             # Documentation
             dx = config.body_length / 2 - doc_lw / 2
             dy = config.body_width / 2 - doc_lw / 2
-            footprint.add_polygon(Polygon(
-                uuid=uuid_body,
-                layer=Layer('top_documentation'),
-                width=Width(doc_lw),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(-dx, dy), Angle(0)),
-                    Vertex(Position(dx, dy), Angle(0)),
-                    Vertex(Position(dx, -dy), Angle(0)),
-                    Vertex(Position(-dx, -dy), Angle(0)),
-                    Vertex(Position(-dx, dy), Angle(0)),
-                ],
-            ))
+            footprint.add_polygon(
+                Polygon(
+                    uuid=uuid_body,
+                    layer=Layer('top_documentation'),
+                    width=Width(doc_lw),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(-dx, dy), Angle(0)),
+                        Vertex(Position(dx, dy), Angle(0)),
+                        Vertex(Position(dx, -dy), Angle(0)),
+                        Vertex(Position(-dx, -dy), Angle(0)),
+                        Vertex(Position(-dx, dy), Angle(0)),
+                    ],
+                )
+            )
             dx0 = config.lead_span / 2
             dx1 = config.body_length / 2
             dy = config.lead_width / 2
             for p_uuid, sign in [(uuid_lead_left, -1), (uuid_lead_right, 1)]:
-                footprint.add_polygon(Polygon(
-                    uuid=p_uuid,
-                    layer=Layer('top_documentation'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(dx0 * sign, dy), Angle(0)),
-                        Vertex(Position(dx1 * sign, dy), Angle(0)),
-                        Vertex(Position(dx1 * sign, -dy), Angle(0)),
-                        Vertex(Position(dx0 * sign, -dy), Angle(0)),
-                        Vertex(Position(dx0 * sign, dy), Angle(0)),
-                    ],
-                ))
+                footprint.add_polygon(
+                    Polygon(
+                        uuid=p_uuid,
+                        layer=Layer('top_documentation'),
+                        width=Width(0),
+                        fill=Fill(True),
+                        grab_area=GrabArea(False),
+                        vertices=[
+                            Vertex(Position(dx0 * sign, dy), Angle(0)),
+                            Vertex(Position(dx1 * sign, dy), Angle(0)),
+                            Vertex(Position(dx1 * sign, -dy), Angle(0)),
+                            Vertex(Position(dx0 * sign, -dy), Angle(0)),
+                            Vertex(Position(dx0 * sign, dy), Angle(0)),
+                        ],
+                    )
+                )
             dx_outer = ((config.body_length / 2) - doc_lw) * 0.75
             dx_inner = ((config.body_length / 2) - doc_lw) * 0.4
             dy = config.body_width / 2 - doc_lw
-            footprint.add_polygon(Polygon(
-                uuid=uuid_polarization_mark,
-                layer=Layer('top_documentation'),
-                width=Width(0),
-                fill=Fill(True),
-                grab_area=GrabArea(True),
-                vertices=[
-                    Vertex(Position(-dx_outer, dy), Angle(0)),
-                    Vertex(Position(-dx_inner, dy), Angle(0)),
-                    Vertex(Position(-dx_inner, -dy), Angle(0)),
-                    Vertex(Position(-dx_outer, -dy), Angle(0)),
-                    Vertex(Position(-dx_outer, dy), Angle(0)),
-                ],
-            ))
+            footprint.add_polygon(
+                Polygon(
+                    uuid=uuid_polarization_mark,
+                    layer=Layer('top_documentation'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(True),
+                    vertices=[
+                        Vertex(Position(-dx_outer, dy), Angle(0)),
+                        Vertex(Position(-dx_inner, dy), Angle(0)),
+                        Vertex(Position(-dx_inner, -dy), Angle(0)),
+                        Vertex(Position(-dx_outer, -dy), Angle(0)),
+                        Vertex(Position(-dx_outer, dy), Angle(0)),
+                    ],
+                )
+            )
 
             # Silkscreen
             x_left = -(pad_dx + fpt_config.pad_length / 2 + silk_lw / 2 + silkscreen_clearance)
@@ -276,45 +334,51 @@ def generate_pkg(
                 config.body_width / 2 + silk_lw / 2,  # Based on body width
                 fpt_config.pad_width / 2 + silk_lw / 2 + silkscreen_clearance,  # Based on pad width
             )
-            footprint.add_polygon(Polygon(
-                uuid=uuid_silkscreen,
-                layer=Layer('top_legend'),
-                width=Width(silk_lw),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(x_right, dy), Angle(0)),
-                    Vertex(Position(x_left, dy), Angle(0)),
-                    Vertex(Position(x_left, -dy), Angle(0)),
-                    Vertex(Position(x_right, -dy), Angle(0)),
-                ],
-            ))
+            footprint.add_polygon(
+                Polygon(
+                    uuid=uuid_silkscreen,
+                    layer=Layer('top_legend'),
+                    width=Width(silk_lw),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(x_right, dy), Angle(0)),
+                        Vertex(Position(x_left, dy), Angle(0)),
+                        Vertex(Position(x_left, -dy), Angle(0)),
+                        Vertex(Position(x_right, -dy), Angle(0)),
+                    ],
+                )
+            )
 
             # Package outlines
             dx = config.body_length / 2
             dy = config.body_width / 2
-            footprint.add_polygon(Polygon(
-                uuid=uuid_outline,
-                layer=Layer('top_package_outlines'),
-                width=Width(0),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(-dx, dy), Angle(0)),  # NW
-                    Vertex(Position(dx, dy), Angle(0)),  # NE
-                    Vertex(Position(dx, -dy), Angle(0)),  # SE
-                    Vertex(Position(-dx, -dy), Angle(0)),  # SW
-                ],
-            ))
+            footprint.add_polygon(
+                Polygon(
+                    uuid=uuid_outline,
+                    layer=Layer('top_package_outlines'),
+                    width=Width(0),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(-dx, dy), Angle(0)),  # NW
+                        Vertex(Position(dx, dy), Angle(0)),  # NE
+                        Vertex(Position(dx, -dy), Angle(0)),  # SE
+                        Vertex(Position(-dx, -dy), Angle(0)),  # SW
+                    ],
+                )
+            )
 
             # Courtyard
-            footprint.add_polygon(generate_courtyard(
-                uuid=uuid_courtyard,
-                max_x=config.lead_span / 2,
-                max_y=config.body_width / 2,
-                excess_x=courtyard_excess,
-                excess_y=courtyard_excess,
-            ))
+            footprint.add_polygon(
+                generate_courtyard(
+                    uuid=uuid_courtyard,
+                    max_x=config.lead_span / 2,
+                    max_y=config.body_width / 2,
+                    excess_x=courtyard_excess,
+                    excess_y=courtyard_excess,
+                )
+            )
 
             # Labels
             if config.body_width < 2.0:
@@ -322,34 +386,38 @@ def generate_pkg(
             else:
                 offset = label_offset
             dy = config.body_width / 2 + offset  # y offset (delta-y)
-            footprint.add_text(StrokeText(
-                uuid=uuid_text_name,
-                layer=Layer('top_names'),
-                height=Height(pkg_text_height),
-                stroke_width=StrokeWidth(0.2),
-                letter_spacing=LetterSpacing.AUTO,
-                line_spacing=LineSpacing.AUTO,
-                align=Align('center bottom'),
-                position=Position(0.0, dy),
-                rotation=Rotation(0.0),
-                auto_rotate=AutoRotate(True),
-                mirror=Mirror(False),
-                value=Value('{{NAME}}'),
-            ))
-            footprint.add_text(StrokeText(
-                uuid=uuid_text_value,
-                layer=Layer('top_values'),
-                height=Height(pkg_text_height),
-                stroke_width=StrokeWidth(0.2),
-                letter_spacing=LetterSpacing.AUTO,
-                line_spacing=LineSpacing.AUTO,
-                align=Align('center top'),
-                position=Position(0.0, -dy),
-                rotation=Rotation(0.0),
-                auto_rotate=AutoRotate(True),
-                mirror=Mirror(False),
-                value=Value('{{VALUE}}'),
-            ))
+            footprint.add_text(
+                StrokeText(
+                    uuid=uuid_text_name,
+                    layer=Layer('top_names'),
+                    height=Height(pkg_text_height),
+                    stroke_width=StrokeWidth(0.2),
+                    letter_spacing=LetterSpacing.AUTO,
+                    line_spacing=LineSpacing.AUTO,
+                    align=Align('center bottom'),
+                    position=Position(0.0, dy),
+                    rotation=Rotation(0.0),
+                    auto_rotate=AutoRotate(True),
+                    mirror=Mirror(False),
+                    value=Value('{{NAME}}'),
+                )
+            )
+            footprint.add_text(
+                StrokeText(
+                    uuid=uuid_text_value,
+                    layer=Layer('top_values'),
+                    height=Height(pkg_text_height),
+                    stroke_width=StrokeWidth(0.2),
+                    letter_spacing=LetterSpacing.AUTO,
+                    line_spacing=LineSpacing.AUTO,
+                    align=Align('center top'),
+                    position=Position(0.0, -dy),
+                    rotation=Rotation(0.0),
+                    auto_rotate=AutoRotate(True),
+                    mirror=Mirror(False),
+                    value=Value('{{VALUE}}'),
+                )
+            )
 
         for fpt in config.footprints:
             add_footprint_variant(fpt)
@@ -386,29 +454,43 @@ def generate_3d(
     marking_width = config.body_length * 0.2
     marking_pos = config.body_length * 0.25
 
-    body = cq.Workplane('XY', origin=(0, 0, body_standoff + (body_height / 2))) \
-        .box(config.body_length, config.body_width, body_height) \
-        .edges().chamfer(body_chamfer)
-    marking = cq.Workplane('XY', origin=(-marking_pos, 0, body_standoff + body_height)) \
-        .box(marking_width, config.body_width - 2 * body_chamfer, 0.05)
+    body = (
+        cq.Workplane('XY', origin=(0, 0, body_standoff + (body_height / 2)))
+        .box(config.body_length, config.body_width, body_height)
+        .edges()
+        .chamfer(body_chamfer)
+    )
+    marking = cq.Workplane('XY', origin=(-marking_pos, 0, body_standoff + body_height)).box(
+        marking_width, config.body_width - 2 * body_chamfer, 0.05
+    )
     if config.flat:
-        leg = cq.Workplane('XY', origin=(0, 0, config.lead_thickness / 2)) \
-            .box(config.lead_span, config.lead_width, config.lead_thickness)
+        leg = cq.Workplane('XY', origin=(0, 0, config.lead_thickness / 2)).box(
+            config.lead_span, config.lead_width, config.lead_thickness
+        )
     else:
-        leg_path = cq.Workplane("XZ") \
-            .hLine(config.lead_contact_length - (config.lead_thickness / 2) - bend_radius) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=270, angle2=360, sense=1) \
-            .vLine(leg_z_top - config.lead_thickness - (2 * bend_radius)) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
-            .hLine(config.lead_span - (2 * bend_radius) - (2 * config.lead_contact_length) + config.lead_thickness) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1) \
-            .vLine(-(leg_z_top - config.lead_thickness - (2 * bend_radius))) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=180, angle2=270, sense=1) \
+        leg_path = (
+            cq.Workplane('XZ')
             .hLine(config.lead_contact_length - (config.lead_thickness / 2) - bend_radius)
-        leg = cq.Workplane("ZY") \
-            .rect(config.lead_thickness, config.lead_width) \
-            .sweep(leg_path) \
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=270, angle2=360, sense=1)
+            .vLine(leg_z_top - config.lead_thickness - (2 * bend_radius))
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1)
+            .hLine(
+                config.lead_span
+                - (2 * bend_radius)
+                - (2 * config.lead_contact_length)
+                + config.lead_thickness
+            )
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1)
+            .vLine(-(leg_z_top - config.lead_thickness - (2 * bend_radius)))
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=180, angle2=270, sense=1)
+            .hLine(config.lead_contact_length - (config.lead_thickness / 2) - bend_radius)
+        )
+        leg = (
+            cq.Workplane('ZY')
+            .rect(config.lead_thickness, config.lead_width)
+            .sweep(leg_path)
             .translate((-config.lead_span / 2, 0, 0))
+        )
 
     assembly = StepAssembly(full_name)
     assembly.add_body(body, 'body', StepColor.IC_BODY)
@@ -436,35 +518,65 @@ if __name__ == '__main__':
         library='LibrePCB_Base.lplib',
         author='Danilo B., U. Bruhin',
         description='Small outline diode (JEDEC {meta[jedec]}).\n\n'
-                    'Lead span: {lead_span}\n'
-                    'Body length: {body_length}mm\n'
-                    'Body width: {body_width}mm\n'
-                    'Max height: {body_height}mm',
+        'Lead span: {lead_span}\n'
+        'Body length: {body_length}mm\n'
+        'Body width: {body_width}mm\n'
+        'Max height: {body_height}mm',
         configs=[
             # https://www.diodes.com/assets/Package-Files/SOD123.pdf
-            Config('SOD3717X135', [AlternativeName('SOD-123', 'JEDEC')],
-                   2.65, 1.55, 1.05,
-                   3.65, 0.57, 0.3, 0.11,
-                   [FootprintConfig('default', 'default', 0.9, 0.95, 2.25),
-                    FootprintConfig('handsolder', 'Hand Soldering', 1.5, 0.95, 2.25)],
-                   False,
-                   meta={'jedec': 'SOD-123', 'keywords': 'SOD123'}),
+            Config(
+                'SOD3717X135',
+                [AlternativeName('SOD-123', 'JEDEC')],
+                2.65,
+                1.55,
+                1.05,
+                3.65,
+                0.57,
+                0.3,
+                0.11,
+                [
+                    FootprintConfig('default', 'default', 0.9, 0.95, 2.25),
+                    FootprintConfig('handsolder', 'Hand Soldering', 1.5, 0.95, 2.25),
+                ],
+                False,
+                meta={'jedec': 'SOD-123', 'keywords': 'SOD123'},
+            ),
             # https://www.diodes.com/assets/Package-Files/SOD323.pdf
-            Config('SOD2514X110', [AlternativeName('SOD-323', 'JEDEC')],
-                   1.7, 1.3, 1.05,
-                   2.5, 0.3, 0.3, 0.11,
-                   [FootprintConfig('default', 'default', 0.6, 0.45, 1.51),
-                    FootprintConfig('handsolder', 'Hand Soldering', 1.0, 0.45, 1.51)],
-                   False,
-                   meta={'jedec': 'SOD-323', 'keywords': 'SOD323'}),
+            Config(
+                'SOD2514X110',
+                [AlternativeName('SOD-323', 'JEDEC')],
+                1.7,
+                1.3,
+                1.05,
+                2.5,
+                0.3,
+                0.3,
+                0.11,
+                [
+                    FootprintConfig('default', 'default', 0.6, 0.45, 1.51),
+                    FootprintConfig('handsolder', 'Hand Soldering', 1.0, 0.45, 1.51),
+                ],
+                False,
+                meta={'jedec': 'SOD-323', 'keywords': 'SOD323'},
+            ),
             # https://www.diodes.com/assets/Package-Files/SOD523.pdf
-            Config('SOD1709X65', [AlternativeName('SOD-523', 'JEDEC')],
-                   1.2, 0.8, 0.6,
-                   1.65, 0.3, 0.3, 0.14,
-                   [FootprintConfig('default', 'default', 0.6, 0.7, 0.8),
-                    FootprintConfig('handsolder', 'Hand Soldering', 1.0, 0.7, 0.8)],
-                   True,
-                   meta={'jedec': 'SOD-523', 'keywords': 'SOD523'}),
+            Config(
+                'SOD1709X65',
+                [AlternativeName('SOD-523', 'JEDEC')],
+                1.2,
+                0.8,
+                0.6,
+                1.65,
+                0.3,
+                0.3,
+                0.14,
+                [
+                    FootprintConfig('default', 'default', 0.6, 0.7, 0.8),
+                    FootprintConfig('handsolder', 'Hand Soldering', 1.0, 0.7, 0.8),
+                ],
+                True,
+                meta={'jedec': 'SOD-523', 'keywords': 'SOD523'},
+            ),
         ],
         generate_3d_models=generate_3d_models,
         pkgcat='9b31c9b4-04b6-4f97-ad12-f095d196bd38',

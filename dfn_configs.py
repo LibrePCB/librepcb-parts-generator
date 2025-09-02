@@ -5,7 +5,18 @@ Configuration file, containing all available DFN configs.
 
 from typing import Any, Callable, Optional, Tuple
 
-from entities.common import Angle, Circle, Diameter, Fill, GrabArea, Layer, Polygon, Position, Vertex, Width
+from entities.common import (
+    Angle,
+    Circle,
+    Diameter,
+    Fill,
+    GrabArea,
+    Layer,
+    Polygon,
+    Position,
+    Vertex,
+    Width,
+)
 from entities.package import Footprint
 
 # Maximal lead width as a function of pitch, Table 4 in the JEDEC
@@ -24,7 +35,7 @@ LEAD_WIDTH = {
 # http://ocipcdc.org/archive/What_is_New_in_IPC-7351C_03_11_2015.pdf
 LEAD_TOE_HEEL = {
     1.00: 0.35,
-    0.95: 0.35,    # not specified in standard
+    0.95: 0.35,  # not specified in standard
     0.8: 0.33,
     0.65: 0.31,
     0.50: 0.29,
@@ -37,27 +48,30 @@ StepModificationFn = Callable[[Any, Any, Any], Tuple[Any, Any]]
 
 
 class DfnConfig:
-    def __init__(self,
-                 length: float,
-                 width: float,
-                 pitch: float,
-                 pin_count: int,
-                 height_nominal: float,
-                 height_max: float,
-                 lead_length: float,
-                 exposed_width: float,
-                 exposed_length: float,
-                 keywords: str,
-                 no_exp: bool = True,    # By default we create variants w/o exp
-                 print_pad: bool = False,    # By default, the pad length is not in the full name
-                 lead_width: Optional[float] = None,
-                 name: Optional[str] = None,
-                 create_date: Optional[str] = None,
-                 library: Optional[str] = None,
-                 pin1_corner_dx_dy: Optional[float] = None,  # Some parts have a triangular pin1 marking
-                 extended_doc_fn: Optional[Callable[['DfnConfig', Callable[[str], str], Footprint], None]] = None,
-                 step_modification_fn: Optional[StepModificationFn] = None,
-                 ):
+    def __init__(
+        self,
+        length: float,
+        width: float,
+        pitch: float,
+        pin_count: int,
+        height_nominal: float,
+        height_max: float,
+        lead_length: float,
+        exposed_width: float,
+        exposed_length: float,
+        keywords: str,
+        no_exp: bool = True,  # By default we create variants w/o exp
+        print_pad: bool = False,  # By default, the pad length is not in the full name
+        lead_width: Optional[float] = None,
+        name: Optional[str] = None,
+        create_date: Optional[str] = None,
+        library: Optional[str] = None,
+        pin1_corner_dx_dy: Optional[float] = None,  # Some parts have a triangular pin1 marking
+        extended_doc_fn: Optional[
+            Callable[['DfnConfig', Callable[[str], str], Footprint], None]
+        ] = None,
+        step_modification_fn: Optional[StepModificationFn] = None,
+    ):
         self.length = length
         self.width = width
         self.pitch = pitch
@@ -65,9 +79,9 @@ class DfnConfig:
         self.height = height_max
         self.height_nominal = height_nominal
 
-        self.exposed_width = exposed_width        # E2
-        self.exposed_length = exposed_length      # D2
-        self.no_exp = no_exp                      # Option with noexp
+        self.exposed_width = exposed_width  # E2
+        self.exposed_length = exposed_length  # D2
+        self.no_exp = no_exp  # Option with noexp
 
         self.lead_length = lead_length
         self.print_pad = print_pad
@@ -80,12 +94,12 @@ class DfnConfig:
         try:
             self.toe_heel = LEAD_TOE_HEEL[pitch]
         except KeyError:
-            raise NotImplementedError("No toe/heel length for pitch {:s}".format(pitch))
+            raise NotImplementedError('No toe/heel length for pitch {:s}'.format(pitch))
 
         self.keywords = keywords
         self.name = name
         self.create_date = create_date
-        self.library = library or "LibrePCB_Base.lplib"
+        self.library = library or 'LibrePCB_Base.lplib'
 
         self.extended_doc_fn = extended_doc_fn
         self.step_modification_fn = step_modification_fn
@@ -280,55 +294,70 @@ JEDEC_CONFIGS = [
 
 def draw_circle(diameter: float) -> Callable[[DfnConfig, Callable[[str], str], Footprint], None]:
     def _draw(config: DfnConfig, uuid: Callable[[str], str], footprint: Footprint) -> None:
-        footprint.add_circle(Circle(
-            uuid('hole-circle-doc'),
-            Layer('top_documentation'),
-            Width(0.1),
-            Fill(False),
-            GrabArea(False),
-            Diameter(diameter),
-            Position(0, 0),
-        ))
+        footprint.add_circle(
+            Circle(
+                uuid('hole-circle-doc'),
+                Layer('top_documentation'),
+                Width(0.1),
+                Fill(False),
+                GrabArea(False),
+                Diameter(diameter),
+                Position(0, 0),
+            )
+        )
+
     return _draw
 
 
-def draw_rect(x: float, y: float, width: float, height: float) -> Callable[[DfnConfig, Callable[[str], str], Footprint], None]:
+def draw_rect(
+    x: float, y: float, width: float, height: float
+) -> Callable[[DfnConfig, Callable[[str], str], Footprint], None]:
     def _draw(config: DfnConfig, uuid: Callable[[str], str], footprint: Footprint) -> None:
-        footprint.add_polygon(Polygon(
-            uuid=uuid('hole-polygon-doc'),
-            layer=Layer('top_documentation'),
-            width=Width(0),
-            fill=Fill(True),
-            grab_area=GrabArea(False),
-            vertices=[
-                Vertex(Position(x - width / 2, y + height / 2), Angle(0)),
-                Vertex(Position(x + width / 2, y + height / 2), Angle(0)),
-                Vertex(Position(x + width / 2, y - height / 2), Angle(0)),
-                Vertex(Position(x - width / 2, y - height / 2), Angle(0)),
-                Vertex(Position(x - width / 2, y + height / 2), Angle(0)),
-            ],
-        ))
+        footprint.add_polygon(
+            Polygon(
+                uuid=uuid('hole-polygon-doc'),
+                layer=Layer('top_documentation'),
+                width=Width(0),
+                fill=Fill(True),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(x - width / 2, y + height / 2), Angle(0)),
+                    Vertex(Position(x + width / 2, y + height / 2), Angle(0)),
+                    Vertex(Position(x + width / 2, y - height / 2), Angle(0)),
+                    Vertex(Position(x - width / 2, y - height / 2), Angle(0)),
+                    Vertex(Position(x - width / 2, y + height / 2), Angle(0)),
+                ],
+            )
+        )
+
     return _draw
 
 
 def step_modification_sphere(diameter: float) -> StepModificationFn:
     def _fn(body: Any, dot: Any, workplane: Any) -> Tuple[Any, Any]:
         return body.cut(workplane.sphere(diameter / 2, centered=True)), dot
+
     return _fn
 
 
-def step_modification_cylinder(x: float, y: float, diameter: float, length: float) -> StepModificationFn:
+def step_modification_cylinder(
+    x: float, y: float, diameter: float, length: float
+) -> StepModificationFn:
     def _fn(body: Any, dot: Any, workplane: Any) -> Tuple[Any, Any]:
-        cutout = workplane.transformed(offset=(x, y, 0), rotate=(0, 90, 0)) \
-            .cylinder(length, diameter / 2, centered=True)
+        cutout = workplane.transformed(offset=(x, y, 0), rotate=(0, 90, 0)).cylinder(
+            length, diameter / 2, centered=True
+        )
         return body.cut(cutout), dot
+
     return _fn
 
 
 def step_modification_sgp3x(body: Any, dot: Any, workplane: Any) -> Tuple[Any, Any]:
-    dot = workplane.cylinder(0.2, 0.6, centered=[True, True, False]) \
-        .transformed(offset=(0.5, 0.5, 0), rotate=(0, 0, 45)) \
+    dot = (
+        workplane.cylinder(0.2, 0.6, centered=[True, True, False])
+        .transformed(offset=(0.5, 0.5, 0), rotate=(0, 0, 45))
         .box(0.3, 0.3, 0.3, centered=[True, True, False])
+    )
     return body, dot
 
 
