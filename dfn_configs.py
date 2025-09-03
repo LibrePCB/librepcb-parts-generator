@@ -5,7 +5,18 @@ Configuration file, containing all available DFN configs.
 
 from typing import Any, Callable, Optional, Tuple
 
-from entities.common import Angle, Circle, Diameter, Fill, GrabArea, Layer, Polygon, Position, Vertex, Width
+from entities.common import (
+    Angle,
+    Circle,
+    Diameter,
+    Fill,
+    GrabArea,
+    Layer,
+    Polygon,
+    Position,
+    Vertex,
+    Width,
+)
 from entities.package import Footprint
 
 # Maximal lead width as a function of pitch, Table 4 in the JEDEC
@@ -16,7 +27,7 @@ LEAD_WIDTH = {
     0.8: 0.35,
     0.65: 0.35,
     0.5: 0.30,
-    0.4: 0.25
+    0.4: 0.25,
 }
 
 # Toe and heel length as a function of pitch
@@ -24,12 +35,12 @@ LEAD_WIDTH = {
 # http://ocipcdc.org/archive/What_is_New_in_IPC-7351C_03_11_2015.pdf
 LEAD_TOE_HEEL = {
     1.00: 0.35,
-    0.95: 0.35,    # not specified in standard
+    0.95: 0.35,  # not specified in standard
     0.8: 0.33,
     0.65: 0.31,
     0.50: 0.29,
     0.40: 0.27,
-    0.35: 0.25
+    0.35: 0.25,
 }
 
 # The real CadQuery types are not known statically, thus allowing any type.
@@ -37,27 +48,30 @@ StepModificationFn = Callable[[Any, Any, Any], Tuple[Any, Any]]
 
 
 class DfnConfig:
-    def __init__(self,
-                 length: float,
-                 width: float,
-                 pitch: float,
-                 pin_count: int,
-                 height_nominal: float,
-                 height_max: float,
-                 lead_length: float,
-                 exposed_width: float,
-                 exposed_length: float,
-                 keywords: str,
-                 no_exp: bool = True,    # By default we create variants w/o exp
-                 print_pad: bool = False,    # By default, the pad length is not in the full name
-                 lead_width: Optional[float] = None,
-                 name: Optional[str] = None,
-                 create_date: Optional[str] = None,
-                 library: Optional[str] = None,
-                 pin1_corner_dx_dy: Optional[float] = None,  # Some parts have a triangular pin1 marking
-                 extended_doc_fn: Optional[Callable[['DfnConfig', Callable[[str], str], Footprint], None]] = None,
-                 step_modification_fn: Optional[StepModificationFn] = None,
-                 ):
+    def __init__(
+        self,
+        length: float,
+        width: float,
+        pitch: float,
+        pin_count: int,
+        height_nominal: float,
+        height_max: float,
+        lead_length: float,
+        exposed_width: float,
+        exposed_length: float,
+        keywords: str,
+        no_exp: bool = True,  # By default we create variants w/o exp
+        print_pad: bool = False,  # By default, the pad length is not in the full name
+        lead_width: Optional[float] = None,
+        name: Optional[str] = None,
+        create_date: Optional[str] = None,
+        library: Optional[str] = None,
+        pin1_corner_dx_dy: Optional[float] = None,  # Some parts have a triangular pin1 marking
+        extended_doc_fn: Optional[
+            Callable[['DfnConfig', Callable[[str], str], Footprint], None]
+        ] = None,
+        step_modification_fn: Optional[StepModificationFn] = None,
+    ):
         self.length = length
         self.width = width
         self.pitch = pitch
@@ -65,9 +79,9 @@ class DfnConfig:
         self.height = height_max
         self.height_nominal = height_nominal
 
-        self.exposed_width = exposed_width        # E2
-        self.exposed_length = exposed_length      # D2
-        self.no_exp = no_exp                      # Option with noexp
+        self.exposed_width = exposed_width  # E2
+        self.exposed_length = exposed_length  # D2
+        self.no_exp = no_exp  # Option with noexp
 
         self.lead_length = lead_length
         self.print_pad = print_pad
@@ -80,17 +94,18 @@ class DfnConfig:
         try:
             self.toe_heel = LEAD_TOE_HEEL[pitch]
         except KeyError:
-            raise NotImplementedError("No toe/heel length for pitch {:s}".format(pitch))
+            raise NotImplementedError('No toe/heel length for pitch {:s}'.format(pitch))
 
         self.keywords = keywords
         self.name = name
         self.create_date = create_date
-        self.library = library or "LibrePCB_Base.lplib"
+        self.library = library or 'LibrePCB_Base.lplib'
 
         self.extended_doc_fn = extended_doc_fn
         self.step_modification_fn = step_modification_fn
 
 
+# fmt: off
 JEDEC_CONFIGS = [
     # Table 6
     # Square, 1.5 x 1.5
@@ -128,8 +143,8 @@ JEDEC_CONFIGS = [
     DfnConfig(3.0, 3.0, 0.5, 8, 0.75, 0.80, 0.40, 2.70, 1.75, 'W3030D-4,WEED-4', no_exp=False),     # no nominal exp_pad
     DfnConfig(3.0, 3.0, 0.5, 8, 0.95, 1.00, 0.55, 2.50, 1.50, 'V3030D-6,VEED-6', no_exp=False),     # no nominal exp_pad
     DfnConfig(3.0, 3.0, 0.5, 8, 0.75, 0.80, 0.55, 2.50, 1.50, 'W3030D-6,WEED-6', no_exp=False),     # no nominal exp_pad
-    DfnConfig(3.0, 3.0, 0.5, 8, 0.95, 1.00, 0.45, 1.60, 1.60, 'V3030D-7,VEED-7', no_exp=False),     # no nominal pad length and exp_pad
-    DfnConfig(3.0, 3.0, 0.5, 8, 0.75, 0.80, 0.45, 1.60, 1.60, 'W3030D-7,WEED-7', no_exp=False),     # no nominal pad length and exp_pad
+    DfnConfig(3.0, 3.0, 0.5, 8, 0.95, 1.00, 0.45, 1.60, 1.60, 'V3030D-7,VEED-7', no_exp=False),     # no nominal pad length and exp_pad  # noqa: E501
+    DfnConfig(3.0, 3.0, 0.5, 8, 0.75, 0.80, 0.45, 1.60, 1.60, 'W3030D-7,WEED-7', no_exp=False),     # no nominal pad length and exp_pad  # noqa: E501
     DfnConfig(3.0, 3.0, 0.5, 10, 0.95, 1.00, 0.55, 2.20, 1.60, 'V3030D-2,VEED-2', print_pad=True),
     DfnConfig(3.0, 3.0, 0.5, 10, 0.75, 0.80, 0.55, 2.00, 1.20, 'W3030D-2,WEED-2'),
     DfnConfig(3.0, 3.0, 0.5, 10, 0.95, 1.00, 0.30, 2.20, 1.60, 'V3030D-3,VEED-3', print_pad=True),
@@ -171,9 +186,9 @@ JEDEC_CONFIGS = [
     DfnConfig(2.0, 3.0, 0.5, 6, 0.75, 0.80, 0.40, 1.00, 1.20, 'W2030D-1,WCED-1', no_exp=False),    # no nominal exp_pad
     DfnConfig(2.0, 3.0, 0.5, 8, 0.95, 1.00, 0.40, 1.75, 1.90, 'V2030D-2,VCED-2', no_exp=False),    # no nominal exp_pad
     DfnConfig(2.0, 3.0, 0.5, 8, 0.75, 0.80, 0.40, 1.75, 1.90, 'W2030D-2,WCED-2', no_exp=False),    # no nominal exp_pad
-    DfnConfig(2.0, 3.0, 0.5, 8, 0.95, 1.00, 0.45, 1.60, 1.60, 'V2030D-3,VCED-3', no_exp=False),    # no nominal pad length and exp_pad
-    DfnConfig(2.0, 3.0, 0.5, 8, 0.75, 0.80, 0.45, 1.60, 1.60, 'W2030D-3,WCED-3', no_exp=False),    # no nominal pad length and exp_pad
-    DfnConfig(2.0, 3.0, 0.5, 8, 0.55, 0.65, 0.45, 1.60, 1.60, 'U2030D', no_exp=False),      # no nominal pad length and exp_pad
+    DfnConfig(2.0, 3.0, 0.5, 8, 0.95, 1.00, 0.45, 1.60, 1.60, 'V2030D-3,VCED-3', no_exp=False),    # no nominal pad length and exp_pad  # noqa: E501
+    DfnConfig(2.0, 3.0, 0.5, 8, 0.75, 0.80, 0.45, 1.60, 1.60, 'W2030D-3,WCED-3', no_exp=False),    # no nominal pad length and exp_pad  # noqa: E501
+    DfnConfig(2.0, 3.0, 0.5, 8, 0.55, 0.65, 0.45, 1.60, 1.60, 'U2030D', no_exp=False),      # no nominal pad length and exp_pad  # noqa: E501
     # Rectangular, Type 1, 2.5 x 3.0
     DfnConfig(2.5, 3.0, 0.8, 6, 0.95, 1.00, 0.55, 1.50, 1.20, 'V2530B,VDEB'),
     DfnConfig(2.5, 3.0, 0.8, 6, 0.75, 0.80, 0.55, 1.50, 1.20, 'W2530B,WDEB'),
@@ -221,14 +236,14 @@ JEDEC_CONFIGS = [
     DfnConfig(3.0, 1.5, 0.5, 10, 0.95, 1.00, 0.55, 2.20, 0.10, 'W3015D-2,VEBD-2'),
     DfnConfig(3.0, 1.5, 0.5, 10, 0.75, 0.80, 0.55, 2.20, 0.10, 'W3015D-2,WEBD-2'),
     # Rectangular, Type 2, 3.0 x 2.0
-    DfnConfig(3.0, 2.0, 0.95, 6, 0.95, 1.00, 0.30, 2.20, 0.60, 'V3020A,VECA'),    # no nominal exp_pad, using manual values
-    DfnConfig(3.0, 2.0, 0.65, 8, 0.95, 1.00, 0.30, 2.20, 0.60, 'V3020C,VECC'),    # no nominal exp_pad, using manual values
+    DfnConfig(3.0, 2.0, 0.95, 6, 0.95, 1.00, 0.30, 2.20, 0.60, 'V3020A,VECA'),    # no nominal exp_pad, using manual values  # noqa: E501
+    DfnConfig(3.0, 2.0, 0.65, 8, 0.95, 1.00, 0.30, 2.20, 0.60, 'V3020C,VECC'),    # no nominal exp_pad, using manual values  # noqa: E501
     DfnConfig(3.0, 2.0, 0.5, 8, 0.95, 1.00, 0.55, 2.20, 0.60, 'V3020D-1,V3020D-4,VECD-1,VECD-4'),
     DfnConfig(3.0, 2.0, 0.5, 8, 0.75, 0.80, 0.55, 2.20, 0.60, 'W3020D-1,W3020D-4,WECD-1,WECD-4'),
     # Commented out as they coincide with the V3020D-1, only the tolerances are different,
     # so we may need to re-add them again later.
-    # DfnConfig(3.0, 2.0, 0.5, 8, 0.95, 1.00, 0.40, 2.20, 0.60, 'V3020D-4,VECD-4', no_exp=False),     # no nominal exp_pad
-    # DfnConfig(3.0, 2.0, 0.5, 8, 0.75, 0.80, 0.40, 2.20, 0.60, 'W3020D-4,WECD-4', no_exp=False),     # no nominal exp_pad
+    # DfnConfig(3.0, 2.0, 0.5, 8, 0.95, 1.00, 0.40, 2.20, 0.60, 'V3020D-4,VECD-4', no_exp=False), # no nominal exp_pad
+    # DfnConfig(3.0, 2.0, 0.5, 8, 0.75, 0.80, 0.40, 2.20, 0.60, 'W3020D-4,WECD-4', no_exp=False), # no nominal exp_pad
     DfnConfig(3.0, 2.0, 0.5, 10, 0.95, 1.00, 0.55, 2.20, 0.60, 'V3020D-2,VECD-2', print_pad=True),
     DfnConfig(3.0, 2.0, 0.5, 10, 0.75, 0.80, 0.55, 2.20, 0.60, 'W3020D-2,WECD-2'),
     DfnConfig(3.0, 2.0, 0.5, 10, 0.95, 1.00, 0.30, 2.20, 0.60, 'V3020D-3,VECD-3', print_pad=True),
@@ -274,65 +289,80 @@ JEDEC_CONFIGS = [
     DfnConfig(6.0, 5.0, 0.5, 18, 0.95, 1.00, 0.55, 4.70, 3.40, 'V6050D-2,VLJD-2', no_exp=False),    # no nominal exp_pad
     DfnConfig(6.0, 5.0, 0.5, 18, 0.75, 0.80, 0.55, 4.70, 3.40, 'W6050D-2,WLJD-2', no_exp=False),    # no nominal exp_pad
 ]
+# fmt: on
 
 
 def draw_circle(diameter: float) -> Callable[[DfnConfig, Callable[[str], str], Footprint], None]:
     def _draw(config: DfnConfig, uuid: Callable[[str], str], footprint: Footprint) -> None:
-        footprint.add_circle(Circle(
-            uuid('hole-circle-doc'),
-            Layer('top_documentation'),
-            Width(0.1),
-            Fill(False),
-            GrabArea(False),
-            Diameter(diameter),
-            Position(0, 0),
-        ))
+        footprint.add_circle(
+            Circle(
+                uuid('hole-circle-doc'),
+                Layer('top_documentation'),
+                Width(0.1),
+                Fill(False),
+                GrabArea(False),
+                Diameter(diameter),
+                Position(0, 0),
+            )
+        )
+
     return _draw
 
 
-def draw_rect(x: float, y: float, width: float, height: float) -> Callable[[DfnConfig, Callable[[str], str], Footprint], None]:
+def draw_rect(
+    x: float, y: float, width: float, height: float
+) -> Callable[[DfnConfig, Callable[[str], str], Footprint], None]:
     def _draw(config: DfnConfig, uuid: Callable[[str], str], footprint: Footprint) -> None:
-        footprint.add_polygon(Polygon(
-            uuid=uuid('hole-polygon-doc'),
-            layer=Layer('top_documentation'),
-            width=Width(0),
-            fill=Fill(True),
-            grab_area=GrabArea(False),
-            vertices=[
-                Vertex(Position(x - width / 2, y + height / 2), Angle(0)),
-                Vertex(Position(x + width / 2, y + height / 2), Angle(0)),
-                Vertex(Position(x + width / 2, y - height / 2), Angle(0)),
-                Vertex(Position(x - width / 2, y - height / 2), Angle(0)),
-                Vertex(Position(x - width / 2, y + height / 2), Angle(0)),
-            ],
-        ))
+        footprint.add_polygon(
+            Polygon(
+                uuid=uuid('hole-polygon-doc'),
+                layer=Layer('top_documentation'),
+                width=Width(0),
+                fill=Fill(True),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(x - width / 2, y + height / 2), Angle(0)),
+                    Vertex(Position(x + width / 2, y + height / 2), Angle(0)),
+                    Vertex(Position(x + width / 2, y - height / 2), Angle(0)),
+                    Vertex(Position(x - width / 2, y - height / 2), Angle(0)),
+                    Vertex(Position(x - width / 2, y + height / 2), Angle(0)),
+                ],
+            )
+        )
+
     return _draw
 
 
 def step_modification_sphere(diameter: float) -> StepModificationFn:
     def _fn(body: Any, dot: Any, workplane: Any) -> Tuple[Any, Any]:
         return body.cut(workplane.sphere(diameter / 2, centered=True)), dot
+
     return _fn
 
 
-def step_modification_cylinder(x: float, y: float, diameter: float, length: float) -> StepModificationFn:
+def step_modification_cylinder(
+    x: float, y: float, diameter: float, length: float
+) -> StepModificationFn:
     def _fn(body: Any, dot: Any, workplane: Any) -> Tuple[Any, Any]:
-        cutout = workplane.transformed(offset=(x, y, 0), rotate=(0, 90, 0)) \
-            .cylinder(length, diameter / 2, centered=True)
+        cutout = workplane.transformed(offset=(x, y, 0), rotate=(0, 90, 0)).cylinder(
+            length, diameter / 2, centered=True
+        )
         return body.cut(cutout), dot
+
     return _fn
 
 
 def step_modification_sgp3x(body: Any, dot: Any, workplane: Any) -> Tuple[Any, Any]:
-    dot = workplane.cylinder(0.2, 0.6, centered=[True, True, False]) \
-        .transformed(offset=(0.5, 0.5, 0), rotate=(0, 0, 45)) \
+    dot = (
+        workplane.cylinder(0.2, 0.6, centered=[True, True, False])
+        .transformed(offset=(0.5, 0.5, 0), rotate=(0, 0, 45))
         .box(0.3, 0.3, 0.3, centered=[True, True, False])
+    )
     return body, dot
 
 
+# fmt: off
 THIRD_CONFIGS = [
-    # length, width, pitch, pin_count, height_nominal, height_max, lead_length, exposed_width, exposed_length, keywords
-
     # Sensirion
     DfnConfig(
         length=2.0,
@@ -411,3 +441,4 @@ THIRD_CONFIGS = [
         no_exp=False,
     ),
 ]
+# fmt: on

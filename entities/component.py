@@ -3,8 +3,21 @@ from typing import Iterable, List
 from common import serialize_common
 
 from .common import (
-    Author, BoolValue, Category, Created, Deprecated, Description, EnumValue, GeneratedBy, Keywords, Name, Position,
-    Rotation, StringValue, UUIDValue, Version
+    Author,
+    BoolValue,
+    Category,
+    Created,
+    Deprecated,
+    Description,
+    EnumValue,
+    GeneratedBy,
+    Keywords,
+    Name,
+    Position,
+    Rotation,
+    StringValue,
+    UUIDValue,
+    Version,
 )
 from .helper import indent_entities
 
@@ -51,9 +64,17 @@ class ForcedNet(StringValue):
         super().__init__('forced_net', forced_net)
 
 
-class Signal():
-    def __init__(self, uuid: str, name: Name, role: Role, required: Required,
-                 negated: Negated, clock: Clock, forced_net: ForcedNet):
+class Signal:
+    def __init__(
+        self,
+        uuid: str,
+        name: Name,
+        role: Role,
+        required: Required,
+        negated: Negated,
+        clock: Clock,
+        forced_net: ForcedNet,
+    ):
         self.uuid = uuid
         self.name = name
         self.role = role
@@ -63,9 +84,11 @@ class Signal():
         self.forced_net = forced_net
 
     def __str__(self) -> str:
-        ret = '(signal {} {} {}\n'.format(self.uuid, self.name, self.role) +\
-            ' {} {} {} {}\n'.format(self.required, self.negated, self.clock, self.forced_net) +\
-            ')'
+        ret = (
+            '(signal {} {} {}\n'.format(self.uuid, self.name, self.role)
+            + ' {} {} {} {}\n'.format(self.required, self.negated, self.clock, self.forced_net)
+            + ')'
+        )
         return ret
 
 
@@ -87,9 +110,8 @@ class TextDesignator(EnumValue):
         return 'text'
 
 
-class PinSignalMap():
-    def __init__(self, pin_uuid: str, signal_uuid: SignalUUID,
-                 text_designator: TextDesignator):
+class PinSignalMap:
+    def __init__(self, pin_uuid: str, signal_uuid: SignalUUID, text_designator: TextDesignator):
         self.pin_uuid = pin_uuid
         self.signal_uuid = signal_uuid
         self.text_designator = text_designator
@@ -103,9 +125,16 @@ class Suffix(StringValue):
         super().__init__('suffix', suffix)
 
 
-class Gate():
-    def __init__(self, uuid: str, symbol_uuid: SymbolUUID, position: Position,
-                 rotation: Rotation, required: Required, suffix: Suffix):
+class Gate:
+    def __init__(
+        self,
+        uuid: str,
+        symbol_uuid: SymbolUUID,
+        position: Position,
+        rotation: Rotation,
+        required: Required,
+        suffix: Suffix,
+    ):
         self.uuid = uuid
         self.symbol_uuid = symbol_uuid
         self.position = position
@@ -118,9 +147,11 @@ class Gate():
         self.pins.append(pin_signal_map)
 
     def __str__(self) -> str:
-        ret = '(gate {}\n'.format(self.uuid) +\
-            ' {}\n'.format(self.symbol_uuid) +\
-            ' {} {} {} {}\n'.format(self.position, self.rotation, self.required, self.suffix)
+        ret = (
+            '(gate {}\n'.format(self.uuid)
+            + ' {}\n'.format(self.symbol_uuid)
+            + ' {} {} {} {}\n'.format(self.position, self.rotation, self.required, self.suffix)
+        )
         pin_lines = []
         for pin in self.pins:
             pin_lines.append(' {}'.format(pin))
@@ -150,21 +181,33 @@ class Variant:
         self.gates.append(gate_map)
 
     def __str__(self) -> str:
-        ret = '(variant {} {}\n'.format(self.uuid, self.norm) +\
-            ' {}\n'.format(self.name) +\
-            ' {}\n'.format(self.description)
+        ret = (
+            '(variant {} {}\n'.format(self.uuid, self.norm)
+            + ' {}\n'.format(self.name)
+            + ' {}\n'.format(self.description)
+        )
         ret += indent_entities(sorted(self.gates, key=lambda x: str(x.uuid)))
         ret += ')'
         return ret
 
 
 class Component:
-    def __init__(self, uuid: str, name: Name, description: Description,
-                 keywords: Keywords, author: Author, version: Version,
-                 created: Created, deprecated: Deprecated,
-                 generated_by: GeneratedBy, categories: Iterable[Category],
-                 schematic_only: SchematicOnly,
-                 default_value: DefaultValue, prefix: Prefix):
+    def __init__(
+        self,
+        uuid: str,
+        name: Name,
+        description: Description,
+        keywords: Keywords,
+        author: Author,
+        version: Version,
+        created: Created,
+        deprecated: Deprecated,
+        generated_by: GeneratedBy,
+        categories: Iterable[Category],
+        schematic_only: SchematicOnly,
+        default_value: DefaultValue,
+        prefix: Prefix,
+    ):
         self.uuid = uuid
         self.name = name
         self.description = description
@@ -186,19 +229,21 @@ class Component:
         self.approvals.append(approval)
 
     def __str__(self) -> str:
-        ret = '(librepcb_component {}\n'.format(self.uuid) +\
-            ' {}\n'.format(self.name) +\
-            ' {}\n'.format(self.description) +\
-            ' {}\n'.format(self.keywords) +\
-            ' {}\n'.format(self.author) +\
-            ' {}\n'.format(self.version) +\
-            ' {}\n'.format(self.created) +\
-            ' {}\n'.format(self.deprecated) +\
-            ' {}\n'.format(self.generated_by) +\
-            ''.join([' {}\n'.format(cat) for cat in self.categories]) +\
-            ' {}\n'.format(self.schematic_only) +\
-            ' {}\n'.format(self.default_value) +\
-            ' {}\n'.format(self.prefix)
+        ret = (
+            '(librepcb_component {}\n'.format(self.uuid)
+            + ' {}\n'.format(self.name)
+            + ' {}\n'.format(self.description)
+            + ' {}\n'.format(self.keywords)
+            + ' {}\n'.format(self.author)
+            + ' {}\n'.format(self.version)
+            + ' {}\n'.format(self.created)
+            + ' {}\n'.format(self.deprecated)
+            + ' {}\n'.format(self.generated_by)
+            + ''.join([' {}\n'.format(cat) for cat in self.categories])
+            + ' {}\n'.format(self.schematic_only)
+            + ' {}\n'.format(self.default_value)
+            + ' {}\n'.format(self.prefix)
+        )
         ret += indent_entities(self.signals)
         ret += indent_entities(self.variants)
         ret += indent_entities(sorted(self.approvals))
@@ -217,5 +262,5 @@ class Component:
             output_directory=output_directory,
             uuid=self.uuid,
             long_type='component',
-            short_type='cmp'
+            short_type='cmp',
         )

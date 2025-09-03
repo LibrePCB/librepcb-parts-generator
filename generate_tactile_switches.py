@@ -1,6 +1,7 @@
 """
 Generate various tactile switch packages & devices
 """
+
 import sys
 from os import path
 from uuid import uuid4
@@ -10,16 +11,60 @@ from typing import List, Optional, Tuple, Union
 from common import init_cache, now, save_cache
 from entities.attribute import Attribute, AttributeType
 from entities.common import (
-    Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
-    Height, Keywords, Layer, Name, Polygon, Position, Position3D, Resource, Rotation, Rotation3D, Value, Version,
-    Vertex, Width
+    Align,
+    Angle,
+    Author,
+    Category,
+    Circle,
+    Created,
+    Deprecated,
+    Description,
+    Diameter,
+    Fill,
+    GeneratedBy,
+    GrabArea,
+    Height,
+    Keywords,
+    Layer,
+    Name,
+    Polygon,
+    Position,
+    Position3D,
+    Resource,
+    Rotation,
+    Rotation3D,
+    Value,
+    Version,
+    Vertex,
+    Width,
 )
 from entities.component import SignalUUID
 from entities.device import ComponentPad, ComponentUUID, Device, Manufacturer, PackageUUID, Part
 from entities.package import (
-    AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, Footprint3DModel, FootprintPad,
-    LetterSpacing, LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, PadHole,
-    Shape, ShapeRadius, Size, SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
+    AssemblyType,
+    AutoRotate,
+    ComponentSide,
+    CopperClearance,
+    DrillDiameter,
+    Footprint,
+    Footprint3DModel,
+    FootprintPad,
+    LetterSpacing,
+    LineSpacing,
+    Mirror,
+    Package,
+    Package3DModel,
+    PackagePad,
+    PackagePadUuid,
+    PadFunction,
+    PadHole,
+    Shape,
+    ShapeRadius,
+    Size,
+    SolderPasteConfig,
+    StopMaskConfig,
+    StrokeText,
+    StrokeWidth,
 )
 
 generator = 'librepcb-parts-generator (generate_tactile_switches.py)'
@@ -40,10 +85,17 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
-class ThtLeadConfig():
-    def __init__(self, pitch_x: float, pitch_y: float, drill: float,
-                 pad_diameter: float, thickness: float, width: float,
-                 length: float):
+class ThtLeadConfig:
+    def __init__(
+        self,
+        pitch_x: float,
+        pitch_y: float,
+        drill: float,
+        pad_diameter: float,
+        thickness: float,
+        width: float,
+        length: float,
+    ):
         self.pitch_x = pitch_x
         self.pitch_y = pitch_y
         self.drill = drill
@@ -53,10 +105,17 @@ class ThtLeadConfig():
         self.length = length  # From PCB surface to end of lead (Z)
 
 
-class GullWingLeadConfig():
-    def __init__(self, pitch_x: float, pitch_y: float, pad_size_x: float,
-                 pad_size_y: float, thickness: float, width: float,
-                 span: float):
+class GullWingLeadConfig:
+    def __init__(
+        self,
+        pitch_x: float,
+        pitch_y: float,
+        pad_size_x: float,
+        pad_size_y: float,
+        thickness: float,
+        width: float,
+        span: float,
+    ):
         self.pitch_x = pitch_x
         self.pitch_y = pitch_y
         self.pad_size_x = pad_size_x
@@ -66,9 +125,16 @@ class GullWingLeadConfig():
         self.span = span
 
 
-class JLeadConfig():
-    def __init__(self, pitch_x: float, pitch_y: float, pad_size_x: float,
-                 pad_size_y: float, thickness: float, width: float):
+class JLeadConfig:
+    def __init__(
+        self,
+        pitch_x: float,
+        pitch_y: float,
+        pad_size_x: float,
+        pad_size_y: float,
+        thickness: float,
+        width: float,
+    ):
         self.pitch_x = pitch_x
         self.pitch_y = pitch_y
         self.pad_size_x = pad_size_x
@@ -78,14 +144,21 @@ class JLeadConfig():
 
 
 class Family:
-    def __init__(self, manufacturer: str, pkg_name_prefix: str,
-                 dev_name_prefix: str, body_size_x: float, body_size_y: float,
-                 body_size_z: float,
-                 actuator_size: Union[float, Tuple[float, float]],
-                 actuator_color: str,
-                 lead_config: Union[ThtLeadConfig, GullWingLeadConfig, JLeadConfig],
-                 datasheet: Optional[str], datasheet_name: Optional[str],
-                 keywords: List[str]) -> None:
+    def __init__(
+        self,
+        manufacturer: str,
+        pkg_name_prefix: str,
+        dev_name_prefix: str,
+        body_size_x: float,
+        body_size_y: float,
+        body_size_z: float,
+        actuator_size: Union[float, Tuple[float, float]],
+        actuator_color: str,
+        lead_config: Union[ThtLeadConfig, GullWingLeadConfig, JLeadConfig],
+        datasheet: Optional[str],
+        datasheet_name: Optional[str],
+        keywords: List[str],
+    ) -> None:
         self.manufacturer = manufacturer
         self.pkg_name_prefix = pkg_name_prefix
         self.dev_name_prefix = dev_name_prefix
@@ -101,38 +174,50 @@ class Family:
 
 
 class Model:
-    def __init__(self, name: str, actuator_height: float, parts: List[Part],
-                 common_part_attributes: Optional[List[Attribute]] = None) -> None:
+    def __init__(
+        self,
+        name: str,
+        actuator_height: float,
+        parts: List[Part],
+        common_part_attributes: Optional[List[Attribute]] = None,
+    ) -> None:
         self.name = name
         self.actuator_height = actuator_height  # From PCB surface to act. top
         self.parts = parts
         self.common_part_attributes = common_part_attributes or []
 
     def uuid_key(self, family: Family) -> str:
-        return '{}-{}'.format(family.pkg_name_prefix, model.name) \
-            .lower().replace(' ', '').replace(',', 'p')
+        return (
+            '{}-{}'.format(family.pkg_name_prefix, model.name)
+            .lower()
+            .replace(' ', '')
+            .replace(',', 'p')
+        )
 
     def get_description(self, family: Family) -> str:
-        s = f"Tactile switch from {family.manufacturer}."
-        s += f"\n\nBody Size: {family.body_size_x:.2f} x {family.body_size_y:.2f} mm"
+        s = f'Tactile switch from {family.manufacturer}.'
+        s += f'\n\nBody Size: {family.body_size_x:.2f} x {family.body_size_y:.2f} mm'
         if isinstance(family.lead_config, ThtLeadConfig):
-            s += f"\nPitch: {family.lead_config.pitch_x:.2f} x {family.lead_config.pitch_y:.2f} mm"
+            s += f'\nPitch: {family.lead_config.pitch_x:.2f} x {family.lead_config.pitch_y:.2f} mm'
         if isinstance(family.lead_config, GullWingLeadConfig):
-            s += f"\nLead Span: {family.lead_config.span:.2f} mm"
+            s += f'\nLead Span: {family.lead_config.span:.2f} mm'
         if not isinstance(family.lead_config, ThtLeadConfig):
-            s += f"\nLead Y-Pitch: {family.lead_config.pitch_y:.2f} mm"
-        s += f"\nActuator Height: {self.actuator_height:.2f} mm"
-        s += f"\n\nGenerated with {generator}"
+            s += f'\nLead Y-Pitch: {family.lead_config.pitch_y:.2f} mm'
+        s += f'\nActuator Height: {self.actuator_height:.2f} mm'
+        s += f'\n\nGenerated with {generator}'
         return s
 
     def get_keywords(self, family: Family) -> str:
-        return ','.join([
-            'push',
-            'press',
-            'button',
-            'switch',
-            'tactile',
-        ] + family.keywords)
+        return ','.join(
+            [
+                'push',
+                'press',
+                'button',
+                'switch',
+                'tactile',
+            ]
+            + family.keywords
+        )
 
 
 def generate_pkg(
@@ -167,7 +252,9 @@ def generate_pkg(
             Category('194951ec-03dd-412a-9828-70c40bbdd22d'),
             Category('c0f16db0-f0db-4121-ab12-b4570ff79738'),
         ],
-        assembly_type=AssemblyType.THT if isinstance(family.lead_config, ThtLeadConfig) else AssemblyType.SMT,
+        assembly_type=AssemblyType.THT
+        if isinstance(family.lead_config, ThtLeadConfig)
+        else AssemblyType.SMT,
     )
 
     # Footprint
@@ -188,216 +275,269 @@ def generate_pkg(
         x = (family.lead_config.pitch_x / 2) * (-1 if (i % 2 == 0) else 1)
         y = (family.lead_config.pitch_y / 2) * (1 if (i < 2) else -1)
         if isinstance(family.lead_config, ThtLeadConfig):
-            footprint.add_pad(FootprintPad(
-                uuid=uuid_fpt_pad,
-                side=ComponentSide.TOP,
-                shape=Shape.ROUNDED_RECT,
-                position=Position(x, y),
-                rotation=Rotation(0),
-                size=Size(family.lead_config.pad_diameter, family.lead_config.pad_diameter),
-                radius=ShapeRadius(1.0),
-                stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
-                solder_paste=SolderPasteConfig.OFF,
-                copper_clearance=CopperClearance(0),
-                function=PadFunction.STANDARD_PAD,
-                package_pad=PackagePadUuid(uuid_pkg_pad),
-                holes=[PadHole(uuid_fpt_pad, DrillDiameter(family.lead_config.drill),
-                               [Vertex(Position(0.0, 0.0), Angle(0.0))])],
-            ))
+            footprint.add_pad(
+                FootprintPad(
+                    uuid=uuid_fpt_pad,
+                    side=ComponentSide.TOP,
+                    shape=Shape.ROUNDED_RECT,
+                    position=Position(x, y),
+                    rotation=Rotation(0),
+                    size=Size(family.lead_config.pad_diameter, family.lead_config.pad_diameter),
+                    radius=ShapeRadius(1.0),
+                    stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
+                    solder_paste=SolderPasteConfig.OFF,
+                    copper_clearance=CopperClearance(0),
+                    function=PadFunction.STANDARD_PAD,
+                    package_pad=PackagePadUuid(uuid_pkg_pad),
+                    holes=[
+                        PadHole(
+                            uuid_fpt_pad,
+                            DrillDiameter(family.lead_config.drill),
+                            [Vertex(Position(0.0, 0.0), Angle(0.0))],
+                        )
+                    ],
+                )
+            )
         else:
-            footprint.add_pad(FootprintPad(
-                uuid=uuid_fpt_pad,
-                side=ComponentSide.TOP,
-                shape=Shape.ROUNDED_RECT,
-                position=Position(x, y),
-                rotation=Rotation(0),
-                size=Size(family.lead_config.pad_size_x, family.lead_config.pad_size_y),
-                radius=ShapeRadius(0.5),
-                stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
-                solder_paste=SolderPasteConfig.AUTO,
-                copper_clearance=CopperClearance(0),
-                function=PadFunction.STANDARD_PAD,
-                package_pad=PackagePadUuid(uuid_pkg_pad),
-                holes=[],
-            ))
+            footprint.add_pad(
+                FootprintPad(
+                    uuid=uuid_fpt_pad,
+                    side=ComponentSide.TOP,
+                    shape=Shape.ROUNDED_RECT,
+                    position=Position(x, y),
+                    rotation=Rotation(0),
+                    size=Size(family.lead_config.pad_size_x, family.lead_config.pad_size_y),
+                    radius=ShapeRadius(0.5),
+                    stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
+                    solder_paste=SolderPasteConfig.AUTO,
+                    copper_clearance=CopperClearance(0),
+                    function=PadFunction.STANDARD_PAD,
+                    package_pad=PackagePadUuid(uuid_pkg_pad),
+                    holes=[],
+                )
+            )
         if isinstance(family.lead_config, GullWingLeadConfig):
             left = (family.lead_config.span / 2) * (-1 if (i % 2 == 0) else 1)
             right = (family.body_size_x / 2) * (-1 if (i % 2 == 0) else 1)
             top = y + (family.lead_config.width / 2)
             bottom = y - (family.lead_config.width / 2)
-            footprint.add_polygon(Polygon(
-                uuid=_uuid('default-polygon-documentation-{}'.format(i + 1)),
-                layer=Layer('top_documentation'),
-                width=Width(0),
-                fill=Fill(True),
-                grab_area=GrabArea(False),
-                vertices=[
-                    Vertex(Position(left, top), Angle(0)),
-                    Vertex(Position(right, top), Angle(0)),
-                    Vertex(Position(right, bottom), Angle(0)),
-                    Vertex(Position(left, bottom), Angle(0)),
-                    Vertex(Position(left, top), Angle(0)),
-                ],
-            ))
+            footprint.add_polygon(
+                Polygon(
+                    uuid=_uuid('default-polygon-documentation-{}'.format(i + 1)),
+                    layer=Layer('top_documentation'),
+                    width=Width(0),
+                    fill=Fill(True),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(left, top), Angle(0)),
+                        Vertex(Position(right, top), Angle(0)),
+                        Vertex(Position(right, bottom), Angle(0)),
+                        Vertex(Position(left, bottom), Angle(0)),
+                        Vertex(Position(left, top), Angle(0)),
+                    ],
+                )
+            )
 
     # Documentation outline
     top = (family.body_size_y / 2) - (line_width / 2)
     bottom = -top
     left = -(family.body_size_x / 2) + (line_width / 2)
     right = -left
-    footprint.add_polygon(Polygon(
-        uuid=_uuid('default-polygon-documentation'),
-        layer=Layer('top_documentation'),
-        width=Width(line_width),
-        fill=Fill(False),
-        grab_area=GrabArea(False),
-        vertices=[
-            Vertex(Position(left, top), Angle(0)),
-            Vertex(Position(right, top), Angle(0)),
-            Vertex(Position(right, bottom), Angle(0)),
-            Vertex(Position(left, bottom), Angle(0)),
-            Vertex(Position(left, top), Angle(0)),
-        ],
-    ))
+    footprint.add_polygon(
+        Polygon(
+            uuid=_uuid('default-polygon-documentation'),
+            layer=Layer('top_documentation'),
+            width=Width(line_width),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(left, top), Angle(0)),
+                Vertex(Position(right, top), Angle(0)),
+                Vertex(Position(right, bottom), Angle(0)),
+                Vertex(Position(left, bottom), Angle(0)),
+                Vertex(Position(left, top), Angle(0)),
+            ],
+        )
+    )
 
     # Documentation actuator
     if isinstance(family.actuator_size, tuple):
         dx = family.actuator_size[0] / 2
         dy = family.actuator_size[1] / 2
-        footprint.add_polygon(Polygon(
-            uuid=_uuid('default-polygon-documentation-actuator'),
-            layer=Layer('top_documentation'),
-            width=Width(line_width),
-            fill=Fill(False),
-            grab_area=GrabArea(False),
-            vertices=[
-                Vertex(Position(-dx, dy), Angle(0)),
-                Vertex(Position(dx, dy), Angle(0)),
-                Vertex(Position(dx, -dy), Angle(0)),
-                Vertex(Position(-dx, -dy), Angle(0)),
-                Vertex(Position(-dx, dy), Angle(0)),
-            ],
-        ))
+        footprint.add_polygon(
+            Polygon(
+                uuid=_uuid('default-polygon-documentation-actuator'),
+                layer=Layer('top_documentation'),
+                width=Width(line_width),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(-dx, dy), Angle(0)),
+                    Vertex(Position(dx, dy), Angle(0)),
+                    Vertex(Position(dx, -dy), Angle(0)),
+                    Vertex(Position(-dx, -dy), Angle(0)),
+                    Vertex(Position(-dx, dy), Angle(0)),
+                ],
+            )
+        )
     else:
-        footprint.add_circle(Circle(
-            uuid=_uuid('default-circle-documentation-actuator'),
-            layer=Layer('top_documentation'),
-            width=Width(line_width),
-            fill=Fill(False),
-            grab_area=GrabArea(False),
-            diameter=Diameter(family.actuator_size - line_width),
-            position=Position(0, 0),
-        ))
+        footprint.add_circle(
+            Circle(
+                uuid=_uuid('default-circle-documentation-actuator'),
+                layer=Layer('top_documentation'),
+                width=Width(line_width),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                diameter=Diameter(family.actuator_size - line_width),
+                position=Position(0, 0),
+            )
+        )
 
     # Legend outline top & bottom
     dx = (family.body_size_x / 2) + (line_width / 2)
     dy = (family.body_size_y / 2) + (line_width / 2)
     if isinstance(family.lead_config, ThtLeadConfig):
-        dx = min(dx, (family.lead_config.pitch_x / 2) - (family.lead_config.pad_diameter / 2) - (line_width / 2) - 0.15)
+        dx = min(
+            dx,
+            (family.lead_config.pitch_x / 2)
+            - (family.lead_config.pad_diameter / 2)
+            - (line_width / 2)
+            - 0.15,
+        )
     else:
-        dx = min(dx, (family.lead_config.pitch_x / 2) - (family.lead_config.pad_size_x / 2) - (line_width / 2) - 0.15)
+        dx = min(
+            dx,
+            (family.lead_config.pitch_x / 2)
+            - (family.lead_config.pad_size_x / 2)
+            - (line_width / 2)
+            - 0.15,
+        )
     for sign, name in [(1, 'top'), (-1, 'bottom')]:
-        footprint.add_polygon(Polygon(
-            uuid=_uuid('default-polygon-legend-{}'.format(name)),
-            layer=Layer('top_legend'),
-            width=Width(line_width),
-            fill=Fill(False),
-            grab_area=GrabArea(False),
-            vertices=[
-                Vertex(Position(-dx, dy * sign), Angle(0)),
-                Vertex(Position(dx, dy * sign), Angle(0)),
-            ],
-        ))
+        footprint.add_polygon(
+            Polygon(
+                uuid=_uuid('default-polygon-legend-{}'.format(name)),
+                layer=Layer('top_legend'),
+                width=Width(line_width),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(-dx, dy * sign), Angle(0)),
+                    Vertex(Position(dx, dy * sign), Angle(0)),
+                ],
+            )
+        )
 
     # Legend outline left & right
     dx = (family.body_size_x / 2) + (line_width / 2)
     dy = (family.body_size_y / 2) + (line_width / 2)
     if isinstance(family.lead_config, ThtLeadConfig):
-        dy = min(dy, (family.lead_config.pitch_y / 2) - (family.lead_config.pad_diameter / 2) - (line_width / 2) - 0.15)
+        dy = min(
+            dy,
+            (family.lead_config.pitch_y / 2)
+            - (family.lead_config.pad_diameter / 2)
+            - (line_width / 2)
+            - 0.15,
+        )
     else:
-        dy = min(dy, (family.lead_config.pitch_y / 2) - (family.lead_config.pad_size_y / 2) - (line_width / 2) - 0.15)
+        dy = min(
+            dy,
+            (family.lead_config.pitch_y / 2)
+            - (family.lead_config.pad_size_y / 2)
+            - (line_width / 2)
+            - 0.15,
+        )
     for sign, name in [(-1, 'left'), (1, 'right')]:
-        footprint.add_polygon(Polygon(
-            uuid=_uuid('default-polygon-legend-{}'.format(name)),
-            layer=Layer('top_legend'),
-            width=Width(line_width),
-            fill=Fill(False),
-            grab_area=GrabArea(False),
-            vertices=[
-                Vertex(Position(dx * sign, dy), Angle(0)),
-                Vertex(Position(dx * sign, -dy), Angle(0)),
-            ],
-        ))
+        footprint.add_polygon(
+            Polygon(
+                uuid=_uuid('default-polygon-legend-{}'.format(name)),
+                layer=Layer('top_legend'),
+                width=Width(line_width),
+                fill=Fill(False),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(dx * sign, dy), Angle(0)),
+                    Vertex(Position(dx * sign, -dy), Angle(0)),
+                ],
+            )
+        )
 
     # Package outline
     top = family.body_size_y / 2
     bottom = -top
     left = -(family.body_size_x / 2)
     right = -left
-    footprint.add_polygon(Polygon(
-        uuid=_uuid('default-polygon-outline'),
-        layer=Layer('top_package_outlines'),
-        width=Width(0),
-        fill=Fill(False),
-        grab_area=GrabArea(False),
-        vertices=[
-            Vertex(Position(left, top), Angle(0)),
-            Vertex(Position(right, top), Angle(0)),
-            Vertex(Position(right, bottom), Angle(0)),
-            Vertex(Position(left, bottom), Angle(0)),
-        ],
-    ))
+    footprint.add_polygon(
+        Polygon(
+            uuid=_uuid('default-polygon-outline'),
+            layer=Layer('top_package_outlines'),
+            width=Width(0),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(left, top), Angle(0)),
+                Vertex(Position(right, top), Angle(0)),
+                Vertex(Position(right, bottom), Angle(0)),
+                Vertex(Position(left, bottom), Angle(0)),
+            ],
+        )
+    )
 
     # Courtyard
     top = (family.body_size_y / 2) + courtyard_excess
     bottom = -top
     left = -(family.body_size_x / 2) - courtyard_excess
     right = -left
-    footprint.add_polygon(Polygon(
-        uuid=_uuid('default-polygon-courtyard'),
-        layer=Layer('top_courtyard'),
-        width=Width(0),
-        fill=Fill(False),
-        grab_area=GrabArea(False),
-        vertices=[
-            Vertex(Position(left, top), Angle(0)),
-            Vertex(Position(right, top), Angle(0)),
-            Vertex(Position(right, bottom), Angle(0)),
-            Vertex(Position(left, bottom), Angle(0)),
-        ],
-    ))
+    footprint.add_polygon(
+        Polygon(
+            uuid=_uuid('default-polygon-courtyard'),
+            layer=Layer('top_courtyard'),
+            width=Width(0),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(left, top), Angle(0)),
+                Vertex(Position(right, top), Angle(0)),
+                Vertex(Position(right, bottom), Angle(0)),
+                Vertex(Position(left, bottom), Angle(0)),
+            ],
+        )
+    )
 
     # Labels
     top = (family.body_size_y / 2) + line_width
     bottom = -top
-    footprint.add_text(StrokeText(
-        uuid=_uuid('default-text-name'),
-        layer=Layer('top_names'),
-        height=Height(1.0),
-        stroke_width=StrokeWidth(0.2),
-        letter_spacing=LetterSpacing.AUTO,
-        line_spacing=LineSpacing.AUTO,
-        align=Align('center bottom'),
-        position=Position(0.0, top + 0.4),
-        rotation=Rotation(0.0),
-        auto_rotate=AutoRotate(True),
-        mirror=Mirror(False),
-        value=Value('{{NAME}}'),
-    ))
-    footprint.add_text(StrokeText(
-        uuid=_uuid('default-text-value'),
-        layer=Layer('top_values'),
-        height=Height(1.0),
-        stroke_width=StrokeWidth(0.2),
-        letter_spacing=LetterSpacing.AUTO,
-        line_spacing=LineSpacing.AUTO,
-        align=Align('center top'),
-        position=Position(0.0, bottom - 0.4),
-        rotation=Rotation(0.0),
-        auto_rotate=AutoRotate(True),
-        mirror=Mirror(False),
-        value=Value('{{VALUE}}'),
-    ))
+    footprint.add_text(
+        StrokeText(
+            uuid=_uuid('default-text-name'),
+            layer=Layer('top_names'),
+            height=Height(1.0),
+            stroke_width=StrokeWidth(0.2),
+            letter_spacing=LetterSpacing.AUTO,
+            line_spacing=LineSpacing.AUTO,
+            align=Align('center bottom'),
+            position=Position(0.0, top + 0.4),
+            rotation=Rotation(0.0),
+            auto_rotate=AutoRotate(True),
+            mirror=Mirror(False),
+            value=Value('{{NAME}}'),
+        )
+    )
+    footprint.add_text(
+        StrokeText(
+            uuid=_uuid('default-text-value'),
+            layer=Layer('top_values'),
+            height=Height(1.0),
+            stroke_width=StrokeWidth(0.2),
+            letter_spacing=LetterSpacing.AUTO,
+            line_spacing=LineSpacing.AUTO,
+            align=Align('center top'),
+            position=Position(0.0, bottom - 0.4),
+            rotation=Rotation(0.0),
+            auto_rotate=AutoRotate(True),
+            mirror=Mirror(False),
+            value=Value('{{VALUE}}'),
+        )
+    )
 
     # Generate 3D model
     uuid_3d = _uuid('3d')
@@ -424,83 +564,130 @@ def generate_3d_model(
 
     print(f'Generating pkg 3D model "{full_name}": {uuid_3d}')
 
-    standoff = (family.lead_config.thickness) \
-        if (type(family.lead_config) is JLeadConfig) else 0.2
+    standoff = (family.lead_config.thickness) if (type(family.lead_config) is JLeadConfig) else 0.2
     bend_radius = 0.3
 
-    body = cq.Workplane('XY', origin=(0, 0, standoff)) \
-        .box(family.body_size_x, family.body_size_y, family.body_size_z - standoff,
-             centered=(True, True, False)) \
-        .edges().fillet(0.2)
+    body = (
+        cq.Workplane('XY', origin=(0, 0, standoff))
+        .box(
+            family.body_size_x,
+            family.body_size_y,
+            family.body_size_z - standoff,
+            centered=(True, True, False),
+        )
+        .edges()
+        .fillet(0.2)
+    )
     if isinstance(family.actuator_size, tuple):
-        actuator = cq.Workplane('XY', origin=(0, 0, 1.0)) \
-            .box(family.actuator_size[0], family.actuator_size[1],
-                 model.actuator_height - 1.0, centered=(True, True, False)) \
-            .edges().fillet(0.2)
+        actuator = (
+            cq.Workplane('XY', origin=(0, 0, 1.0))
+            .box(
+                family.actuator_size[0],
+                family.actuator_size[1],
+                model.actuator_height - 1.0,
+                centered=(True, True, False),
+            )
+            .edges()
+            .fillet(0.2)
+        )
     else:
-        actuator = cq.Workplane('XY', origin=(0, 0, 1.0)) \
-            .cylinder(model.actuator_height - 1.0, family.actuator_size / 2,
-                      centered=(True, True, False)) \
-            .edges().fillet(0.2)
+        actuator = (
+            cq.Workplane('XY', origin=(0, 0, 1.0))
+            .cylinder(
+                model.actuator_height - 1.0, family.actuator_size / 2, centered=(True, True, False)
+            )
+            .edges()
+            .fillet(0.2)
+        )
     if isinstance(family.lead_config, ThtLeadConfig):
-        lead_path = cq.Workplane("XZ") \
-            .lineTo(0.0, 1.0) \
-            .lineTo(-0.5, 2.0) \
-            .lineTo(0.0, 3.0) \
-            .lineTo(0.0, 4.0) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
-            .lineTo(family.lead_config.pitch_x - bend_radius, 4.0 + bend_radius) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1) \
-            .lineTo(family.lead_config.pitch_x, 3.0) \
-            .lineTo(family.lead_config.pitch_x + 0.5, 2.0) \
-            .lineTo(family.lead_config.pitch_x, 1.0) \
+        lead_path = (
+            cq.Workplane('XZ')
+            .lineTo(0.0, 1.0)
+            .lineTo(-0.5, 2.0)
+            .lineTo(0.0, 3.0)
+            .lineTo(0.0, 4.0)
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1)
+            .lineTo(family.lead_config.pitch_x - bend_radius, 4.0 + bend_radius)
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1)
+            .lineTo(family.lead_config.pitch_x, 3.0)
+            .lineTo(family.lead_config.pitch_x + 0.5, 2.0)
+            .lineTo(family.lead_config.pitch_x, 1.0)
             .lineTo(family.lead_config.pitch_x, 0.0)
-        lead = cq.Workplane("XY") \
-            .rect(family.lead_config.thickness, family.lead_config.width) \
+        )
+        lead = (
+            cq.Workplane('XY')
+            .rect(family.lead_config.thickness, family.lead_config.width)
             .sweep(lead_path)
+        )
         lead_xz = (-family.lead_config.pitch_x / 2, -family.lead_config.length)
     elif isinstance(family.lead_config, GullWingLeadConfig):
-        contact_length = ((family.lead_config.span - family.body_size_x) / 2) - bend_radius - family.lead_config.thickness
-        lead_path = cq.Workplane("XZ") \
-            .lineTo(contact_length, 0.0) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=-90, angle2=360, sense=1) \
-            .lineTo(contact_length + bend_radius, 0.2 + bend_radius) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
-            .lineTo(family.lead_config.span - contact_length - 2 * bend_radius, 0.2 + 2 * bend_radius) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1) \
-            .lineTo(family.lead_config.span - contact_length - bend_radius, bend_radius) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=-180, angle2=270, sense=1) \
+        contact_length = (
+            ((family.lead_config.span - family.body_size_x) / 2)
+            - bend_radius
+            - family.lead_config.thickness
+        )
+        lead_path = (
+            cq.Workplane('XZ')
+            .lineTo(contact_length, 0.0)
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=-90, angle2=360, sense=1)
+            .lineTo(contact_length + bend_radius, 0.2 + bend_radius)
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1)
+            .lineTo(
+                family.lead_config.span - contact_length - 2 * bend_radius, 0.2 + 2 * bend_radius
+            )
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1)
+            .lineTo(family.lead_config.span - contact_length - bend_radius, bend_radius)
+            .ellipseArc(
+                x_radius=bend_radius, y_radius=bend_radius, angle1=-180, angle2=270, sense=1
+            )
             .lineTo(family.lead_config.span, 0.0)
-        lead = cq.Workplane("ZY") \
-            .rect(family.lead_config.thickness, family.lead_config.width) \
+        )
+        lead = (
+            cq.Workplane('ZY')
+            .rect(family.lead_config.thickness, family.lead_config.width)
             .sweep(lead_path)
+        )
         lead_xz = (-family.lead_config.span / 2, family.lead_config.thickness / 2)
     elif isinstance(family.lead_config, JLeadConfig):
         width = family.body_size_x + family.lead_config.thickness
         height = 0.5
         contact_length = 0.4
-        lead_path = cq.Workplane("XZ") \
-            .lineTo(-contact_length, 0.0) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=180, angle2=270, sense=-1) \
-            .lineTo(-contact_length - bend_radius, height + bend_radius) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
-            .lineTo(width - contact_length - 2 * bend_radius, height + 2 * bend_radius) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1) \
-            .lineTo(width - contact_length - bend_radius, bend_radius) \
-            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=-90, angle2=0, sense=-1) \
+        lead_path = (
+            cq.Workplane('XZ')
+            .lineTo(-contact_length, 0.0)
+            .ellipseArc(
+                x_radius=bend_radius, y_radius=bend_radius, angle1=180, angle2=270, sense=-1
+            )
+            .lineTo(-contact_length - bend_radius, height + bend_radius)
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1)
+            .lineTo(width - contact_length - 2 * bend_radius, height + 2 * bend_radius)
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1)
+            .lineTo(width - contact_length - bend_radius, bend_radius)
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=-90, angle2=0, sense=-1)
             .lineTo(width - 2 * contact_length - 2 * bend_radius, 0.0)
-        lead = cq.Workplane("ZY") \
-            .rect(family.lead_config.thickness, family.lead_config.width) \
+        )
+        lead = (
+            cq.Workplane('ZY')
+            .rect(family.lead_config.thickness, family.lead_config.width)
             .sweep(lead_path)
+        )
         lead_xz = (-(width / 2) + contact_length + bend_radius, family.lead_config.thickness / 2)
 
     assembly = StepAssembly(full_name)
     assembly.add_body(body, 'body', StepColor.IC_BODY)
     assembly.add_body(actuator, 'actuator', cq.Color(family.actuator_color))
-    assembly.add_body(lead, 'lead-12', StepColor.LEAD_SMT,
-                      location=cq.Location((lead_xz[0], family.lead_config.pitch_y / 2, lead_xz[1])))
-    assembly.add_body(lead, 'lead-34', StepColor.LEAD_SMT,
-                      location=cq.Location((lead_xz[0], -family.lead_config.pitch_y / 2, lead_xz[1])))
+    assembly.add_body(
+        lead,
+        'lead-12',
+        StepColor.LEAD_SMT,
+        location=cq.Location((lead_xz[0], family.lead_config.pitch_y / 2, lead_xz[1])),
+    )
+    assembly.add_body(
+        lead,
+        'lead-34',
+        StepColor.LEAD_SMT,
+        location=cq.Location((lead_xz[0], -family.lead_config.pitch_y / 2, lead_xz[1])),
+    )
 
     # Save without fusing for massively better minification!
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
@@ -515,7 +702,7 @@ def generate_dev(
     family: Family,
     model: Model,
 ) -> None:
-    full_name = f"{family.dev_name_prefix} {model.name}"
+    full_name = f'{family.dev_name_prefix} {model.name}'
 
     def _uuid(identifier: str) -> str:
         return uuid('dev', model.uuid_key(family), identifier)
@@ -553,11 +740,13 @@ def generate_dev(
         device.add_part(part)
 
     if family.datasheet:
-        device.add_resource(Resource(
-            name='Datasheet {}'.format(family.datasheet_name),
-            mediatype='application/pdf',
-            url=family.datasheet,
-        ))
+        device.add_resource(
+            Resource(
+                name='Datasheet {}'.format(family.datasheet_name),
+                mediatype='application/pdf',
+                url=family.datasheet,
+            )
+        )
 
     device.serialize(path.join('out', library, 'dev'))
 
@@ -598,6 +787,7 @@ if __name__ == '__main__':
         datasheet_name='PTS645',
         keywords=[],
     )
+    # fmt: off
     models = [
         # 4.3mm
         Model(name='PTS645Sx432', actuator_height=4.3, parts=[
@@ -704,6 +894,7 @@ if __name__ == '__main__':
             Attribute('HEIGHT', '9.5mm', AttributeType.STRING, None),
         ]),
     ]
+    # fmt: on
     for model in models:
         generate_pkg(
             library='CK.lplib',
@@ -746,6 +937,7 @@ if __name__ == '__main__':
         datasheet_name='PTS645',
         keywords=[],
     )
+    # fmt: off
     models = [
         Model(name='PTS645SJx732', actuator_height=7.3, parts=[
             Part('PTS645SJK432LFS', Manufacturer('C&K'), [
@@ -773,6 +965,7 @@ if __name__ == '__main__':
             Attribute('HEIGHT', '7.3mm', AttributeType.STRING, None),
         ]),
     ]
+    # fmt: on
     for model in models:
         generate_pkg(
             library='CK.lplib',
@@ -815,6 +1008,7 @@ if __name__ == '__main__':
         datasheet_name='PTS645',
         keywords=[],
     )
+    # fmt: off
     models = [
         # 4.3mm
         Model(name='PTS645Sx43SMTR92', actuator_height=4.3, parts=[
@@ -973,6 +1167,7 @@ if __name__ == '__main__':
             Attribute('HEIGHT', '13mm', AttributeType.STRING, None),
         ]),
     ]
+    # fmt: on
     for model in models:
         generate_pkg(
             library='CK.lplib',
@@ -1015,6 +1210,7 @@ if __name__ == '__main__':
         datasheet_name='PTS645',
         keywords=[],
     )
+    # fmt: off
     models = [
         Model(name='PTS645SJx73SMTR92', actuator_height=7.3, parts=[
             Part('PTS645SJK43SMTR92LFS', Manufacturer('C&K'), [
@@ -1042,6 +1238,7 @@ if __name__ == '__main__':
             Attribute('HEIGHT', '7.3mm', AttributeType.STRING, None),
         ]),
     ]
+    # fmt: on
     for model in models:
         generate_pkg(
             library='CK.lplib',
@@ -1083,6 +1280,7 @@ if __name__ == '__main__':
         datasheet_name='PTS645',
         keywords=[],
     )
+    # fmt: off
     models = [
         # 4.3mm
         Model(name='PTS645Sx43JSMTR92', actuator_height=4.3, parts=[
@@ -1241,6 +1439,7 @@ if __name__ == '__main__':
             Attribute('HEIGHT', '13mm', AttributeType.STRING, None),
         ]),
     ]
+    # fmt: on
     for model in models:
         generate_pkg(
             library='CK.lplib',
@@ -1282,6 +1481,7 @@ if __name__ == '__main__':
         datasheet_name='PTS645',
         keywords=[],
     )
+    # fmt: off
     models = [
         Model(name='PTS645SJx73JSMTR92', actuator_height=7.3, parts=[
             Part('PTS645SJK43JSMTR92LFS', Manufacturer('C&K'), [
@@ -1309,6 +1509,7 @@ if __name__ == '__main__':
             Attribute('HEIGHT', '7.3mm', AttributeType.STRING, None),
         ]),
     ]
+    # fmt: on
     for model in models:
         generate_pkg(
             library='CK.lplib',

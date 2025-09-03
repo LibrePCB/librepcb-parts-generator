@@ -6,6 +6,7 @@ Generate mounting hole packages & devices
 - ISO14580: https://cdn.standards.iteh.ai/samples/56456/88025f720d57423b9e2c1ceb78304eec/ISO-14580-2011.pdf
 - DIN965: https://www.aramfix.com/content/files/d965cagll/datasheet%20din%20965.pdf
 """
+
 from os import path
 from uuid import uuid4
 
@@ -13,14 +14,49 @@ from typing import Optional
 
 from common import init_cache, now, save_cache
 from entities.common import (
-    Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea, Keywords,
-    Layer, Name, Position, Position3D, Rotation, Rotation3D, Version, Vertex, Width
+    Angle,
+    Author,
+    Category,
+    Circle,
+    Created,
+    Deprecated,
+    Description,
+    Diameter,
+    Fill,
+    GeneratedBy,
+    GrabArea,
+    Keywords,
+    Layer,
+    Name,
+    Position,
+    Position3D,
+    Rotation,
+    Rotation3D,
+    Version,
+    Vertex,
+    Width,
 )
 from entities.component import SignalUUID
 from entities.device import ComponentPad, ComponentUUID, Device, PackageUUID
 from entities.package import (
-    AssemblyType, ComponentSide, CopperClearance, DrillDiameter, Footprint, FootprintPad, Hole, Package, PackagePad,
-    PackagePadUuid, PadFunction, PadHole, Shape, ShapeRadius, Size, SolderPasteConfig, StopMaskConfig, Zone
+    AssemblyType,
+    ComponentSide,
+    CopperClearance,
+    DrillDiameter,
+    Footprint,
+    FootprintPad,
+    Hole,
+    Package,
+    PackagePad,
+    PackagePadUuid,
+    PadFunction,
+    PadHole,
+    Shape,
+    ShapeRadius,
+    Size,
+    SolderPasteConfig,
+    StopMaskConfig,
+    Zone,
 )
 
 generator = 'librepcb-parts-generator (generate_mounting_holes.py)'
@@ -53,7 +89,7 @@ def generate_pkg(
     hole_diameter: float,
     pad_diameter: float,
 ) -> None:
-    full_name = f"MOUNTING_HOLE_{name}"
+    full_name = f'MOUNTING_HOLE_{name}'
     full_desc = f"""Generic mounting hole for {name} screws, compatible with ISO7380, ISO14580 and DIN965.
 
 Hole diameter: {hole_diameter:.2f} mm
@@ -61,7 +97,7 @@ Pad diameter: {pad_diameter:.2f} mm
 
 Generated with {generator}
 """
-    keywords = f"mounting,hole,pad,drill,screw,{name},{hole_diameter}mm,{pad_diameter}mm"
+    keywords = f'mounting,hole,pad,drill,screw,{name},{hole_diameter}mm,{pad_diameter}mm'
 
     def _uuid(identifier: str) -> str:
         return uuid('pkg', name.lower(), identifier)
@@ -101,126 +137,143 @@ Generated with {generator}
         # Pad or hole
         if pad:
             uuid_pad = _uuid(uuid_ns + 'pad')
-            footprint.add_pad(FootprintPad(
-                uuid=uuid_pad,
-                side=ComponentSide.TOP,
-                shape=Shape.ROUNDED_RECT,
-                position=Position(0, 0),
-                rotation=Rotation(0),
-                size=Size(pad_diameter, pad_diameter),
-                radius=ShapeRadius(1),
-                stop_mask=StopMaskConfig(stopmask_excess),
-                solder_paste=SolderPasteConfig.OFF,
-                copper_clearance=CopperClearance(copper_clearance),
-                function=PadFunction.STANDARD_PAD,
-                package_pad=PackagePadUuid(uuid_pkg_pad),
-                holes=[PadHole(uuid_pad, DrillDiameter(hole_diameter),
-                               [Vertex(Position(0.0, 0.0), Angle(0.0))])],
-            ))
+            footprint.add_pad(
+                FootprintPad(
+                    uuid=uuid_pad,
+                    side=ComponentSide.TOP,
+                    shape=Shape.ROUNDED_RECT,
+                    position=Position(0, 0),
+                    rotation=Rotation(0),
+                    size=Size(pad_diameter, pad_diameter),
+                    radius=ShapeRadius(1),
+                    stop_mask=StopMaskConfig(stopmask_excess),
+                    solder_paste=SolderPasteConfig.OFF,
+                    copper_clearance=CopperClearance(copper_clearance),
+                    function=PadFunction.STANDARD_PAD,
+                    package_pad=PackagePadUuid(uuid_pkg_pad),
+                    holes=[
+                        PadHole(
+                            uuid_pad,
+                            DrillDiameter(hole_diameter),
+                            [Vertex(Position(0.0, 0.0), Angle(0.0))],
+                        )
+                    ],
+                )
+            )
             package.add_approval(
-                "(approved pad_with_copper_clearance\n" +
-                " (footprint {})\n".format(footprint.uuid) +
-                " (pad {})\n".format(uuid_pad) +
-                ")"
+                '(approved pad_with_copper_clearance\n'
+                + ' (footprint {})\n'.format(footprint.uuid)
+                + ' (pad {})\n'.format(uuid_pad)
+                + ')'
             )
         else:
-            footprint.add_hole(Hole(
-                uuid=_uuid(uuid_ns + 'hole'),
-                diameter=DrillDiameter(hole_diameter),
-                vertices=[Vertex(Position(0.0, 0.0), Angle(0.0))],
-                stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
-            ))
+            footprint.add_hole(
+                Hole(
+                    uuid=_uuid(uuid_ns + 'hole'),
+                    diameter=DrillDiameter(hole_diameter),
+                    vertices=[Vertex(Position(0.0, 0.0), Angle(0.0))],
+                    stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
+                )
+            )
             zone_y = (pad_diameter / 2) + copper_clearance
-            footprint.add_zone(Zone(
-                uuid=_uuid(uuid_ns + 'zone'),
-                top=True,
-                inner=False,
-                bottom=True,
-                no_copper=True,
-                no_planes=True,
-                no_exposure=cover,
-                no_devices=False,
-                vertices=[
-                    Vertex(Position(0.0, zone_y), Angle(180.0)),
-                    Vertex(Position(0.0, -zone_y), Angle(180.0)),
-                    Vertex(Position(0.0, zone_y), Angle(0.0)),
-                ],
-            ))
+            footprint.add_zone(
+                Zone(
+                    uuid=_uuid(uuid_ns + 'zone'),
+                    top=True,
+                    inner=False,
+                    bottom=True,
+                    no_copper=True,
+                    no_planes=True,
+                    no_exposure=cover,
+                    no_devices=False,
+                    vertices=[
+                        Vertex(Position(0.0, zone_y), Angle(180.0)),
+                        Vertex(Position(0.0, -zone_y), Angle(180.0)),
+                        Vertex(Position(0.0, zone_y), Angle(0.0)),
+                    ],
+                )
+            )
 
         for side in ['top', 'bot']:
             # Stop mask
             if not pad and not cover:
-                footprint.add_circle(Circle(
-                    uuid=_uuid(uuid_ns + 'circle-stopmask-' + side),
-                    layer=Layer(side + '_stop_mask'),
-                    width=Width(0),
-                    fill=Fill(True),
-                    grab_area=GrabArea(False),
-                    diameter=Diameter(pad_diameter + 2 * stopmask_excess),
-                    position=Position(0, 0),
-                ))
+                footprint.add_circle(
+                    Circle(
+                        uuid=_uuid(uuid_ns + 'circle-stopmask-' + side),
+                        layer=Layer(side + '_stop_mask'),
+                        width=Width(0),
+                        fill=Fill(True),
+                        grab_area=GrabArea(False),
+                        diameter=Diameter(pad_diameter + 2 * stopmask_excess),
+                        position=Position(0, 0),
+                    )
+                )
 
             # Documentation
-            footprint.add_circle(Circle(
-                uuid=_uuid(uuid_ns + 'circle-documentation-' + side),
-                layer=Layer(side + '_documentation'),
-                width=Width(line_width),
-                fill=Fill(False),
-                grab_area=GrabArea(True),
-                diameter=Diameter(pad_diameter + line_width + 2 * legend_clearance),
-                position=Position(0, 0),
-            ))
+            footprint.add_circle(
+                Circle(
+                    uuid=_uuid(uuid_ns + 'circle-documentation-' + side),
+                    layer=Layer(side + '_documentation'),
+                    width=Width(line_width),
+                    fill=Fill(False),
+                    grab_area=GrabArea(True),
+                    diameter=Diameter(pad_diameter + line_width + 2 * legend_clearance),
+                    position=Position(0, 0),
+                )
+            )
 
             # Legend
-            footprint.add_circle(Circle(
-                uuid=_uuid(uuid_ns + 'circle-legend-' + side),
-                layer=Layer(side + '_legend'),
-                width=Width(line_width),
-                fill=Fill(False),
-                grab_area=GrabArea(True),
-                diameter=Diameter(pad_diameter + line_width + 2 * legend_clearance),
-                position=Position(0, 0),
-            ))
+            footprint.add_circle(
+                Circle(
+                    uuid=_uuid(uuid_ns + 'circle-legend-' + side),
+                    layer=Layer(side + '_legend'),
+                    width=Width(line_width),
+                    fill=Fill(False),
+                    grab_area=GrabArea(True),
+                    diameter=Diameter(pad_diameter + line_width + 2 * legend_clearance),
+                    position=Position(0, 0),
+                )
+            )
 
             # Package outline
-            footprint.add_circle(Circle(
-                uuid=_uuid(uuid_ns + 'circle-outline-' + side),
-                layer=Layer(side + '_package_outlines'),
-                width=Width(0),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                diameter=Diameter(pad_diameter + 2 * legend_clearance),
-                position=Position(0, 0),
-            ))
+            footprint.add_circle(
+                Circle(
+                    uuid=_uuid(uuid_ns + 'circle-outline-' + side),
+                    layer=Layer(side + '_package_outlines'),
+                    width=Width(0),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    diameter=Diameter(pad_diameter + 2 * legend_clearance),
+                    position=Position(0, 0),
+                )
+            )
 
             # Courtyard
-            footprint.add_circle(Circle(
-                uuid=_uuid(uuid_ns + 'circle-courtyard-' + side),
-                layer=Layer(side + '_courtyard'),
-                width=Width(0),
-                fill=Fill(False),
-                grab_area=GrabArea(False),
-                diameter=Diameter(pad_diameter + 2 * courtyard_excess),
-                position=Position(0, 0),
-            ))
+            footprint.add_circle(
+                Circle(
+                    uuid=_uuid(uuid_ns + 'circle-courtyard-' + side),
+                    layer=Layer(side + '_courtyard'),
+                    width=Width(0),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    diameter=Diameter(pad_diameter + 2 * courtyard_excess),
+                    position=Position(0, 0),
+                )
+            )
 
         # Approvals
         package.add_approval(
-            "(approved missing_name_text\n" +
-            " (footprint {})\n".format(footprint.uuid) +
-            ")"
+            '(approved missing_name_text\n' + ' (footprint {})\n'.format(footprint.uuid) + ')'
         )
         package.add_approval(
-            "(approved missing_value_text\n" +
-            " (footprint {})\n".format(footprint.uuid) +
-            ")"
+            '(approved missing_value_text\n' + ' (footprint {})\n'.format(footprint.uuid) + ')'
         )
 
     _add_footprint('copper', pad=True, cover=False)
     _add_footprint('covered', pad=False, cover=True)
     _add_footprint('blank', pad=False, cover=False)
 
-    package.add_approval("(approved suspicious_assembly_type)")
+    package.add_approval('(approved suspicious_assembly_type)')
 
     package.serialize(path.join('out', library, 'pkg'))
 
@@ -234,7 +287,7 @@ def generate_dev(
     hole_diameter: float,
     pad_diameter: float,
 ) -> None:
-    full_name = f"Mounting Hole {name}"
+    full_name = f'Mounting Hole {name}'
     full_desc = f"""Generic mounting hole for {name} screws, compatible with ISO7380, ISO14580 and DIN965.
 
 Hole diameter: {hole_diameter:.2f} mm
@@ -242,7 +295,7 @@ Pad diameter: {pad_diameter:.2f} mm
 
 Generated with {generator}
 """
-    keywords = f"mounting,hole,pad,drill,screw,{name},{hole_diameter}mm,{pad_diameter}mm"
+    keywords = f'mounting,hole,pad,drill,screw,{name},{hole_diameter}mm,{pad_diameter}mm'
 
     def _uuid(identifier: str) -> str:
         return uuid('dev', name.lower(), identifier)
@@ -269,9 +322,12 @@ Generated with {generator}
         package_uuid=PackageUUID(uuid('pkg', name.lower(), 'pkg')),
     )
 
-    device.add_pad(ComponentPad(uuid('pkg', name.lower(), 'pad'),
-                   SignalUUID('c8721bab-6c90-43f6-8135-c32fce7aecc0')))
-    device.add_approval("(approved no_parts)")
+    device.add_pad(
+        ComponentPad(
+            uuid('pkg', name.lower(), 'pad'), SignalUUID('c8721bab-6c90-43f6-8135-c32fce7aecc0')
+        )
+    )
+    device.add_approval('(approved no_parts)')
 
     device.serialize(path.join('out', library, 'dev'))
 

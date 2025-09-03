@@ -15,9 +15,8 @@ version = "0.1.0"
 [project.optional-dependencies]
 test = [
     "pytest ~= 8.2.1",
-    "flake8 ~= 4.0.1",
     "mypy == 1.10.0",
-    "isort ~= 5.13.2",
+    "ruff ~= 0.12.2",
 ]
 
 [tool.setuptools.packages.find]
@@ -40,12 +39,31 @@ module = [
 ]
 disallow_untyped_defs = false
 
-[tool.isort]
-line_length = 120
-multi_line_output = 5
-balanced_wrapping = false
-known_typing = "typing"
-sections = "FUTURE,STDLIB,TYPING,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+[tool.ruff]
+target-version = "py38"
+line-length = 100
+
+[tool.ruff.lint.pycodestyle]
+# When the autoformatter fails to reduce the line length or it is disabled,
+# allow for a bit more
+max-line-length = 120
+
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "W",
+    "I",
+]
+
+[tool.ruff.lint.isort]
+force-wrap-aliases = false
+sections = { typing = ["typing"] }
+section-order = ["future", "standard-library", "typing", "third-party", "first-party", "local-folder"]
+
+[tool.ruff.format]
+quote-style = "single"
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules"
