@@ -440,9 +440,9 @@ THIRD_CONFIGS = [
         create_date='2020-11-01T17:32:01Z',
         no_exp=False,
     ),
-    
+
     # Texas Instruments
-    DfnConfig(2.0, 2.0, 0.5, 8, 0.75, 0.8, 0.30, 1.6, 0.9, 'wson,wson-8', False), # no nominal exp_pad
-    DfnConfig(3.0, 3.0, 0.5, 8, 0.75, 0.8, 0.40, 2, 1.6, 'wson,wson-8', False), # no nominal exp_pad
+    DfnConfig(2.0, 2.0, 0.5, 8, 0.75, 0.8, 0.30, 1.6, 0.9, 'wson,wson-8', False),  # no nominal exp_pad
+    DfnConfig(3.0, 3.0, 0.5, 8, 0.75, 0.8, 0.40, 2, 1.6, 'wson,wson-8', False),  # no nominal exp_pad
 ]
 # fmt: on
