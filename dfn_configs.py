@@ -442,7 +442,33 @@ THIRD_CONFIGS = [
     ),
 
     # Texas Instruments
-    DfnConfig(2.0, 2.0, 0.5, 8, 0.75, 0.8, 0.30, 1.6, 0.9, 'wson,wson-8', False),  # no nominal exp_pad
-    DfnConfig(3.0, 3.0, 0.5, 8, 0.75, 0.8, 0.40, 2, 1.6, 'wson,wson-8', False),  # no nominal exp_pad
+    DfnConfig(
+        length=2.0,
+        width=2.0,
+        pitch=0.5,
+        pin_count=8,
+        height_nominal=0.75,
+        height_max=0.8,
+        lead_length=0.30,
+        exposed_width=1.6,
+        exposed_length=0.9,
+        keywords='wson-8,wson8',
+        create_date='2025-10-03T10:32:01Z',
+        no_exp=False,
+    ),
+    DfnConfig(
+        length=3.0,
+        width=3.0,
+        pitch=0.5,
+        pin_count=8,
+        height_nominal=0.75,
+        height_max=0.8,
+        lead_length=0.40,
+        exposed_width=2.0,
+        exposed_length=1.6,
+        keywords='wson-8,wson8',
+        create_date='2025-10-03T10:32:01Z',
+        no_exp=False,
+    ),
 ]
 # fmt: on
