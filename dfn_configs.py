@@ -440,5 +440,35 @@ THIRD_CONFIGS = [
         create_date='2020-11-01T17:32:01Z',
         no_exp=False,
     ),
+
+    # Texas Instruments
+    DfnConfig(
+        length=2.0,
+        width=2.0,
+        pitch=0.5,
+        pin_count=8,
+        height_nominal=0.75,
+        height_max=0.8,
+        lead_length=0.30,
+        exposed_width=1.6,
+        exposed_length=0.9,
+        keywords='wson-8,wson8',
+        create_date='2025-10-03T10:32:01Z',
+        no_exp=False,
+    ),
+    DfnConfig(
+        length=3.0,
+        width=3.0,
+        pitch=0.5,
+        pin_count=8,
+        height_nominal=0.75,
+        height_max=0.8,
+        lead_length=0.40,
+        exposed_width=2.0,
+        exposed_length=1.6,
+        keywords='wson-8,wson8',
+        create_date='2025-10-03T10:32:01Z',
+        no_exp=False,
+    ),
 ]
 # fmt: on
