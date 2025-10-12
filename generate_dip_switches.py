@@ -1,5 +1,5 @@
 """
-Generate various DIP switch packages & devices
+Generate various DIP switch symbols, components, packages & devices
 """
 import sys
 from os import path
@@ -12,15 +12,17 @@ from entities.attribute import Attribute, AttributeType
 from entities.common import (
     Align, Angle, Author, Category, Circle, Created, Deprecated, Description, Diameter, Fill, GeneratedBy, GrabArea,
     Height, Keywords, Layer, Name, Polygon, Position, Position3D, Resource, Rotation, Rotation3D, Value, Version,
-    Vertex, Width
+    Vertex, Width, Text, Length
 )
-from entities.component import SignalUUID
+from entities.component import SignalUUID, TextDesignator, PinSignalMap, Suffix, SymbolUUID, Variant, Norm, Gate, Role, ForcedNet, Required, Negated, Clock, Signal, Component, SchematicOnly, DefaultValue, Prefix
 from entities.device import ComponentPad, ComponentUUID, Device, Manufacturer, PackageUUID, Part
 from entities.package import (
     AssemblyType, AutoRotate, ComponentSide, CopperClearance, DrillDiameter, Footprint, Footprint3DModel, FootprintPad,
     LetterSpacing, LineSpacing, Mirror, Package, Package3DModel, PackagePad, PackagePadUuid, PadFunction, PadHole,
     Shape, ShapeRadius, Size, SolderPasteConfig, StopMaskConfig, StrokeText, StrokeWidth
 )
+from entities.symbol import NameAlign, NameHeight, NamePosition, NameRotation, Symbol
+from entities.symbol import Pin as SymbolPin
 
 generator = 'librepcb-parts-generator (generate_dip_switches.py)'
 
@@ -95,9 +97,9 @@ class GullWingLeadConfig():
 class Family:
     def __init__(self, manufacturer: str, pkg_name_prefix: str,
                  dev_name_prefix: str, body_size_x: float,
-                 body_size_z: float,
-                 actuator_size: Union[float, Tuple[float, float]],
-                 actuator_height: float, actuator_color: str,
+                 body_size_z: float, body_standoff: float,
+                 window_size: Tuple[float, float],
+                 actuator_size: float, actuator_color: str,
                  lead_config: Union[ThtLeadConfig, GullWingLeadConfig],
                  datasheet: Optional[str], datasheet_name: Optional[str],
                  keywords: List[str]) -> None:
@@ -106,8 +108,9 @@ class Family:
         self.dev_name_prefix = dev_name_prefix
         self.body_size_x = body_size_x
         self.body_size_z = body_size_z
-        self.actuator_size = actuator_size  # tuple=rectangular, float=circular
-        self.actuator_height = actuator_height  # From PCB surface to act. top
+        self.body_standoff = body_standoff
+        self.window_size = window_size
+        self.actuator_size = actuator_size
         self.actuator_color = actuator_color
         self.lead_config = lead_config
         self.datasheet = datasheet
@@ -138,7 +141,7 @@ class Model:
             s += f"\nLead Span: {family.lead_config.span:.2f} mm"
         if not isinstance(family.lead_config, ThtLeadConfig):
             s += f"\nLead Y-Pitch: {family.lead_config.pitch_y:.2f} mm"
-        s += f"\nActuator Height: {family.actuator_height:.2f} mm"
+        #s += f"\nActuator Height: {family.actuator_height:.2f} mm"
         s += f"\n\nGenerated with {generator}"
         return s
 
@@ -210,7 +213,7 @@ def generate_pkg(
                 position=Position(x, y),
                 rotation=Rotation(0),
                 size=Size(family.lead_config.pad_diameter, family.lead_config.pad_diameter),
-                radius=ShapeRadius(1.0),
+                radius=ShapeRadius(0.0 if (i == 0) else 1.0),
                 stop_mask=StopMaskConfig(StopMaskConfig.AUTO),
                 solder_paste=SolderPasteConfig.OFF,
                 copper_clearance=CopperClearance(0),
@@ -275,74 +278,91 @@ def generate_pkg(
         ],
     ))
 
-    # Documentation actuator
-    #if isinstance(family.actuator_size, tuple):
-    #    dx = family.actuator_size[0] / 2
-    #    dy = family.actuator_size[1] / 2
-    #    footprint.add_polygon(Polygon(
-    #        uuid=_uuid('default-polygon-documentation-actuator'),
-    #        layer=Layer('top_documentation'),
-    #        width=Width(line_width),
-    #        fill=Fill(False),
-    #        grab_area=GrabArea(False),
-    #        vertices=[
-    #            Vertex(Position(-dx, dy), Angle(0)),
-    #            Vertex(Position(dx, dy), Angle(0)),
-    #            Vertex(Position(dx, -dy), Angle(0)),
-    #            Vertex(Position(-dx, -dy), Angle(0)),
-    #            Vertex(Position(-dx, dy), Angle(0)),
-    #        ],
-    #    ))
-    #else:
-    #    footprint.add_circle(Circle(
-    #        uuid=_uuid('default-circle-documentation-actuator'),
-    #        layer=Layer('top_documentation'),
-    #        width=Width(line_width),
-    #        fill=Fill(False),
-    #        grab_area=GrabArea(False),
-    #        diameter=Diameter(family.actuator_size - line_width),
-    #        position=Position(0, 0),
-    #    ))
+    # Documentation actuators
+    window_dx = family.window_size[0] / 2
+    window_dy = family.window_size[1] / 2
+    window_width = 0.1
+    actuator_padding = 0.15
+    actuator_dy = family.actuator_size / 2
+    actuator_x0 = (-window_dx / 2) - actuator_dy
+    actuator_x1 = actuator_x0 + family.actuator_size
+    text_x = -family.lead_config.pitch_x / 2
+    if isinstance(family.lead_config, ThtLeadConfig):
+        text_x += (family.lead_config.pad_diameter / 2)
+    else:
+        text_x += (family.lead_config.pad_size_x / 2)
+    text_x = (text_x + (-window_dx - (line_width / 2))) / 2
+    for circuit in range(model.circuits):
+        y = get_y(circuit, model.circuits, family.lead_config.pitch_y)
+        footprint.add_polygon(Polygon(
+            uuid=_uuid(f'default-polygon-documentation-window-{circuit}'),
+            layer=Layer('top_documentation'),
+            width=Width(window_width),
+            fill=Fill(False),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(-window_dx, y + window_dy), Angle(0)),
+                Vertex(Position(window_dx, y + window_dy), Angle(0)),
+                Vertex(Position(window_dx, y - window_dy), Angle(0)),
+                Vertex(Position(-window_dx, y -window_dy), Angle(0)),
+                Vertex(Position(-window_dx, y + window_dy), Angle(0)),
+            ],
+        ))
+        footprint.add_polygon(Polygon(
+            uuid=_uuid(f'default-polygon-documentation-actuator-{circuit}'),
+            layer=Layer('top_documentation'),
+            width=Width(0),
+            fill=Fill(True),
+            grab_area=GrabArea(False),
+            vertices=[
+                Vertex(Position(actuator_x0, y + actuator_dy), Angle(0)),
+                Vertex(Position(actuator_x1, y + actuator_dy), Angle(0)),
+                Vertex(Position(actuator_x1, y - actuator_dy), Angle(0)),
+                Vertex(Position(actuator_x0, y -actuator_dy), Angle(0)),
+                Vertex(Position(actuator_x0, y + actuator_dy), Angle(0)),
+            ],
+        ))
+        footprint.add_text(StrokeText(
+            uuid=_uuid(f'default-text-documentation-{circuit}'),
+            layer=Layer('top_documentation'),
+            height=Height(0.8),
+            stroke_width=StrokeWidth(0.1),
+            letter_spacing=LetterSpacing.AUTO,
+            line_spacing=LineSpacing.AUTO,
+            align=Align('center center'),
+            position=Position(text_x, y),
+            rotation=Rotation(-90.0),
+            auto_rotate=AutoRotate(False),
+            mirror=Mirror(False),
+            value=Value(f'{circuit + 1}'),
+        ))
 
     # Legend outline top & bottom
     dx = (family.body_size_x / 2) + (line_width / 2)
+    dx_pin1 = (family.lead_config.pitch_x / 2) - (line_width / 2)
     dy = (model.body_size_y / 2) + (line_width / 2)
+    dy_inner = get_y(0, model.circuits, family.lead_config.pitch_y)
     if isinstance(family.lead_config, ThtLeadConfig):
-        dx = min(dx, (family.lead_config.pitch_x / 2) - (family.lead_config.pad_diameter / 2) - (line_width / 2) - 0.15)
+        dx_pin1 += (family.lead_config.pad_diameter / 2)
+        dy_inner += (family.lead_config.pad_diameter / 2) + (line_width / 2) + 0.15
     else:
-        dx = min(dx, (family.lead_config.pitch_x / 2) - (family.lead_config.pad_size_x / 2) - (line_width / 2) - 0.15)
+        dx_pin1 += (family.lead_config.pad_size_x / 2)
+        dy_inner += (family.lead_config.pad_size_y / 2) + (line_width / 2) + 0.15
     for sign, name in [(1, 'top'), (-1, 'bottom')]:
+        pin1_vertices = [Vertex(Position(-dx_pin1, dy_inner * sign), Angle(0))]
         footprint.add_polygon(Polygon(
             uuid=_uuid('default-polygon-legend-{}'.format(name)),
             layer=Layer('top_legend'),
             width=Width(line_width),
             fill=Fill(False),
             grab_area=GrabArea(False),
-            vertices=[
+            vertices=(pin1_vertices if (sign > 0) else []) + [
+                Vertex(Position(-dx, dy_inner * sign), Angle(0)),
                 Vertex(Position(-dx, dy * sign), Angle(0)),
                 Vertex(Position(dx, dy * sign), Angle(0)),
+                Vertex(Position(dx, dy_inner * sign), Angle(0)),
             ],
         ))
-
-    # Legend outline left & right
-    #dx = (family.body_size_x / 2) + (line_width / 2)
-    #dy = (model.body_size_y / 2) + (line_width / 2)
-    #if isinstance(family.lead_config, ThtLeadConfig):
-    #    dy = min(dy, (family.lead_config.pitch_y / 2) - (family.lead_config.pad_diameter / 2) - (line_width / 2) - 0.15)
-    #else:
-    #    dy = min(dy, (family.lead_config.pitch_y / 2) - (family.lead_config.pad_size_y / 2) - (line_width / 2) - 0.15)
-    #for sign, name in [(-1, 'left'), (1, 'right')]:
-    #    footprint.add_polygon(Polygon(
-    #        uuid=_uuid('default-polygon-legend-{}'.format(name)),
-    #        layer=Layer('top_legend'),
-    #        width=Width(line_width),
-    #        fill=Fill(False),
-    #        grab_area=GrabArea(False),
-    #        vertices=[
-    #            Vertex(Position(dx * sign, dy), Angle(0)),
-    #            Vertex(Position(dx * sign, -dy), Angle(0)),
-    #        ],
-    #    ))
 
     # Package outline
     top = model.body_size_y / 2
@@ -439,35 +459,31 @@ def generate_3d_model(
 
     print(f'Generating pkg 3D model "{full_name}": {uuid_3d}')
 
-    standoff = 0.2
     bend_radius = 0.3
 
-    body = cq.Workplane('XY', origin=(0, 0, standoff)) \
-        .box(family.body_size_x, model.body_size_y, family.body_size_z - standoff,
+    body = cq.Workplane('XY', origin=(0, 0, family.body_standoff)) \
+        .box(family.body_size_x, model.body_size_y, family.body_size_z,
              centered=(True, True, False)) \
         .edges().fillet(0.2)
-    #if isinstance(family.actuator_size, tuple):
-    #    actuator = cq.Workplane('XY', origin=(0, 0, 1.0)) \
-    #        .box(family.actuator_size[0], family.actuator_size[1],
-    #             family.actuator_height - 1.0, centered=(True, True, False)) \
-    #        .edges().fillet(0.2)
-    #else:
-    #    actuator = cq.Workplane('XY', origin=(0, 0, 1.0)) \
-    #        .cylinder(family.actuator_height - 1.0, family.actuator_size / 2,
-    #                  centered=(True, True, False)) \
-    #        .edges().fillet(0.2)
+    for i in range(model.circuits):
+        y = get_y(i, model.circuits, family.lead_config.pitch_y)
+        body = body.workplane(origin=(0, y), offset=family.body_size_z / 2).box(
+            family.window_size[0], family.window_size[1], 2.0, centered=(True, True, True), combine='cut'
+        )
+    actuator_x = -family.window_size[0] / 4
+    actuator = cq.Workplane('XY', origin=(actuator_x, 0, family.body_standoff + family.body_size_z - 1.0)) \
+        .box(family.actuator_size, family.actuator_size, 1.0,
+             centered=(True, True, False))
+    inner = cq.Workplane('XY', origin=(0, 0, family.body_standoff + family.body_size_z - 1.0)) \
+        .box(family.window_size[0] + 0.5, model.body_size_y - 0.5, 0.2,
+             centered=(True, True, True))
     if isinstance(family.lead_config, ThtLeadConfig):
+        lead_height = family.lead_config.length + family.body_standoff + 0.5
         lead_path = cq.Workplane("XZ") \
-            .lineTo(0.0, 1.0) \
-            .lineTo(-0.5, 2.0) \
-            .lineTo(0.0, 3.0) \
-            .lineTo(0.0, 4.0) \
+            .lineTo(0.0, lead_height) \
             .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
-            .lineTo(family.lead_config.pitch_x - bend_radius, 4.0 + bend_radius) \
+            .lineTo(family.lead_config.pitch_x - bend_radius, lead_height + bend_radius) \
             .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1) \
-            .lineTo(family.lead_config.pitch_x, 3.0) \
-            .lineTo(family.lead_config.pitch_x + 0.5, 2.0) \
-            .lineTo(family.lead_config.pitch_x, 1.0) \
             .lineTo(family.lead_config.pitch_x, 0.0)
         lead = cq.Workplane("XY") \
             .rect(family.lead_config.thickness, family.lead_config.width) \
@@ -475,12 +491,13 @@ def generate_3d_model(
         lead_xz = (-family.lead_config.pitch_x / 2, -family.lead_config.length)
     elif isinstance(family.lead_config, GullWingLeadConfig):
         contact_length = ((family.lead_config.span - family.body_size_x) / 2) - bend_radius - family.lead_config.thickness
+        lead_height = family.body_standoff + 0.5
         lead_path = cq.Workplane("XZ") \
             .lineTo(contact_length, 0.0) \
             .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=-90, angle2=360, sense=1) \
-            .lineTo(contact_length + bend_radius, 0.2 + bend_radius) \
+            .lineTo(contact_length + bend_radius, 0.2 + bend_radius + lead_height) \
             .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1) \
-            .lineTo(family.lead_config.span - contact_length - 2 * bend_radius, 0.2 + 2 * bend_radius) \
+            .lineTo(family.lead_config.span - contact_length - 2 * bend_radius, 0.2 + 2 * bend_radius + lead_height) \
             .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1) \
             .lineTo(family.lead_config.span - contact_length - bend_radius, bend_radius) \
             .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=-180, angle2=270, sense=1) \
@@ -492,15 +509,224 @@ def generate_3d_model(
 
     assembly = StepAssembly(full_name)
     assembly.add_body(body, 'body', StepColor.IC_BODY)
-    #assembly.add_body(actuator, 'actuator', cq.Color(family.actuator_color))
+    assembly.add_body(inner, 'inner', cq.Color('gray56'))
     for i in range(model.circuits):
         assembly.add_body(lead, 'lead-{}'.format(i + 1), StepColor.LEAD_SMT,
             location=cq.Location((lead_xz[0], get_y(i, model.circuits, family.lead_config.pitch_y), lead_xz[1])))
+        assembly.add_body(actuator, 'actuator-{}'.format(i + 1), cq.Color(family.actuator_color),
+            location=cq.Location((0, get_y(i, model.circuits, family.lead_config.pitch_y), 0)))
 
     # Save without fusing for massively better minification!
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
     assembly.save(out_path, fused=False)
 
+
+def generate_sym(
+    library: str,
+    author: str,
+    name: str,
+    cmpcat: str,
+    keywords: str,
+    circuits: int,
+    version: str,
+    create_date: Optional[str] = None,
+) -> None:
+    full_name = name.format(circuits=circuits)
+
+    def _uuid(identifier: str) -> str:
+        return uuid('sym', str(circuits), identifier)
+
+    uuid_sym = _uuid('sym')
+
+    print('Generating {}: {}'.format(full_name, uuid_sym))
+
+    # Symbol
+    symbol = Symbol(
+        uuid=uuid_sym,
+        name=Name(full_name),
+        description=Description(
+            f'DIP switch with {circuits} circuits.\n\nGenerated with {generator}'
+        ),
+        keywords=Keywords(keywords),
+        author=Author(author),
+        version=Version(version),
+        created=Created(create_date or now()),
+        deprecated=Deprecated(False),
+        generated_by=GeneratedBy(''),
+        categories=[Category(cmpcat)],
+    )
+
+    # Pins
+    dx = 5.08
+    pin1_y = ((circuits - 1) // 2) * 2.54
+    pin_length = 2.0
+    for circuit in range(1, circuits + 1):
+        for side in [-1, 1]:
+            x = dx * side
+            y = pin1_y - (circuit - 1) * 2.54
+            letter = 'a' if (side < 0) else 'b'
+            suffix = '' if (side < 0) else '.2'
+            symbol.add_pin(SymbolPin(
+                _uuid(f'pin-{circuit}{letter}'),
+                Name(f'{circuit}{suffix}'),
+                Position(x, y),
+                Rotation(0 if (side < 0) else 180),
+                Length(pin_length),
+                NamePosition(pin_length + 0.5, 0 if (side < 0) else -0.4),
+                NameRotation(0.0),
+                NameHeight(2.5),
+                NameAlign('left bottom' if (side < 0) else 'left top'),
+            ))
+
+    # Outline
+    dx -= pin_length
+    y_top = pin1_y + 2.54
+    y_bot = pin1_y - circuits * 2.54
+    symbol.add_polygon(Polygon(
+        _uuid('polygon-outline'),
+        Layer('sym_outlines'),
+        Width(0.2),
+        Fill(False),
+        GrabArea(True),
+        [
+            Vertex(Position(-dx, y_top), Angle(0.0)),
+            Vertex(Position(dx, y_top), Angle(0.0)),
+            Vertex(Position(dx, y_bot), Angle(0.0)),
+            Vertex(Position(-dx, y_bot), Angle(0.0)),
+            Vertex(Position(-dx, y_top), Angle(0.0)),
+        ],
+    ))
+
+    # Switches
+    switch_dx = 1.5
+    switch_dy = 0.8
+    for circuit in range(1, circuits + 1):
+        y = pin1_y - (circuit - 1) * 2.54
+        symbol.add_polygon(Polygon(
+            _uuid(f'polygon-switch-{circuit}-left'),
+            Layer('sym_outlines'),
+            Width(0.15875),
+            Fill(False),
+            GrabArea(False),
+            [
+                Vertex(Position(-dx, y), Angle(0.0)),
+                Vertex(Position(-switch_dx, y), Angle(0.0)),
+                Vertex(Position(switch_dx + 0.15, y + switch_dy), Angle(0.0)),
+            ],
+        ))
+        symbol.add_polygon(Polygon(
+            _uuid(f'polygon-switch-{circuit}-right'),
+            Layer('sym_outlines'),
+            Width(0.15875),
+            Fill(False),
+            GrabArea(False),
+            [
+                Vertex(Position(switch_dx, y + 0.2), Angle(0.0)),
+                Vertex(Position(switch_dx, y), Angle(0.0)),
+                Vertex(Position(dx, y), Angle(0.0)),
+            ],
+        ))
+
+    # Name
+    symbol.add_text(Text(
+        _uuid('text-name'),
+        Layer('sym_names'),
+        Value('{{NAME}}'),
+        Align('left bottom'),
+        Height(2.5),
+        Position(-dx, y_top),
+        Rotation(0.0),
+    ))
+
+    # Value
+    symbol.add_text(Text(
+        _uuid('text-value'),
+        Layer('sym_values'),
+        Value('{{VALUE}}'),
+        Align('left top'),
+        Height(2.5),
+        Position(-dx, y_bot),
+        Rotation(0.0),
+    ))
+
+    symbol.serialize(path.join('out', library, 'sym'))
+
+
+def generate_cmp(
+    library: str,
+    author: str,
+    name: str,
+    cmpcat: str,
+    keywords: str,
+    circuits: int,
+    version: str,
+    create_date: Optional[str] = None,
+) -> None:
+    full_name = name.format(circuits=circuits)
+
+    def _uuid(identifier: str) -> str:
+        return uuid('cmp', str(circuits), identifier)
+
+    uuid_cmp = _uuid('cmp')
+
+    print('Generating {}: {}'.format(full_name, uuid_cmp))
+
+    # Component
+    component = Component(
+        uuid=uuid_cmp,
+        name=Name(full_name),
+        description=Description(
+            f'DIP switch with {circuits} circuits.\n\nGenerated with {generator}'
+        ),
+        keywords=Keywords(keywords),
+        author=Author(author),
+        version=Version(version),
+        created=Created(create_date or now()),
+        deprecated=Deprecated(False),
+        generated_by=GeneratedBy(''),
+        categories=[Category(cmpcat)],
+        schematic_only=SchematicOnly(False),
+        default_value=DefaultValue('{{MPN or DEVICE}}'),
+        prefix=Prefix('S'),
+    )
+
+    # Signals
+    for circuit in range(1, circuits + 1):
+        for letter in ['a', 'b']:
+            component.add_signal(Signal(
+                _uuid(f'signal-{circuit}{letter}'),
+                Name(f'{circuit}{letter.upper()}'),
+                Role.PASSIVE,
+                Required(False),
+                Negated(False),
+                Clock(False),
+                ForcedNet(''),
+            ))
+
+    # Variant & Gates
+    gate = Gate(
+        _uuid(f'default-gate'),
+        SymbolUUID(uuid_cache[f'sym-{circuits}-sym']),
+        Position(0, 0),
+        Rotation(0),
+        Required(True),
+        Suffix(''),
+    )
+    for circuit in range(1, circuits + 1):
+        for letter in ['a', 'b']:
+            pin_uuid = uuid_cache[f'sym-{circuits}-pin-{circuit}{letter}']
+            sig_uuid = uuid_cache[f'cmp-{circuits}-signal-{circuit}{letter}']
+            gate.add_pin_signal_map(PinSignalMap(pin_uuid, SignalUUID(sig_uuid),
+            TextDesignator.SYMBOL_PIN_NAME if (letter == 'a') else TextDesignator.NONE))
+    component.add_variant(Variant(
+        _uuid(f'default-variant'),
+        Norm.EMPTY,
+        Name('default'),
+        Description(''),
+        gate,
+    ))
+
+    component.serialize(path.join('out', library, 'cmp'))
 
 def generate_dev(
     library: str,
@@ -570,6 +796,30 @@ if __name__ == '__main__':
         warning = 'Note: Not generating 3D models unless the "--3d" argument is passed in!'
         print(f'\033[1;33m{warning}\033[0m')
 
+    # Symbols
+    for i in range(1, 10):
+        generate_sym(
+            library='LibrePCB_Base.lplib',
+            author='Urban B.',
+            name='DIP Switch {circuits}x',
+            cmpcat='e29f0cb3-ef6d-4203-b854-d75150cbae0b',
+            keywords='slide',
+            circuits=i,
+            version='0.1',
+            create_date='2025-10-11T14:33:06Z',
+        )
+        generate_cmp(
+            library='LibrePCB_Base.lplib',
+            author='Urban B.',
+            name='DIP Switch {circuits}x',
+            cmpcat='e29f0cb3-ef6d-4203-b854-d75150cbae0b',
+            keywords='slide',
+            circuits=i,
+            version='0.1',
+            create_date='2025-10-11T14:33:06Z',
+        )
+
+
     # C&K SDAxxH0B
     family = Family(
         manufacturer='C&K',
@@ -577,17 +827,18 @@ if __name__ == '__main__':
         dev_name_prefix='C&K',
         body_size_x=7.49,
         body_size_z=3.5,
-        actuator_size=3.5,  # round
-        actuator_height=4.65,
-        actuator_color='azure4',
+        body_standoff=4.65 - 3.5,
+        window_size=(2.8, 1.4),  # guessed
+        actuator_size=1.0,  # guessed
+        actuator_color='gray97',
         lead_config=ThtLeadConfig(
-            pitch_x=7.6,
+            pitch_x=7.62,
             pitch_y=2.54,
             drill=0.8,
             pad_diameter=1.5,
             thickness=0.25,
-            width=1.6,
-            length=3.0,
+            width=0.61,
+            length=2.7,
         ),
         datasheet='https://www.ckswitches.com/media/1327/sda.pdf',
         datasheet_name='SDA Series',
@@ -633,10 +884,11 @@ if __name__ == '__main__':
         pkg_name_prefix='CK',
         dev_name_prefix='C&K',
         body_size_x=7.49,
-        body_size_z=4.45,
-        actuator_size=3.5,  # round
-        actuator_height=4.45,
-        actuator_color='azure4',
+        body_size_z=4.25,
+        body_standoff=0.2,
+        window_size=(2.8, 1.4),  # guessed
+        actuator_size=1.0,  # guessed
+        actuator_color='gray97',
         lead_config=GullWingLeadConfig(
             pitch_x=8.25,
             pitch_y=2.54,

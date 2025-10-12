@@ -103,6 +103,7 @@ class SignalUUID(UUIDValue):
 
 
 class TextDesignator(EnumValue):
+    NONE = 'none'
     SYMBOL_PIN_NAME = 'pin'
     SIGNAL_NAME = 'signal'
 
