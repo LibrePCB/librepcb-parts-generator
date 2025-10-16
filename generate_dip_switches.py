@@ -70,14 +70,16 @@ def get_y(pin_index: int, circuits: int, pitch: float):
 
 class ThtLeadConfig():
     def __init__(self, pitch_x: float, pitch_y: float, drill: float,
-                 pad_diameter: float, thickness: float, width: float,
+                 pad_diameter: float, thickness: float, width_top: float,
+                 width_bottom: float,
                  length: float):
         self.pitch_x = pitch_x
         self.pitch_y = pitch_y
         self.drill = drill
         self.pad_diameter = pad_diameter
         self.thickness = thickness
-        self.width = width
+        self.width_top = width_top
+        self.width_bottom = width_bottom
         self.length = length  # From PCB surface to end of lead (Z)
 
 
@@ -486,12 +488,24 @@ def generate_3d_model(
             .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1) \
             .lineTo(family.lead_config.pitch_x, 0.0)
         lead = cq.Workplane("XY") \
-            .rect(family.lead_config.thickness, family.lead_config.width) \
+            .rect(family.lead_config.thickness, family.lead_config.width_top) \
             .sweep(lead_path)
+        lead_cutout_width = (family.lead_config.width_top - family.lead_config.width_bottom)  / 2
+        lead = lead.faces(">X").workplane() \
+            .lineTo(-family.lead_config.width_bottom / 2, 0) \
+            .lineTo(-family.lead_config.width_bottom / 2, family.lead_config.length) \
+            .lineTo(-family.lead_config.width_top * 0.51, family.lead_config.length + lead_cutout_width) \
+            .lineTo(-family.lead_config.width_top, -1) \
+            .lineTo(family.lead_config.width_top, -1) \
+            .lineTo(family.lead_config.width_top  * 0.51, family.lead_config.length + lead_cutout_width) \
+            .lineTo(family.lead_config.width_bottom / 2, family.lead_config.length) \
+            .lineTo(family.lead_config.width_bottom / 2, 0) \
+            .close() \
+            .cutThruAll()
         lead_xz = (-family.lead_config.pitch_x / 2, -family.lead_config.length)
     elif isinstance(family.lead_config, GullWingLeadConfig):
         contact_length = ((family.lead_config.span - family.body_size_x) / 2) - bend_radius - family.lead_config.thickness
-        lead_height = family.body_standoff + 0.5
+        lead_height = family.body_standoff + 0.3
         lead_path = cq.Workplane("XZ") \
             .lineTo(contact_length, 0.0) \
             .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=-90, angle2=360, sense=1) \
@@ -837,7 +851,8 @@ if __name__ == '__main__':
             drill=0.8,
             pad_diameter=1.5,
             thickness=0.25,
-            width=0.61,
+            width_top=1.6,
+            width_bottom=0.61,
             length=2.7,
         ),
         datasheet='https://www.ckswitches.com/media/1327/sda.pdf',
@@ -884,8 +899,8 @@ if __name__ == '__main__':
         pkg_name_prefix='CK',
         dev_name_prefix='C&K',
         body_size_x=7.49,
-        body_size_z=4.25,
-        body_standoff=0.2,
+        body_size_z=4.45 - 0.8,
+        body_standoff=0.8,
         window_size=(2.8, 1.4),  # guessed
         actuator_size=1.0,  # guessed
         actuator_color='gray97',
