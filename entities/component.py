@@ -1,4 +1,4 @@
-from typing import Iterable, List
+from typing import Iterable, List, Optional
 
 from common import serialize_common
 
@@ -103,6 +103,7 @@ class SignalUUID(UUIDValue):
 
 
 class TextDesignator(EnumValue):
+    NONE = 'none'
     SYMBOL_PIN_NAME = 'pin'
     SIGNAL_NAME = 'signal'
 
@@ -170,12 +171,19 @@ class Norm(EnumValue):
 
 
 class Variant:
-    def __init__(self, uuid: str, norm: Norm, name: Name, description: Description, gate: Gate):
+    def __init__(
+        self,
+        uuid: str,
+        norm: Norm,
+        name: Name,
+        description: Description,
+        gate: Optional[Gate] = None,
+    ):
         self.uuid = uuid
         self.norm = norm
         self.name = name
         self.description = description
-        self.gates = [gate]
+        self.gates = [gate] if gate else []
 
     def add_gate(self, gate_map: Gate) -> None:
         self.gates.append(gate_map)
@@ -186,7 +194,7 @@ class Variant:
             + ' {}\n'.format(self.name)
             + ' {}\n'.format(self.description)
         )
-        ret += indent_entities(sorted(self.gates, key=lambda x: str(x.uuid)))
+        ret += indent_entities(self.gates)
         ret += ')'
         return ret
 
