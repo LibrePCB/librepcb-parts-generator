@@ -402,7 +402,7 @@ def generate_cmp(
 
 if __name__ == '__main__':
     # Symbols & Components
-    for i in [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14]:
+    for i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14]:
         generate_sym(
             library='LibrePCB_Base.lplib',
             author='Urban B.',
