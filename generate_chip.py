@@ -371,7 +371,7 @@ def generate_pkg(
                 pad_dx = pad_gap / 2 + pad_length / 2  # x offset (delta-x)
             elif gap is not None:
                 pad_gap = gap
-                pad_width = config.body.width + get_by_density(
+                pad_width = config.body.width + 2 * get_by_density(
                     config.body.length, density_level, 'side'
                 )
                 pad_toe = get_by_density(config.body.length, density_level, 'toe')
@@ -938,7 +938,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,chip,generic',
-        version='0.4',
+        version='0.5',
         create_date='2018-12-19T00:08:03Z',
     )
     # J-Lead resistors (RESJ)
@@ -956,7 +956,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='a20f0330-06d3-4bc2-a1fa-f8577deb6770',
         keywords='r,resistor,j-lead,generic',
-        version='0.4',
+        version='0.5',
         create_date='2019-01-04T23:06:17Z',
     )
     # Chip capacitors (CAPC)
@@ -997,7 +997,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='414f873f-4099-47fd-8526-bdd8419de581',
         keywords='c,capacitor,chip,generic',
-        version='0.4',
+        version='0.5',
         create_date='2015-06-21T12:37:34Z',
     )
     # Molded polarized capacitors (CAPPM)
@@ -1160,7 +1160,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='812c8e64-3a47-49d8-987f-2cfba377c8ae',
         keywords='l,inductor,ferrite,bead,chip,generic',
-        version='0.1',
+        version='0.2',
         create_date='2023-11-05T09:15:41Z',
     )
     # Generic devices
