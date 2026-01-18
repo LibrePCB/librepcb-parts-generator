@@ -23,6 +23,7 @@ from .common import (
     Position3D,
     Rotation,
     Rotation3D,
+    StringValue,
     UUIDValue,
     Value,
     Version,
@@ -144,6 +145,7 @@ class StrokeText:
         auto_rotate: AutoRotate,
         mirror: Mirror,
         value: Value,
+        lock: Optional[bool] = None,
     ):
         self.uuid = uuid
         self.layer = layer
@@ -157,6 +159,9 @@ class StrokeText:
         self.auto_rotate = auto_rotate
         self.mirror = mirror
         self.value = value
+        if lock is None:
+            lock = layer.layer not in ['top_names', 'top_values', 'bot_names', 'bot_values']
+        self.lock = BoolValue('lock', lock)
 
     def __str__(self) -> str:
         ret = (
@@ -164,7 +169,7 @@ class StrokeText:
             + ' {} {} {} {}\n'.format(
                 self.height, self.stroke_width, self.letter_spacing, self.line_spacing
             )
-            + ' {} {} {}\n'.format(self.align, self.position, self.rotation)
+            + ' {} {} {} {}\n'.format(self.align, self.position, self.rotation, self.lock)
             + ' {} {} {}\n)'.format(self.auto_rotate, self.mirror, self.value)
         )
         return ret
@@ -383,6 +388,7 @@ class Footprint:
         self.uuid = uuid
         self.name = name
         self.description = description
+        self.tags: List[StringValue] = []
         self.position_3d = position_3d
         self.rotation_3d = rotation_3d
         self.pads: List[FootprintPad] = []
@@ -392,6 +398,9 @@ class Footprint:
         self.texts: List[StrokeText] = []
         self.holes: List[Hole] = []
         self.zones: List[Zone] = []
+
+    def add_tag(self, tag: str) -> None:
+        self.tags.append(StringValue('tag', tag))
 
     def add_pad(self, pad: FootprintPad) -> None:
         self.pads.append(pad)
@@ -419,8 +428,9 @@ class Footprint:
             '(footprint {}\n'.format(self.uuid)
             + ' {}\n'.format(self.name)
             + ' {}\n'.format(self.description)
-            + ' {} {}\n'.format(self.position_3d, self.rotation_3d)
         )
+        ret += indent_entities(self.tags)
+        ret += ' {} {}\n'.format(self.position_3d, self.rotation_3d)
         ret += indent_entities(sorted(self.models_3d))
         ret += indent_entities(self.pads)
         ret += indent_entities(self.polygons)
@@ -493,6 +503,8 @@ class Package:
             + ''.join([' {}\n'.format(cat) for cat in self.categories])
             + ''.join([' {}\n'.format(alt) for alt in self.alternative_names])
             + ' {}\n'.format(self.assembly_type)
+            + ' (grid_interval 2.54)\n'  # To be implemented
+            + ' (min_copper_clearance 0.2)\n'  # To be implemented
         )
         ret += indent_entities(self.pads)
         ret += indent_entities(self.models_3d)

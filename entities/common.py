@@ -339,6 +339,7 @@ class Text:
         height: Height,
         position: Position,
         rotation: Rotation,
+        lock: Optional[bool] = None,
     ):
         self.uuid = uuid
         self.layer = layer
@@ -347,11 +348,15 @@ class Text:
         self.height = height
         self.position = position
         self.rotation = rotation
+        if lock is None:
+            lock = layer.layer not in ['sym_names', 'sym_values']
+        self.lock = BoolValue('lock', lock)
 
     def __str__(self) -> str:
         return (
-            '(text {} {} {}\n'.format(self.uuid, self.layer, self.value)
-            + ' {} {} {} {}\n'.format(self.align, self.height, self.position, self.rotation)
+            '(text {} {} {}\n'.format(self.uuid, self.layer, self.height)
+            + ' {} {} {} {}\n'.format(self.align, self.position, self.rotation, self.lock)
+            + ' {}\n'.format(self.value)
             + ')'
         )
 

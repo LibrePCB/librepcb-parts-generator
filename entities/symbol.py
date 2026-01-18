@@ -140,6 +140,7 @@ class Symbol:
             + ' {}\n'.format(self.deprecated)
             + ' {}\n'.format(self.generated_by)
             + ''.join([' {}\n'.format(cat) for cat in self.categories])
+            + ' (grid_interval 2.54)\n'  # To be implemented
         )
         ret += indent_entities(self.pins)
         ret += indent_entities(self.polygons)

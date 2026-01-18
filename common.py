@@ -147,7 +147,7 @@ def serialize_common(
     if not (path.exists(dir_path) and path.isdir(dir_path)):
         makedirs(dir_path)
     with open(path.join(dir_path, f'.librepcb-{short_type}'), 'w', newline='\n') as f:
-        f.write('1\n')
+        f.write('2\n')
     with open(path.join(dir_path, f'{long_type}.lp'), 'w', newline='\n') as f:
         f.write(str(serializable))
         f.write('\n')

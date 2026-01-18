@@ -351,7 +351,9 @@ def generate_pkg(
         for p in range(1, pin_count + 1):
             package.add_pad(PackagePad(uuid_pads[p - 1], Name(str(p))))
 
-        def add_footprint_variant(key: str, name: str, pad_size: Tuple[float, float]) -> None:
+        def add_footprint_variant(
+            key: str, name: str, tag: str, pad_size: Tuple[float, float]
+        ) -> None:
             uuid_footprint = _uuid('footprint-{}'.format(key))
             uuid_silkscreen_top = _uuid('polygon-silkscreen-{}'.format(key))
             uuid_silkscreen_bot = _uuid('polygon-silkscreen-bot-{}'.format(key))
@@ -369,6 +371,8 @@ def generate_pkg(
                 Position3D.zero(),
                 Rotation3D.zero(),
             )
+            if len(tag):
+                footprint.add_tag(tag)
             package.add_footprint(footprint)
 
             # Pads
@@ -591,8 +595,8 @@ def generate_pkg(
                 + ')'
             )
 
-        add_footprint_variant('handsoldering', 'hand soldering', (2.54, 1.27))
-        add_footprint_variant('compact', 'compact', (1.6, 1.6))
+        add_footprint_variant('handsoldering', 'hand soldering', 'hand-soldering', (2.54, 1.27))
+        add_footprint_variant('compact', 'compact', '', (1.6, 1.6))
 
         package.serialize(path.join('out', library, category))
         print('{}: Wrote package {}'.format(ipc_name, uuid_pkg))
