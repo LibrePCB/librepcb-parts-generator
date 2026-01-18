@@ -6,7 +6,7 @@ This is a collection of Python 3 based scripts to generate parts for the
 
 ## Requirements
 
-- Python 3.8+
+- Python 3.10+
 - Dependencies in `pyproject.toml`
 
 
