@@ -464,6 +464,7 @@ def generate_pkg(
                 position_3d=Position3D.zero(),
                 rotation_3d=Rotation3D.zero(),
             )
+            footprint.add_tag('ipc-density-level-{}'.format(density_level.lower()))
             package.add_footprint(footprint)
 
             # Pads

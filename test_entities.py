@@ -176,8 +176,9 @@ def test_text() -> None:
     )
     assert (
         text
-        == '(text b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e (layer sym_names) (value "{{NAME}}")\n'
-        + ' (align center bottom) (height 2.54) (position 0.0 22.86) (rotation 0.0)\n'
+        == '(text b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e (layer sym_names) (height 2.54)\n'
+        + ' (align center bottom) (position 0.0 22.86) (rotation 0.0) (lock false)\n'
+        + ' (value "{{NAME}}")\n'
         + ')'
     )
 
@@ -256,6 +257,7 @@ def test_symbol() -> None:
  (deprecated false)
  (generated_by "black magic")
  (category d0618c29-0436-42da-a388-fdadf7b23892)
+ (grid_interval 2.54)
  (pin 6da06b2b-7806-4e68-bd0c-e9f18eb2f9d8 (name "1")
   (position 5.08 20.32) (rotation 180.0) (length 3.81)
   (name_position 1.0 2.0) (name_rotation 270.0) (name_height 2.5)
@@ -270,8 +272,9 @@ def test_symbol() -> None:
  (circle b5599e68-ff6a-464b-9a40-c6ba8ef8daf5 (layer sym_outlines)
   (width 0.254) (fill false) (grab_area false) (diameter 1.27) (position 5.715 0.0)
  )
- (text b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e (layer sym_names) (value "{{NAME}}")
-  (align center bottom) (height 2.54) (position 0.0 22.86) (rotation 0.0)
+ (text b9c4aa19-0a46-400c-9c96-e8c3dfb8f83e (layer sym_names) (height 2.54)
+  (align center bottom) (position 0.0 22.86) (rotation 0.0) (lock false)
+  (value "{{NAME}}")
  )
  (approval bar)
  (approval foo)
@@ -518,7 +521,7 @@ def test_stroke_text() -> None:
         str(stroke_text)
         == """(stroke_text f16d1604-8a82-4688-bc58-be1c1375873f (layer top_names)
  (height 1.0) (stroke_width 0.2) (letter_spacing auto) (line_spacing auto)
- (align center bottom) (position 0.0 25.63) (rotation 0.0)
+ (align center bottom) (position 0.0 25.63) (rotation 0.0) (lock false)
  (auto_rotate true) (mirror false) (value "{{NAME}}")
 )"""
     )
@@ -645,7 +648,7 @@ def test_footprint() -> None:
  )
  (stroke_text f16d1604-8a82-4688-bc58-be1c1375873f (layer top_names)
   (height 1.0) (stroke_width 0.2) (letter_spacing auto) (line_spacing auto)
-  (align center bottom) (position 0.0 25.63) (rotation 0.0)
+  (align center bottom) (position 0.0 25.63) (rotation 0.0) (lock false)
   (auto_rotate true) (mirror false) (value "{{NAME}}")
  )
 )"""
@@ -694,6 +697,8 @@ Generated with librepcb-parts-generator (generate_connectors.py)")
  (generated_by "black magic")
  (category 56a5773f-eeb4-4b39-8cb9-274f3da26f4f)
  (assembly_type tht)
+ (grid_interval 2.54)
+ (min_copper_clearance 0.2)
  (pad 5c4d39d3-35cc-4836-a082-693143ee9135 (name "1"))
  (pad 6100dd55-d3b3-4139-9085-d5a75e783c37 (name "2"))
  (3d_model ea459880-68df-4929-b796-b5c8686a1862 (name "3dmodel"))
@@ -728,7 +733,7 @@ Generated with librepcb-parts-generator (generate_connectors.py)")
   )
   (stroke_text f16d1604-8a82-4688-bc58-be1c1375873f (layer top_names)
    (height 1.0) (stroke_width 0.2) (letter_spacing auto) (line_spacing auto)
-   (align center bottom) (position 0.0 25.63) (rotation 0.0)
+   (align center bottom) (position 0.0 25.63) (rotation 0.0) (lock false)
    (auto_rotate true) (mirror false) (value "{{NAME}}")
   )
  )
@@ -744,7 +749,9 @@ def test_component_pad() -> None:
     )
     assert (
         str(component_pad)
-        == '(pad 67a7b034-b30b-4644-b8d3-d7a99606efdc (signal 9bccea5e-e23f-4b88-9de1-4be00dc0c12a))'
+        == """(pad 67a7b034-b30b-4644-b8d3-d7a99606efdc (optional false)
+ (signal 9bccea5e-e23f-4b88-9de1-4be00dc0c12a)
+)"""
     )
 
 
@@ -796,8 +803,12 @@ def test_device() -> None:
  (category ade6d8ff-3c4f-4dac-a939-cc540c87c280)
  (component bc911fcc-8b5c-4728-b596-d644797c55da)
  (package b4e92c64-18c4-44a6-aa39-d1be3e8c29bd)
- (pad 67a7b034-b30b-4644-b8d3-d7a99606efdc (signal 9bccea5e-e23f-4b88-9de1-4be00dc0c12a))
- (pad aec3f475-28c4-4508-ab4f-e1b618a0d77d (signal 726fd1ce-a01b-4287-bb61-e3ff165a0644))
+ (pad 67a7b034-b30b-4644-b8d3-d7a99606efdc (optional false)
+  (signal 9bccea5e-e23f-4b88-9de1-4be00dc0c12a)
+ )
+ (pad aec3f475-28c4-4508-ab4f-e1b618a0d77d (optional false)
+  (signal 726fd1ce-a01b-4287-bb61-e3ff165a0644)
+ )
  (part "mpn1" (manufacturer "man1")
  )
  (part "mpn2" (manufacturer "man2")

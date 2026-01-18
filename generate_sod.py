@@ -245,6 +245,8 @@ def generate_pkg(
                 position_3d=Position3D.zero(),
                 rotation_3d=Rotation3D.zero(),
             )
+            if 'Hand' in fpt_config.name:  # Added a bit hacky for new file format
+                footprint.add_tag('hand-soldering')
             package.add_footprint(footprint)
 
             # Pads

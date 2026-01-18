@@ -2,6 +2,7 @@ from typing import Iterable, List, Optional
 
 from common import escape_string, serialize_common
 from entities.attribute import Attribute
+from entities.common import BoolValue
 
 from .common import (
     Author,
@@ -32,12 +33,13 @@ class PackageUUID(UUIDValue):
 
 
 class ComponentPad:
-    def __init__(self, pad_uuid: str, signal: SignalUUID):
+    def __init__(self, pad_uuid: str, signal: SignalUUID, optional: bool = False):
         self.pad_uuid = pad_uuid
         self.signal = signal
+        self.optional = BoolValue('optional', optional)
 
     def __str__(self) -> str:
-        return '(pad {} {})'.format(self.pad_uuid, self.signal)
+        return '(pad {} {}\n {}\n)'.format(self.pad_uuid, self.optional, self.signal)
 
 
 class Manufacturer(StringValue):

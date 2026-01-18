@@ -211,6 +211,8 @@ def generate_pkg(
                 position_3d=Position3D.zero(),
                 rotation_3d=Rotation3D.zero(),
             )
+            if 'Large' in name:  # Added a bit hacky for new file format
+                footprint.add_tag('extra-large-pads')
             package.add_footprint(footprint)
 
             # Footprint pads

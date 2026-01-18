@@ -208,7 +208,7 @@ def generate_pkg(
         package.add_pad(PackagePad(uuid_exp, Name('ExposedPad')))
 
     # Create Footprint function
-    def _generate_footprint(key: str, name: str, pad_extension: float) -> None:
+    def _generate_footprint(key: str, name: str, tag: str, pad_extension: float) -> None:
         # Create Meta-data
         uuid_footprint = _uuid('footprint-{}'.format(key))
         footprint = Footprint(
@@ -218,6 +218,7 @@ def generate_pkg(
             position_3d=Position3D.zero(),
             rotation_3d=Rotation3D.zero(),
         )
+        footprint.add_tag(tag)
         package.add_footprint(footprint)
 
         pad_length = config.lead_length + config.toe_heel + pad_extension
@@ -561,8 +562,8 @@ def generate_pkg(
         )
 
     # Apply function to available footprints
-    _generate_footprint('reflow', 'reflow', 0.0)
-    _generate_footprint('hand-soldering', 'hand soldering', 0.3)
+    _generate_footprint('reflow', 'reflow', 'reflow-soldering', 0.0)
+    _generate_footprint('hand-soldering', 'hand soldering', 'hand-soldering', 0.3)
 
     # Generate 3D models
     uuid_3d = _uuid('3d')
