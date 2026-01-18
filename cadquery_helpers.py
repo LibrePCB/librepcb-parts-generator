@@ -59,4 +59,4 @@ class StepAssembly:
             makedirs(dir_path)
 
         mode = 'fused' if fused else 'default'  # type: cq.occ_impl.exporters.assembly.STEPExportModeLiterals
-        self.assembly.save(out_path, 'STEP', mode=mode, write_pcurves=False)
+        self.assembly.export(out_path, 'STEP', mode=mode, write_pcurves=False)

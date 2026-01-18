@@ -5,10 +5,9 @@ authors = [
     { name = "Raphael Nestler", email = "raphael.nestler@gmail.com" },
 ]
 
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
-    "cadquery == 2.3.1",
-    "numpy < 2",  # Dependency of cadquery, but not working with v2.x
+    "cadquery == 2.6.1",
 ]
 version = "0.1.0"
 
