@@ -1,6 +1,6 @@
 from os import makedirs, path
 
-from typing import Optional
+from typing import Optional, Union
 
 import cadquery as cq
 from OCP.Message import Message, Message_Gravity  # type: ignore
@@ -11,6 +11,7 @@ class StepConstants:
 
 
 class StepColor:
+    COPPER = cq.Color('gold2')
     IC_BODY = cq.Color('gray16')
     IC_PIN1_DOT = cq.Color('gray55')
     LEAD_SMT = cq.Color('gainsboro')
@@ -30,7 +31,11 @@ class StepAssembly:
             printer.SetTraceLevel(Message_Gravity.Message_Fail)
 
     def add_body(
-        self, body: cq.Workplane, name: str, color: cq.Color, location: Optional[cq.Location] = None
+        self,
+        body: Union[cq.Workplane, cq.Assembly],
+        name: str,
+        color: Optional[cq.Color] = None,
+        location: Optional[cq.Location] = None,
     ) -> None:
         """
         Add a body to the assembly.
