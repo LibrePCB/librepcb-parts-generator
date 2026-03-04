@@ -273,6 +273,7 @@ Generated with {generator}
     _add_footprint('covered', pad=False, cover=True)
     _add_footprint('blank', pad=False, cover=False)
 
+    package.add_approval('(approved ambiguous_footprint_tags)')
     package.add_approval('(approved suspicious_assembly_type)')
 
     package.serialize(path.join('out', library, 'pkg'))
@@ -357,7 +358,7 @@ if __name__ == '__main__':
         generate_pkg(
             library='LibrePCB_Base.lplib',
             author='U. Bruhin',
-            version='0.1',
+            version='0.1.1',
             create_date='2025-04-09T15:07:42Z',
             name=name,
             hole_diameter=hole_diameter,
