@@ -633,6 +633,14 @@ def generate_pkg(
                 )
             )
 
+            # For the horizontal footprints, it is desired that the origin is
+            # not in the package center, but equal to the vertical footprint.
+            # However, due to a bug in LibrePCB, this approval doesn't work yet.
+            # Enable this after the CI runs with a fixed LibrePCB version.
+            # package.add_approval(
+            #     f'(approved origin_not_in_center\n (footprint {footprint.uuid})\n)'
+            # )
+
         # Add footprints
         _add_vertical_footprint(
             package,
@@ -676,6 +684,9 @@ def generate_pkg(
             body_height=config.body_height,
             body_offset=7.62,
         )
+
+        package.add_approval('(approved ambiguous_footprint_tags)')
+        package.add_approval('(approved origin_not_in_center)')
 
         package.serialize(path.join('out', library, category))
 
@@ -830,6 +841,9 @@ def generate_dev(
             )
         )
 
+        # Approve "no parts" warning because it's a generic device
+        device.add_approval('(approved no_parts)')
+
         device.serialize(path.join('out', library, category))
 
 
@@ -876,7 +890,7 @@ if __name__ == '__main__':
         configs=configs,
         pkgcat='9c36c4be-3582-4f27-ae00-4c1229f1e870',
         keywords='led,tht',
-        version='0.2',
+        version='0.2.1',
         create_date='2022-02-26T00:06:03Z',
         generate_3d_models=generate_3d_models,
     )
@@ -886,7 +900,7 @@ if __name__ == '__main__':
         configs=configs,
         cmpcat='70421345-ae1d-4fed-aa60-e7619524b97f',
         keywords='led,tht',
-        version='0.1.1',
+        version='0.1.2',
         create_date='2022-08-31T11:18:33Z',
     )
 
