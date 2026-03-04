@@ -139,10 +139,14 @@ def generate_pkg(
         drill = LEAD_WIDTH_TO_DRILL[lead_width]
         restring = min(
             (0.4 if diameter >= 6.0 else 0.3),  # preferred restring
-            (pitch - drill - 0.25) / 2,
+            (pitch - drill - 0.2) / 2,
         )  # minimum required restring
         pad_diameter = drill + (2 * restring)  # outer diameter of pad
         courtyard_diameter = diameter + (1.0 if diameter >= 10.0 else 0.8)
+
+        # verify that no library check would fail
+        assert restring > 0.149999  # minimum pad restring
+        assert (pitch - pad_diameter) > 0.199999  # minimum copper clearance
 
         def _generate_fill_polygon(identifier: str, layer: str) -> Polygon:
             polygon = Polygon(
@@ -488,6 +492,9 @@ def generate_dev(
         )
     )
 
+    # Approve "no parts" warning because it's a generic device
+    device.add_approval('(approved no_parts)')
+
     # write files
     device.serialize(path.join('out', library, 'dev'))
     print('Wrote device {}'.format(name))
@@ -543,7 +550,7 @@ if __name__ == '__main__':
             lead_width=config['lead_width'],
             generate_3d_models=generate_3d_models,
             author='U. Bruhin',
-            version='0.2',
+            version='0.3',
             create_date='2019-12-29T14:14:11Z',
         )
         generate_dev(
@@ -553,7 +560,7 @@ if __name__ == '__main__':
             pitch=config['pitch'],
             lead_width=config['lead_width'],
             author='U. Bruhin',
-            version='0.1',
+            version='0.1.1',
             create_date='2019-12-29T14:14:11Z',
         )
 
