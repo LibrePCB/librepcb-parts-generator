@@ -54,6 +54,7 @@ from entities.package import (
     FootprintPad,
     LetterSpacing,
     LineSpacing,
+    MinCopperClearance,
     Mirror,
     Package,
     Package3DModel,
@@ -230,6 +231,7 @@ def generate_pkg(
             generated_by=GeneratedBy(''),
             categories=[Category(pkgcat)],
             assembly_type=AssemblyType.SMT,
+            min_copper_clearance=(MinCopperClearance(0.15) if (pitch < 0.5) else None),
         )
 
         for p in range(1, pin_count + 1):
@@ -797,7 +799,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='241d9d5d-8f74-4740-8901-3cf51cf50091',
         keywords='so,sop,tssop,small outline package,smd',
-        version='0.3',
+        version='0.3.1',
         create_date='2019-06-16T12:46:54Z',
     )
 
@@ -886,7 +888,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
         keywords='so,sop,ssop,small outline package,smd,jedec,mo-152',
-        version='0.2',
+        version='0.2.1',
         create_date='2019-07-21T12:55:20Z',
     )
     generate_pkg(
@@ -966,7 +968,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='7993abb0-fb0a-4157-8f83-1db890755836',
         keywords='so,sop,tsop,small outline package,smd',
-        version='0.2',
+        version='0.2.1',
         create_date='2020-12-26T16:14:30Z',
     )
     save_cache(uuid_cache_file, uuid_cache)

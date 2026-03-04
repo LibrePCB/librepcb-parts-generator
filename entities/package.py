@@ -92,6 +92,11 @@ class AssemblyType(EnumValue):
         return 'assembly_type'
 
 
+class MinCopperClearance(FloatValue):
+    def __init__(self, clearance: float):
+        super().__init__('min_copper_clearance', clearance)
+
+
 class PackagePad:
     def __init__(self, uuid: str, name: Name):
         self.uuid = uuid
@@ -456,6 +461,7 @@ class Package:
         generated_by: GeneratedBy,
         categories: Iterable[Category],
         assembly_type: AssemblyType,
+        min_copper_clearance: Optional[MinCopperClearance] = None,
     ):
         self.uuid = uuid
         self.name = name
@@ -469,6 +475,7 @@ class Package:
         self.categories = categories
         self.alternative_names: List[AlternativeName] = []
         self.assembly_type = assembly_type
+        self.min_copper_clearance = min_copper_clearance or MinCopperClearance(0.2)
         self.pads: List[PackagePad] = []
         self.models_3d: List[Package3DModel] = []
         self.footprints: List[Footprint] = []
@@ -504,7 +511,7 @@ class Package:
             + ''.join([' {}\n'.format(alt) for alt in self.alternative_names])
             + ' {}\n'.format(self.assembly_type)
             + ' (grid_interval 2.54)\n'  # To be implemented
-            + ' (min_copper_clearance 0.2)\n'  # To be implemented
+            + ' {}\n'.format(self.min_copper_clearance)
         )
         ret += indent_entities(self.pads)
         ret += indent_entities(self.models_3d)
