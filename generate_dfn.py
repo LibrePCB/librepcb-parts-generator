@@ -50,6 +50,7 @@ from entities.package import (
     FootprintPad,
     LetterSpacing,
     LineSpacing,
+    MinCopperClearance,
     Mirror,
     Package,
     Package3DModel,
@@ -186,12 +187,13 @@ def generate_pkg(
         description=Description(full_description),
         keywords=Keywords(full_keywords),
         author=Author(author),
-        version=Version('0.2'),
+        version=Version('0.3'),
         created=Created(create_date or now()),
         deprecated=Deprecated(False),
         generated_by=GeneratedBy(''),
         categories=[Category(pkgcat)],
         assembly_type=AssemblyType.SMT,
+        min_copper_clearance=MinCopperClearance(0.15),
     )
 
     # Create pads
