@@ -197,6 +197,8 @@ Generated with {generator}
             position_3d=Position3D.zero(),
             rotation_3d=Rotation3D.zero(),
         )
+        if not variant.compact:
+            footprint.add_tag('extra-large-pads')
         package.add_footprint(footprint)
 
         # Pads
@@ -610,6 +612,10 @@ Generated with {generator}
             generated_3d_uuids.add(uuid_3d)
         footprint.add_3d_model(Footprint3DModel(uuid_3d))
 
+    package.add_approval('(approved ambiguous_footprint_tags)')
+    if name == 'R-THT-0309':
+        package.add_approval('(approved origin_not_in_center)')
+
     package.serialize(path.join('out', library, 'pkg'))
 
 
@@ -790,7 +796,7 @@ if __name__ == '__main__':
         ],
         author='U. Bruhin',
         pkgcat='72ceb547-9e68-4d6b-8c96-283d325e1abf',
-        version='0.4',
+        version='0.4.1',
         create_date='2018-10-11T22:24:42Z',
         generate_3d_models=generate_3d_models,
     )
@@ -818,7 +824,7 @@ if __name__ == '__main__':
         ],
         author='U. Bruhin',
         pkgcat='72ceb547-9e68-4d6b-8c96-283d325e1abf',
-        version='0.4',
+        version='0.4.1',
         create_date='2018-10-11T22:24:42Z',
         generate_3d_models=generate_3d_models,
     )
@@ -847,7 +853,7 @@ if __name__ == '__main__':
         ],
         author='U. Bruhin',
         pkgcat='72ceb547-9e68-4d6b-8c96-283d325e1abf',
-        version='0.4',
+        version='0.4.1',
         create_date='2018-10-11T22:24:42Z',
         generate_3d_models=generate_3d_models,
     )
@@ -879,7 +885,7 @@ if __name__ == '__main__':
         ],
         author='U. Bruhin',
         pkgcat='dcaa6b6c-0c55-43fd-a320-5dd74a2cdc85',
-        version='0.2',
+        version='0.2.1',
         create_date='2023-09-07T13:30:53Z',
         generate_3d_models=generate_3d_models,
     )
@@ -909,7 +915,7 @@ if __name__ == '__main__':
         ],
         author='U. Bruhin',
         pkgcat='dcaa6b6c-0c55-43fd-a320-5dd74a2cdc85',
-        version='0.2',
+        version='0.2.1',
         create_date='2023-09-07T13:30:53Z',
         generate_3d_models=generate_3d_models,
     )
@@ -938,7 +944,7 @@ if __name__ == '__main__':
         ],
         author='U. Bruhin',
         pkgcat='dcaa6b6c-0c55-43fd-a320-5dd74a2cdc85',
-        version='0.2',
+        version='0.2.1',
         create_date='2023-09-07T13:30:53Z',
         generate_3d_models=generate_3d_models,
     )
@@ -967,7 +973,7 @@ if __name__ == '__main__':
         ],
         author='U. Bruhin',
         pkgcat='dcaa6b6c-0c55-43fd-a320-5dd74a2cdc85',
-        version='0.2',
+        version='0.2.1',
         create_date='2023-09-07T13:30:53Z',
         generate_3d_models=generate_3d_models,
     )
@@ -996,7 +1002,7 @@ if __name__ == '__main__':
         ],
         author='U. Bruhin',
         pkgcat='dcaa6b6c-0c55-43fd-a320-5dd74a2cdc85',
-        version='0.2',
+        version='0.2.1',
         create_date='2023-09-07T13:30:53Z',
         generate_3d_models=generate_3d_models,
     )
@@ -1025,7 +1031,7 @@ if __name__ == '__main__':
         ],
         author='U. Bruhin',
         pkgcat='dcaa6b6c-0c55-43fd-a320-5dd74a2cdc85',
-        version='0.2',
+        version='0.2.1',
         create_date='2023-09-07T13:30:53Z',
         generate_3d_models=generate_3d_models,
     )
