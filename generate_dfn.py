@@ -50,6 +50,7 @@ from entities.package import (
     FootprintPad,
     LetterSpacing,
     LineSpacing,
+    MinCopperClearance,
     Mirror,
     Package,
     Package3DModel,
@@ -99,22 +100,15 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
-def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> float:
+def get_y(pin_number: int, pin_count: int, spacing: float) -> float:
     """
-    Return the y coordinate of the specified pin. Keep the pins grid aligned, if desired.
+    Return the y coordinate of the specified pin.
 
     The pin number is 1 index based. Pin 1 is at the top. The middle pin will
     be at or near 0.
-
     """
-    if grid_align:
-        mid = float((pin_count + 1) // 2)
-    else:
-        mid = (pin_count + 1) / 2
-    y = -round(pin_number * spacing - mid * spacing, 2)
-    if y == -0.0:  # Returns true for 0.0 too, but that doesn't matter
-        return 0.0
-    return y
+    mid = (pin_count + 1) / 2
+    return -pin_number * spacing + mid * spacing
 
 
 def generate_pkg(
@@ -193,12 +187,13 @@ def generate_pkg(
         description=Description(full_description),
         keywords=Keywords(full_keywords),
         author=Author(author),
-        version=Version('0.2'),
+        version=Version('0.3'),
         created=Created(create_date or now()),
         deprecated=Deprecated(False),
         generated_by=GeneratedBy(''),
         categories=[Category(pkgcat)],
         assembly_type=AssemblyType.SMT,
+        min_copper_clearance=MinCopperClearance(0.15),
     )
 
     # Create pads
@@ -254,7 +249,7 @@ def generate_pkg(
         # Place pads
         for pad_idx, pad_nr in enumerate(range(1, config.pin_count + 1)):
             half_n_pads = config.pin_count // 2
-            pad_pos_y = get_y(pad_idx % half_n_pads + 1, half_n_pads, config.pitch, False)
+            pad_pos_y = get_y(pad_idx % half_n_pads + 1, half_n_pads, config.pitch)
 
             if pad_idx < (config.pin_count / 2):
                 pad_pos_x = -abs_pad_pos_x
@@ -314,7 +309,7 @@ def generate_pkg(
         silk_down = (
             config.length / 2
             - SILKSCREEN_OFFSET
-            - get_y(1, half_n_pads, config.pitch, False)
+            - get_y(1, half_n_pads, config.pitch)
             - config.lead_width / 2
             - SILKSCREEN_LINE_WIDTH / 2
         )  # required for round ending of line
@@ -383,7 +378,7 @@ def generate_pkg(
 
             # Make silkscreen lead exact pad width and length
             half_n_pads = config.pin_count // 2
-            pad_pos_y = get_y(pad_idx % half_n_pads + 1, half_n_pads, config.pitch, False)
+            pad_pos_y = get_y(pad_idx % half_n_pads + 1, half_n_pads, config.pitch)
             if pad_idx >= (config.pin_count / 2):
                 pad_pos_y = -pad_pos_y
             y_min = pad_pos_y - config.lead_width / 2
@@ -625,7 +620,7 @@ def generate_3d(
     pins_per_side = config.pin_count // 2
     for i in range(0, config.pin_count):
         side = -1 if (i < pins_per_side) else 1
-        y1 = get_y(1 if (i < pins_per_side) else pins_per_side, pins_per_side, config.pitch, False)
+        y1 = get_y(1 if (i < pins_per_side) else pins_per_side, pins_per_side, config.pitch)
         y_index = i % pins_per_side
         assembly.add_body(
             lead,
