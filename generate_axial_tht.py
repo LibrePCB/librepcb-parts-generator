@@ -177,8 +177,8 @@ Generated with {generator}
         assembly_type=AssemblyType.THT,
     )
 
-    for i, name in enumerate(pad_names):
-        package.add_pad(PackagePad(uuid=_uuid('pad-' + str(i + 1)), name=Name(name)))
+    for i, pad_name in enumerate(pad_names):
+        package.add_pad(PackagePad(uuid=_uuid('pad-' + str(i + 1)), name=Name(pad_name)))
 
     generated_3d_uuids = set()
     for variant in variants:
@@ -342,12 +342,12 @@ Generated with {generator}
                 )
         else:
             silk_pad_clearance = (variant.pitch - pad_size[0] - body_length_nom) / 2
-            if silk_pad_clearance < 0.25:  # 0.1mm line plus 0.15mm clearance
+            if silk_pad_clearance < 0.3:  # 0.15mm line plus 0.15mm clearance
                 split_silkscreen = True
                 silkscreen_width = line_width
             else:
                 split_silkscreen = False
-                silkscreen_width = line_width if (silk_pad_clearance - line_width >= 0.15) else 0.1
+                silkscreen_width = line_width if (silk_pad_clearance - line_width >= 0.15) else 0.15
             dx = (body_length_nom / 2) + (silkscreen_width / 2)
             dy = (body_diameter_nom / 2) + (silkscreen_width / 2)
             if split_silkscreen:
