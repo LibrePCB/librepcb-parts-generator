@@ -52,6 +52,7 @@ from entities.package import (
     FootprintPad,
     LetterSpacing,
     LineSpacing,
+    MinCopperClearance,
     Mirror,
     Package,
     Package3DModel,
@@ -299,6 +300,7 @@ def generate_pkg(
             generated_by=GeneratedBy(''),
             categories=[Category(pkgcat)],
             assembly_type=AssemblyType.SMT,
+            min_copper_clearance=MinCopperClearance(min(config.gap or 0.2, 0.2)),
         )
 
         package.add_pad(
@@ -378,6 +380,12 @@ def generate_pkg(
                 pad_toe = get_by_density(config.body.length, density_level, 'toe')
                 pad_length = (config.body.length - gap) / 2 + pad_toe
                 pad_dx = gap / 2 + pad_length / 2  # x offset (delta-x)
+                # Due to rounding numbers during serialization, the gap might
+                # end up too small, causing clearance errors. Thus we increase
+                # pad_dx accordingly if the gap would be too small.
+                actual_gap = 2 * round(pad_dx, 3) - round(pad_length, 3)
+                if actual_gap < gap:
+                    pad_dx += (gap - actual_gap) / 2
             else:
                 raise ValueError('Either dimensions or gap must be set')
             for p in [0, 1]:
@@ -998,7 +1006,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='414f873f-4099-47fd-8526-bdd8419de581',
         keywords='c,capacitor,chip,generic',
-        version='0.5',
+        version='0.6',
         create_date='2015-06-21T12:37:34Z',
     )
     # Molded polarized capacitors (CAPPM)
@@ -1161,7 +1169,7 @@ if __name__ == '__main__':
         generate_3d_models=generate_3d_models,
         pkgcat='812c8e64-3a47-49d8-987f-2cfba377c8ae',
         keywords='l,inductor,ferrite,bead,chip,generic',
-        version='0.2',
+        version='0.3',
         create_date='2023-11-05T09:15:41Z',
     )
     # Generic devices
