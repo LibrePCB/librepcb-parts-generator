@@ -210,3 +210,22 @@ if __name__ == '__main__':
         ],
         pin1_indicator=True,
     )
+    # TO-253D (https://www.jedec.org/system/files/docs/to-253d.pdf)
+    generate(
+        name='SOT143-4P192_237X122L54',
+        body_width=1.3,
+        body_length=2.9,
+        total_height=1.22,
+        lead_span=2.37,
+        lead_height=0.14,
+        lead_contact_length=0.4,
+        leads_left=[
+            ('1', 0.76, 0.825),
+            ('2', -0.96, 0.4),
+        ],
+        leads_right=[
+            ('3', -0.96, 0.4),
+            ('4', 0.96, 0.4),
+        ],
+        pin1_indicator=True,
+    )
