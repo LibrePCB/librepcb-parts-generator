@@ -485,5 +485,38 @@ THIRD_CONFIGS = [
         create_date='2025-10-03T10:32:01Z',
         no_exp=False,
     ),
+
+    # STMicroelectronics
+    # https://www.st.com/resource/en/datasheet/ldln015.pdf
+    DfnConfig(
+        length=2.0,
+        width=2.0,
+        pitch=0.5,
+        pin_count=6,
+        height_nominal=0.55,
+        height_max=0.6,
+        lead_length=0.25,
+        exposed_width=1.45,
+        exposed_length=1.0,
+        keywords='dfn6',
+        create_date='2026-03-07T14:54:10Z',
+        no_exp=False,
+    ),
+    # https://www.st.com/resource/en/datasheet/ldk715.pdf
+    # https://www.st.com/resource/en/datasheet/ldln050.pdf
+    DfnConfig(
+        length=3.0,
+        width=3.0,
+        pitch=0.65,
+        pin_count=8,
+        height_nominal=0.9,
+        height_max=1.0,
+        lead_length=0.4,
+        exposed_width=1.75,
+        exposed_length=1.50,
+        keywords='dfn8',
+        create_date='2026-03-07T14:54:10Z',
+        no_exp=False,
+    ),
 ]
 # fmt: on
