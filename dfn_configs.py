@@ -485,5 +485,19 @@ THIRD_CONFIGS = [
         create_date='2025-10-03T10:32:01Z',
         no_exp=False,
     ),
+    DfnConfig(
+        length=4.0,
+        width=4.0,
+        pitch=0.8,
+        pin_count=8,
+        height_nominal=0.75,
+        height_max=0.8,
+        lead_length=0.40,
+        exposed_width=3,
+        exposed_length=1.98,
+        keywords='wson-8,wson8',
+        create_date='2026-03-20T19:06:05Z',
+        no_exp=False,
+    ),
 ]
 # fmt: on
