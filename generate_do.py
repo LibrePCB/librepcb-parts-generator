@@ -2,6 +2,7 @@
 Generate DO packages.
 
 - JEDEC DO-214 https://www.jedec.org/system/files/docs/DO-214D.PDF
+- JEDEC DO-219 https://www.jedec.org/sites/default/files/docs/do-219b.pdf
 
 """
 
@@ -63,10 +64,10 @@ from entities.package import (
     StrokeWidth,
 )
 
-GENERATOR_NAME = 'librepcb-parts-generator (generate_do.py)'
+GENERATOR_NAME = 'librepcb-parts-generator (generate_do214.py)'
 
 line_width = 0.2
-
+silkscreen_clearance = 0.15
 
 # Initialize UUID cache
 uuid_cache_file = 'uuid_cache_do.csv'
@@ -94,7 +95,7 @@ class DoConfig:
         contact_width_min: float,
         contact_width_max: float,
         variant: str,
-        common_name: str,
+        common_name: Optional[str],
     ):
         self.body_length = body_length_nom
         self.body_width = body_width_nom
@@ -116,18 +117,37 @@ def generate_pkg(
     library: str,
     author: str,
     config: DoConfig,
+    flat_leads: bool,
     polarity: bool,
     generate_3d_models: bool,
     pkgcat: str,
     version: str,
     create_date: Optional[str],
 ) -> None:
-    keywords = f'Diode,SMD,DO-214{config.variant},DO214{config.variant},{config.common_name}'
-    polarity_text = 'Unidirectional' if polarity else 'Bidirectional'
-    prefix = 'DIOM' if polarity else 'DIONM'
-    pkg_name = f'{prefix}{fd(config.total_length, 1)}{fd(config.body_width, 1)}X{fd(config.total_height, 2)}'
+    assert polarity or not flat_leads, 'Flat leads are only supported for unidirectional diodes'
+
+    jedec_id = '219' if flat_leads else '214'
+    kw_common_name = ',' + config.common_name if config.common_name else ''
+    keywords = (
+        f'Diode,SMD,DO-{jedec_id}{config.variant},DO{jedec_id}{config.variant}{kw_common_name}'
+    )
+    if flat_leads:
+        pkg_name = (
+            f'SODFL{fd(config.total_length, 1)}X{fd(config.body_width, 1)}X{fd(config.total_height, 2)}'
+            + f'L{fd(config.contact_length, 1)}X{fd(config.contact_width, 1)}'
+        )
+    else:
+        prefix = 'DIOM' if polarity else 'DIONM'
+        pkg_name = f'{prefix}{fd(config.total_length, 1)}{fd(config.body_width, 1)}X{fd(config.total_height, 2)}'
+    if flat_leads:
+        desc_name = 'Small Outline Diode'
+    elif polarity:
+        desc_name = 'Unidirectional Diode Outline'
+    else:
+        desc_name = 'Bidirectional Diode Outline'
+    desc_common_name = ' (' + config.common_name + ')' if config.common_name else ''
     pkg_description = f"""\
-{polarity_text} Diode Outline DO-214{config.variant} ({config.common_name}), standardized by JEDEC.
+{desc_name} DO-{jedec_id}{config.variant}{desc_common_name}, standardized by JEDEC.
 
 Length: {config.total_length:.2f}mm
 Width: {config.body_width:.2f}mm
@@ -295,7 +315,22 @@ Generated with {GENERATOR_NAME}
                 grab_area=GrabArea(False),
             )
 
-        if polarity:
+        if flat_leads:
+            ss_y = max(
+                config.body_width / 2 + line_offset,  # Based on body width
+                _pad_width() / 2 + line_width / 2 + silkscreen_clearance,  # Based on pad width
+            )
+            ss = _add_silkscreen('main', uuid_ns)
+            x0 = _pad_center(-1) - (_pad_length() / 2 + 0.4)
+            x1 = right_edge - line_offset
+            y0 = -ss_y
+            y1 = ss_y
+            ss.add_vertex(Vertex(Position(x1, y1), Angle(0)))
+            ss.add_vertex(Vertex(Position(x0, y1), Angle(0)))
+            ss.add_vertex(Vertex(Position(x0, y0), Angle(0)))
+            ss.add_vertex(Vertex(Position(x1, y0), Angle(0)))
+            footprint.add_polygon(ss)
+        elif polarity:
             ss = _add_silkscreen('main', uuid_ns)
             x0 = _pad_center(-1) - (_pad_length() / 2 + 0.4)
             x1 = right_edge - line_offset
@@ -409,7 +444,7 @@ Generated with {GENERATOR_NAME}
     # Generate 3D models
     uuid_3d = _uuid('3d')
     if generate_3d_models:
-        generate_3d(library, pkg_name, uuid_pkg, uuid_3d, config, polarity)
+        generate_3d(library, pkg_name, uuid_pkg, uuid_3d, config, flat_leads, polarity)
     package.add_3d_model(Package3DModel(uuid_3d, Name(pkg_name)))
     for footprint in package.footprints:
         footprint.add_3d_model(Footprint3DModel(uuid_3d))
@@ -423,6 +458,7 @@ def generate_3d(
     uuid_pkg: str,
     uuid_3d: str,
     config: DoConfig,
+    flat_leads: bool,
     polarity: bool,
 ) -> None:
     import cadquery as cq
@@ -431,52 +467,73 @@ def generate_3d(
 
     print(f'Generating pkg 3D model "{pkg_name}": {uuid_3d}')
 
-    body_standoff = 0.15 + (0.05 + 0.3) / 2  # A2 + A3
-    leg_height = (0.15 + 0.41) / 2  # c
-    leg_z_top = body_standoff + (config.body_height / 2) + (leg_height / 2)
-    bend_radius = 0.1 + (leg_height / 2)
-    body_chamfer_xy = 0.15  # rough estimation
-    body_chamfer_z = (config.body_height - leg_height) / 2
+    if flat_leads:
+        body_standoff = 0.02
+        lead_thickness = 0.3
+        body_chamfer_xy = 0.15  # rough estimation
+        body_chamfer_z = config.body_height - lead_thickness
+    else:
+        body_standoff = 0.15 + (0.05 + 0.3) / 2  # A2 + A3
+        leg_height = (0.15 + 0.41) / 2  # c
+        leg_z_top = body_standoff + (config.body_height / 2) + (leg_height / 2)
+        bend_radius = 0.1 + (leg_height / 2)
+        body_chamfer_xy = 0.15  # rough estimation
+        body_chamfer_z = (config.body_height - leg_height) / 2
     bar_length = 0.2 * config.body_length
     bar_width = config.body_width - (3 * body_chamfer_xy)
     bar_height = 0.02
     bar_x = -(config.body_length - bar_length) / 2 + (2 * body_chamfer_xy)
 
-    body = (
-        cq.Workplane('XY', origin=(0, 0, body_standoff + (config.body_height / 2)))
-        .box(config.body_length, config.body_width, config.body_height)
-        .edges('|Y')
-        .chamfer(body_chamfer_z, body_chamfer_xy)
-        .edges('|X')
-        .chamfer(body_chamfer_z, body_chamfer_xy)
+    body = cq.Workplane('XY', origin=(0, 0, body_standoff + (config.body_height / 2))).box(
+        config.body_length, config.body_width, config.body_height
     )
+    if flat_leads:
+        body = body.edges('>Z').chamfer(body_chamfer_z, body_chamfer_xy)
+    else:
+        body = (
+            body.edges('|Y')
+            .chamfer(body_chamfer_z, body_chamfer_xy)
+            .edges('|X')
+            .chamfer(body_chamfer_z, body_chamfer_xy)
+        )
     bar = cq.Workplane('XY', origin=(bar_x, 0, body_standoff + config.body_height)).box(
         bar_length, bar_width, bar_height
     )
-    leg_path = (
-        cq.Workplane('XZ')
-        .hLine(-config.contact_length + (leg_height / 2) + bend_radius)
-        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=180, angle2=270, sense=-1)
-        .vLine(leg_z_top - leg_height - (2 * bend_radius))
-        .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1)
-        .hLine(config.contact_length)
-    )
-    leg = cq.Workplane('ZY').rect(leg_height, config.contact_width).sweep(leg_path)
 
     assembly = StepAssembly(pkg_name)
     assembly.add_body(body, 'body', StepColor.IC_BODY)
     if polarity:
         assembly.add_body(bar, 'bar', StepColor.IC_PIN1_DOT)
-    lead_x = (config.total_length / 2) - config.contact_length
-    assembly.add_body(
-        leg, 'leg-1', StepColor.LEAD_SMT, location=cq.Location((-lead_x, 0, leg_height / 2))
-    )
-    assembly.add_body(
-        leg,
-        'leg-2',
-        StepColor.LEAD_SMT,
-        location=cq.Location((lead_x, 0, leg_height / 2), (0, 0, 1), 180),
-    )
+
+    if flat_leads:
+        leg = cq.Workplane('XY', origin=(0, 0, lead_thickness / 2)).box(
+            config.contact_length, config.contact_width, lead_thickness
+        )
+        lead_x = (config.total_length - config.contact_length) / 2
+        assembly.add_body(leg, 'leg-1', StepColor.LEAD_SMT, location=cq.Location((-lead_x, 0, 0)))
+        assembly.add_body(leg, 'leg-2', StepColor.LEAD_SMT, location=cq.Location((lead_x, 0, 0)))
+    else:
+        leg_path = (
+            cq.Workplane('XZ')
+            .hLine(-config.contact_length + (leg_height / 2) + bend_radius)
+            .ellipseArc(
+                x_radius=bend_radius, y_radius=bend_radius, angle1=180, angle2=270, sense=-1
+            )
+            .vLine(leg_z_top - leg_height - (2 * bend_radius))
+            .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1)
+            .hLine(config.contact_length)
+        )
+        leg = cq.Workplane('ZY').rect(leg_height, config.contact_width).sweep(leg_path)
+        lead_x = (config.total_length - config.contact_length) / 2
+        assembly.add_body(
+            leg, 'leg-1', StepColor.LEAD_SMT, location=cq.Location((-lead_x, 0, leg_height / 2))
+        )
+        assembly.add_body(
+            leg,
+            'leg-2',
+            StepColor.LEAD_SMT,
+            location=cq.Location((lead_x, 0, leg_height / 2), (0, 0, 1), 180),
+        )
 
     # Save without fusing for slightly better minification.
     out_path = path.join('out', library, 'pkg', uuid_pkg, f'{uuid_3d}.step')
@@ -496,51 +553,75 @@ if __name__ == '__main__':
         warning = 'Note: Not generating 3D models unless the "--3d" argument is passed in!'
         print(f'\033[1;33m{warning}\033[0m')
 
-    configs = []
+    configs_do214 = []
+    configs_do219 = []
 
     # body_length_nom (E1); body_width_nom (D); body_height_nom (A1)
     # total_length_nom (E); total_height_nom (A)
     # contact_length_min, contact_length_nom, contact_length_max (L); contact_width_min, contact_width_max (b)
     # variant; common_name
     # fmt: off
-    configs.append(DoConfig(4.30, 3.60, 2.15,
-                            5.40, 2.30,
-                            0.75, 1.15, 1.60, 1.95, 2.20,
-                            'AA', 'SMB'))
-    configs.append(DoConfig(6.85, 5.90, 2.15,
-                            7.95, 2.30,
-                            0.75, 1.15, 1.60, 2.90, 3.20,
-                            'AB', 'SMC'))
-    configs.append(DoConfig(4.30, 2.60, 2.30,
-                            5.20, 2.40,
-                            0.75, 1.15, 1.60, 1.25, 1.65,
-                            'AC', 'SMA'))
-    configs.append(DoConfig(4.45, 2.60, 2.80,
-                            5.25, 2.95,
-                            0.75, 1.15, 1.60, 1.00, 1.70,
-                            'BA', 'GF1'))
+    configs_do214.append(DoConfig(4.30, 3.60, 2.15,
+                                  5.40, 2.30,
+                                  0.75, 1.15, 1.60, 1.95, 2.20,
+                                  'AA', 'SMB'))
+    configs_do214.append(DoConfig(6.85, 5.90, 2.15,
+                                  7.95, 2.30,
+                                  0.75, 1.15, 1.60, 2.90, 3.20,
+                                  'AB', 'SMC'))
+    configs_do214.append(DoConfig(4.30, 2.60, 2.30,
+                                  5.20, 2.40,
+                                  0.75, 1.15, 1.60, 1.25, 1.65,
+                                  'AC', 'SMA'))
+    configs_do214.append(DoConfig(4.45, 2.60, 2.80,
+                                  5.25, 2.95,
+                                  0.75, 1.15, 1.60, 1.00, 1.70,
+                                  'BA', 'GF1'))
+    configs_do219.append(DoConfig(2.80, 1.80, 1.30,
+                                  3.70, 1.30,
+                                  0.66, 0.81, 0.96, 0.80, 1.35,
+                                  'AA', None))
+    configs_do219.append(DoConfig(2.80, 1.80, 0.98,
+                                  3.70, 0.98,
+                                  0.35, 0.60, 0.85, 0.80, 1.35,
+                                  'AB', 'SMF'))
     # fmt: on
 
-    for config in configs:
+    for config in configs_do214:
         generate_pkg(
             library='LibrePCB_Base.lplib',
             author='murray',
             config=config,
+            flat_leads=False,
             polarity=True,
             generate_3d_models=generate_3d_models,
             pkgcat='dcaa6b6c-0c55-43fd-a320-5dd74a2cdc85',
-            version='0.2',
+            version='0.2.1',
             create_date='2023-08-15T22:33:08Z',
         )
         generate_pkg(
             library='LibrePCB_Base.lplib',
             author='murray',
             config=config,
+            flat_leads=False,
             polarity=False,
             generate_3d_models=generate_3d_models,
             pkgcat='dcaa6b6c-0c55-43fd-a320-5dd74a2cdc85',
-            version='0.2',
+            version='0.2.1',
             create_date='2023-08-15T22:33:08Z',
+        )
+
+    for config in configs_do219:
+        generate_pkg(
+            library='LibrePCB_Base.lplib',
+            author='eduardosm',
+            config=config,
+            flat_leads=True,
+            polarity=True,
+            generate_3d_models=generate_3d_models,
+            pkgcat='9b31c9b4-04b6-4f97-ad12-f095d196bd38',
+            version='0.1',
+            create_date='2026-06-06T11:58:35Z',
         )
 
     save_cache(uuid_cache_file, uuid_cache)
