@@ -703,7 +703,7 @@ if __name__ == '__main__':
         'Pitch: {pitch:.2f} mm\nNominal width: 6.00mm\nHeight: {height:.2f}mm',
         configs=configs,
         lead_width_lookup={1.27: Dimension.range(0.31, 0.51)},
-        lead_contact_length=Dimension.plusminus(0.835, 0.435),
+        lead_contact_length=Dimension.plusminus(0.835, 0.2),
         generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec',
