@@ -8,7 +8,7 @@ import re
 from datetime import datetime
 from os import makedirs, path
 
-from typing import Any, Dict, Iterable, List, OrderedDict, Union
+from typing import Any, Dict, Iterable, List, Optional, OrderedDict, Union
 
 # String escape sequences
 STRING_ESCAPE_SEQUENCES = (
@@ -21,6 +21,25 @@ STRING_ESCAPE_SEQUENCES = (
     ('\v', '\\v'),
     ('"', '\\"'),
 )
+
+
+class Dimension:
+    def __init__(self, nominal: float, min: Optional[float] = None, max: Optional[float] = None):
+        self.nominal = nominal
+        self.min = min if min is not None else self.nominal
+        self.max = max if max is not None else self.nominal
+        self.tolerance = self.max - self.min
+        self.is_nominal = self.min == self.max
+        assert self.min <= self.nominal
+        assert self.nominal <= self.max
+
+    @classmethod
+    def range(cls, min: float, max: float) -> 'Dimension':
+        return cls((min + max) / 2, min, max)
+
+    @classmethod
+    def plusminus(cls, nominal: float, plusminus: float) -> 'Dimension':
+        return cls(nominal, nominal - plusminus, nominal + plusminus)
 
 
 def init_cache(uuid_cache_file: str) -> Dict[str, str]:

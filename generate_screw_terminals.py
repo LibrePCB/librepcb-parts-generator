@@ -724,17 +724,19 @@ if __name__ == '__main__':
         ],
         datasheet='https://www.phoenixcontact.com/us/products/{mpn}/pdf',
         keywords=[],
-        draw_body_sketch_fn=lambda workplane: workplane.moveTo(4.0, 0.0)
-        .lineTo(4.0, 3.5)
-        .lineTo(2.5, 11.4)
-        .lineTo(-2.5, 11.4)
-        .lineTo(-3.8, 6.5)
-        .lineTo(-4.5, 6.5)
-        .ellipseArc(x_radius=0.5, y_radius=0.5, angle1=90, angle2=180, sense=1)
-        .lineTo(-5.0, 4.0)
-        .ellipseArc(x_radius=0.5, y_radius=0.5, angle1=180, angle2=270, sense=1)
-        .lineTo(-4.3, 3.5)
-        .lineTo(-4.3, 0.0),
+        draw_body_sketch_fn=lambda workplane: (
+            workplane.moveTo(4.0, 0.0)
+            .lineTo(4.0, 3.5)
+            .lineTo(2.5, 11.4)
+            .lineTo(-2.5, 11.4)
+            .lineTo(-3.8, 6.5)
+            .lineTo(-4.5, 6.5)
+            .ellipseArc(x_radius=0.5, y_radius=0.5, angle1=90, angle2=180, sense=1)
+            .lineTo(-5.0, 4.0)
+            .ellipseArc(x_radius=0.5, y_radius=0.5, angle1=180, angle2=270, sense=1)
+            .lineTo(-4.3, 3.5)
+            .lineTo(-4.3, 0.0)
+        ),
     )
     models = [
         Model(name='PT 1,5/2-5,0-H', mpn='1935161', circuits=2),
@@ -798,13 +800,15 @@ if __name__ == '__main__':
         ],
         datasheet='https://www.phoenixcontact.com/us/products/{mpn}/pdf',
         keywords=[],
-        draw_body_sketch_fn=lambda workplane: workplane.moveTo(4.5, 0.0)
-        .lineTo(4.5, 13.5)
-        .lineTo(-2.5, 13.5)
-        .lineTo(-3.5, 6.5)
-        .lineTo(-4.0, 6.5)
-        .ellipseArc(x_radius=0.5, y_radius=0.5, angle1=90, angle2=180, sense=1)
-        .lineTo(-4.5, 0.0),
+        draw_body_sketch_fn=lambda workplane: (
+            workplane.moveTo(4.5, 0.0)
+            .lineTo(4.5, 13.5)
+            .lineTo(-2.5, 13.5)
+            .lineTo(-3.5, 6.5)
+            .lineTo(-4.0, 6.5)
+            .ellipseArc(x_radius=0.5, y_radius=0.5, angle1=90, angle2=180, sense=1)
+            .lineTo(-4.5, 0.0)
+        ),
     )
     models = [
         Model(name='PT 2,5/2-5,0-H', mpn='1935776', circuits=2),

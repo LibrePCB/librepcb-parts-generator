@@ -14,8 +14,8 @@ from uuid import uuid4
 
 from typing import Dict, Iterable, List, Optional
 
+from common import Dimension, init_cache, now, save_cache
 from common import format_ipc_dimension as fd
-from common import init_cache, now, save_cache
 from entities.common import (
     Align,
     Angle,
@@ -69,6 +69,7 @@ from entities.package import (
     StrokeText,
     StrokeWidth,
 )
+from ipc_calculator import IpcCalculator, IpcSolderJointTable
 
 generator = 'librepcb-parts-generator (generate_so.py)'
 
@@ -76,6 +77,15 @@ line_width = 0.25
 pkg_text_height = 1.0
 silkscreen_offset = 0.150  # 150 µm
 pin_package_offset = 0.762  # Distance between pad center and the package body
+
+# From Footprint Expert Guideline, Draft 4, Chapter 6.0.
+# All numbers in the same order as in the PDF.
+IPC_SOLDER_JOINT_TABLES_MINMAX = [
+    (0.0, (0.3, 0.4, 0.05, 0.1), (0.35, 0.45, 0.06, 0.2), (0.4, 0.5, 0.07, 0.4)),
+]
+IPC_SOLDER_JOINT_TABLES_NOMINAL = [
+    (0.0, (0.3, 0.4, 0.05, 0.1), (0.35, 0.45, 0.06, 0.2), (0.4, 0.5, 0.07, 0.4)),
+]
 
 
 # Based on IPC 7351B (Table 3-2)
@@ -115,12 +125,16 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
-def get_by_density(pitch: float, level: str, key: str) -> float:
-    if pitch >= 0.625:
-        table = DENSITY_LEVELS
-    else:
-        table = DENSITY_LEVELS_SMALL
-    return table[level][key]
+def get_ipc_solder_joint_tables(
+    pitch: float, level: str
+) -> (IpcSolderJointTable, IpcSolderJointTable):
+    def _get_table(tbl):
+        for pitch_threshold, c, b, a in tbl:
+            if pitch > pitch_threshold:
+                values = dict(A=a, B=b, C=c)[level]
+                return IpcSolderJointTable(*values)
+
+    return _get_table(IPC_SOLDER_JOINT_TABLES_MINMAX), _get_table(IPC_SOLDER_JOINT_TABLES_NOMINAL)
 
 
 def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> float:
@@ -150,7 +164,7 @@ class SoConfig:
         pitch: float,
         body_length: float,
         body_width: float,
-        total_width: float,
+        lead_span: Dimension,
         height: float,
         variation: Optional[str] = None,
     ):
@@ -158,7 +172,7 @@ class SoConfig:
         self.pitch = pitch
         self.body_length = body_length
         self.body_width = body_width
-        self.total_width = total_width
+        self.lead_span = lead_span
         self.height = height
         self.variation = variation
 
@@ -169,8 +183,8 @@ def generate_pkg(
     name: str,
     description: str,
     configs: Iterable[SoConfig],
-    lead_width_lookup: Dict[float, float],
-    lead_contact_length: float,
+    lead_width_lookup: Dict[float, Dimension],
+    lead_contact_length: Dimension,
     generate_3d_models: bool,
     pkgcat: str,
     keywords: str,
@@ -183,18 +197,24 @@ def generate_pkg(
         pin_count = config.pin_count
         height = config.height
         body_width = config.body_width
-        total_width = config.total_width
+        lead_span = config.lead_span
         body_length = config.body_length
         lead_width = lead_width_lookup[pitch]
-        lead_length = (total_width - body_width) / 2
+        lead_length = (lead_span.nominal - body_width) / 2
+        calculator = IpcCalculator(
+            lead_span=lead_span,
+            terminal_length=lead_contact_length,
+            lead_space=None,
+            lead_width=lead_width,
+        )
 
         full_name = name.format(
             height=fd(height),
             pitch=fd(pitch),
             pin_count=pin_count,
             body_length=fd(body_length),
-            lead_span=fd(total_width),
-            lead_width=fd(lead_width),
+            lead_span=fd(lead_span.nominal),
+            lead_width=fd(lead_width.nominal),
             lead_length=fd(lead_length),
         )
         full_description = description.format(
@@ -203,8 +223,8 @@ def generate_pkg(
             pitch=pitch,
             body_length=body_length,
             body_width=body_width,
-            lead_span=total_width,
-            lead_width=lead_width,
+            lead_span=lead_span.nominal,
+            lead_width=lead_width.nominal,
             lead_length=lead_length,
             variation=config.variation,
         ) + '\n\nGenerated with {}'.format(generator)
@@ -270,14 +290,13 @@ def generate_pkg(
             package.add_footprint(footprint)
 
             # Pad excess according to IPC density levels
-            pad_heel = get_by_density(pitch, density_level, 'heel')
-            pad_toe = get_by_density(pitch, density_level, 'toe')
-            pad_side = get_by_density(pitch, density_level, 'side')
+            ipc_table_minmax, ipc_table_nominal = get_ipc_solder_joint_tables(pitch, density_level)
+            ipc_result = calculator.calculate(ipc_table_minmax, ipc_table_nominal)
 
             # Pads
-            pad_width = lead_width + 2 * pad_side
-            pad_length = lead_contact_length + pad_heel + pad_toe
-            pad_x_offset = total_width / 2 - lead_contact_length / 2 - pad_heel / 2 + pad_toe / 2
+            pad_width = ipc_result.pad_size_y
+            pad_length = ipc_result.pad_size_x
+            pad_x_offset = ipc_result.pad_pos_dx
             for p in range(1, pin_count + 1):
                 mid = pin_count // 2
                 if p <= mid:
@@ -305,26 +324,26 @@ def generate_pkg(
                     )
                 )
                 max_y_copper = max(max_y_copper, y + pad_width / 2)
-            max_x = max(max_x, total_width / 2 + pad_toe)
+            max_x = max(max_x, lead_span.nominal / 2)
 
             # Documentation: Leads
             lead_contact_x_offset = (
-                total_width / 2 - lead_contact_length
+                lead_span.nominal / 2 - lead_contact_length.nominal
             )  # this is the inner side of the contact area
             for p in range(1, pin_count + 1):
                 mid = pin_count // 2
                 if p <= mid:  # left side
                     y = get_y(p, pin_count // 2, pitch, False)
-                    lcxo_max = -lead_contact_x_offset - lead_contact_length
+                    lcxo_max = -lead_contact_x_offset - lead_contact_length.nominal
                     lcxo_min = -lead_contact_x_offset
                     body_side = -body_width / 2
                 else:  # right side
                     y = -get_y(p - mid, pin_count // 2, pitch, False)
                     lcxo_min = lead_contact_x_offset
-                    lcxo_max = lead_contact_x_offset + lead_contact_length
+                    lcxo_max = lead_contact_x_offset + lead_contact_length.nominal
                     body_side = body_width / 2
-                y_max = y - lead_width / 2
-                y_min = y + lead_width / 2
+                y_max = y - lead_width.nominal / 2
+                y_min = y + lead_width.nominal / 2
                 lead_uuid_ctct = uuid_leads1[p - 1]  # Contact area
                 lead_uuid_proj = uuid_leads2[p - 1]  # Vertical projection
                 # Contact area
@@ -368,7 +387,7 @@ def generate_pkg(
             y_max = body_length / 2 + line_width / 2 + y_offset
             y_min = -body_length / 2 - line_width / 2 - y_offset
             short_x_offset = body_width / 2 - line_width / 2
-            long_x_offset = total_width / 2 - line_width / 2 + pad_toe  # Pin1 marking
+            long_x_offset = pad_x_offset + (pad_length / 2) - line_width / 2  # Pin1 marking
             footprint.add_polygon(
                 Polygon(
                     uuid=uuid_silkscreen_top,
@@ -436,7 +455,7 @@ def generate_pkg(
             footprint.add_circle(pin1_dot)
 
             # Package Outline
-            dx = config.total_width / 2
+            dx = config.lead_span.nominal / 2
             dy = config.body_length / 2
             footprint.add_polygon(
                 Polygon(
@@ -455,14 +474,13 @@ def generate_pkg(
             )
 
             # Courtyard
-            courtyard_excess = get_by_density(pitch, density_level, 'courtyard')
             footprint.add_polygon(
                 generate_courtyard(
                     uuid=uuid_courtyard,
                     max_x=max_x,
                     max_y=max_y,
-                    excess_x=courtyard_excess,
-                    excess_y=courtyard_excess,
+                    excess_x=ipc_table_nominal.courtyard,
+                    excess_y=ipc_table_nominal.courtyard,
                 )
             )
 
@@ -510,7 +528,13 @@ def generate_pkg(
         uuid_3d = uuid('pkg', full_name, '3d')
         if generate_3d_models:
             generate_3d(
-                library, full_name, uuid_pkg, uuid_3d, config, lead_width, lead_contact_length
+                library,
+                full_name,
+                uuid_pkg,
+                uuid_3d,
+                config,
+                lead_width.nominal,
+                lead_contact_length.nominal,
             )
         package.add_3d_model(Package3DModel(uuid_3d, Name(full_name)))
         for footprint in package.footprints:
@@ -567,7 +591,9 @@ def generate_3d(
         .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=270, angle2=360, sense=1)
         .vLine(leg_z_top - leg_height - (2 * bend_radius))
         .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1)
-        .hLine(config.total_width - (2 * bend_radius) - (2 * lead_contact_length) + leg_height)
+        .hLine(
+            config.lead_span.nominal - (2 * bend_radius) - (2 * lead_contact_length) + leg_height
+        )
         .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1)
         .vLine(-(leg_z_top - leg_height - (2 * bend_radius)))
         .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=180, angle2=270, sense=1)
@@ -586,7 +612,7 @@ def generate_3d(
             StepColor.LEAD_SMT,
             location=cq.Location(
                 (
-                    -config.total_width / 2,
+                    -config.lead_span.nominal / 2,
                     y1 - i * config.pitch,
                     leg_height / 2,
                 )
@@ -618,8 +644,8 @@ if __name__ == '__main__':
             pitch = 1.27
             body_length = (pin_count / 2 - 1) * pitch + 2.0
             body_width = 5.22
-            total_width = 8.42  # effective, not nominal (7.62)
-            configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
+            lead_span = Dimension(8.42)  # effective, not nominal (7.62)
+            configs.append(SoConfig(pin_count, pitch, body_length, body_width, lead_span, height))
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
@@ -628,8 +654,8 @@ if __name__ == '__main__':
         'standardized by EIAJ.\n\n'
         'Pitch: {pitch:.2f} mm\nNominal width: 7.62mm\nHeight: {height:.2f}mm',
         configs=configs,
-        lead_width_lookup={1.27: 0.4},
-        lead_contact_length=0.8,
+        lead_width_lookup={1.27: Dimension(0.4)},
+        lead_contact_length=Dimension(0.8),
         generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
@@ -642,8 +668,8 @@ if __name__ == '__main__':
             pitch = 1.27
             body_length = (pin_count / 2 - 1) * pitch + 2.0
             body_width = 12.84
-            total_width = 16.04  # effective, not nominal (15.42)
-            configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
+            lead_span = Dimension(16.04)  # effective, not nominal (15.42)
+            configs.append(SoConfig(pin_count, pitch, body_length, body_width, lead_span, height))
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
@@ -652,8 +678,8 @@ if __name__ == '__main__':
         'standardized by EIAJ.\n\n'
         'Pitch: {pitch:.2f} mm\nNominal width: 15.24mm\nHeight: {height:.2f}mm',
         configs=configs,
-        lead_width_lookup={1.27: 0.4},
-        lead_contact_length=0.8,
+        lead_width_lookup={1.27: Dimension(0.4)},
+        lead_contact_length=Dimension(0.8),
         generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
@@ -666,8 +692,8 @@ if __name__ == '__main__':
         height = 1.75
         body_length = (pin_count / 2 - 1) * pitch + 1.6
         body_width = 3.9
-        total_width = 6.0
-        configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
+        lead_span = Dimension(6.0)
+        configs.append(SoConfig(pin_count, pitch, body_length, body_width, lead_span, height))
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
@@ -676,8 +702,8 @@ if __name__ == '__main__':
         'standardized by JEDEC (MS-012G).\n\n'
         'Pitch: {pitch:.2f} mm\nNominal width: 6.00mm\nHeight: {height:.2f}mm',
         configs=configs,
-        lead_width_lookup={1.27: 0.45},
-        lead_contact_length=0.835,
+        lead_width_lookup={1.27: Dimension.range(0.31, 0.51)},
+        lead_contact_length=Dimension.plusminus(0.835, 0.435),
         generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec',
@@ -690,8 +716,8 @@ if __name__ == '__main__':
         height = 2.65
         body_length = (pin_count / 2 - 1) * pitch + 1.6
         body_width = 7.5
-        total_width = 10.3
-        configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
+        lead_span = Dimension(10.3)
+        configs.append(SoConfig(pin_count, pitch, body_length, body_width, lead_span, height))
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='U. Bruhin',
@@ -700,8 +726,8 @@ if __name__ == '__main__':
         'standardized by JEDEC (MS-013F).\n\n'
         'Pitch: {pitch:.2f} mm\nNominal width: 10.30mm\nHeight: {height:.2f}mm',
         configs=configs,
-        lead_width_lookup={1.27: 0.45},
-        lead_contact_length=0.835,
+        lead_width_lookup={1.27: Dimension(0.45)},
+        lead_contact_length=Dimension(0.835),
         generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec,ms-013f',
@@ -722,80 +748,80 @@ if __name__ == '__main__':
         'Height: {height:.2f} mm\n'
         'Lead length: {lead_length:.2f} mm\nLead width: {lead_width:.2f} mm',
         configs=[
-            # pin count, pitch, body length, body width, total width, height
+            # pin count, pitch, body length, body width, lead span, height
             # Symbols based on JEDEC MO-153:
             #        N    e     D     E1   E    A
             # 4.40mm body width
             #   0.65mm pitch
-            SoConfig(8, 0.65, 3.0, 4.4, 6.4, 1.2, 'AA'),
-            SoConfig(14, 0.65, 5.0, 4.4, 6.4, 1.2, 'AB-1'),
-            SoConfig(16, 0.65, 5.0, 4.4, 6.4, 1.2, 'AB'),
-            SoConfig(20, 0.65, 6.5, 4.4, 6.4, 1.2, 'AC'),
-            SoConfig(24, 0.65, 7.8, 4.4, 6.4, 1.2, 'AD'),
-            SoConfig(28, 0.65, 9.7, 4.4, 6.4, 1.2, 'AE'),
+            SoConfig(8, 0.65, 3.0, 4.4, Dimension(6.4), 1.2, 'AA'),
+            SoConfig(14, 0.65, 5.0, 4.4, Dimension(6.4), 1.2, 'AB-1'),
+            SoConfig(16, 0.65, 5.0, 4.4, Dimension(6.4), 1.2, 'AB'),
+            SoConfig(20, 0.65, 6.5, 4.4, Dimension(6.4), 1.2, 'AC'),
+            SoConfig(24, 0.65, 7.8, 4.4, Dimension(6.4), 1.2, 'AD'),
+            SoConfig(28, 0.65, 9.7, 4.4, Dimension(6.4), 1.2, 'AE'),
             #   0.5mm pitch
-            SoConfig(20, 0.50, 5.0, 4.4, 6.4, 1.2, 'BA'),
-            SoConfig(24, 0.50, 6.5, 4.4, 6.4, 1.2, 'BB'),
-            SoConfig(28, 0.50, 7.8, 4.4, 6.4, 1.2, 'BC'),
-            SoConfig(30, 0.50, 7.8, 4.4, 6.4, 1.2, 'BC-1'),
-            SoConfig(36, 0.50, 9.7, 4.4, 6.4, 1.2, 'BD'),
-            SoConfig(38, 0.50, 9.7, 4.4, 6.4, 1.2, 'BD-1'),
-            SoConfig(44, 0.50, 11.0, 4.4, 6.4, 1.2, 'BE'),
-            SoConfig(50, 0.50, 12.5, 4.4, 6.4, 1.2, 'BF'),
+            SoConfig(20, 0.50, 5.0, 4.4, Dimension(6.4), 1.2, 'BA'),
+            SoConfig(24, 0.50, 6.5, 4.4, Dimension(6.4), 1.2, 'BB'),
+            SoConfig(28, 0.50, 7.8, 4.4, Dimension(6.4), 1.2, 'BC'),
+            SoConfig(30, 0.50, 7.8, 4.4, Dimension(6.4), 1.2, 'BC-1'),
+            SoConfig(36, 0.50, 9.7, 4.4, Dimension(6.4), 1.2, 'BD'),
+            SoConfig(38, 0.50, 9.7, 4.4, Dimension(6.4), 1.2, 'BD-1'),
+            SoConfig(44, 0.50, 11.0, 4.4, Dimension(6.4), 1.2, 'BE'),
+            SoConfig(50, 0.50, 12.5, 4.4, Dimension(6.4), 1.2, 'BF'),
             #   0.4mm pitch
-            SoConfig(24, 0.40, 5.0, 4.4, 6.4, 1.2, 'CA'),
-            SoConfig(32, 0.40, 6.5, 4.4, 6.4, 1.2, 'CB'),
-            SoConfig(36, 0.40, 7.8, 4.4, 6.4, 1.2, 'CC'),
-            SoConfig(48, 0.40, 9.7, 4.4, 6.4, 1.2, 'CD'),
+            SoConfig(24, 0.40, 5.0, 4.4, Dimension(6.4), 1.2, 'CA'),
+            SoConfig(32, 0.40, 6.5, 4.4, Dimension(6.4), 1.2, 'CB'),
+            SoConfig(36, 0.40, 7.8, 4.4, Dimension(6.4), 1.2, 'CC'),
+            SoConfig(48, 0.40, 9.7, 4.4, Dimension(6.4), 1.2, 'CD'),
             # 6.10mm body width
             #   0.65mm pitch
-            SoConfig(24, 0.65, 7.8, 6.1, 8.1, 1.2, 'DA'),
-            SoConfig(28, 0.65, 9.7, 6.1, 8.1, 1.2, 'DB'),
-            SoConfig(30, 0.65, 9.7, 6.1, 8.1, 1.2, 'DB-1'),
-            SoConfig(32, 0.65, 11.0, 6.1, 8.1, 1.2, 'DC'),
-            SoConfig(36, 0.65, 12.5, 6.1, 8.1, 1.2, 'DD'),
-            SoConfig(38, 0.65, 12.5, 6.1, 8.1, 1.2, 'DD-1'),
-            SoConfig(40, 0.65, 14.0, 6.1, 8.1, 1.2, 'DE'),
+            SoConfig(24, 0.65, 7.8, 6.1, Dimension(8.1), 1.2, 'DA'),
+            SoConfig(28, 0.65, 9.7, 6.1, Dimension(8.1), 1.2, 'DB'),
+            SoConfig(30, 0.65, 9.7, 6.1, Dimension(8.1), 1.2, 'DB-1'),
+            SoConfig(32, 0.65, 11.0, 6.1, Dimension(8.1), 1.2, 'DC'),
+            SoConfig(36, 0.65, 12.5, 6.1, Dimension(8.1), 1.2, 'DD'),
+            SoConfig(38, 0.65, 12.5, 6.1, Dimension(8.1), 1.2, 'DD-1'),
+            SoConfig(40, 0.65, 14.0, 6.1, Dimension(8.1), 1.2, 'DE'),
             #  0.5mm pitch
-            SoConfig(28, 0.50, 7.8, 6.1, 8.1, 1.2, 'EA'),
-            SoConfig(36, 0.50, 9.7, 6.1, 8.1, 1.2, 'EB'),
-            SoConfig(40, 0.50, 11.0, 6.1, 8.1, 1.2, 'EC'),
-            SoConfig(44, 0.50, 11.0, 6.1, 8.1, 1.2, 'EC-1'),
-            SoConfig(48, 0.50, 12.5, 6.1, 8.1, 1.2, 'ED'),
-            SoConfig(56, 0.50, 14.0, 6.1, 8.1, 1.2, 'EE'),
-            SoConfig(64, 0.50, 17.0, 6.1, 8.1, 1.2, 'EF'),
+            SoConfig(28, 0.50, 7.8, 6.1, Dimension(8.1), 1.2, 'EA'),
+            SoConfig(36, 0.50, 9.7, 6.1, Dimension(8.1), 1.2, 'EB'),
+            SoConfig(40, 0.50, 11.0, 6.1, Dimension(8.1), 1.2, 'EC'),
+            SoConfig(44, 0.50, 11.0, 6.1, Dimension(8.1), 1.2, 'EC-1'),
+            SoConfig(48, 0.50, 12.5, 6.1, Dimension(8.1), 1.2, 'ED'),
+            SoConfig(56, 0.50, 14.0, 6.1, Dimension(8.1), 1.2, 'EE'),
+            SoConfig(64, 0.50, 17.0, 6.1, Dimension(8.1), 1.2, 'EF'),
             #  0.4mm pitch
-            SoConfig(36, 0.40, 7.8, 6.1, 8.1, 1.2, 'FA'),
-            SoConfig(48, 0.40, 9.7, 6.1, 8.1, 1.2, 'FB'),
-            SoConfig(52, 0.40, 11.0, 6.1, 8.1, 1.2, 'FC'),
-            SoConfig(56, 0.40, 12.5, 6.1, 8.1, 1.2, 'FD'),
-            SoConfig(64, 0.40, 14.0, 6.1, 8.1, 1.2, 'FE'),
-            SoConfig(80, 0.40, 17.0, 6.1, 8.1, 1.2, 'FF'),
+            SoConfig(36, 0.40, 7.8, 6.1, Dimension(8.1), 1.2, 'FA'),
+            SoConfig(48, 0.40, 9.7, 6.1, Dimension(8.1), 1.2, 'FB'),
+            SoConfig(52, 0.40, 11.0, 6.1, Dimension(8.1), 1.2, 'FC'),
+            SoConfig(56, 0.40, 12.5, 6.1, Dimension(8.1), 1.2, 'FD'),
+            SoConfig(64, 0.40, 14.0, 6.1, Dimension(8.1), 1.2, 'FE'),
+            SoConfig(80, 0.40, 17.0, 6.1, Dimension(8.1), 1.2, 'FF'),
             # 8.00mm body width
             #   0.65mm pitch
-            SoConfig(28, 0.65, 9.7, 8.0, 10.0, 1.2, 'GA'),
-            SoConfig(32, 0.65, 11.0, 8.0, 10.0, 1.2, 'GB'),
-            SoConfig(36, 0.65, 12.5, 8.0, 10.0, 1.2, 'GC'),
-            SoConfig(40, 0.65, 14.0, 8.0, 10.0, 1.2, 'GD'),
+            SoConfig(28, 0.65, 9.7, 8.0, Dimension(10.0), 1.2, 'GA'),
+            SoConfig(32, 0.65, 11.0, 8.0, Dimension(10.0), 1.2, 'GB'),
+            SoConfig(36, 0.65, 12.5, 8.0, Dimension(10.0), 1.2, 'GC'),
+            SoConfig(40, 0.65, 14.0, 8.0, Dimension(10.0), 1.2, 'GD'),
             #   0.5mm pitch
-            SoConfig(36, 0.50, 9.7, 8.0, 10.0, 1.2, 'HA'),
-            SoConfig(40, 0.50, 11.0, 8.0, 10.0, 1.2, 'HB'),
-            SoConfig(48, 0.50, 12.5, 8.0, 10.0, 1.2, 'HC'),
-            SoConfig(56, 0.50, 14.0, 8.0, 10.0, 1.2, 'HD'),
+            SoConfig(36, 0.50, 9.7, 8.0, Dimension(10.0), 1.2, 'HA'),
+            SoConfig(40, 0.50, 11.0, 8.0, Dimension(10.0), 1.2, 'HB'),
+            SoConfig(48, 0.50, 12.5, 8.0, Dimension(10.0), 1.2, 'HC'),
+            SoConfig(56, 0.50, 14.0, 8.0, Dimension(10.0), 1.2, 'HD'),
             #   0.4mm pitch
-            SoConfig(48, 0.40, 9.7, 8.0, 10.0, 1.2, 'JA'),
-            SoConfig(52, 0.40, 11.0, 8.0, 10.0, 1.2, 'JB'),
-            SoConfig(56, 0.40, 12.5, 8.0, 10.0, 1.2, 'JC'),
-            SoConfig(60, 0.40, 12.5, 8.0, 10.0, 1.2, 'JC-1'),
-            SoConfig(64, 0.40, 14.0, 8.0, 10.0, 1.2, 'JD'),
-            SoConfig(68, 0.40, 14.0, 8.0, 10.0, 1.2, 'JD-1'),
+            SoConfig(48, 0.40, 9.7, 8.0, Dimension(10.0), 1.2, 'JA'),
+            SoConfig(52, 0.40, 11.0, 8.0, Dimension(10.0), 1.2, 'JB'),
+            SoConfig(56, 0.40, 12.5, 8.0, Dimension(10.0), 1.2, 'JC'),
+            SoConfig(60, 0.40, 12.5, 8.0, Dimension(10.0), 1.2, 'JC-1'),
+            SoConfig(64, 0.40, 14.0, 8.0, Dimension(10.0), 1.2, 'JD'),
+            SoConfig(68, 0.40, 14.0, 8.0, Dimension(10.0), 1.2, 'JD-1'),
         ],
         lead_width_lookup={
-            0.65: 0.3,
-            0.5: 0.27,
-            0.4: 0.23,
+            0.65: Dimension(0.3),
+            0.5: Dimension(0.27),
+            0.4: Dimension(0.23),
         },
-        lead_contact_length=0.6,
+        lead_contact_length=Dimension(0.6),
         generate_3d_models=generate_3d_models,
         pkgcat='241d9d5d-8f74-4740-8901-3cf51cf50091',
         keywords='so,sop,tssop,small outline package,smd',
@@ -816,75 +842,75 @@ if __name__ == '__main__':
         'Height: {height:.2f} mm\n'
         'Lead length: {lead_length:.2f} mm\nLead width: {lead_width:.2f} mm',
         configs=[
-            # pin count, pitch, body length, body width, total width, height
+            # pin count, pitch, body length, body width, lead span, height
             # Symbols based on JEDEC MO-152:
             #        N    e     D    E1   E    A
             # 4.40mm body width
             #   0.65mm pitch
-            SoConfig(8, 0.65, 3.0, 4.4, 6.4, 2.0, 'AA'),
-            SoConfig(14, 0.65, 5.0, 4.4, 6.4, 2.0, 'AB-1'),
-            SoConfig(16, 0.65, 5.0, 4.4, 6.4, 2.0, 'AB'),
-            SoConfig(20, 0.65, 6.5, 4.4, 6.4, 2.0, 'AC'),
-            SoConfig(24, 0.65, 7.8, 4.4, 6.4, 2.0, 'AD'),
-            SoConfig(28, 0.65, 9.7, 4.4, 6.4, 2.0, 'AE'),
+            SoConfig(8, 0.65, 3.0, 4.4, Dimension(6.4), 2.0, 'AA'),
+            SoConfig(14, 0.65, 5.0, 4.4, Dimension(6.4), 2.0, 'AB-1'),
+            SoConfig(16, 0.65, 5.0, 4.4, Dimension(6.4), 2.0, 'AB'),
+            SoConfig(20, 0.65, 6.5, 4.4, Dimension(6.4), 2.0, 'AC'),
+            SoConfig(24, 0.65, 7.8, 4.4, Dimension(6.4), 2.0, 'AD'),
+            SoConfig(28, 0.65, 9.7, 4.4, Dimension(6.4), 2.0, 'AE'),
             #   0.5mm pitch
-            SoConfig(20, 0.50, 5.0, 4.4, 6.4, 2.0, 'BA'),
-            SoConfig(24, 0.50, 6.5, 4.4, 6.4, 2.0, 'BB'),
-            SoConfig(28, 0.50, 7.8, 4.4, 6.4, 2.0, 'BC'),
-            SoConfig(36, 0.50, 9.7, 4.4, 6.4, 2.0, 'BD'),
+            SoConfig(20, 0.50, 5.0, 4.4, Dimension(6.4), 2.0, 'BA'),
+            SoConfig(24, 0.50, 6.5, 4.4, Dimension(6.4), 2.0, 'BB'),
+            SoConfig(28, 0.50, 7.8, 4.4, Dimension(6.4), 2.0, 'BC'),
+            SoConfig(36, 0.50, 9.7, 4.4, Dimension(6.4), 2.0, 'BD'),
             #   0.4mm pitch
-            SoConfig(24, 0.40, 5.0, 4.4, 6.4, 2.0, 'CA'),
-            SoConfig(32, 0.40, 6.5, 4.4, 6.4, 2.0, 'CB'),
-            SoConfig(36, 0.40, 7.8, 4.4, 6.4, 2.0, 'CC'),
-            SoConfig(48, 0.40, 9.7, 4.4, 6.4, 2.0, 'CD'),
+            SoConfig(24, 0.40, 5.0, 4.4, Dimension(6.4), 2.0, 'CA'),
+            SoConfig(32, 0.40, 6.5, 4.4, Dimension(6.4), 2.0, 'CB'),
+            SoConfig(36, 0.40, 7.8, 4.4, Dimension(6.4), 2.0, 'CC'),
+            SoConfig(48, 0.40, 9.7, 4.4, Dimension(6.4), 2.0, 'CD'),
             # 6.10mm body width
             #   0.65mm pitch
-            SoConfig(24, 0.65, 7.8, 6.1, 8.1, 2.0, 'DA'),
-            SoConfig(28, 0.65, 9.7, 6.1, 8.1, 2.0, 'DB'),
-            SoConfig(30, 0.65, 9.7, 6.1, 8.1, 2.0, 'DB-1'),
-            SoConfig(32, 0.65, 11.0, 6.1, 8.1, 2.0, 'DC'),
-            SoConfig(36, 0.65, 12.5, 6.1, 8.1, 2.0, 'DD'),
-            SoConfig(40, 0.65, 14.0, 6.1, 8.1, 2.0, 'DE'),
+            SoConfig(24, 0.65, 7.8, 6.1, Dimension(8.1), 2.0, 'DA'),
+            SoConfig(28, 0.65, 9.7, 6.1, Dimension(8.1), 2.0, 'DB'),
+            SoConfig(30, 0.65, 9.7, 6.1, Dimension(8.1), 2.0, 'DB-1'),
+            SoConfig(32, 0.65, 11.0, 6.1, Dimension(8.1), 2.0, 'DC'),
+            SoConfig(36, 0.65, 12.5, 6.1, Dimension(8.1), 2.0, 'DD'),
+            SoConfig(40, 0.65, 14.0, 6.1, Dimension(8.1), 2.0, 'DE'),
             #  0.5mm pitch
-            SoConfig(28, 0.50, 7.8, 6.1, 8.1, 2.0, 'EA'),
-            SoConfig(36, 0.50, 9.7, 6.1, 8.1, 2.0, 'EB'),
-            SoConfig(40, 0.50, 11.0, 6.1, 8.1, 2.0, 'EC'),
-            SoConfig(44, 0.50, 11.0, 6.1, 8.1, 2.0, 'EC-1'),
-            SoConfig(48, 0.50, 12.5, 6.1, 8.1, 2.0, 'ED'),
-            SoConfig(56, 0.50, 14.0, 6.1, 8.1, 2.0, 'EE'),
-            SoConfig(64, 0.50, 17.0, 6.1, 8.1, 2.0, 'EF'),
+            SoConfig(28, 0.50, 7.8, 6.1, Dimension(8.1), 2.0, 'EA'),
+            SoConfig(36, 0.50, 9.7, 6.1, Dimension(8.1), 2.0, 'EB'),
+            SoConfig(40, 0.50, 11.0, 6.1, Dimension(8.1), 2.0, 'EC'),
+            SoConfig(44, 0.50, 11.0, 6.1, Dimension(8.1), 2.0, 'EC-1'),
+            SoConfig(48, 0.50, 12.5, 6.1, Dimension(8.1), 2.0, 'ED'),
+            SoConfig(56, 0.50, 14.0, 6.1, Dimension(8.1), 2.0, 'EE'),
+            SoConfig(64, 0.50, 17.0, 6.1, Dimension(8.1), 2.0, 'EF'),
             #  0.4mm pitch
-            SoConfig(36, 0.40, 7.8, 6.1, 8.1, 2.0, 'FA'),
-            SoConfig(48, 0.40, 9.7, 6.1, 8.1, 2.0, 'FB'),
-            SoConfig(52, 0.40, 11.0, 6.1, 8.1, 2.0, 'FC'),
-            SoConfig(56, 0.40, 12.5, 6.1, 8.1, 2.0, 'FD'),
-            SoConfig(64, 0.40, 14.0, 6.1, 8.1, 2.0, 'FE'),
-            SoConfig(80, 0.40, 17.0, 6.1, 8.1, 2.0, 'FF'),
+            SoConfig(36, 0.40, 7.8, 6.1, Dimension(8.1), 2.0, 'FA'),
+            SoConfig(48, 0.40, 9.7, 6.1, Dimension(8.1), 2.0, 'FB'),
+            SoConfig(52, 0.40, 11.0, 6.1, Dimension(8.1), 2.0, 'FC'),
+            SoConfig(56, 0.40, 12.5, 6.1, Dimension(8.1), 2.0, 'FD'),
+            SoConfig(64, 0.40, 14.0, 6.1, Dimension(8.1), 2.0, 'FE'),
+            SoConfig(80, 0.40, 17.0, 6.1, Dimension(8.1), 2.0, 'FF'),
             # 8.00mm body width
             #   0.65mm pitch
-            SoConfig(28, 0.65, 9.7, 8.0, 10.0, 2.0, 'GA'),
-            SoConfig(32, 0.65, 11.0, 8.0, 10.0, 2.0, 'GB'),
-            SoConfig(36, 0.65, 12.5, 8.0, 10.0, 2.0, 'GC'),
-            SoConfig(40, 0.65, 14.0, 8.0, 10.0, 2.0, 'GD'),
+            SoConfig(28, 0.65, 9.7, 8.0, Dimension(10.0), 2.0, 'GA'),
+            SoConfig(32, 0.65, 11.0, 8.0, Dimension(10.0), 2.0, 'GB'),
+            SoConfig(36, 0.65, 12.5, 8.0, Dimension(10.0), 2.0, 'GC'),
+            SoConfig(40, 0.65, 14.0, 8.0, Dimension(10.0), 2.0, 'GD'),
             #   0.5mm pitch
-            SoConfig(36, 0.50, 9.7, 8.0, 10.0, 2.0, 'HA'),
-            SoConfig(40, 0.50, 11.0, 8.0, 10.0, 2.0, 'HB'),
-            SoConfig(48, 0.50, 12.5, 8.0, 10.0, 2.0, 'HC'),
-            SoConfig(56, 0.50, 14.0, 8.0, 10.0, 2.0, 'HD'),
+            SoConfig(36, 0.50, 9.7, 8.0, Dimension(10.0), 2.0, 'HA'),
+            SoConfig(40, 0.50, 11.0, 8.0, Dimension(10.0), 2.0, 'HB'),
+            SoConfig(48, 0.50, 12.5, 8.0, Dimension(10.0), 2.0, 'HC'),
+            SoConfig(56, 0.50, 14.0, 8.0, Dimension(10.0), 2.0, 'HD'),
             #   0.4mm pitch
-            SoConfig(48, 0.40, 9.7, 8.0, 10.0, 2.0, 'JA'),
-            SoConfig(52, 0.40, 11.0, 8.0, 10.0, 2.0, 'JB'),
-            SoConfig(56, 0.40, 12.5, 8.0, 10.0, 2.0, 'JC'),
-            SoConfig(60, 0.40, 12.5, 8.0, 10.0, 2.0, 'JC-1'),
-            SoConfig(64, 0.40, 14.0, 8.0, 10.0, 2.0, 'JD'),
-            SoConfig(68, 0.40, 14.0, 8.0, 10.0, 2.0, 'JD-1'),
+            SoConfig(48, 0.40, 9.7, 8.0, Dimension(10.0), 2.0, 'JA'),
+            SoConfig(52, 0.40, 11.0, 8.0, Dimension(10.0), 2.0, 'JB'),
+            SoConfig(56, 0.40, 12.5, 8.0, Dimension(10.0), 2.0, 'JC'),
+            SoConfig(60, 0.40, 12.5, 8.0, Dimension(10.0), 2.0, 'JC-1'),
+            SoConfig(64, 0.40, 14.0, 8.0, Dimension(10.0), 2.0, 'JD'),
+            SoConfig(68, 0.40, 14.0, 8.0, Dimension(10.0), 2.0, 'JD-1'),
         ],
         lead_width_lookup={
-            0.65: 0.30,
-            0.50: 0.27,
-            0.40: 0.23,
+            0.65: Dimension(0.30),
+            0.50: Dimension(0.27),
+            0.40: Dimension(0.23),
         },
-        lead_contact_length=0.6,
+        lead_contact_length=Dimension(0.6),
         generate_3d_models=generate_3d_models,
         pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
         keywords='so,sop,ssop,small outline package,smd,jedec,mo-152',
@@ -903,24 +929,24 @@ if __name__ == '__main__':
         'Height: {height:.2f} mm\n'
         'Lead length: {lead_length:.2f} mm\nLead width: {lead_width:.2f} mm',
         configs=[
-            # pin count, pitch, body length, body width, total width, height
+            # pin count, pitch, body length, body width, lead span, height
             # Symbols based on JEDEC MO-150:
-            #        N   e      D    E1   E    A
-            SoConfig(8, 0.65, 3.0, 5.3, 7.8, 2.0, 'AA'),
-            SoConfig(14, 0.65, 6.2, 5.3, 7.8, 2.0, 'AB'),
-            SoConfig(16, 0.65, 6.2, 5.3, 7.8, 2.0, 'AC'),
-            SoConfig(18, 0.65, 7.2, 5.3, 7.8, 2.0, 'AD'),
-            SoConfig(20, 0.65, 7.2, 5.3, 7.8, 2.0, 'AE'),
-            SoConfig(22, 0.65, 8.2, 5.3, 7.8, 2.0, 'AF'),
-            SoConfig(24, 0.65, 8.2, 5.3, 7.8, 2.0, 'AG'),
-            SoConfig(28, 0.65, 10.2, 5.3, 7.8, 2.0, 'AH'),
-            SoConfig(30, 0.65, 10.2, 5.3, 7.8, 2.0, 'AJ'),
-            SoConfig(38, 0.65, 12.6, 5.3, 7.8, 2.0, 'AK'),
+            #        N  e     D    E1   E               A
+            SoConfig(8, 0.65, 3.0, 5.3, Dimension(7.8), 2.0, 'AA'),
+            SoConfig(14, 0.65, 6.2, 5.3, Dimension(7.8), 2.0, 'AB'),
+            SoConfig(16, 0.65, 6.2, 5.3, Dimension(7.8), 2.0, 'AC'),
+            SoConfig(18, 0.65, 7.2, 5.3, Dimension(7.8), 2.0, 'AD'),
+            SoConfig(20, 0.65, 7.2, 5.3, Dimension(7.8), 2.0, 'AE'),
+            SoConfig(22, 0.65, 8.2, 5.3, Dimension(7.8), 2.0, 'AF'),
+            SoConfig(24, 0.65, 8.2, 5.3, Dimension(7.8), 2.0, 'AG'),
+            SoConfig(28, 0.65, 10.2, 5.3, Dimension(7.8), 2.0, 'AH'),
+            SoConfig(30, 0.65, 10.2, 5.3, Dimension(7.8), 2.0, 'AJ'),
+            SoConfig(38, 0.65, 12.6, 5.3, Dimension(7.8), 2.0, 'AK'),
         ],
         lead_width_lookup={
-            0.65: 0.38,
+            0.65: Dimension(0.38),
         },
-        lead_contact_length=0.75,
+        lead_contact_length=Dimension(0.75),
         generate_3d_models=generate_3d_models,
         pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
         keywords='so,sop,ssop,small outline package,smd,jedec,mo-150',
@@ -941,30 +967,30 @@ if __name__ == '__main__':
         'Height: {height:.2f} mm\n'
         'Lead length: {lead_length:.2f} mm\nLead width: {lead_width:.2f} mm',
         configs=[
-            # pin count, pitch, body length, body width, total width, height
+            # pin count, pitch, body length, body width, lead span, height
             # Symbols based on JEDEC MS-024:
-            #        N    e     D      E1     E      A
-            SoConfig(28, 1.27, 18.41, 10.16, 11.76, 1.2, 'AA'),
-            SoConfig(32, 1.27, 20.95, 10.16, 11.76, 1.2, 'BA'),
-            SoConfig(50, 0.80, 20.95, 10.16, 11.76, 1.2, 'BC'),
-            SoConfig(80, 0.50, 20.95, 10.16, 11.76, 1.2, 'BD'),
-            SoConfig(36, 1.27, 23.49, 10.16, 11.76, 1.2, 'CA'),
-            SoConfig(70, 0.65, 23.49, 10.16, 11.76, 1.2, 'CB'),
-            SoConfig(40, 1.27, 26.03, 10.16, 11.76, 1.2, 'DA'),
-            SoConfig(70, 0.80, 28.57, 10.16, 11.76, 1.2, 'EA'),
-            SoConfig(54, 0.80, 22.22, 10.16, 11.76, 1.2, 'FA'),
-            SoConfig(86, 0.50, 22.22, 10.16, 11.76, 1.2, 'FB'),
-            SoConfig(66, 0.65, 22.22, 10.16, 11.76, 1.2, 'FC'),
-            SoConfig(54, 0.40, 11.20, 10.16, 11.76, 1.2, 'GA'),
+            #        N   e     D      E1     E                 A
+            SoConfig(28, 1.27, 18.41, 10.16, Dimension(11.76), 1.2, 'AA'),
+            SoConfig(32, 1.27, 20.95, 10.16, Dimension(11.76), 1.2, 'BA'),
+            SoConfig(50, 0.80, 20.95, 10.16, Dimension(11.76), 1.2, 'BC'),
+            SoConfig(80, 0.50, 20.95, 10.16, Dimension(11.76), 1.2, 'BD'),
+            SoConfig(36, 1.27, 23.49, 10.16, Dimension(11.76), 1.2, 'CA'),
+            SoConfig(70, 0.65, 23.49, 10.16, Dimension(11.76), 1.2, 'CB'),
+            SoConfig(40, 1.27, 26.03, 10.16, Dimension(11.76), 1.2, 'DA'),
+            SoConfig(70, 0.80, 28.57, 10.16, Dimension(11.76), 1.2, 'EA'),
+            SoConfig(54, 0.80, 22.22, 10.16, Dimension(11.76), 1.2, 'FA'),
+            SoConfig(86, 0.50, 22.22, 10.16, Dimension(11.76), 1.2, 'FB'),
+            SoConfig(66, 0.65, 22.22, 10.16, Dimension(11.76), 1.2, 'FC'),
+            SoConfig(54, 0.40, 11.20, 10.16, Dimension(11.76), 1.2, 'GA'),
         ],
         lead_width_lookup={
-            0.40: 0.18,
-            0.50: 0.22,
-            0.65: 0.30,
-            0.80: 0.375,
-            1.27: 0.41,
+            0.40: Dimension(0.18),
+            0.50: Dimension(0.22),
+            0.65: Dimension(0.30),
+            0.80: Dimension(0.375),
+            1.27: Dimension(0.41),
         },
-        lead_contact_length=0.5,
+        lead_contact_length=Dimension(0.5),
         generate_3d_models=generate_3d_models,
         pkgcat='7993abb0-fb0a-4157-8f83-1db890755836',
         keywords='so,sop,tsop,small outline package,smd',
