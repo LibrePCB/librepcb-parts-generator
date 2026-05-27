@@ -275,7 +275,7 @@ def generate_pkg(
             pad_side = get_by_density(pitch, density_level, 'side')
 
             # Pads
-            pad_width = lead_width + pad_side
+            pad_width = lead_width + 2 * pad_side
             pad_length = lead_contact_length + pad_heel + pad_toe
             pad_x_offset = total_width / 2 - lead_contact_length / 2 - pad_heel / 2 + pad_toe / 2
             for p in range(1, pin_count + 1):
