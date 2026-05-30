@@ -735,7 +735,7 @@ if __name__ == '__main__':
             configs.append(SoConfig(pin_count, pitch, body_length, body_width, lead_span, height))
     generate_pkg(
         library='LibrePCB_Base.lplib',
-        author='Danilo B.',
+        author='Danilo B., U. Bruhin',
         name='SOIC{pitch}P762X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
         'standardized by EIAJ EDR-7320.',
@@ -745,7 +745,7 @@ if __name__ == '__main__':
         lead_contact_length=0.8,  # 'Lp'
         generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
-        keywords='so,soic,small outline,smd,eiaj',
+        keywords='small outline,eiaj,edr-7320',
         version='0.4',
         create_date='2018-11-10T20:32:03Z',
     )
@@ -759,7 +759,7 @@ if __name__ == '__main__':
             configs.append(SoConfig(pin_count, pitch, body_length, body_width, lead_span, height))
     generate_pkg(
         library='LibrePCB_Base.lplib',
-        author='Danilo B.',
+        author='Danilo B., U. Bruhin',
         name='SOIC{pitch}P1524X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
         'standardized by EIAJ EDR-7320.',
@@ -769,7 +769,7 @@ if __name__ == '__main__':
         lead_contact_length=0.8,  # 'Lp'
         generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
-        keywords='so,soic,small outline,smd,eiaj',
+        keywords='small outline,eiaj,edr-7320',
         version='0.4',
         create_date='2018-11-10T20:32:03Z',
     )
@@ -790,7 +790,7 @@ if __name__ == '__main__':
         configs.append(SoConfig(pin_count, pitch, body_length, body_width, lead_span, height))
     generate_pkg(
         library='LibrePCB_Base.lplib',
-        author='Danilo B.',
+        author='Danilo B., U. Bruhin',
         name='SOIC{pitch}P600X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
         'standardized by JEDEC MS-012H, variation Ax.',
@@ -800,7 +800,7 @@ if __name__ == '__main__':
         lead_contact_length=0.835,
         generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
-        keywords='so,soic,small outline,smd,jedec',
+        keywords='small outline,jedec,ms-012h',
         version='0.4',
         create_date='2018-11-10T20:32:03Z',
     )
@@ -833,7 +833,7 @@ if __name__ == '__main__':
         lead_contact_length=0.835,  # 'L'
         generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
-        keywords='so,soic,small outline,smd,jedec,ms-013f',
+        keywords='small outline,jedec,ms-013h',
         version='0.3',
         create_date='2020-09-15T20:46:13Z',
     )
@@ -929,7 +929,7 @@ if __name__ == '__main__':
         lead_contact_length=0.6,
         generate_3d_models=generate_3d_models,
         pkgcat='241d9d5d-8f74-4740-8901-3cf51cf50091',
-        keywords='so,sop,tssop,small outline package,smd',
+        keywords='sop,soic,small outline package,jedec,mo-153i',
         version='0.4',
         create_date='2019-06-16T12:46:54Z',
     )
@@ -1020,7 +1020,7 @@ if __name__ == '__main__':
         lead_contact_length=0.6,
         generate_3d_models=generate_3d_models,
         pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
-        keywords='so,sop,ssop,small outline package,smd,jedec,mo-152',
+        keywords='sop,soic,small outline package,jedec,mo-152c',
         version='0.3',
         create_date='2019-07-21T12:55:20Z',
     )
@@ -1056,7 +1056,7 @@ if __name__ == '__main__':
         lead_contact_length=0.75,
         generate_3d_models=generate_3d_models,
         pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
-        keywords='so,sop,ssop,small outline package,smd,jedec,mo-150',
+        keywords='sop,soic,small outline package,jedec,mo-150b',
         version='0.3',
         create_date='2019-07-21T12:55:20Z',
     )
@@ -1104,7 +1104,7 @@ if __name__ == '__main__':
         lead_contact_length=0.5,
         generate_3d_models=generate_3d_models,
         pkgcat='7993abb0-fb0a-4157-8f83-1db890755836',
-        keywords='so,sop,tsop,small outline package,smd',
+        keywords='sop,soic,small outline package,jedec,ms-024h',
         version='0.3',
         create_date='2020-12-26T16:14:30Z',
     )
