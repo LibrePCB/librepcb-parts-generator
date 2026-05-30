@@ -12,7 +12,7 @@ import sys
 from os import path
 from uuid import uuid4
 
-from typing import Dict, Iterable, List, Optional
+from typing import Dict, Iterable, List, Optional, cast
 
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache
@@ -42,7 +42,6 @@ from entities.common import (
     Version,
     Vertex,
     Width,
-    generate_courtyard,
 )
 from entities.package import (
     AssemblyType,
@@ -72,24 +71,50 @@ from entities.package import (
 
 generator = 'librepcb-parts-generator (generate_so.py)'
 
-line_width = 0.25
+line_width = 0.2
 pkg_text_height = 1.0
 silkscreen_offset = 0.150  # 150 µm
-pin_package_offset = 0.762  # Distance between pad center and the package body
 
 
-# Based on IPC 7351B (Table 3-2)
-DENSITY_LEVELS = {  # For pitch 0.625 mm and up
-    'A': {'toe': 0.55, 'heel': 0.45, 'side': 0.05, 'courtyard': 0.50},
-    'B': {'toe': 0.35, 'heel': 0.35, 'side': 0.03, 'courtyard': 0.25},
-    'C': {'toe': 0.15, 'heel': 0.25, 'side': 0.01, 'courtyard': 0.10},
-}
-# Based on IPC 7351B (Table 3-3)
-DENSITY_LEVELS_SMALL = {  # For pitch below 0.625 mm
-    'A': {'toe': 0.55, 'heel': 0.45, 'side': 0.01, 'courtyard': 0.50},
-    'B': {'toe': 0.35, 'heel': 0.35, 'side': -0.02, 'courtyard': 0.25},
-    'C': {'toe': 0.15, 'heel': 0.25, 'side': -0.04, 'courtyard': 0.10},
-}
+# Based on Footprint Expert Guidelines, Chapter 7.0 (Nominal Calculation)
+DENSITY_LEVELS: List[Dict[str, object]] = [
+    {
+        'pitch_above': 1.0,
+        'C': {'toe': 0.3, 'heel': 0.4, 'side': 0.08, 'courtyard': 0.1},
+        'B': {'toe': 0.35, 'heel': 0.5, 'side': 0.1, 'courtyard': 0.2},
+        'A': {'toe': 0.4, 'heel': 0.6, 'side': 0.12, 'courtyard': 0.4},
+    },
+    {
+        'pitch_above': 0.8,
+        'C': {'toe': 0.25, 'heel': 0.35, 'side': 0.06, 'courtyard': 0.1},
+        'B': {'toe': 0.3, 'heel': 0.45, 'side': 0.08, 'courtyard': 0.2},
+        'A': {'toe': 0.35, 'heel': 0.65, 'side': 0.1, 'courtyard': 0.4},
+    },
+    {
+        'pitch_above': 0.65,
+        'C': {'toe': 0.2, 'heel': 0.3, 'side': 0.04, 'courtyard': 0.1},
+        'B': {'toe': 0.25, 'heel': 0.4, 'side': 0.06, 'courtyard': 0.2},
+        'A': {'toe': 0.3, 'heel': 0.5, 'side': 0.08, 'courtyard': 0.4},
+    },
+    {
+        'pitch_above': 0.5,
+        'C': {'toe': 0.15, 'heel': 0.25, 'side': 0.02, 'courtyard': 0.1},
+        'B': {'toe': 0.2, 'heel': 0.35, 'side': 0.04, 'courtyard': 0.2},
+        'A': {'toe': 0.25, 'heel': 0.45, 'side': 0.06, 'courtyard': 0.4},
+    },
+    {
+        'pitch_above': 0.4,
+        'C': {'toe': 0.1, 'heel': 0.2, 'side': 0.0, 'courtyard': 0.1},
+        'B': {'toe': 0.15, 'heel': 0.3, 'side': 0.02, 'courtyard': 0.2},
+        'A': {'toe': 0.2, 'heel': 0.4, 'side': 0.04, 'courtyard': 0.4},
+    },
+    {
+        'pitch_above': 0.0,
+        'C': {'toe': 0.1, 'heel': 0.2, 'side': 0.0, 'courtyard': 0.1},
+        'B': {'toe': 0.15, 'heel': 0.3, 'side': 0.02, 'courtyard': 0.2},
+        'A': {'toe': 0.2, 'heel': 0.4, 'side': 0.04, 'courtyard': 0.4},
+    },
+]
 
 
 # Initialize UUID cache
@@ -116,11 +141,10 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
 
 
 def get_by_density(pitch: float, level: str, key: str) -> float:
-    if pitch >= 0.625:
-        table = DENSITY_LEVELS
-    else:
-        table = DENSITY_LEVELS_SMALL
-    return table[level][key]
+    for table in DENSITY_LEVELS:
+        if pitch > cast(float, table['pitch_above']):
+            return cast(Dict[str, float], table[level])[key]
+    assert False
 
 
 def get_y(pin_number: int, pin_count: int, spacing: float, grid_align: bool) -> float:
@@ -150,7 +174,7 @@ class SoConfig:
         pitch: float,
         body_length: float,
         body_width: float,
-        total_width: float,
+        lead_span: float,
         height: float,
         variation: Optional[str] = None,
     ):
@@ -158,7 +182,7 @@ class SoConfig:
         self.pitch = pitch
         self.body_length = body_length
         self.body_width = body_width
-        self.total_width = total_width
+        self.lead_span = lead_span
         self.height = height
         self.variation = variation
 
@@ -170,6 +194,7 @@ def generate_pkg(
     description: str,
     configs: Iterable[SoConfig],
     lead_width_lookup: Dict[float, float],
+    min_pad_width_lookup: Dict[float, float],
     lead_contact_length: float,
     generate_3d_models: bool,
     pkgcat: str,
@@ -183,27 +208,36 @@ def generate_pkg(
         pin_count = config.pin_count
         height = config.height
         body_width = config.body_width
-        total_width = config.total_width
+        lead_span = config.lead_span
         body_length = config.body_length
         lead_width = lead_width_lookup[pitch]
-        lead_length = (total_width - body_width) / 2
+        lead_length = (lead_span - body_width) / 2
+        min_pad_width = min_pad_width_lookup[pitch]
 
         full_name = name.format(
             height=fd(height),
             pitch=fd(pitch),
             pin_count=pin_count,
             body_length=fd(body_length),
-            lead_span=fd(total_width),
+            lead_span=fd(lead_span),
             lead_width=fd(lead_width),
             lead_length=fd(lead_length),
         )
-        full_description = description.format(
+        full_description = (
+            description + '\n\nPitch: {pitch:.2f} mm\n'
+            'Body length: {body_length:.2f} mm\n'
+            'Body width: {body_width:.2f} mm\n'
+            'Height: {height:.2f} mm\n'
+            'Lead span: {lead_span:.2f} mm\n'
+            'Lead width: {lead_width:.2f} mm'
+        )
+        full_description = full_description.format(
             height=height,
             pin_count=pin_count,
             pitch=pitch,
             body_length=body_length,
             body_width=body_width,
-            lead_span=total_width,
+            lead_span=lead_span,
             lead_width=lead_width,
             lead_length=lead_length,
             variation=config.variation,
@@ -275,9 +309,20 @@ def generate_pkg(
             pad_side = get_by_density(pitch, density_level, 'side')
 
             # Pads
-            pad_width = lead_width + pad_side
+            # Trim width to maintain 0.15mm clearance, as documented in
+            # Footprint Expert Guidelines, Minimum pad to pad, page 71.
+            pad_width = min(lead_width + 2 * pad_side, pitch - 0.15)
+            # Increase pad width to a minimum value, because the tolerances
+            # specified for lead widths are sometimes very wide, possibly
+            # causing pads thinner than the maximum lead width. This is not
+            # specified in any standard, but I guess it is good to ensure
+            # *some* minimum pad width (even though maybe less than the maximum
+            #  lead width).
+            pad_width = max(pad_width, min_pad_width)
+            # Sanity check that we don't create pads thinner than the leads:
+            assert pad_width >= lead_width
             pad_length = lead_contact_length + pad_heel + pad_toe
-            pad_x_offset = total_width / 2 - lead_contact_length / 2 - pad_heel / 2 + pad_toe / 2
+            pad_x_offset = lead_span / 2 - lead_contact_length / 2 - pad_heel / 2 + pad_toe / 2
             for p in range(1, pin_count + 1):
                 mid = pin_count // 2
                 if p <= mid:
@@ -305,11 +350,11 @@ def generate_pkg(
                     )
                 )
                 max_y_copper = max(max_y_copper, y + pad_width / 2)
-            max_x = max(max_x, total_width / 2 + pad_toe)
+            max_x = max(max_x, lead_span / 2 + pad_toe)
 
             # Documentation: Leads
             lead_contact_x_offset = (
-                total_width / 2 - lead_contact_length
+                lead_span / 2 - lead_contact_length
             )  # this is the inner side of the contact area
             for p in range(1, pin_count + 1):
                 mid = pin_count // 2
@@ -365,10 +410,36 @@ def generate_pkg(
             # Silkscreen (fully outside body)
             # Ensure minimum clearance between copper and silkscreen
             y_offset = max(silkscreen_offset - (body_length / 2 - max_y_copper), 0)
-            y_max = body_length / 2 + line_width / 2 + y_offset
-            y_min = -body_length / 2 - line_width / 2 - y_offset
+            dy_outer = body_length / 2 + line_width / 2 + y_offset
+            dy_inner = max_y_copper + line_width / 2 + silkscreen_offset
             short_x_offset = body_width / 2 - line_width / 2
-            long_x_offset = total_width / 2 - line_width / 2 + pad_toe  # Pin1 marking
+            middle_x_offset = body_width / 2 + line_width / 2
+            long_x_offset = lead_span / 2 - line_width / 2 + pad_toe  # Pin1 marking
+            if dy_outer >= (dy_inner + 0.1):
+                # 'U'-shape line at top and bottom
+                top_vertices = [
+                    Vertex(Position(-long_x_offset, dy_inner), Angle(0)),
+                    Vertex(Position(-middle_x_offset, dy_inner), Angle(0)),
+                    Vertex(Position(-middle_x_offset, dy_outer), Angle(0)),
+                    Vertex(Position(middle_x_offset, dy_outer), Angle(0)),
+                    Vertex(Position(middle_x_offset, dy_inner), Angle(0)),
+                ]
+                bot_vertices = [
+                    Vertex(Position(-middle_x_offset, -dy_inner), Angle(0)),
+                    Vertex(Position(-middle_x_offset, -dy_outer), Angle(0)),
+                    Vertex(Position(middle_x_offset, -dy_outer), Angle(0)),
+                    Vertex(Position(middle_x_offset, -dy_inner), Angle(0)),
+                ]
+            else:
+                # Just a single straight line at top and bottom
+                top_vertices = [
+                    Vertex(Position(-long_x_offset, dy_outer), Angle(0)),
+                    Vertex(Position(short_x_offset, dy_outer), Angle(0)),
+                ]
+                bot_vertices = [
+                    Vertex(Position(-short_x_offset, -dy_outer), Angle(0)),
+                    Vertex(Position(short_x_offset, -dy_outer), Angle(0)),
+                ]
             footprint.add_polygon(
                 Polygon(
                     uuid=uuid_silkscreen_top,
@@ -376,10 +447,7 @@ def generate_pkg(
                     width=Width(line_width),
                     fill=Fill(False),
                     grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(-long_x_offset, y_max), Angle(0)),
-                        Vertex(Position(short_x_offset, y_max), Angle(0)),
-                    ],
+                    vertices=top_vertices,
                 )
             )
             footprint.add_polygon(
@@ -389,10 +457,7 @@ def generate_pkg(
                     width=Width(line_width),
                     fill=Fill(False),
                     grab_area=GrabArea(False),
-                    vertices=[
-                        Vertex(Position(-short_x_offset, y_min), Angle(0)),
-                        Vertex(Position(short_x_offset, y_min), Angle(0)),
-                    ],
+                    vertices=bot_vertices,
                 )
             )
 
@@ -436,8 +501,10 @@ def generate_pkg(
             footprint.add_circle(pin1_dot)
 
             # Package Outline
-            dx = config.total_width / 2
-            dy = config.body_length / 2
+            outer_dx = config.lead_span / 2
+            outer_dy = config.body_length / 2
+            inner_dx = config.body_width / 2
+            inner_dy = ((config.pitch * ((config.pin_count / 2) - 1)) / 2) + (lead_width / 2)
             footprint.add_polygon(
                 Polygon(
                     uuid=uuid_outline,
@@ -446,29 +513,55 @@ def generate_pkg(
                     fill=Fill(False),
                     grab_area=GrabArea(False),
                     vertices=[
-                        Vertex(Position(-dx, dy), Angle(0)),  # NW
-                        Vertex(Position(dx, dy), Angle(0)),  # NE
-                        Vertex(Position(dx, -dy), Angle(0)),  # SE
-                        Vertex(Position(-dx, -dy), Angle(0)),  # SW
+                        Vertex(Position(-inner_dx, outer_dy), Angle(0)),  # NW
+                        Vertex(Position(inner_dx, outer_dy), Angle(0)),  # NE
+                        Vertex(Position(inner_dx, inner_dy), Angle(0)),
+                        Vertex(Position(outer_dx, inner_dy), Angle(0)),
+                        Vertex(Position(outer_dx, -inner_dy), Angle(0)),
+                        Vertex(Position(inner_dx, -inner_dy), Angle(0)),
+                        Vertex(Position(inner_dx, -outer_dy), Angle(0)),  # SE
+                        Vertex(Position(-inner_dx, -outer_dy), Angle(0)),  # SW
+                        Vertex(Position(-inner_dx, -inner_dy), Angle(0)),
+                        Vertex(Position(-outer_dx, -inner_dy), Angle(0)),
+                        Vertex(Position(-outer_dx, inner_dy), Angle(0)),
+                        Vertex(Position(-inner_dx, inner_dy), Angle(0)),
                     ],
                 )
             )
 
             # Courtyard
             courtyard_excess = get_by_density(pitch, density_level, 'courtyard')
+            outer_dx = max(outer_dx + courtyard_excess, max_x)
+            outer_dy += courtyard_excess
+            inner_dx += courtyard_excess
+            inner_dy += courtyard_excess
             footprint.add_polygon(
-                generate_courtyard(
+                Polygon(
                     uuid=uuid_courtyard,
-                    max_x=max_x,
-                    max_y=max_y,
-                    excess_x=courtyard_excess,
-                    excess_y=courtyard_excess,
+                    layer=Layer('top_courtyard'),
+                    width=Width(0),
+                    fill=Fill(False),
+                    grab_area=GrabArea(False),
+                    vertices=[
+                        Vertex(Position(-inner_dx, outer_dy), Angle(0)),  # NW
+                        Vertex(Position(inner_dx, outer_dy), Angle(0)),  # NE
+                        Vertex(Position(inner_dx, inner_dy), Angle(0)),
+                        Vertex(Position(outer_dx, inner_dy), Angle(0)),
+                        Vertex(Position(outer_dx, -inner_dy), Angle(0)),
+                        Vertex(Position(inner_dx, -inner_dy), Angle(0)),
+                        Vertex(Position(inner_dx, -outer_dy), Angle(0)),  # SE
+                        Vertex(Position(-inner_dx, -outer_dy), Angle(0)),  # SW
+                        Vertex(Position(-inner_dx, -inner_dy), Angle(0)),
+                        Vertex(Position(-outer_dx, -inner_dy), Angle(0)),
+                        Vertex(Position(-outer_dx, inner_dy), Angle(0)),
+                        Vertex(Position(-inner_dx, inner_dy), Angle(0)),
+                    ],
                 )
             )
 
             # Labels
-            y_max = body_length / 2 + 1.27
-            y_min = -body_length / 2 - 1.27
+            y_max = body_length / 2 + line_width + 0.5
+            y_min = -y_max
             footprint.add_text(
                 StrokeText(
                     uuid=uuid_text_name,
@@ -567,7 +660,7 @@ def generate_3d(
         .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=270, angle2=360, sense=1)
         .vLine(leg_z_top - leg_height - (2 * bend_radius))
         .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=90, angle2=180, sense=-1)
-        .hLine(config.total_width - (2 * bend_radius) - (2 * lead_contact_length) + leg_height)
+        .hLine(config.lead_span - (2 * bend_radius) - (2 * lead_contact_length) + leg_height)
         .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=0, angle2=90, sense=-1)
         .vLine(-(leg_z_top - leg_height - (2 * bend_radius)))
         .ellipseArc(x_radius=bend_radius, y_radius=bend_radius, angle1=180, angle2=270, sense=1)
@@ -586,7 +679,7 @@ def generate_3d(
             StepColor.LEAD_SMT,
             location=cq.Location(
                 (
-                    -config.total_width / 2,
+                    -config.lead_span / 2,
                     y1 - i * config.pitch,
                     leg_height / 2,
                 )
@@ -612,115 +705,148 @@ if __name__ == '__main__':
         print(f'\033[1;33m{warning}\033[0m')
 
     # SOIC
+    # https://home.jeita.or.jp/tsc/std-pdf/EDR-7320.pdf
     configs: List[SoConfig] = []
+    body_length_lookup = {
+        6: 5.08,
+        8: 5.08,
+        10: 7.62,
+        12: 7.62,
+        14: 10.16,
+        16: 10.16,
+        18: 12.7,
+        20: 12.7,
+        22: 15.24,
+        24: 15.24,
+        28: 17.78,
+        30: 20.32,
+        32: 20.32,
+        36: 22.86,
+        40: 26.67,
+        42: 26.67,
+        44: 27.94,
+    }
     for pin_count in [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32]:
         for height in [1.2, 1.4, 1.7, 2.7]:
-            pitch = 1.27
-            body_length = (pin_count / 2 - 1) * pitch + 2.0
-            body_width = 5.22
-            total_width = 8.42  # effective, not nominal (7.62)
-            configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
+            pitch = 1.27  # 'e'
+            body_length = body_length_lookup[pin_count]  # 'D'
+            body_width = 5.22  # 'E'
+            lead_span = 8.42  # 'He' effective, not nominal (7.62)
+            configs.append(SoConfig(pin_count, pitch, body_length, body_width, lead_span, height))
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='SOIC{pitch}P762X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
-        'standardized by EIAJ.\n\n'
-        'Pitch: {pitch:.2f} mm\nNominal width: 7.62mm\nHeight: {height:.2f}mm',
+        'standardized by EIAJ EDR-7320.',
         configs=configs,
-        lead_width_lookup={1.27: 0.4},
-        lead_contact_length=0.8,
+        lead_width_lookup={1.27: 0.42},  # 'b', nominal for Pb/Sn plating
+        min_pad_width_lookup={1.27: 0.48},  # 'b' is 0.51 maximum, reduced a bit by guess
+        lead_contact_length=0.8,  # 'Lp'
         generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
-        version='0.3',
+        version='0.4',
         create_date='2018-11-10T20:32:03Z',
     )
     configs = []
     for pin_count in [20, 22, 24, 28, 30, 32, 36, 40, 42, 44]:
         for height in [1.2, 1.4, 1.7, 2.7]:
-            pitch = 1.27
-            body_length = (pin_count / 2 - 1) * pitch + 2.0
-            body_width = 12.84
-            total_width = 16.04  # effective, not nominal (15.42)
-            configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
+            pitch = 1.27  # 'e'
+            body_length = body_length_lookup[pin_count]  # 'D'
+            body_width = 12.84  # 'E'
+            lead_span = 16.04  # 'He' effective, not nominal (15.42)
+            configs.append(SoConfig(pin_count, pitch, body_length, body_width, lead_span, height))
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='SOIC{pitch}P1524X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
-        'standardized by EIAJ.\n\n'
-        'Pitch: {pitch:.2f} mm\nNominal width: 15.24mm\nHeight: {height:.2f}mm',
+        'standardized by EIAJ EDR-7320.',
         configs=configs,
-        lead_width_lookup={1.27: 0.4},
-        lead_contact_length=0.8,
+        lead_width_lookup={1.27: 0.42},  # 'b', nominal for Pb/Sn plating
+        min_pad_width_lookup={1.27: 0.48},  # 'b' is 0.51 maximum, reduced a bit by guess
+        lead_contact_length=0.8,  # 'Lp'
         generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,eiaj',
-        version='0.3',
+        version='0.4',
         create_date='2018-11-10T20:32:03Z',
     )
+    # https://www.jedec.org/system/files/docs/MS-012H.pdf
+    # Note: Don't remember where all the pin counts come from?! The spec contains only [8, 14, 16].
     configs = []
+    body_length_lookup = {
+        8: 4.9,
+        14: 8.65,
+        16: 9.9,
+    }
     for pin_count in [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32, 36, 40, 42, 44, 48]:
         pitch = 1.27
-        height = 1.75
-        body_length = (pin_count / 2 - 1) * pitch + 1.6
-        body_width = 3.9
-        total_width = 6.0
-        configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
+        height = 1.75  # 'Z'
+        body_length = body_length_lookup.get(pin_count, (pin_count / 2 - 1) * pitch + 1.01)  # 'X'
+        body_width = 3.9  # 'Y1'
+        lead_span = 6.0  # 'Y'
+        configs.append(SoConfig(pin_count, pitch, body_length, body_width, lead_span, height))
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
         name='SOIC{pitch}P600X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
-        'standardized by JEDEC (MS-012G).\n\n'
-        'Pitch: {pitch:.2f} mm\nNominal width: 6.00mm\nHeight: {height:.2f}mm',
+        'standardized by JEDEC MS-012H, variation Ax.',
         configs=configs,
-        lead_width_lookup={1.27: 0.45},
+        lead_width_lookup={1.27: 0.41},  # 'b'
+        min_pad_width_lookup={1.27: 0.48},  # 'b' is 0.51 maximum, reduced a bit by guess
         lead_contact_length=0.835,
         generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec',
-        version='0.3',
+        version='0.4',
         create_date='2018-11-10T20:32:03Z',
     )
+    # https://www.jedec.org/system/files/docs/MS-013H.pdf
     configs = []
+    body_length_lookup = {
+        14: 9.0,
+        16: 10.3,
+        18: 11.55,
+        20: 12.8,
+        24: 15.4,
+        28: 17.9,
+    }
     for pin_count in [14, 16, 18, 20, 24, 28]:
-        pitch = 1.27
-        height = 2.65
-        body_length = (pin_count / 2 - 1) * pitch + 1.6
-        body_width = 7.5
-        total_width = 10.3
-        configs.append(SoConfig(pin_count, pitch, body_length, body_width, total_width, height))
+        pitch = 1.27  # 'e'
+        height = 2.65  # 'Z'
+        body_length = body_length_lookup[pin_count]  # 'X'
+        body_width = 7.5  # 'Y1'
+        lead_span = 10.3  # 'Y'
+        configs.append(SoConfig(pin_count, pitch, body_length, body_width, lead_span, height))
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='U. Bruhin',
         name='SOIC{pitch}P1030X{height}-{pin_count}',
         description='{pin_count}-pin Small Outline Integrated Circuit (SOIC), '
-        'standardized by JEDEC (MS-013F).\n\n'
-        'Pitch: {pitch:.2f} mm\nNominal width: 10.30mm\nHeight: {height:.2f}mm',
+        'standardized by JEDEC MS-013H, variation Ax.',
         configs=configs,
-        lead_width_lookup={1.27: 0.45},
-        lead_contact_length=0.835,
+        lead_width_lookup={1.27: 0.41},  # 'b'
+        min_pad_width_lookup={1.27: 0.48},  # 'b' is 0.51 maximum, reduced a bit by guess
+        lead_contact_length=0.835,  # 'L'
         generate_3d_models=generate_3d_models,
         pkgcat='a074fabf-4912-4c29-bc6b-451bf43c2193',
         keywords='so,soic,small outline,smd,jedec,ms-013f',
-        version='0.2',
+        version='0.3',
         create_date='2020-09-15T20:46:13Z',
     )
 
     # TSSOP
+    # https://www.jedec.org/system/files/docs/MO-153I.pdf
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
         # Name according to IPC7351C
         name='TSSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
         description='{pin_count}-pin Thin-Shrink Small Outline Package (TSSOP), '
-        'standardized by JEDEC (MO-153), variation {variation}.\n\n'
-        'Pitch: {pitch:.2f} mm\nBody length: {body_length:.2f} mm\n'
-        'Body width: {body_width:.2f} mm\nLead span: {lead_span:.2f} mm\n'
-        'Height: {height:.2f} mm\n'
-        'Lead length: {lead_length:.2f} mm\nLead width: {lead_width:.2f} mm',
+        'standardized by JEDEC MO-153I, variation {variation}.',
         configs=[
             # pin count, pitch, body length, body width, total width, height
             # Symbols based on JEDEC MO-153:
@@ -791,30 +917,32 @@ if __name__ == '__main__':
             SoConfig(68, 0.40, 14.0, 8.0, 10.0, 1.2, 'JD-1'),
         ],
         lead_width_lookup={
-            0.65: 0.3,
-            0.5: 0.27,
-            0.4: 0.23,
+            0.65: 0.24,  # 0.17..0.30 -> 0.235 -> 0.24 nominal
+            0.50: 0.22,  # 0.17..0.27 -> 0.22 nominal
+            0.40: 0.18,  # 0.13..0.23 -> 0.18 nominal
+        },
+        min_pad_width_lookup={
+            0.65: 0.28,  # reduced maximum lead width a little bit by guess
+            0.50: 0.25,  # reduced maximum lead width a little bit by guess
+            0.40: 0.21,  # reduced maximum lead width a little bit by guess
         },
         lead_contact_length=0.6,
         generate_3d_models=generate_3d_models,
         pkgcat='241d9d5d-8f74-4740-8901-3cf51cf50091',
         keywords='so,sop,tssop,small outline package,smd',
-        version='0.3.1',
+        version='0.4',
         create_date='2019-06-16T12:46:54Z',
     )
 
     # SSOP
+    # https://www.jedec.org/system/files/docs/Mo-152c.pdf
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
         # Name according to IPC7351C
         name='SSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
         description='{pin_count}-pin Plastic Shrink Small Outline Package (SSOP), '
-        'standardized by JEDEC (MO-152), variation {variation}.\n\n'
-        'Pitch: {pitch:.2f} mm\nBody length: {body_length:.2f} mm\n'
-        'Body width: {body_width:.2f} mm\nLead span: {lead_span:.2f} mm\n'
-        'Height: {height:.2f} mm\n'
-        'Lead length: {lead_length:.2f} mm\nLead width: {lead_width:.2f} mm',
+        'standardized by JEDEC MO-152C, variation {variation}.',
         configs=[
             # pin count, pitch, body length, body width, total width, height
             # Symbols based on JEDEC MO-152:
@@ -880,28 +1008,30 @@ if __name__ == '__main__':
             SoConfig(68, 0.40, 14.0, 8.0, 10.0, 2.0, 'JD-1'),
         ],
         lead_width_lookup={
-            0.65: 0.30,
-            0.50: 0.27,
-            0.40: 0.23,
+            0.65: 0.25,  # 0.19..0.30 -> 0.245 -> 0.25 nominal
+            0.50: 0.22,  # 0.17..0.27 -> 0.22 nominal
+            0.40: 0.18,  # 0.13..0.23 -> 0.18 nominal
+        },
+        min_pad_width_lookup={
+            0.65: 0.28,  # reduced maximum lead width a little bit by guess
+            0.50: 0.25,  # reduced maximum lead width a little bit by guess
+            0.40: 0.21,  # reduced maximum lead width a little bit by guess
         },
         lead_contact_length=0.6,
         generate_3d_models=generate_3d_models,
         pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
         keywords='so,sop,ssop,small outline package,smd,jedec,mo-152',
-        version='0.2.1',
+        version='0.3',
         create_date='2019-07-21T12:55:20Z',
     )
+    # https://www.jedec.org/system/files/docs/Mo-150b.pdf
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
         # Name according to IPC7351C
         name='SSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
         description='{pin_count}-pin Plastic Shrink Small Outline Package (SSOP), '
-        'standardized by JEDEC (MO-150), variation {variation}.\n\n'
-        'Pitch: {pitch:.2f} mm\nBody length: {body_length:.2f} mm\n'
-        'Body width: {body_width:.2f} mm\nLead span: {lead_span:.2f} mm\n'
-        'Height: {height:.2f} mm\n'
-        'Lead length: {lead_length:.2f} mm\nLead width: {lead_width:.2f} mm',
+        'standardized by JEDEC MO-150B, variation {variation}.',
         configs=[
             # pin count, pitch, body length, body width, total width, height
             # Symbols based on JEDEC MO-150:
@@ -918,28 +1048,28 @@ if __name__ == '__main__':
             SoConfig(38, 0.65, 12.6, 5.3, 7.8, 2.0, 'AK'),
         ],
         lead_width_lookup={
-            0.65: 0.38,
+            0.65: 0.30,  # 0.22..0.38 -> 0.30 nominal
+        },
+        min_pad_width_lookup={
+            0.65: 0.35,  # reduced maximum lead width a little bit by guess
         },
         lead_contact_length=0.75,
         generate_3d_models=generate_3d_models,
         pkgcat='3627bf02-2e6e-4d68-9ada-743fa69a4f8c',
         keywords='so,sop,ssop,small outline package,smd,jedec,mo-150',
-        version='0.2',
+        version='0.3',
         create_date='2019-07-21T12:55:20Z',
     )
 
     # TSOP
+    # https://www.jedec.org/system/files/docs/MS-024H.pdf
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Tubbles',
         # Name extrapolated from IPC7351C
         name='TSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
         description='{pin_count}-pin Thin Small Outline Package (TSOP), '
-        'standardized by JEDEC (MS-024), Type II (pins on longer side), variation {variation}.\n\n'
-        'Pitch: {pitch:.2f} mm\nBody length: {body_length:.2f} mm\n'
-        'Body width: {body_width:.2f} mm\nLead span: {lead_span:.2f} mm\n'
-        'Height: {height:.2f} mm\n'
-        'Lead length: {lead_length:.2f} mm\nLead width: {lead_width:.2f} mm',
+        'standardized by JEDEC MS-024H, Type II (pins on longer side), variation {variation}.',
         configs=[
             # pin count, pitch, body length, body width, total width, height
             # Symbols based on JEDEC MS-024:
@@ -958,17 +1088,24 @@ if __name__ == '__main__':
             SoConfig(54, 0.40, 11.20, 10.16, 11.76, 1.2, 'GA'),
         ],
         lead_width_lookup={
-            0.40: 0.18,
-            0.50: 0.22,
-            0.65: 0.30,
-            0.80: 0.375,
-            1.27: 0.41,
+            0.40: 0.18,  # 0.13..0.23 -> 0.18 nominal
+            0.50: 0.22,  # 0.17..0.27 -> 0.22 nominal
+            0.65: 0.30,  # 0.22..0.38 -> 0.30 nominal
+            0.80: 0.38,  # 0.30..0.45 -> 0.375 -> 0.38 nominal
+            1.27: 0.41,  # 0.30..0.52 -> 0.41 nominal
+        },
+        min_pad_width_lookup={
+            0.40: 0.21,  # reduced maximum lead width a little bit by guess
+            0.50: 0.25,  # reduced maximum lead width a little bit by guess
+            0.65: 0.34,  # reduced maximum lead width a little bit by guess
+            0.80: 0.41,  # reduced maximum lead width a little bit by guess
+            1.27: 0.48,  # reduced maximum lead width a little bit by guess
         },
         lead_contact_length=0.5,
         generate_3d_models=generate_3d_models,
         pkgcat='7993abb0-fb0a-4157-8f83-1db890755836',
         keywords='so,sop,tsop,small outline package,smd',
-        version='0.2.1',
+        version='0.3',
         create_date='2020-12-26T16:14:30Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
