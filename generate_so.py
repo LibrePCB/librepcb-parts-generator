@@ -150,7 +150,7 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
 def excess_by_density(pitch: float, level: str) -> Excess:
     for table in DENSITY_LEVELS:
         if pitch > cast(float, table['pitch_above']):
-            return cast(Dict[str, float], table[level])
+            return cast(Excess, table[level])
     assert False
 
 
