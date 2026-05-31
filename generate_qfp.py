@@ -900,7 +900,7 @@ if __name__ == '__main__':
         configs=configs,
         generate_3d_models=generate_3d_models,
         pkgcat='3363b8b1-6fa8-4041-962e-5f839cfd86b7',
-        version='0.4',
+        version='0.5',
         create_date='2019-02-07T21:03:03Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
