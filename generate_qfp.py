@@ -16,7 +16,7 @@ from itertools import chain
 from os import path
 from uuid import uuid4
 
-from typing import Iterable, List, Optional
+from typing import Dict, Iterable, List, Optional, cast
 
 from common import format_ipc_dimension as fd
 from common import init_cache, now, save_cache, sign
@@ -57,6 +57,7 @@ from entities.package import (
     FootprintPad,
     LetterSpacing,
     LineSpacing,
+    MinCopperClearance,
     Mirror,
     Package,
     Package3DModel,
@@ -79,35 +80,65 @@ pkg_text_height = 1.0
 text_y_offset = 0.7
 silkscreen_offset = 0.150  # 150 µm
 
+# Footprint Expert Guidelines mentions that two separate courtyard values may
+# be used for body/leads vs. pads, while by default they are assumed to be
+# equal. I think this would lead to too much courtyard, so I'd suggest to use
+# a minimal courtyard of 0.1mm around pads.
+courtyard_around_pads = 0.1  # 100 µm
+
 
 # Initialize UUID cache
 uuid_cache_file = 'uuid_cache_qfp.csv'
 uuid_cache = init_cache(uuid_cache_file)
 
 
-# Excess as a function of pitch according to IPC-7351C.
+# Based on Footprint Expert Guidelines, Chapter 7.0 (Nominal Calculation)
 Excess = namedtuple('Excess', 'toe heel side courtyard')
-DENSITY_LEVEL_A = {  # Most
-    1.00: Excess(0.35, 0.45, 0.06, 0.40),
-    0.80: Excess(0.30, 0.40, 0.05, 0.40),
-    0.65: Excess(0.25, 0.35, 0.03, 0.40),
-    0.50: Excess(0.20, 0.30, 0.00, 0.40),
-    0.40: Excess(0.20, 0.30, -0.01, 0.40),
-}
-DENSITY_LEVEL_B = {  # Nominal
-    1.00: Excess(0.30, 0.40, 0.05, 0.20),
-    0.80: Excess(0.25, 0.35, 0.04, 0.20),
-    0.65: Excess(0.20, 0.30, 0.02, 0.20),
-    0.50: Excess(0.15, 0.25, -0.01, 0.20),
-    0.40: Excess(0.15, 0.25, -0.02, 0.20),
-}
-DENSITY_LEVEL_C = {  # Least
-    1.00: Excess(0.25, 0.35, 0.04, 0.10),
-    0.80: Excess(0.20, 0.30, 0.03, 0.10),
-    0.65: Excess(0.15, 0.25, 0.01, 0.10),
-    0.50: Excess(0.10, 0.20, -0.02, 0.10),
-    0.40: Excess(0.10, 0.20, -0.03, 0.10),
-}
+DENSITY_LEVELS: List[Dict[str, object]] = [
+    {
+        'pitch_above': 1.0,
+        'C': Excess(0.30, 0.40, 0.08, 0.10),
+        'B': Excess(0.35, 0.50, 0.10, 0.20),
+        'A': Excess(0.40, 0.60, 0.12, 0.40),
+    },
+    {
+        'pitch_above': 0.8,
+        'C': Excess(0.25, 0.35, 0.06, 0.10),
+        'B': Excess(0.30, 0.45, 0.08, 0.20),
+        'A': Excess(0.35, 0.65, 0.10, 0.40),
+    },
+    {
+        'pitch_above': 0.65,
+        'C': Excess(0.20, 0.30, 0.04, 0.10),
+        'B': Excess(0.25, 0.40, 0.06, 0.20),
+        'A': Excess(0.30, 0.50, 0.08, 0.40),
+    },
+    {
+        'pitch_above': 0.5,
+        'C': Excess(0.15, 0.25, 0.02, 0.10),
+        'B': Excess(0.20, 0.35, 0.04, 0.20),
+        'A': Excess(0.25, 0.45, 0.06, 0.40),
+    },
+    {
+        'pitch_above': 0.4,
+        'C': Excess(0.10, 0.20, 0.00, 0.10),
+        'B': Excess(0.15, 0.30, 0.02, 0.20),
+        'A': Excess(0.20, 0.40, 0.04, 0.40),
+    },
+    {
+        'pitch_above': 0.0,
+        'C': Excess(0.10, 0.20, 0.00, 0.10),
+        'B': Excess(0.15, 0.30, 0.02, 0.20),
+        'A': Excess(0.20, 0.40, 0.04, 0.40),
+    },
+]
+
+
+def excess_by_density(pitch: float, level: str) -> Excess:
+    for table in DENSITY_LEVELS:
+        if pitch > cast(float, table['pitch_above']):
+            return cast(Excess, table[level])
+    assert False
 
 
 class QfpConfig:
@@ -187,23 +218,6 @@ class QfpConfig:
                 generator,
             )
         )
-
-    def excess_by_density(self, density: str) -> Excess:
-        """
-        Return the `Excess` based on the specified density level ('A', 'B' or
-        'C') and the pitch.
-        """
-        try:
-            if density == 'A':
-                return DENSITY_LEVEL_A[self.pitch]
-            elif density == 'B':
-                return DENSITY_LEVEL_B[self.pitch]
-            elif density == 'C':
-                return DENSITY_LEVEL_C[self.pitch]
-            else:
-                raise ValueError('Invalid density level: {}'.format(density))
-        except KeyError:
-            raise ValueError('Unhandled pitch: {}'.format(self.pitch))
 
     def __str__(self) -> str:
         return self.ipc_name()
@@ -421,6 +435,7 @@ def generate_pkg(
             generated_by=GeneratedBy(''),
             categories=[Category(pkgcat)],
             assembly_type=AssemblyType.SMT,
+            min_copper_clearance=(MinCopperClearance(0.15) if (config.pitch < 0.5) else None),
         )
 
         for p in range(1, config.lead_count + 1):
@@ -444,7 +459,7 @@ def generate_pkg(
             uuid_text_value = _uuid('text-value-{}'.format(key))
 
             # Pad excess according to IPC density levels
-            excess = config.excess_by_density(density_level)
+            excess = excess_by_density(config.pitch, density_level)
 
             # Lead contact offsets
             lead_contact_x_offset = (
@@ -468,7 +483,18 @@ def generate_pkg(
             package.add_footprint(footprint)
 
             # Pads
-            pad_width = config.lead_width + excess.side * 2
+            # Trim width to maintain 0.15mm clearance, as documented in
+            # Footprint Expert Guidelines, Minimum pad to pad, page 71.
+            pad_width = min(config.lead_width + 2 * excess.side, config.pitch - 0.15)
+            # Increase pad width to a minimum value, because the tolerances
+            # specified for lead widths are sometimes very wide, possibly
+            # causing pads thinner than the maximum lead width. This is not
+            # specified in any standard, but I guess it is good to ensure
+            # *some* minimum pad width (even though maybe less than the maximum
+            # lead width).
+            pad_width = max(pad_width, config.lead_width + 0.03)
+            # Sanity check that we don't create pads thinner than the leads:
+            assert pad_width >= config.lead_width
             pad_length = config.lead_contact_length + excess.heel + excess.toe
             for p in range(1, config.lead_count + 1):
                 pad_uuid = uuid_pads[p - 1]
@@ -563,7 +589,7 @@ def generate_pkg(
 
                 x_min = (
                     abs(pos_last.x)
-                    + config.lead_width / 2
+                    + pad_width / 2
                     + excess.side
                     + silkscreen_offset
                     + line_width / 2
@@ -571,7 +597,7 @@ def generate_pkg(
                 x_max = config.body_size_x / 2 + line_width / 2
                 y_min = (
                     abs(pos_first.y)
-                    + config.lead_width / 2
+                    + pad_width / 2
                     + excess.side
                     + silkscreen_offset
                     + line_width / 2
@@ -643,19 +669,19 @@ def generate_pkg(
             footprint.add_circle(pin1_dot)
 
             def _create_outline_vertices(
-                offset: float = 0, around_pads: bool = False
+                offset: float = 0, min_pads_offset: Optional[float] = None
             ) -> List[Vertex]:
-                x_max = config.lead_span_x / 2
-                x_mid = config.body_size_x / 2
-                x_min = abs(pos_last.x) + config.lead_width / 2
-                y_max = config.lead_span_y / 2
-                y_mid = config.body_size_y / 2
-                y_min = abs(pos_first.y) + config.lead_width / 2
-                if around_pads:
-                    x_max += excess.toe
-                    x_min += excess.side
-                    y_max += excess.toe
-                    y_min += excess.side
+                x_max = config.lead_span_x / 2 + offset
+                x_mid = config.body_size_x / 2 + offset
+                x_min = abs(pos_last.x) + config.lead_width / 2 + offset
+                y_max = config.lead_span_y / 2 + offset
+                y_mid = config.body_size_y / 2 + offset
+                y_min = abs(pos_first.y) + config.lead_width / 2 + offset
+                if min_pads_offset is not None:
+                    x_max = max(x_max, config.lead_span_x / 2 + excess.toe + min_pads_offset)
+                    x_min = max(x_min, abs(pos_last.x) + pad_width / 2 + min_pads_offset)
+                    y_max = max(y_max, config.lead_span_y / 2 + excess.toe + min_pads_offset)
+                    y_min = max(y_min, abs(pos_first.y) + pad_width / 2 + min_pads_offset)
                 vertices = [  # Starting at top left
                     # Top
                     (-x_min, y_max),
@@ -682,10 +708,7 @@ def generate_pkg(
                     (-x_mid, y_mid),
                     (-x_min, y_mid),
                 ]
-                return [
-                    Vertex(Position(x + sign(x) * offset, y + sign(y) * offset), Angle(0))
-                    for (x, y) in vertices
-                ]
+                return [Vertex(Position(x, y), Angle(0)) for (x, y) in vertices]
 
             # Package Outline
             footprint.add_polygon(
@@ -707,7 +730,9 @@ def generate_pkg(
                     width=Width(0),
                     fill=Fill(False),
                     grab_area=GrabArea(False),
-                    vertices=_create_outline_vertices(offset=excess.courtyard, around_pads=True),
+                    vertices=_create_outline_vertices(
+                        offset=excess.courtyard, min_pads_offset=courtyard_around_pads
+                    ),
                 )
             )
 
@@ -875,7 +900,7 @@ if __name__ == '__main__':
         configs=configs,
         generate_3d_models=generate_3d_models,
         pkgcat='3363b8b1-6fa8-4041-962e-5f839cfd86b7',
-        version='0.4',
+        version='0.5',
         create_date='2019-02-07T21:03:03Z',
     )
     save_cache(uuid_cache_file, uuid_cache)
