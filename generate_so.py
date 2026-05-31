@@ -76,6 +76,11 @@ line_width = 0.2
 pkg_text_height = 1.0
 silkscreen_offset = 0.150  # 150 µm
 
+# Footprint Expert Guidelines mentions that two separate courtyard values may
+# be used for body/leads vs. pads, while by default they are assumed to be
+# equal. I think this would lead to too much courtyard, so I'd suggest to use
+# a minimal courtyard of 0.1mm around pads.
+courtyard_around_pads = 0.1  # 100 µm
 
 # Based on Footprint Expert Guidelines, Chapter 7.0 (Nominal Calculation)
 Excess = namedtuple('Excess', 'toe heel side courtyard')
@@ -317,7 +322,7 @@ def generate_pkg(
             # causing pads thinner than the maximum lead width. This is not
             # specified in any standard, but I guess it is good to ensure
             # *some* minimum pad width (even though maybe less than the maximum
-            #  lead width).
+            # lead width).
             pad_width = max(pad_width, min_pad_width)
             # Sanity check that we don't create pads thinner than the leads:
             assert pad_width >= lead_width
@@ -532,10 +537,15 @@ def generate_pkg(
             )
 
             # Courtyard
-            outer_dx = max(outer_dx + excess.courtyard, max_x)
+            outer_dx = max(outer_dx + excess.courtyard, max_x + courtyard_around_pads)
             outer_dy += excess.courtyard
             inner_dx += excess.courtyard
-            inner_dy += excess.courtyard
+            inner_dy = max(
+                inner_dy + excess.courtyard,
+                ((config.pitch * ((config.pin_count / 2) - 1)) / 2)
+                + (pad_width / 2)
+                + courtyard_around_pads,
+            )
             footprint.add_polygon(
                 Polygon(
                     uuid=uuid_courtyard,
