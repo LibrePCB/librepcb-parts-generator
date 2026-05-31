@@ -9,6 +9,7 @@ Generate the following SO packages:
 """
 
 import sys
+from collections import namedtuple
 from os import path
 from uuid import uuid4
 
@@ -77,42 +78,43 @@ silkscreen_offset = 0.150  # 150 µm
 
 
 # Based on Footprint Expert Guidelines, Chapter 7.0 (Nominal Calculation)
+Excess = namedtuple('Excess', 'toe heel side courtyard')
 DENSITY_LEVELS: List[Dict[str, object]] = [
     {
         'pitch_above': 1.0,
-        'C': {'toe': 0.3, 'heel': 0.4, 'side': 0.08, 'courtyard': 0.1},
-        'B': {'toe': 0.35, 'heel': 0.5, 'side': 0.1, 'courtyard': 0.2},
-        'A': {'toe': 0.4, 'heel': 0.6, 'side': 0.12, 'courtyard': 0.4},
+        'C': Excess(0.30, 0.40, 0.08, 0.10),
+        'B': Excess(0.35, 0.50, 0.10, 0.20),
+        'A': Excess(0.40, 0.60, 0.12, 0.40),
     },
     {
         'pitch_above': 0.8,
-        'C': {'toe': 0.25, 'heel': 0.35, 'side': 0.06, 'courtyard': 0.1},
-        'B': {'toe': 0.3, 'heel': 0.45, 'side': 0.08, 'courtyard': 0.2},
-        'A': {'toe': 0.35, 'heel': 0.65, 'side': 0.1, 'courtyard': 0.4},
+        'C': Excess(0.25, 0.35, 0.06, 0.10),
+        'B': Excess(0.30, 0.45, 0.08, 0.20),
+        'A': Excess(0.35, 0.65, 0.10, 0.40),
     },
     {
         'pitch_above': 0.65,
-        'C': {'toe': 0.2, 'heel': 0.3, 'side': 0.04, 'courtyard': 0.1},
-        'B': {'toe': 0.25, 'heel': 0.4, 'side': 0.06, 'courtyard': 0.2},
-        'A': {'toe': 0.3, 'heel': 0.5, 'side': 0.08, 'courtyard': 0.4},
+        'C': Excess(0.20, 0.30, 0.04, 0.10),
+        'B': Excess(0.25, 0.40, 0.06, 0.20),
+        'A': Excess(0.30, 0.50, 0.08, 0.40),
     },
     {
         'pitch_above': 0.5,
-        'C': {'toe': 0.15, 'heel': 0.25, 'side': 0.02, 'courtyard': 0.1},
-        'B': {'toe': 0.2, 'heel': 0.35, 'side': 0.04, 'courtyard': 0.2},
-        'A': {'toe': 0.25, 'heel': 0.45, 'side': 0.06, 'courtyard': 0.4},
+        'C': Excess(0.15, 0.25, 0.02, 0.10),
+        'B': Excess(0.20, 0.35, 0.04, 0.20),
+        'A': Excess(0.25, 0.45, 0.06, 0.40),
     },
     {
         'pitch_above': 0.4,
-        'C': {'toe': 0.1, 'heel': 0.2, 'side': 0.0, 'courtyard': 0.1},
-        'B': {'toe': 0.15, 'heel': 0.3, 'side': 0.02, 'courtyard': 0.2},
-        'A': {'toe': 0.2, 'heel': 0.4, 'side': 0.04, 'courtyard': 0.4},
+        'C': Excess(0.10, 0.20, 0.00, 0.10),
+        'B': Excess(0.15, 0.30, 0.02, 0.20),
+        'A': Excess(0.20, 0.40, 0.04, 0.40),
     },
     {
         'pitch_above': 0.0,
-        'C': {'toe': 0.1, 'heel': 0.2, 'side': 0.0, 'courtyard': 0.1},
-        'B': {'toe': 0.15, 'heel': 0.3, 'side': 0.02, 'courtyard': 0.2},
-        'A': {'toe': 0.2, 'heel': 0.4, 'side': 0.04, 'courtyard': 0.4},
+        'C': Excess(0.10, 0.20, 0.00, 0.10),
+        'B': Excess(0.15, 0.30, 0.02, 0.20),
+        'A': Excess(0.20, 0.40, 0.04, 0.40),
     },
 ]
 
@@ -140,10 +142,10 @@ def uuid(category: str, full_name: str, identifier: str) -> str:
     return uuid_cache[key]
 
 
-def get_by_density(pitch: float, level: str, key: str) -> float:
+def excess_by_density(pitch: float, level: str) -> Excess:
     for table in DENSITY_LEVELS:
         if pitch > cast(float, table['pitch_above']):
-            return cast(Dict[str, float], table[level])[key]
+            return cast(Dict[str, float], table[level])
     assert False
 
 
@@ -304,14 +306,12 @@ def generate_pkg(
             package.add_footprint(footprint)
 
             # Pad excess according to IPC density levels
-            pad_heel = get_by_density(pitch, density_level, 'heel')
-            pad_toe = get_by_density(pitch, density_level, 'toe')
-            pad_side = get_by_density(pitch, density_level, 'side')
+            excess = excess_by_density(pitch, density_level)
 
             # Pads
             # Trim width to maintain 0.15mm clearance, as documented in
             # Footprint Expert Guidelines, Minimum pad to pad, page 71.
-            pad_width = min(lead_width + 2 * pad_side, pitch - 0.15)
+            pad_width = min(lead_width + 2 * excess.side, pitch - 0.15)
             # Increase pad width to a minimum value, because the tolerances
             # specified for lead widths are sometimes very wide, possibly
             # causing pads thinner than the maximum lead width. This is not
@@ -321,8 +321,10 @@ def generate_pkg(
             pad_width = max(pad_width, min_pad_width)
             # Sanity check that we don't create pads thinner than the leads:
             assert pad_width >= lead_width
-            pad_length = lead_contact_length + pad_heel + pad_toe
-            pad_x_offset = lead_span / 2 - lead_contact_length / 2 - pad_heel / 2 + pad_toe / 2
+            pad_length = lead_contact_length + excess.heel + excess.toe
+            pad_x_offset = (
+                lead_span / 2 - lead_contact_length / 2 - excess.heel / 2 + excess.toe / 2
+            )
             for p in range(1, pin_count + 1):
                 mid = pin_count // 2
                 if p <= mid:
@@ -350,7 +352,7 @@ def generate_pkg(
                     )
                 )
                 max_y_copper = max(max_y_copper, y + pad_width / 2)
-            max_x = max(max_x, lead_span / 2 + pad_toe)
+            max_x = max(max_x, lead_span / 2 + excess.toe)
 
             # Documentation: Leads
             lead_contact_x_offset = (
@@ -414,7 +416,7 @@ def generate_pkg(
             dy_inner = max_y_copper + line_width / 2 + silkscreen_offset
             short_x_offset = body_width / 2 - line_width / 2
             middle_x_offset = body_width / 2 + line_width / 2
-            long_x_offset = lead_span / 2 - line_width / 2 + pad_toe  # Pin1 marking
+            long_x_offset = lead_span / 2 - line_width / 2 + excess.toe  # Pin1 marking
             if dy_outer >= (dy_inner + 0.1):
                 # 'U'-shape line at top and bottom
                 top_vertices = [
@@ -530,11 +532,10 @@ def generate_pkg(
             )
 
             # Courtyard
-            courtyard_excess = get_by_density(pitch, density_level, 'courtyard')
-            outer_dx = max(outer_dx + courtyard_excess, max_x)
-            outer_dy += courtyard_excess
-            inner_dx += courtyard_excess
-            inner_dy += courtyard_excess
+            outer_dx = max(outer_dx + excess.courtyard, max_x)
+            outer_dy += excess.courtyard
+            inner_dx += excess.courtyard
+            inner_dy += excess.courtyard
             footprint.add_polygon(
                 Polygon(
                     uuid=uuid_courtyard,
