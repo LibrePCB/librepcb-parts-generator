@@ -145,6 +145,7 @@ class QfpConfig:
     def __init__(
         self,
         name: str,  # e.g. QFP or LQFP
+        jedec_std: bool,
         body_size_x: float,
         body_size_y: float,
         height_nom: float,  # Nominal height (1.0 for TQFP and 1.4 for LQFP)
@@ -160,6 +161,7 @@ class QfpConfig:
         assert body_size_x == body_size_y, 'rectangular support not yet implemented'
 
         self.name = name
+        self.jedec_std = jedec_std
         self.body_size_x = body_size_x
         self.body_size_y = body_size_y
         self.pitch = pitch
@@ -202,12 +204,19 @@ class QfpConfig:
             full_name = 'Quad Flat Package (QFP)'
         else:
             raise ValueError('Invalid name: {}'.format(self.name))
+
+        if self.jedec_std:
+            extra_desc = ', standardized by JEDEC in MS-026'
+        else:
+            extra_desc = ''
+
         return (
-            '{}-pin {}, standardized by JEDEC in MS-026.\n\n'
+            '{}-pin {}{}.\n\n'
             'Pitch: {} mm\nBody size: {}x{} mm\nLead span: {}x{} mm\n'
             'Nominal height: {} mm\nMax height: {} mm\n\nGenerated with {}'.format(
                 self.lead_count,
                 full_name,
+                extra_desc,
                 self.pitch,
                 self.body_size_x,
                 self.body_size_y,
@@ -224,6 +233,14 @@ class QfpConfig:
 
     def __repr__(self) -> str:
         return '<QfpConfig: {}>'.format(self.ipc_name())
+
+
+class SingleConfig:
+    def __init__(self, config: QfpConfig):
+        self.config = config
+
+    def get_configs(self) -> List[QfpConfig]:
+        return [self.config]
 
 
 class LTQfpConfig:
@@ -260,52 +277,61 @@ class LTQfpConfig:
 
 # fmt: off
 JEDEC_CONFIGS = [  # May contain any type that has a `get_configs(self) -> List[QfpConfig]` method
-    # Datasheet designators       D1    E1       A   e           D     E    b
-    # Description                 body-x,y           ptch   pin  span-x,y
+    # Datasheet designators             D1    E1       A   e           D     E    b
+    # Description                       body-x,y           ptch   pin  span-x,y
 
-    LTQfpConfig(QfpConfig('QFP',  4.0,  4.0, -1, -1, 0.65,  20,  6.0,  6.0, 0.32, ''), 'AKA', 'BKA'),
-    LTQfpConfig(QfpConfig('QFP',  4.0,  4.0, -1, -1, 0.50,  24,  6.0,  6.0, 0.22, ''), 'AKB', 'BKB'),
-    LTQfpConfig(QfpConfig('QFP',  4.0,  4.0, -1, -1, 0.40,  32,  6.0,  6.0, 0.18, ''), 'AKC', 'BKC'),
+    LTQfpConfig(QfpConfig('QFP', True,  4.0,  4.0, -1, -1, 0.65,  20,  6.0,  6.0, 0.32, ''), 'AKA', 'BKA'),
+    LTQfpConfig(QfpConfig('QFP', True,  4.0,  4.0, -1, -1, 0.50,  24,  6.0,  6.0, 0.22, ''), 'AKB', 'BKB'),
+    LTQfpConfig(QfpConfig('QFP', True,  4.0,  4.0, -1, -1, 0.40,  32,  6.0,  6.0, 0.18, ''), 'AKC', 'BKC'),
 
-    LTQfpConfig(QfpConfig('QFP',  5.0,  5.0, -1, -1, 0.50,  32,  7.0,  7.0, 0.22, ''), 'AAA', 'BAA'),
-    LTQfpConfig(QfpConfig('QFP',  5.0,  5.0, -1, -1, 0.40,  40,  7.0,  7.0, 0.18, ''), 'AAB', 'BAB'),
+    LTQfpConfig(QfpConfig('QFP', True,  5.0,  5.0, -1, -1, 0.50,  32,  7.0,  7.0, 0.22, ''), 'AAA', 'BAA'),
+    LTQfpConfig(QfpConfig('QFP', True,  5.0,  5.0, -1, -1, 0.40,  40,  7.0,  7.0, 0.18, ''), 'AAB', 'BAB'),
 
-    LTQfpConfig(QfpConfig('QFP',  7.0,  7.0, -1, -1, 0.80,  32,  9.0,  9.0, 0.37, ''), 'ABA', 'BBA'),
-    LTQfpConfig(QfpConfig('QFP',  7.0,  7.0, -1, -1, 0.65,  40,  9.0,  9.0, 0.32, ''), 'ABB', 'BBB'),
-    LTQfpConfig(QfpConfig('QFP',  7.0,  7.0, -1, -1, 0.50,  48,  9.0,  9.0, 0.22, ''), 'ABC', 'BBC'),
-    LTQfpConfig(QfpConfig('QFP',  7.0,  7.0, -1, -1, 0.40,  64,  9.0,  9.0, 0.18, ''), 'ABD', 'BBD'),
+    LTQfpConfig(QfpConfig('QFP', True,  7.0,  7.0, -1, -1, 0.80,  32,  9.0,  9.0, 0.37, ''), 'ABA', 'BBA'),
+    LTQfpConfig(QfpConfig('QFP', True,  7.0,  7.0, -1, -1, 0.65,  40,  9.0,  9.0, 0.32, ''), 'ABB', 'BBB'),
+    LTQfpConfig(QfpConfig('QFP', True,  7.0,  7.0, -1, -1, 0.50,  48,  9.0,  9.0, 0.22, ''), 'ABC', 'BBC'),
+    LTQfpConfig(QfpConfig('QFP', True,  7.0,  7.0, -1, -1, 0.40,  64,  9.0,  9.0, 0.18, ''), 'ABD', 'BBD'),
 
-    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, -1, 1.00,  36, 12.0, 12.0, 0.42, ''), 'ACA', 'BCA'),
-    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, -1, 0.80,  44, 12.0, 12.0, 0.37, ''), 'ACB', 'BCB'),
-    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, -1, 0.65,  52, 12.0, 12.0, 0.32, ''), 'ACC', 'BCC'),
-    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, -1, 0.50,  64, 12.0, 12.0, 0.22, ''), 'ACD', 'BCD'),
-    LTQfpConfig(QfpConfig('QFP', 10.0, 10.0, -1, -1, 0.40,  80, 12.0, 12.0, 0.18, ''), 'ACE', 'BCE'),
+    LTQfpConfig(QfpConfig('QFP', True, 10.0, 10.0, -1, -1, 1.00,  36, 12.0, 12.0, 0.42, ''), 'ACA', 'BCA'),
+    LTQfpConfig(QfpConfig('QFP', True, 10.0, 10.0, -1, -1, 0.80,  44, 12.0, 12.0, 0.37, ''), 'ACB', 'BCB'),
+    LTQfpConfig(QfpConfig('QFP', True, 10.0, 10.0, -1, -1, 0.65,  52, 12.0, 12.0, 0.32, ''), 'ACC', 'BCC'),
+    LTQfpConfig(QfpConfig('QFP', True, 10.0, 10.0, -1, -1, 0.50,  64, 12.0, 12.0, 0.22, ''), 'ACD', 'BCD'),
+    LTQfpConfig(QfpConfig('QFP', True, 10.0, 10.0, -1, -1, 0.40,  80, 12.0, 12.0, 0.18, ''), 'ACE', 'BCE'),
 
-    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, -1, 1.00,  44, 14.0, 14.0, 0.42, ''), 'ADA', 'BDA'),
-    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, -1, 0.80,  52, 14.0, 14.0, 0.37, ''), 'ADB', 'BDB'),
-    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, -1, 0.65,  64, 14.0, 14.0, 0.32, ''), 'ADC', 'BDC'),
-    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, -1, 0.50,  80, 14.0, 14.0, 0.22, ''), 'ADD', 'BDD'),
-    LTQfpConfig(QfpConfig('QFP', 12.0, 12.0, -1, -1, 0.40, 100, 14.0, 14.0, 0.18, ''), 'ADE', 'BDE'),
+    LTQfpConfig(QfpConfig('QFP', True, 12.0, 12.0, -1, -1, 1.00,  44, 14.0, 14.0, 0.42, ''), 'ADA', 'BDA'),
+    LTQfpConfig(QfpConfig('QFP', True, 12.0, 12.0, -1, -1, 0.80,  52, 14.0, 14.0, 0.37, ''), 'ADB', 'BDB'),
+    LTQfpConfig(QfpConfig('QFP', True, 12.0, 12.0, -1, -1, 0.65,  64, 14.0, 14.0, 0.32, ''), 'ADC', 'BDC'),
+    LTQfpConfig(QfpConfig('QFP', True, 12.0, 12.0, -1, -1, 0.50,  80, 14.0, 14.0, 0.22, ''), 'ADD', 'BDD'),
+    LTQfpConfig(QfpConfig('QFP', True, 12.0, 12.0, -1, -1, 0.40, 100, 14.0, 14.0, 0.18, ''), 'ADE', 'BDE'),
 
-    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, -1, 1.00,  52, 16.0, 16.0, 0.42, ''), 'AEA', 'BEA'),
-    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, -1, 0.80,  64, 16.0, 16.0, 0.37, ''), 'AEB', 'BEB'),
-    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, -1, 0.65,  80, 16.0, 16.0, 0.32, ''), 'AEC', 'BEC'),
-    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, -1, 0.50, 100, 16.0, 16.0, 0.22, ''), 'AED', 'BED'),
-    LTQfpConfig(QfpConfig('QFP', 14.0, 14.0, -1, -1, 0.40, 120, 16.0, 16.0, 0.18, ''), 'AEE', 'BEE'),
+    LTQfpConfig(QfpConfig('QFP', True, 14.0, 14.0, -1, -1, 1.00,  52, 16.0, 16.0, 0.42, ''), 'AEA', 'BEA'),
+    LTQfpConfig(QfpConfig('QFP', True, 14.0, 14.0, -1, -1, 0.80,  64, 16.0, 16.0, 0.37, ''), 'AEB', 'BEB'),
+    LTQfpConfig(QfpConfig('QFP', True, 14.0, 14.0, -1, -1, 0.65,  80, 16.0, 16.0, 0.32, ''), 'AEC', 'BEC'),
+    LTQfpConfig(QfpConfig('QFP', True, 14.0, 14.0, -1, -1, 0.50, 100, 16.0, 16.0, 0.22, ''), 'AED', 'BED'),
+    LTQfpConfig(QfpConfig('QFP', True, 14.0, 14.0, -1, -1, 0.40, 120, 16.0, 16.0, 0.18, ''), 'AEE', 'BEE'),
 
-    LTQfpConfig(QfpConfig('QFP', 20.0, 20.0, -1, -1, 0.65, 112, 22.0, 22.0, 0.32, ''), 'AFA', 'BFA'),
-    LTQfpConfig(QfpConfig('QFP', 20.0, 20.0, -1, -1, 0.50, 144, 22.0, 22.0, 0.22, ''), 'AFB', 'BFB'),
-    LTQfpConfig(QfpConfig('QFP', 20.0, 20.0, -1, -1, 0.40, 176, 22.0, 22.0, 0.18, ''), 'AFC', 'BFC'),
+    LTQfpConfig(QfpConfig('QFP', True, 20.0, 20.0, -1, -1, 0.65, 112, 22.0, 22.0, 0.32, ''), 'AFA', 'BFA'),
+    LTQfpConfig(QfpConfig('QFP', True, 20.0, 20.0, -1, -1, 0.50, 144, 22.0, 22.0, 0.22, ''), 'AFB', 'BFB'),
+    LTQfpConfig(QfpConfig('QFP', True, 20.0, 20.0, -1, -1, 0.40, 176, 22.0, 22.0, 0.18, ''), 'AFC', 'BFC'),
 
-    LTQfpConfig(QfpConfig('QFP', 24.0, 24.0, -1, -1, 0.50, 176, 26.0, 26.0, 0.22, ''), 'AGA', 'BGA'),
-    LTQfpConfig(QfpConfig('QFP', 24.0, 24.0, -1, -1, 0.40, 216, 26.0, 26.0, 0.18, ''), 'AGB', 'BGB'),
+    LTQfpConfig(QfpConfig('QFP', True, 24.0, 24.0, -1, -1, 0.50, 176, 26.0, 26.0, 0.22, ''), 'AGA', 'BGA'),
+    LTQfpConfig(QfpConfig('QFP', True, 24.0, 24.0, -1, -1, 0.40, 216, 26.0, 26.0, 0.18, ''), 'AGB', 'BGB'),
 
-    # LTQfpConfig(QfpConfig('QFP', 20.0, 14.0, -1, -1, 0.65, 100, 22.0, 16.0, 0.32, ''), 'AHA', 'BHA'),
-    # LTQfpConfig(QfpConfig('QFP', 20.0, 14.0, -1, -1, 0.50, 128, 22.0, 16.0, 0.22, ''), 'AHB', 'BHB'),
+    # LTQfpConfig(QfpConfig('QFP', True, 20.0, 14.0, -1, -1, 0.65, 100, 22.0, 16.0, 0.32, ''), 'AHA', 'BHA'),
+    # LTQfpConfig(QfpConfig('QFP', True, 20.0, 14.0, -1, -1, 0.50, 128, 22.0, 16.0, 0.22, ''), 'AHB', 'BHB'),
 
-    LTQfpConfig(QfpConfig('QFP', 28.0, 28.0, -1, -1, 0.65, 160, 30.0, 30.0, 0.32, ''),  None, 'BJA'),
-    LTQfpConfig(QfpConfig('QFP', 28.0, 28.0, -1, -1, 0.50, 208, 30.0, 30.0, 0.22, ''),  None, 'BJB'),
-    LTQfpConfig(QfpConfig('QFP', 28.0, 28.0, -1, -1, 0.40, 256, 30.0, 30.0, 0.18, ''),  None, 'BJC'),
+    LTQfpConfig(QfpConfig('QFP', True, 28.0, 28.0, -1, -1, 0.65, 160, 30.0, 30.0, 0.32, ''),  None, 'BJA'),
+    LTQfpConfig(QfpConfig('QFP', True, 28.0, 28.0, -1, -1, 0.50, 208, 30.0, 30.0, 0.22, ''),  None, 'BJB'),
+    LTQfpConfig(QfpConfig('QFP', True, 28.0, 28.0, -1, -1, 0.40, 256, 30.0, 30.0, 0.18, ''),  None, 'BJC'),
+]
+
+OTHER_CONFIGS = [
+    # Datasheet designators               D1    E1    A         e          D     E    b
+    # Description                         body-x,y              ptch  pin  span-x,y
+
+    # https://ww1.microchip.com/downloads/aemDocuments/documents/corporate-responsibilty/environmental/material-compliance-documents/128L_LQFP_14x14x1_4mm_C04-00058b.pdf
+    # Also used by STM32G4
+    SingleConfig(QfpConfig('LQFP', False, 14.0, 14.0, 1.4, 1.6, 0.40, 128, 16.0, 16.0, 0.18, '')),
 ]
 # fmt: on
 
@@ -893,7 +919,8 @@ if __name__ == '__main__':
         warning = 'Note: Not generating 3D models unless the "--3d" argument is passed in!'
         print(f'\033[1;33m{warning}\033[0m')
 
-    configs = list(chain.from_iterable(c.get_configs() for c in JEDEC_CONFIGS))
+    base_configs = JEDEC_CONFIGS + OTHER_CONFIGS
+    configs = list(chain.from_iterable(c.get_configs() for c in base_configs))
     generate_pkg(
         library='LibrePCB_Base.lplib',
         author='Danilo B.',
