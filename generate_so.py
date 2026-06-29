@@ -1119,4 +1119,30 @@ if __name__ == '__main__':
         version='0.3',
         create_date='2020-12-26T16:14:30Z',
     )
+
+    # VSOP
+    # TI MSPM0C
+    generate_pkg(
+        library='LibrePCB_Base.lplib',
+        author='U. Bruhin',
+        # Name extrapolated from IPC7351C
+        name='VSSOP{pin_count}P{pitch}_{body_length}X{lead_span}X{height}L{lead_length}X{lead_width}',
+        description='For TI MSPM0C',
+        configs=[
+            # pin count, pitch, body length, body width, total width, height
+            SoConfig(20, 0.5, 5.1, 3.0, 4.9, 1.1),
+        ],
+        lead_width_lookup={
+            0.50: 0.22,  # 0.165..0.275 -> 0.22 nominal
+        },
+        min_pad_width_lookup={
+            0.50: 0.25,  # reduced maximum lead width a little bit by guess
+        },
+        lead_contact_length=0.5,
+        generate_3d_models=generate_3d_models,
+        pkgcat='7993abb0-fb0a-4157-8f83-1db890755836',
+        keywords='',
+        version='0.1',
+        create_date='2020-12-26T16:14:30Z',  # TODO
+    )
     save_cache(uuid_cache_file, uuid_cache)
