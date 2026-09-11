@@ -4,12 +4,27 @@ Common functionality for generator scripts.
 
 import collections
 import csv
+import math
 import re
 from datetime import datetime
 from os import path
 from uuid import uuid4
 
-from typing import Any, Dict, List, OrderedDict, Union
+from typing import Any, Dict, Generator, List, Literal, OrderedDict, Union
+
+from entities.common import Angle, Fill, GrabArea, Layer, Polygon, Position, Vertex, Width
+
+
+class SubCache:
+    def __init__(self, base: Union['UuidCache', 'SubCache'], *prefixes: Any):
+        self.base = base
+        self.prefixes = prefixes
+
+    def get(self, *args: Any) -> str:
+        return self.base.get(*self.prefixes, *args)
+
+    def sub_cache(self, *prefixes: Any) -> 'SubCache':
+        return SubCache(self, *prefixes)
 
 
 class UuidCache:
@@ -66,6 +81,9 @@ class UuidCache:
             stale_keys = {key for key in self.data if key not in self.used_keys}
             if stale_keys:
                 raise RuntimeError(f'There are stale UUIDs in the cache: {stale_keys}')
+
+    def sub_cache(self, *prefixes: Any) -> SubCache:
+        return SubCache(self, *prefixes)
 
 
 def now() -> str:
@@ -128,3 +146,77 @@ def human_sort_key(key: str) -> List[Any]:
         return int(text) if text.isdigit() else text
 
     return [_convert(x) for x in re.split(r'(\d+)', key) if x]
+
+
+def make_border_rectangle(
+    left: float,
+    right: float,
+    top: float,
+    bottom: float,
+    width: float,
+    direction: Literal['inner', 'outer', 'center'],
+) -> list[Vertex]:
+    w = (
+        width
+        / 2
+        * {
+            'inner': -1.0,
+            'center': 0.0,
+            'outer': +1.0,
+        }[direction]
+    )
+    line_l = left - w
+    line_r = right + w
+    line_t = top + w
+    line_b = bottom - w
+
+    return [
+        Vertex(Position(x, y), Angle(0))
+        for x, y in [
+            (line_l, line_t),
+            (line_l, line_b),
+            (line_r, line_b),
+            (line_r, line_t),
+            (line_l, line_t),
+        ]
+    ]
+
+
+def grid_solderpaste(
+    uuid_cache: SubCache,
+    x_min: float,
+    x_max: float,
+    y_min: float,
+    y_max: float,
+    max_drop_size: float = 1.00,
+) -> Generator[Polygon, None, None]:
+    # SLUA271c suggests 1x1mm solder drops
+    fill_factor = 0.80  # approximated from default pad filling
+    num_x = math.ceil((x_max - x_min) / max_drop_size)
+    num_y = math.ceil((y_max - y_min) / max_drop_size)
+    pitch_x = (x_max - x_min) / num_x
+    pitch_y = (y_max - y_min) / num_y
+    size_x = pitch_x * fill_factor
+    size_y = pitch_y * fill_factor
+
+    for ix in range(num_x):
+        for iy in range(num_y):
+            center_x = pitch_x * (ix - num_x / 2 + 0.5)
+            center_y = pitch_y * (iy - num_y / 2 + 0.5)
+            yield Polygon(
+                uuid=uuid_cache.get('solderpaste', ix, iy),
+                layer=Layer('top_solder_paste'),
+                width=Width(0),
+                fill=Fill(True),
+                grab_area=GrabArea(False),
+                vertices=[
+                    Vertex(Position(x, y), Angle(0))
+                    for x, y in [
+                        (center_x - size_x / 2, center_y - size_y / 2),
+                        (center_x - size_x / 2, center_y + size_y / 2),
+                        (center_x + size_x / 2, center_y + size_y / 2),
+                        (center_x + size_x / 2, center_y - size_y / 2),
+                        (center_x - size_x / 2, center_y - size_y / 2),
+                    ]
+                ],
+            )
