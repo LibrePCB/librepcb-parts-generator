@@ -1,7 +1,7 @@
 """
 Generate STM32 microcontroller symbols, components and devices.
 
-Data source: https://github.com/LibrePCB/stm-pinout
+Data source: https://github.com/LibrePCB/stm-db
 
 In order to reduce the number of symbols, the following items are reused:
 
@@ -191,7 +191,10 @@ class MCU:
         self.family = info['names']['family']
         self.package = info['package']
         self.pins = list(pins)
-        self.flash = '{} KiB'.format(info['info']['flash'])
+        if 'flash' in info['info']:
+            self.flash: Optional[str] = '{} KiB'.format(info['info']['flash'])
+        else:
+            self.flash = None
         self.ram = '{} KiB'.format(info['info']['ram'])
         self.io_count: int = info['info']['io']
         self.gpio_version = info['gpio_version'] if len(info['gpio_version']) else None
@@ -231,6 +234,22 @@ class MCU:
             val = re.sub(r'\s*-\s*OSC', r'-OSC', val)
             val = re.sub(r'\s*/\s*OSC', r'-OSC', val)
             val = re.sub(r'([0-9])OSC', r'\1-OSC', val)
+            val = re.sub(r'-(OSC(X|32)?_(IN|OUT))\([A-Z0-9_]+\)', r'-\1', val)
+
+        if 'NRST' in pin_name:
+            val = re.sub(r'NRST\((P[A-Z][0-9]+)\)', r'NRST/\1', val)
+
+        # Ad-hoc cleanup
+        if '(JTMS/SWDIO)' in pin_name:
+            val = val.replace('(JTMS/SWDIO)', '')
+        if '(JTCK/SWCLK)' in pin_name:
+            val = val.replace('(JTCK/SWCLK)', '')
+        if '(JTDI)' in pin_name:
+            val = val.replace('(JTDI)', '')
+        if '(JTDO/TRACESWO)' in pin_name:
+            val = val.replace('(JTDO/TRACESWO)', '')
+        if '(NJTRST)' in pin_name:
+            val = val.replace('(NJTRST)', '')
 
         # Remove everything after the first space
         val = val.split(' ')[0]
@@ -265,9 +284,10 @@ class MCU:
             # Ensure that all merged signals have the same pin type
             types = {pin.pin_type for pin in group}
             if 'MonoIO' in types and 'IO' in types:
-                # Merge MonoIO into IO
+                # Merge 'MonoIO' into 'IO'
                 types.remove('MonoIO')
-                types.add('IO')
+            if 'Reset' in types and 'IO' in types:
+                types.remove('IO')
             assert len(types) == 1, (types, info)
 
             # Update the first pin
@@ -320,6 +340,8 @@ class MCU:
         # finding the flash size in the ref name, so don't handle them for now.
         if ref.startswith('STM32MP'):
             return None  # No flash
+        elif ref.startswith('STM32WBA'):
+            return 11
         elif ref.startswith('STM32'):
             return 10
         else:
@@ -345,6 +367,7 @@ class MCU:
         # Sanity check for the flash size
         size = self.ref[offset]
         flash_sizes = {
+            '0': 1,
             '2': 4,
             '3': 8,
             '4': 16,
@@ -360,6 +383,9 @@ class MCU:
             'G': 1024,
             'H': 1536,
             'I': 2048,
+            'J': 4096,
+            'K': 3072,
+            'Y': 640,
         }
         assert size in flash_sizes, "{}: Flash size {} doesn't look valid".format(self.ref, size)
 
@@ -456,13 +482,12 @@ class MCU:
     @property
     def description(self) -> str:
         description = 'A {} MCU by ST Microelectronics.\n\n'.format(self.name)
-        description += 'Package: {}\nFlash: {}\nRAM: {}\nI/Os: {}\nFrequency: {}\n'.format(
-            self.package,
-            self.flash,
-            self.ram,
-            self.io_count,
-            self.frequency,
-        )
+        description += 'Package: {}\n'.format(self.package)
+        if self.flash:
+            description += 'Flash: {}\n'.format(self.flash)
+        description += 'RAM: {}\n'.format(self.ram)
+        description += 'I/Os: {}\n'.format(self.io_count)
+        description += 'Frequency: {}\n'.format(self.frequency)
         if self.voltage:
             description += 'Voltage: {}\n'.format(self.voltage)
         if self.temperature:
